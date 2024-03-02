@@ -1,0 +1,31 @@
+import csv
+from datetime import datetime
+import os
+from config import output_folder
+
+
+def read(path):
+    entries = []
+    print("Lendo arquivo", path)
+    with open(path, newline='') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        for row in spamreader:
+            entries.append(', '.join(row))
+    return entries
+
+
+def write(name, budget):
+    print("Escrevendo o arquivo", name)
+    date = datetime.now().strftime("%Y-%m-%d")
+    folder = output_folder() + date
+
+    if not os.path.exists(folder):
+        os.mkdir(folder)
+
+    file_path = folder + "/" + name
+    with open(file_path, 'w', newline='', encoding="utf-8") as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        for e in budget:
+            spamwriter.writerow(e)
+
+    return file_path
