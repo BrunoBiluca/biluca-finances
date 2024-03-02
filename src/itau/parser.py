@@ -39,8 +39,7 @@ def parse(path, period=None):
             e["description"],
             value,
             "saída" if value[0] == '-' else "entrada",
-            "",
-            "itau"
+            ""
         ])
 
     return write("itau.csv", [headers(), *formated_budget])

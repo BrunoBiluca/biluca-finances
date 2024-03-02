@@ -37,7 +37,6 @@ def parse(path):
             e["description"],
             value,
             "saída",
-            "",
-            "nubank"
+            ""
         ])
     return write("nubank.csv", [headers(), *formated_budget])
