@@ -14,7 +14,7 @@ def categorize_identification(csv_path):
 
     prestacao_contas = pd.read_csv(csv_path)
 
-    train = pd.read_csv("resources/Prestação de contas.csv")
+    train = pd.read_csv("resources/classification_train.csv")
     train = train[train[column_to_predict].notna()]
     train[value_fn] = train[value_fn].apply(lambda d: d.rsplit(" ", -1)[0])
 
@@ -38,4 +38,4 @@ def categorize_identification(csv_path):
     clf.fit(train_combined, train[column_to_predict])
 
     prestacao_contas[column_to_predict] = clf.predict(features)
-    prestacao_contas.to_csv(csv_path)
+    prestacao_contas.to_csv(csv_path, index=False)

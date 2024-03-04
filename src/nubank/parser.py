@@ -35,7 +35,7 @@ def parse(path):
         formated_budget.append([
             to_str(e["date"]),
             e["description"],
-            value,
+            float(value) * -1.0,
             "saída",
             ""
         ])

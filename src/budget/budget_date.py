@@ -1,6 +1,7 @@
 from datetime import datetime
 
 date_pattern = "%d/%m/%Y"
+output_pattern = "%m/%d/%Y"
 
 
 def to_date(str):
@@ -8,4 +9,4 @@ def to_date(str):
 
 
 def to_str(date):
-    return date.strftime(date_pattern)
+    return date.strftime(output_pattern)

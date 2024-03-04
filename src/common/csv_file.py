@@ -24,8 +24,7 @@ def write(name, budget):
 
     file_path = folder + "/" + name
     with open(file_path, 'w', newline='', encoding="utf-8") as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        for e in budget:
-            spamwriter.writerow(e)
+        spamwriter = csv.writer(csvfile, quoting=csv.QUOTE_NONE)
+        spamwriter.writerows(budget)
 
     return file_path
