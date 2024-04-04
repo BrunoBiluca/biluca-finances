@@ -21,6 +21,9 @@ def parse(path):
             if "Pagamento" in description:
                 continue
 
+            if "Estorno" in description:
+                continue
+
             invoice.append({
                 "date": date,
                 "description": description,
