@@ -13,7 +13,8 @@ def parse(path):
         properties = full_strip(e)
 
         try:
-            date = to_date(properties[0:6])
+            date_substr = properties[0:6]
+            date = to_date(date_substr)
             date = datetime(day=date.day, month=date.month, year=2024)
             description, value = properties[6:].rsplit(" ", 1)
             description = full_strip(description)
@@ -24,6 +25,7 @@ def parse(path):
             if "Estorno" in description:
                 continue
 
+            description = description.replace('"', "")
             invoice.append({
                 "date": date,
                 "description": description,
