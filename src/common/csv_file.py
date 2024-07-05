@@ -7,7 +7,7 @@ from config import output_folder
 def read(path):
     entries = []
     print("Lendo arquivo", path)
-    with open(path, newline='') as csvfile:
+    with open(path, newline='', encoding="utf8") as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in spamreader:
             entries.append(', '.join(row))
