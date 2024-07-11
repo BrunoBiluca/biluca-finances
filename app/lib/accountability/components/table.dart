@@ -1,6 +1,6 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
-import 'package:biluca_financas/accountability/common/formatter.dart';
+import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/accountability/components/identification_edit.dart';
 import 'package:biluca_financas/components/text_field_edit.dart';
 import 'package:flutter/material.dart';
