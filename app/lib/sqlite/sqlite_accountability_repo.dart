@@ -1,0 +1,141 @@
+import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+import '../accountability/models/entry.dart';
+import '../accountability/models/entry_request.dart';
+
+class SQLiteAccountabilityRepo {
+  final Database db;
+  SQLiteAccountabilityRepo(this.db);
+
+  String tableName = "accountability";
+
+  Future<List<AccountabilityEntry>> getEntries() async {
+    return await db.rawQuery(
+      """
+    select 
+      a.*, 
+      ai.id as ai_id,
+      ai.description as ai_description,
+      ai.color as ai_color
+    from $tableName a
+    left join accountability_identifications ai on a.identification_id = ai.id
+    order by createdAt desc
+    """,
+    ).then((value) => value
+        .map(
+          (e) => AccountabilityEntry.fromMap(e),
+        )
+        .toList());
+  }
+
+  Future<AccountabilityEntry> getById(int id) async {
+    var entry = (await db.query(tableName, where: "id = ?", whereArgs: [id])).first;
+    var result = AccountabilityEntry.fromMap(entry);
+    if (result.identificationId != null) {
+      result.identification = await getIdentification(result.identificationId!);
+    }
+    return result;
+  }
+
+  Future<AccountabilityEntry> add(AccountabilityEntryRequest req) async {
+    String? identificationId = await addOrGetIdentification(req.identification);
+
+    var newId = await db.rawInsert("""
+    INSERT INTO $tableName (description, value, createdAt, insertedAt, updatedAt, identification_id)
+    VALUES (?, ?, ?, ?, ?, ?);
+    """, [
+      req.description,
+      req.value,
+      req.createdAt.toIso8601String(),
+      DateTime.now().toIso8601String(),
+      DateTime.now().toIso8601String(),
+      identificationId
+    ]);
+
+    return getById(newId);
+  }
+
+  Future<String?> addOrGetIdentification(AccountabilityIdentification? identification) async {
+    String? identificationId;
+    if (identification != null) {
+      var dbIdentification = await getIdentification(identification.id);
+
+      if (dbIdentification != null) {
+        identificationId = dbIdentification.id;
+      } else {
+        var newIdentification = await addIdentification(identification);
+        identificationId = newIdentification.id;
+      }
+    }
+    return identificationId;
+  }
+
+  Future<void> delete(AccountabilityEntry entry) async {
+    await db.delete(tableName, where: "id = ?", whereArgs: [entry.id]);
+  }
+
+  Future<AccountabilityEntry> update(AccountabilityEntry entry) async {
+    String? identificationId = await addOrGetIdentification(entry.identification);
+
+    var updatedEntry = entry.toMap();
+    updatedEntry["updatedAt"] = DateTime.now().toIso8601String();
+    updatedEntry["identification_id"] = identificationId;
+    await db.update(
+      tableName,
+      updatedEntry,
+      where: "id = ?",
+      whereArgs: [entry.id],
+    );
+    return getById(entry.id);
+  }
+
+  Future<List<AccountabilityIdentification>> getIdentifications() async {
+    return await db
+        .query("accountability_identifications")
+        .then((value) => value.map((e) => AccountabilityIdentification.fromMap(e)).toList());
+  }
+
+  Future<AccountabilityIdentification?> getIdentification(String identificationId) async {
+    var result = await db.query(
+      "accountability_identifications",
+      where: "id = ?",
+      whereArgs: [identificationId],
+    );
+
+    if (result.isEmpty) {
+      return null;
+    }
+
+    return AccountabilityIdentification.fromMap(result.first);
+  }
+
+  Future<AccountabilityIdentification> addIdentification(AccountabilityIdentification identification) async {
+    await db.rawInsert("""
+    INSERT INTO accountability_identifications (id, description, color, insertedAt, updatedAt)
+    VALUES (?, ?, ?, ?, ?);
+    """, [
+      identification.id,
+      identification.description,
+      identification.color.value,
+      DateTime.now().toIso8601String(),
+      DateTime.now().toIso8601String()
+    ]);
+    return identification;
+  }
+
+  Future<void> updateIdentification(AccountabilityIdentification updatedIdentification) async {
+    var map = updatedIdentification.toMap();
+    map["updatedAt"] = DateTime.now().toIso8601String();
+    await db.update(
+      "accountability_identifications",
+      map,
+      where: "id = ?",
+      whereArgs: [updatedIdentification.id],
+    );
+  }
+
+  Future<void> deleteIdentification(String id) async {
+    await db.delete("accountability_identifications", where: "id = ?", whereArgs: [id]);
+  }
+}

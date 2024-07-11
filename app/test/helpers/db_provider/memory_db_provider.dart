@@ -1,0 +1,22 @@
+import 'package:biluca_financas/sqlite/db_provider.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+class MemoryDBProvider extends DBProvider {
+  MemoryDBProvider();
+  static final MemoryDBProvider instance = MemoryDBProvider();
+  static MemoryDBProvider get i => instance;
+
+  @override
+  Future<Database> open() async {
+    return await databaseFactory.openDatabase(
+      inMemoryDatabasePath,
+      options: OpenDatabaseOptions(
+        version: 1,
+        onCreate: (db, version) async => await migrate(db, initialSQL),
+        onUpgrade: (db, oldVersion, newVersion) async {},
+        singleInstance: false,
+      ),
+    );
+  }
+}
