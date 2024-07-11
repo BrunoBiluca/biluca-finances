@@ -1,14 +1,13 @@
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
-import 'package:biluca_financas/sqlite/sqlite_accountability_repo.dart';
+import 'package:biluca_financas/accountability/repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountabilityBloc extends Bloc<AccountabilityEvent, AccountabilityState> {
-  final SQLiteAccountabilityRepo repo;
+  final AccountabilityRepo repo;
 
   AccountabilityBloc({required this.repo}) : super(const AccountabilityInitial()) {
     on<FetchAccountabilityEntries>((event, emit) async {
-      emit(const AccountabilityInitial());
       emit(AccountabilityChanged(
         entries: await repo.getEntries(),
         identifications: await repo.getIdentifications(),

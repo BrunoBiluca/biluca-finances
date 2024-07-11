@@ -1,15 +1,17 @@
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/accountability/repo.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../accountability/models/entry.dart';
 import '../accountability/models/entry_request.dart';
 
-class SQLiteAccountabilityRepo {
+class SQLiteAccountabilityRepo implements AccountabilityRepo{
   final Database db;
   SQLiteAccountabilityRepo(this.db);
 
   String tableName = "accountability";
 
+  @override
   Future<List<AccountabilityEntry>> getEntries() async {
     return await db.rawQuery(
       """
@@ -29,6 +31,7 @@ class SQLiteAccountabilityRepo {
         .toList());
   }
 
+  @override
   Future<AccountabilityEntry> getById(int id) async {
     var entry = (await db.query(tableName, where: "id = ?", whereArgs: [id])).first;
     var result = AccountabilityEntry.fromMap(entry);
@@ -38,6 +41,7 @@ class SQLiteAccountabilityRepo {
     return result;
   }
 
+  @override
   Future<AccountabilityEntry> add(AccountabilityEntryRequest req) async {
     String? identificationId = await addOrGetIdentification(req.identification);
 
@@ -56,6 +60,7 @@ class SQLiteAccountabilityRepo {
     return getById(newId);
   }
 
+  @override
   Future<String?> addOrGetIdentification(AccountabilityIdentification? identification) async {
     String? identificationId;
     if (identification != null) {
@@ -71,10 +76,12 @@ class SQLiteAccountabilityRepo {
     return identificationId;
   }
 
+  @override
   Future<void> delete(AccountabilityEntry entry) async {
     await db.delete(tableName, where: "id = ?", whereArgs: [entry.id]);
   }
 
+  @override
   Future<AccountabilityEntry> update(AccountabilityEntry entry) async {
     String? identificationId = await addOrGetIdentification(entry.identification);
 
@@ -90,12 +97,14 @@ class SQLiteAccountabilityRepo {
     return getById(entry.id);
   }
 
+  @override
   Future<List<AccountabilityIdentification>> getIdentifications() async {
     return await db
         .query("accountability_identifications")
         .then((value) => value.map((e) => AccountabilityIdentification.fromMap(e)).toList());
   }
 
+  @override
   Future<AccountabilityIdentification?> getIdentification(String identificationId) async {
     var result = await db.query(
       "accountability_identifications",
@@ -110,6 +119,7 @@ class SQLiteAccountabilityRepo {
     return AccountabilityIdentification.fromMap(result.first);
   }
 
+  @override
   Future<AccountabilityIdentification> addIdentification(AccountabilityIdentification identification) async {
     await db.rawInsert("""
     INSERT INTO accountability_identifications (id, description, color, insertedAt, updatedAt)
@@ -124,6 +134,7 @@ class SQLiteAccountabilityRepo {
     return identification;
   }
 
+  @override
   Future<void> updateIdentification(AccountabilityIdentification updatedIdentification) async {
     var map = updatedIdentification.toMap();
     map["updatedAt"] = DateTime.now().toIso8601String();
@@ -135,6 +146,7 @@ class SQLiteAccountabilityRepo {
     );
   }
 
+  @override
   Future<void> deleteIdentification(String id) async {
     await db.delete("accountability_identifications", where: "id = ?", whereArgs: [id]);
   }
