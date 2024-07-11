@@ -5,7 +5,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../accountability/models/entry.dart';
 import '../accountability/models/entry_request.dart';
 
-class SQLiteAccountabilityRepo implements AccountabilityRepo{
+class SQLiteAccountabilityRepo implements AccountabilityRepo {
   final Database db;
   SQLiteAccountabilityRepo(this.db);
 
@@ -24,11 +24,20 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo{
     left join accountability_identifications ai on a.identification_id = ai.id
     order by createdAt desc
     """,
-    ).then((value) => value
-        .map(
-          (e) => AccountabilityEntry.fromMap(e),
-        )
-        .toList());
+    ).then((value) => value.map(
+          (e) {
+            var ai = <String, dynamic>{};
+            for (var key in e.keys) {
+              if (key.startsWith('ai_') && e[key] != null) {
+                ai[key.replaceFirst('ai_', '')] = e[key];
+              }
+            }
+            return AccountabilityEntry.fromMap({
+              'identification': ai.isEmpty ? null : ai,
+              ...e,
+            });
+          },
+        ).toList());
   }
 
   @override

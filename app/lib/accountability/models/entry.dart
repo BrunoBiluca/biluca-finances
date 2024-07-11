@@ -31,15 +31,8 @@ class AccountabilityEntry {
       updatedAt: DateTime.parse(map['updatedAt']),
     );
 
-    var ai = <String, dynamic>{};
-    for (var key in map.keys) {
-      if (key.startsWith('ai_') && map[key] != null) {
-        ai[key.replaceFirst('ai_', '')] = map[key];
-      }
-    }
-    
-    if (ai.isNotEmpty) {
-      entry.identification = AccountabilityIdentification.fromMap(ai);  
+    if (map['identification'] != null) {
+      entry.identification = AccountabilityIdentification.fromMap(map['identification']);  
     }
     return entry;
   }
