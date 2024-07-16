@@ -13,52 +13,59 @@ class AccountabilityTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      children: [
-        const TableRow(
-          children: [
-            Text('Descrição'),
-            Text('Valor'),
-            Text('Identificação'),
-            Text('Criação'),
-            Text('Data da Inserção'),
-            Text(''),
-          ],
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text('Descrição')),
+              DataColumn(label: Text('Valor')),
+              DataColumn(label: Text('Identificação')),
+              DataColumn(label: Text('Criação')),
+              DataColumn(label: Text('Data da Inserção')),
+              DataColumn(label: Text('')),
+            ],
+            rows: [...entries.map((entry) => _tableRow(context, entry))],
         ),
-        ...entries.map((entry) => tableRow(context, entry)),
-      ],
+      ),
     );
   }
 }
 
-TableRow tableRow(BuildContext context, AccountabilityEntry entry) {
-  return TableRow(
-    children: [
-      TextFieldEdit(
-        text: entry.description,
-        onEdit: (updatedText) {
-          entry.description = updatedText;
-          context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry));
-        },
+DataRow _tableRow(BuildContext context, AccountabilityEntry entry) {
+  return DataRow(
+    cells: [
+      DataCell(
+        TextFieldEdit(
+          text: entry.description,
+          onEdit: (updatedText) {
+            entry.description = updatedText;
+            context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry));
+          },
+        ),
       ),
-      Text(Formatter.number(entry.value)),
-      AccountabilityIdentificationEdit(
+      DataCell(Text(Formatter.number(entry.value))),
+      DataCell(AccountabilityIdentificationEdit(
         identification: entry.identification,
         onEdit: (id) {
           entry.identification = id;
           context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry));
         },
-      ),
-      Text(Formatter.date(entry.createdAt)),
-      Text(Formatter.date(entry.insertedAt)),
-      IconButton(
-        onPressed: () => {
-          context.read<AccountabilityBloc>()
-            ..add(
-              DeleteAccountabilityEntry(entry),
-            )
-        },
-        icon: const Icon(Icons.delete),
+      )),
+      DataCell(Text(Formatter.date(entry.createdAt))),
+      DataCell(Text(Formatter.date(entry.insertedAt))),
+      DataCell(
+        IconButton(
+          onPressed: () => {
+            context.read<AccountabilityBloc>()
+              ..add(
+                DeleteAccountabilityEntry(entry),
+              )
+          },
+          icon: const Icon(Icons.delete),
+        ),
       ),
     ],
   );

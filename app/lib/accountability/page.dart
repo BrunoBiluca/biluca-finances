@@ -12,31 +12,27 @@ class AccountabilityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AccountabilityBloc>().add(FetchAccountabilityEntries());
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Página com Tabela'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ElevatedButton(
-            onPressed: () {
-              var bloc = context.read<AccountabilityBloc>();
-              bloc.add(
-                AddAccountabilityEntry(
-                  AccountabilityEntryRequest(
-                    description: "Descricão fictício",
-                    value: 10.00,
-                    createdAt: DateTime.now(),
-                  ),
-                ),
-              );
-            },
-            child: const Text('Adicionar Item'),
+          Container(
+            padding: const EdgeInsets.all(20.0),
+            margin: const EdgeInsets.all(20.0),
+            child: ElevatedButton(
+              onPressed: () => context.read<AccountabilityBloc>().add(AddAccountabilityEntry()),
+              child: const Text('Adicionar Item'),
+            ),
           ),
-          BlocBuilder<AccountabilityBloc, AccountabilityState>(
-            builder: (context, state) => AccountabilityTable(entries: state.entries),
-          ),
+          Expanded(
+            child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+              builder: (context, state) => AccountabilityTable(entries: state.entries),
+            ),
+          )
         ],
       ),
     );

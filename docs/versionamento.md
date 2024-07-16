@@ -21,3 +21,4 @@ As mensagem de commits deve seguir o seguinte formato:
 | ----- | ------------------------- | ------------------------------------------------------------------------ |
 | 📖     | Alteração de documentação | 📖 Adição de documentação referente a ...<br>📖 Melhoria na escrita de ... |
 | ♻️     | Refatoração de código     | ♻️ Melhoria de ... para ...                                               |
+| ✨     | Funcionalidade            | ✨ <Fumcionalidade> .... para ....                                        |

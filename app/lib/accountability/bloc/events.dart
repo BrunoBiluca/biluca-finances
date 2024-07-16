@@ -13,8 +13,11 @@ class FetchAccountabilityEntries extends AccountabilityEvent {
 }
 
 class AddAccountabilityEntry extends AccountabilityEvent {
-  final AccountabilityEntryRequest request;
-  const AddAccountabilityEntry(this.request);
+  final AccountabilityEntryRequest request = AccountabilityEntryRequest(
+    description: "Descricão fictício",
+    value: 10.00,
+    createdAt: DateTime.now(),
+  );
 
   @override
   List<Object?> get props => [request];
