@@ -2,14 +2,15 @@ import 'package:biluca_financas/accountability/components/table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-
 void main() {
   testWidgets('AccountabilityTable vazia apenas com o cabeçalho quando criada', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityTable(entries: []),
+          body: FittedBox(
+            child: AccountabilityTable(entries: []),
+          ),
         ),
       ),
     );
@@ -20,5 +21,4 @@ void main() {
     expect(find.text("Criação"), findsOneWidget);
     expect(find.text("Data da Inserção"), findsOneWidget);
   });
-
 }

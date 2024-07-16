@@ -34,14 +34,7 @@ void main() {
     build: () {
       return AccountabilityBloc(repo: MockSQLiteAccountabilityRepo());
     },
-    act: (bloc) => bloc
-      ..add(AddAccountabilityEntry(
-        AccountabilityEntryRequest(
-          description: "Descricão fictício",
-          value: 10.00,
-          createdAt: DateTime.now(),
-        ),
-      )),
+    act: (bloc) => bloc..add(AddAccountabilityEntry()),
     verify: (bloc) => {
       verify((bloc.repo as MockSQLiteAccountabilityRepo).add(any)).called(1),
       verify(bloc.repo.getEntries()).called(1),
