@@ -17,8 +17,9 @@ As mensagem de commits deve seguir o seguinte formato:
 	- A justificativa é opcional já que muitas vezes a própria descrição do conteúdo já explana a justificativa da alteração.
 
 
-| Emoji | Tipo                      | Possíveis descrições                                                     |
-| ----- | ------------------------- | ------------------------------------------------------------------------ |
-| 📖     | Alteração de documentação | 📖 Adição de documentação referente a ...<br>📖 Melhoria na escrita de ... |
-| ♻️     | Refatoração de código     | ♻️ Melhoria de ... para ...                                               |
-| ✨     | Funcionalidade            | ✨ <Fumcionalidade> .... para ....                                        |
+| Emoji | Tipo                          | Possíveis descrições                                                     |
+| ----- | ----------------------------- | ------------------------------------------------------------------------ |
+| 📖     | Alteração de documentação     | 📖 Adição de documentação referente a ...<br>📖 Melhoria na escrita de ... |
+| ♻️     | Refatoração de código         | ♻️ Melhoria de ... para ...                                               |
+| ✨     | Funcionalidade                | ✨ <Fumcionalidade> .... para ....                                        |
+| 🔥     | Remoção de código ou arquivos | 🔥 <Código ou arquivo removido> .... por causa ....                       |
