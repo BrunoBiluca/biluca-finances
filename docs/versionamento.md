@@ -23,3 +23,4 @@ As mensagem de commits deve seguir o seguinte formato:
 | ♻️     | Refatoração de código         | ♻️ Melhoria de ... para ...                                               |
 | ✨     | Funcionalidade                | ✨ <Fumcionalidade> .... para ....                                        |
 | 🔥     | Remoção de código ou arquivos | 🔥 <Código ou arquivo removido> .... por causa ....                       |
+| ✅     | Adição ou correção de testes  | ✅ .... relacionados à ....                                               |
