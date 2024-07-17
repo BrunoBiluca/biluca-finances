@@ -35,6 +35,33 @@ void main() {
     expect(entries.length, 1);
   });
 
+  test("should return accountability entries limited by 10 when stored", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+
+    for (var i = 0; i < 20; i++) {
+      await repo.add(
+        AccountabilityEntryRequest(
+          description: "${i + 1}",
+          value: 10.00,
+          createdAt: DateTime.now().add(Duration(seconds: i)),
+        ),
+      );
+    }
+
+    final entries = await repo.getEntries(limit: 10);
+    final entries2 = await repo.getEntries(limit: 10, offset: 10);
+
+    expect(entries.length, 10);
+    for (var i = 0; i < 10; i++) {
+      expect(entries[i].description, "${20 - i}");
+    }
+
+    expect(entries2.length, 10);
+    for (var i = 0; i < 10; i++) {
+      expect(entries2[i].description, "${10 - i}");
+    }
+  });
+
   test("should add an accountability entry", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 

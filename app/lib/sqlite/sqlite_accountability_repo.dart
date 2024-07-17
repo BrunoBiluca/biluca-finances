@@ -12,7 +12,7 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   String tableName = "accountability";
 
   @override
-  Future<List<AccountabilityEntry>> getEntries() async {
+  Future<List<AccountabilityEntry>> getEntries({int limit = 10, int offset = 0}) async {
     return await db.rawQuery(
       """
     select 
@@ -23,6 +23,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
     from $tableName a
     left join accountability_identifications ai on a.identification_id = ai.id
     order by createdAt desc
+    ${limit > 0 ? "limit $limit" : ""}
+    ${offset > 0 ? "offset $offset" : ""}
     """,
     ).then((value) => value.map(
           (e) {

@@ -12,6 +12,11 @@ class FetchAccountabilityEntries extends AccountabilityEvent {
   List<Object> get props => [];
 }
 
+class LoadMoreAccountabilityEntries extends AccountabilityEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class AddAccountabilityEntry extends AccountabilityEvent {
   final AccountabilityEntryRequest request = AccountabilityEntryRequest(
     description: "Descricão fictício",

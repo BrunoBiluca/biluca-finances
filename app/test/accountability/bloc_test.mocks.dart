@@ -3,17 +3,15 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i7;
+import 'dart:async' as _i5;
 
-import 'package:biluca_financas/accountability/models/entry.dart' as _i3;
+import 'package:biluca_financas/accountability/models/entry.dart' as _i2;
 import 'package:biluca_financas/accountability/models/entry_request.dart'
-    as _i8;
+    as _i6;
 import 'package:biluca_financas/accountability/models/identification.dart'
-    as _i4;
-import 'package:biluca_financas/sqlite/sqlite_accountability_repo.dart' as _i5;
+    as _i3;
+import 'package:biluca_financas/accountability/repo.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i6;
-import 'package:sqflite_common_ffi/sqflite_ffi.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -28,8 +26,9 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeDatabase_0 extends _i1.SmartFake implements _i2.Database {
-  _FakeDatabase_0(
+class _FakeAccountabilityEntry_0 extends _i1.SmartFake
+    implements _i2.AccountabilityEntry {
+  _FakeAccountabilityEntry_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -38,9 +37,9 @@ class _FakeDatabase_0 extends _i1.SmartFake implements _i2.Database {
         );
 }
 
-class _FakeAccountabilityEntry_1 extends _i1.SmartFake
-    implements _i3.AccountabilityEntry {
-  _FakeAccountabilityEntry_1(
+class _FakeAccountabilityIdentification_1 extends _i1.SmartFake
+    implements _i3.AccountabilityIdentification {
+  _FakeAccountabilityIdentification_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -49,205 +48,167 @@ class _FakeAccountabilityEntry_1 extends _i1.SmartFake
         );
 }
 
-class _FakeAccountabilityIdentification_2 extends _i1.SmartFake
-    implements _i4.AccountabilityIdentification {
-  _FakeAccountabilityIdentification_2(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-/// A class which mocks [SQLiteAccountabilityRepo].
+/// A class which mocks [AccountabilityRepo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockSQLiteAccountabilityRepo extends _i1.Mock
-    implements _i5.SQLiteAccountabilityRepo {
+class MockAccountabilityRepo extends _i1.Mock
+    implements _i4.AccountabilityRepo {
   @override
-  _i2.Database get db => (super.noSuchMethod(
-        Invocation.getter(#db),
-        returnValue: _FakeDatabase_0(
-          this,
-          Invocation.getter(#db),
-        ),
-        returnValueForMissingStub: _FakeDatabase_0(
-          this,
-          Invocation.getter(#db),
-        ),
-      ) as _i2.Database);
-
-  @override
-  String get tableName => (super.noSuchMethod(
-        Invocation.getter(#tableName),
-        returnValue: _i6.dummyValue<String>(
-          this,
-          Invocation.getter(#tableName),
-        ),
-        returnValueForMissingStub: _i6.dummyValue<String>(
-          this,
-          Invocation.getter(#tableName),
-        ),
-      ) as String);
-
-  @override
-  set tableName(String? _tableName) => super.noSuchMethod(
-        Invocation.setter(
-          #tableName,
-          _tableName,
-        ),
-        returnValueForMissingStub: null,
-      );
-
-  @override
-  _i7.Future<List<_i3.AccountabilityEntry>> getEntries() => (super.noSuchMethod(
+  _i5.Future<List<_i2.AccountabilityEntry>> getEntries({
+    int? limit = 10,
+    int? offset = 0,
+  }) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getEntries,
           [],
+          {
+            #limit: limit,
+            #offset: offset,
+          },
         ),
-        returnValue: _i7.Future<List<_i3.AccountabilityEntry>>.value(
-            <_i3.AccountabilityEntry>[]),
+        returnValue: _i5.Future<List<_i2.AccountabilityEntry>>.value(
+            <_i2.AccountabilityEntry>[]),
         returnValueForMissingStub:
-            _i7.Future<List<_i3.AccountabilityEntry>>.value(
-                <_i3.AccountabilityEntry>[]),
-      ) as _i7.Future<List<_i3.AccountabilityEntry>>);
+            _i5.Future<List<_i2.AccountabilityEntry>>.value(
+                <_i2.AccountabilityEntry>[]),
+      ) as _i5.Future<List<_i2.AccountabilityEntry>>);
 
   @override
-  _i7.Future<_i3.AccountabilityEntry> getById(int? id) => (super.noSuchMethod(
+  _i5.Future<_i2.AccountabilityEntry> getById(int? id) => (super.noSuchMethod(
         Invocation.method(
           #getById,
           [id],
         ),
-        returnValue: _i7.Future<_i3.AccountabilityEntry>.value(
-            _FakeAccountabilityEntry_1(
+        returnValue: _i5.Future<_i2.AccountabilityEntry>.value(
+            _FakeAccountabilityEntry_0(
           this,
           Invocation.method(
             #getById,
             [id],
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.AccountabilityEntry>.value(
-            _FakeAccountabilityEntry_1(
+        returnValueForMissingStub: _i5.Future<_i2.AccountabilityEntry>.value(
+            _FakeAccountabilityEntry_0(
           this,
           Invocation.method(
             #getById,
             [id],
           ),
         )),
-      ) as _i7.Future<_i3.AccountabilityEntry>);
+      ) as _i5.Future<_i2.AccountabilityEntry>);
 
   @override
-  _i7.Future<_i3.AccountabilityEntry> add(
-          _i8.AccountabilityEntryRequest? req) =>
+  _i5.Future<_i2.AccountabilityEntry> add(
+          _i6.AccountabilityEntryRequest? req) =>
       (super.noSuchMethod(
         Invocation.method(
           #add,
           [req],
         ),
-        returnValue: _i7.Future<_i3.AccountabilityEntry>.value(
-            _FakeAccountabilityEntry_1(
+        returnValue: _i5.Future<_i2.AccountabilityEntry>.value(
+            _FakeAccountabilityEntry_0(
           this,
           Invocation.method(
             #add,
             [req],
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.AccountabilityEntry>.value(
-            _FakeAccountabilityEntry_1(
+        returnValueForMissingStub: _i5.Future<_i2.AccountabilityEntry>.value(
+            _FakeAccountabilityEntry_0(
           this,
           Invocation.method(
             #add,
             [req],
           ),
         )),
-      ) as _i7.Future<_i3.AccountabilityEntry>);
+      ) as _i5.Future<_i2.AccountabilityEntry>);
 
   @override
-  _i7.Future<String?> addOrGetIdentification(
-          _i4.AccountabilityIdentification? identification) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #addOrGetIdentification,
-          [identification],
-        ),
-        returnValue: _i7.Future<String?>.value(),
-        returnValueForMissingStub: _i7.Future<String?>.value(),
-      ) as _i7.Future<String?>);
-
-  @override
-  _i7.Future<void> delete(_i3.AccountabilityEntry? entry) =>
+  _i5.Future<void> delete(_i2.AccountabilityEntry? entry) =>
       (super.noSuchMethod(
         Invocation.method(
           #delete,
           [entry],
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i7.Future<_i3.AccountabilityEntry> update(_i3.AccountabilityEntry? entry) =>
+  _i5.Future<_i2.AccountabilityEntry> update(_i2.AccountabilityEntry? entry) =>
       (super.noSuchMethod(
         Invocation.method(
           #update,
           [entry],
         ),
-        returnValue: _i7.Future<_i3.AccountabilityEntry>.value(
-            _FakeAccountabilityEntry_1(
+        returnValue: _i5.Future<_i2.AccountabilityEntry>.value(
+            _FakeAccountabilityEntry_0(
           this,
           Invocation.method(
             #update,
             [entry],
           ),
         )),
-        returnValueForMissingStub: _i7.Future<_i3.AccountabilityEntry>.value(
-            _FakeAccountabilityEntry_1(
+        returnValueForMissingStub: _i5.Future<_i2.AccountabilityEntry>.value(
+            _FakeAccountabilityEntry_0(
           this,
           Invocation.method(
             #update,
             [entry],
           ),
         )),
-      ) as _i7.Future<_i3.AccountabilityEntry>);
+      ) as _i5.Future<_i2.AccountabilityEntry>);
 
   @override
-  _i7.Future<List<_i4.AccountabilityIdentification>> getIdentifications() =>
+  _i5.Future<List<_i3.AccountabilityIdentification>> getIdentifications() =>
       (super.noSuchMethod(
         Invocation.method(
           #getIdentifications,
           [],
         ),
-        returnValue: _i7.Future<List<_i4.AccountabilityIdentification>>.value(
-            <_i4.AccountabilityIdentification>[]),
+        returnValue: _i5.Future<List<_i3.AccountabilityIdentification>>.value(
+            <_i3.AccountabilityIdentification>[]),
         returnValueForMissingStub:
-            _i7.Future<List<_i4.AccountabilityIdentification>>.value(
-                <_i4.AccountabilityIdentification>[]),
-      ) as _i7.Future<List<_i4.AccountabilityIdentification>>);
+            _i5.Future<List<_i3.AccountabilityIdentification>>.value(
+                <_i3.AccountabilityIdentification>[]),
+      ) as _i5.Future<List<_i3.AccountabilityIdentification>>);
 
   @override
-  _i7.Future<_i4.AccountabilityIdentification?> getIdentification(
+  _i5.Future<String?> addOrGetIdentification(
+          _i3.AccountabilityIdentification? identification) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addOrGetIdentification,
+          [identification],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+        returnValueForMissingStub: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<_i3.AccountabilityIdentification?> getIdentification(
           String? identificationId) =>
       (super.noSuchMethod(
         Invocation.method(
           #getIdentification,
           [identificationId],
         ),
-        returnValue: _i7.Future<_i4.AccountabilityIdentification?>.value(),
+        returnValue: _i5.Future<_i3.AccountabilityIdentification?>.value(),
         returnValueForMissingStub:
-            _i7.Future<_i4.AccountabilityIdentification?>.value(),
-      ) as _i7.Future<_i4.AccountabilityIdentification?>);
+            _i5.Future<_i3.AccountabilityIdentification?>.value(),
+      ) as _i5.Future<_i3.AccountabilityIdentification?>);
 
   @override
-  _i7.Future<_i4.AccountabilityIdentification> addIdentification(
-          _i4.AccountabilityIdentification? identification) =>
+  _i5.Future<_i3.AccountabilityIdentification> addIdentification(
+          _i3.AccountabilityIdentification? identification) =>
       (super.noSuchMethod(
         Invocation.method(
           #addIdentification,
           [identification],
         ),
-        returnValue: _i7.Future<_i4.AccountabilityIdentification>.value(
-            _FakeAccountabilityIdentification_2(
+        returnValue: _i5.Future<_i3.AccountabilityIdentification>.value(
+            _FakeAccountabilityIdentification_1(
           this,
           Invocation.method(
             #addIdentification,
@@ -255,35 +216,35 @@ class MockSQLiteAccountabilityRepo extends _i1.Mock
           ),
         )),
         returnValueForMissingStub:
-            _i7.Future<_i4.AccountabilityIdentification>.value(
-                _FakeAccountabilityIdentification_2(
+            _i5.Future<_i3.AccountabilityIdentification>.value(
+                _FakeAccountabilityIdentification_1(
           this,
           Invocation.method(
             #addIdentification,
             [identification],
           ),
         )),
-      ) as _i7.Future<_i4.AccountabilityIdentification>);
+      ) as _i5.Future<_i3.AccountabilityIdentification>);
 
   @override
-  _i7.Future<void> updateIdentification(
-          _i4.AccountabilityIdentification? updatedIdentification) =>
+  _i5.Future<void> updateIdentification(
+          _i3.AccountabilityIdentification? updatedIdentification) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateIdentification,
           [updatedIdentification],
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 
   @override
-  _i7.Future<void> deleteIdentification(String? id) => (super.noSuchMethod(
+  _i5.Future<void> deleteIdentification(String? id) => (super.noSuchMethod(
         Invocation.method(
           #deleteIdentification,
           [id],
         ),
-        returnValue: _i7.Future<void>.value(),
-        returnValueForMissingStub: _i7.Future<void>.value(),
-      ) as _i7.Future<void>);
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
 }

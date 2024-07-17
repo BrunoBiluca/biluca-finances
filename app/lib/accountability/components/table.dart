@@ -13,22 +13,18 @@ class AccountabilityTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(20),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-          child: DataTable(
-            columns: const [
-              DataColumn(label: Text('Descrição')),
-              DataColumn(label: Text('Valor')),
-              DataColumn(label: Text('Identificação')),
-              DataColumn(label: Text('Criação')),
-              DataColumn(label: Text('Data da Inserção')),
-              DataColumn(label: Text('')),
-            ],
-            rows: [...entries.map((entry) => _tableRow(context, entry))],
-        ),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: DataTable(
+        columns: const [
+          DataColumn(label: Text('Descrição')),
+          DataColumn(label: Text('Valor')),
+          DataColumn(label: Text('Identificação')),
+          DataColumn(label: Text('Criação')),
+          DataColumn(label: Text('Data da Inserção')),
+          DataColumn(label: Text('')),
+        ],
+        rows: [...entries.map((entry) => _tableRow(context, entry))],
       ),
     );
   }

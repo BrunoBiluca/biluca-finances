@@ -16,23 +16,31 @@ class AccountabilityPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Página com Tabela'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20.0),
-            margin: const EdgeInsets.all(20.0),
-            child: ElevatedButton(
+      body: Container(
+        padding: const EdgeInsets.all(20.0),
+        margin: const EdgeInsets.all(20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton(
               onPressed: () => context.read<AccountabilityBloc>().add(AddAccountabilityEntry()),
               child: const Text('Adicionar Item'),
             ),
-          ),
-          Expanded(
-            child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-              builder: (context, state) => AccountabilityTable(entries: state.entries),
+            const SizedBox(height: 20),
+            Expanded(
+              child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+                builder: (context, state) => AccountabilityTable(entries: state.entries),
+              ),
             ),
-          )
-        ],
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () => context.read<AccountabilityBloc>().add(LoadMoreAccountabilityEntries()),
+              child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+                builder: (context, state) => Text('(${state.entries.length}) Carregar mais'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
