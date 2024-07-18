@@ -2,6 +2,7 @@ import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/accountability/components/identification_edit.dart';
+import 'package:biluca_financas/components/number_field_edit.dart';
 import 'package:biluca_financas/components/text_field_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,13 +37,15 @@ DataRow _tableRow(BuildContext context, AccountabilityEntry entry) {
       DataCell(
         TextFieldEdit(
           text: entry.description,
-          onEdit: (updatedText) {
-            entry.description = updatedText;
-            context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry));
-          },
+          onEdit: (updatedText) =>
+              context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry..description = updatedText)),
         ),
       ),
-      DataCell(Text(Formatter.number(entry.value))),
+      DataCell(NumberFieldEdit(
+        number: entry.value,
+        onEdit: (updatedNumber) =>
+            context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry..value = updatedNumber)),
+      )),
       DataCell(AccountabilityIdentificationEdit(
         identification: entry.identification,
         onEdit: (id) {

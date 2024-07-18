@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "app"
+		},
+		{
+			"path": "docs"
+		},
+		{
+			"path": "predict"
+		}
+	],
+	"settings": {}
+}
