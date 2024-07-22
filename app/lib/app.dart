@@ -1,7 +1,7 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/page.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
-import 'package:biluca_financas/sqlite/sqlite_accountability_repo.dart';
+import 'package:biluca_financas/sqlite/accountability_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
