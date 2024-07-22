@@ -5,7 +5,7 @@ import 'package:biluca_financas/sqlite/sqlite_accountability_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../helpers/db_provider/memory_db_provider.dart';
+import 'helpers/memory_db_provider.dart';
 
 void main() {
   setUpAll(() {
