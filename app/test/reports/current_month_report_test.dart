@@ -1,5 +1,5 @@
 import 'package:biluca_financas/accountability/current_month_service.dart';
-import 'package:biluca_financas/reports/current_month_report.dart';
+import 'package:biluca_financas/reports/current_month_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -22,7 +22,7 @@ void main() {
         title: 'Flutter Demo',
         home: Scaffold(
           body: FittedBox(
-            child: CurrentMonthReport(service: mock),
+            child: CurrentMonthCard(service: mock),
           ),
         ),
       ),

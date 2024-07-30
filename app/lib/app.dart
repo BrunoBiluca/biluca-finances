@@ -1,5 +1,6 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/page.dart';
+import 'package:biluca_financas/reports/current_month_card.dart';
 import 'package:biluca_financas/reports/current_month_report.dart';
 import 'package:biluca_financas/sqlite/current_month_service.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
@@ -47,9 +48,7 @@ class App extends StatelessWidget {
                   child: const Text('Prestação de Contas'),
                 ),
                 const SizedBox(height: 20),
-                CurrentMonthReport(
-                  service: SQLiteAccontabilityCurrentMonthService(db: snapshot.data!, month: "07/2024"),
-                ),
+                const CurrentMonthReport(),
               ]),
             ),
           );

@@ -1,74 +1,64 @@
-import 'package:biluca_financas/accountability/current_month_service.dart';
-import 'package:biluca_financas/common/formatter.dart';
+import 'package:biluca_financas/reports/current_month_card.dart';
+import 'package:biluca_financas/sqlite/current_month_service.dart';
+import 'package:biluca_financas/sqlite/db_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
-class CurrentMonthReport extends StatelessWidget {
-  final AccountabilityCurrentMonthService service;
-  const CurrentMonthReport({super.key, required this.service});
+class CurrentMonthReport extends StatefulWidget {
+  const CurrentMonthReport({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _CurrentMonthReportState();
+}
+
+class _CurrentMonthReportState extends State<CurrentMonthReport> {
+  String _selectedMonth = "07/2024";
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      const Text("Relatório do mês atual"),
-      Row(
-        children: [
-          const Text("Balanço: "),
-          const SizedBox(width: 5),
-          FutureBuilder(
-            future: service.getBalance(),
-            builder: (c, s) {
-              if (s.connectionState != ConnectionState.done) {
-                return textShimmer();
-              }
-              return Text(Formatter.number(s.data!));
-            },
-          ),
-          const SizedBox(width: 20),
-          const Text("Gastos: "),
-          const SizedBox(width: 5),
-          FutureBuilder(
-            future: service.getExpenses(),
-            builder: (c, s) {
-              if (s.connectionState != ConnectionState.done) {
-                return textShimmer();
-              }
-              return Text(Formatter.number(s.data!));
-            },
-          ),
-          const SizedBox(width: 20),
-          const Text("Receitas: "),
-          const SizedBox(width: 5),
-          FutureBuilder(
-            future: service.getIncomes(),
-            builder: (c, s) {
-              if (s.connectionState != ConnectionState.done) {
-                return textShimmer();
-              }
-              return Text(Formatter.number(s.data!));
-            },
-          ),
-        ],
-      ),
-    ]);
-  }
+    return FutureBuilder(
+      future: DBProvider.i.database,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const CircularProgressIndicator();
+        }
 
-  SizedBox textShimmer() {
-    return SizedBox(
-      width: 200.0,
-      height: 100.0,
-      child: Shimmer.fromColors(
-        baseColor: Colors.red,
-        highlightColor: Colors.yellow,
-        child: const Text(
-          'Shimmer',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 40.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+        return Column(
+          children: [
+            DropdownButton<String>(
+              value: _selectedMonth,
+              onChanged: (month) {
+                setState(() {
+                  _selectedMonth = month!;
+                });
+              },
+              items: [
+                "07/2024",
+                "08/2024",
+                "09/2024",
+              ].map((month) {
+                return DropdownMenuItem<String>(
+                  value: month,
+                  child: Text(month),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 20),
+            Text("Resumo do mês $_selectedMonth"),
+            const SizedBox(height: 20),
+            FutureBuilder(
+              future: DBProvider.i.database,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const CircularProgressIndicator();
+                }
+                return CurrentMonthCard(
+                  service: SQLiteAccontabilityCurrentMonthService(db: snapshot.data!, month: _selectedMonth),
+                );
+              },
+            )
+          ],
+        );
+      },
     );
   }
 }
