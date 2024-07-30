@@ -11,7 +11,30 @@ class CurrentMonthReport extends StatefulWidget {
 }
 
 class _CurrentMonthReportState extends State<CurrentMonthReport> {
-  String _selectedMonth = "07/2024";
+  late String _selectedMonth;
+  late List<String> availableMonths = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    var now = DateTime.now();
+    _selectedMonth = formatMonth(now.month, now.year);
+
+    availableMonths = [];
+    for (var year = 2022; year <= now.year; year++) {
+      for (var month = 1; month <= 12; month++) {
+        if (month > now.month && year == now.year) {
+          break;
+        }
+        availableMonths.add(formatMonth(month, year));
+      }
+    }
+  }
+
+  String formatMonth(int month, int year) {
+    return "${month < 10 ? '0' : ''}$month/$year";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +54,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                   _selectedMonth = month!;
                 });
               },
-              items: [
-                "07/2024",
-                "08/2024",
-                "09/2024",
-              ].map((month) {
-                return DropdownMenuItem<String>(
-                  value: month,
-                  child: Text(month),
-                );
-              }).toList(),
+              items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
             ),
             const SizedBox(height: 20),
             Text("Resumo do mês $_selectedMonth"),

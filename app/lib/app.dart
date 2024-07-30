@@ -1,8 +1,6 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/page.dart';
-import 'package:biluca_financas/reports/current_month_card.dart';
 import 'package:biluca_financas/reports/current_month_report.dart';
-import 'package:biluca_financas/sqlite/current_month_service.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
 import 'package:biluca_financas/sqlite/accountability_repo.dart';
 import 'package:flutter/material.dart';
