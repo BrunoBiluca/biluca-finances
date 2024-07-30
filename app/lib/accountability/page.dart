@@ -1,9 +1,8 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
-import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'components/table.dart';
+import 'components/section.dart';
 
 class AccountabilityPage extends StatelessWidget {
   const AccountabilityPage({super.key});
@@ -11,37 +10,11 @@ class AccountabilityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     context.read<AccountabilityBloc>().add(FetchAccountabilityEntries());
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Página com Tabela'),
+        title: const Text('Prestação de Contas'),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(20.0),
-        margin: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ElevatedButton(
-              onPressed: () => context.read<AccountabilityBloc>().add(AddAccountabilityEntry()),
-              child: const Text('Adicionar Item'),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-                builder: (context, state) => AccountabilityTable(entries: state.entries),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => context.read<AccountabilityBloc>().add(LoadMoreAccountabilityEntries()),
-              child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-                builder: (context, state) => Text('(${state.entries.length}) Carregar mais'),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: const AccountabilitySection(),
     );
   }
 }

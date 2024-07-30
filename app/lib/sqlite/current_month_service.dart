@@ -1,10 +1,12 @@
+import 'package:biluca_financas/accountability/current_month_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-class SQLiteAccontabilityCurrentMonthService {
+class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMonthService {
   final Database db;
   final String month;
   SQLiteAccontabilityCurrentMonthService({required this.db, required this.month});
 
+  @override
   Future<double> getBalance() async {
     var result = await db.rawQuery(
       """
@@ -22,6 +24,7 @@ class SQLiteAccontabilityCurrentMonthService {
     return result.first['total'] as double;
   }
 
+  @override
   Future<double> getExpenses() async {
     var result = await db.rawQuery(
       """
@@ -39,6 +42,7 @@ class SQLiteAccontabilityCurrentMonthService {
     return result.first['total'] as double;
   }
 
+  @override
   Future<double> getIncomes() async {
     var result = await db.rawQuery(
       """

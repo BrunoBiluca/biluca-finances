@@ -47,6 +47,7 @@ dependencies:
   equatable: ^2.0.5
   flutter_bloc: ^8.1.6
   logging: ^1.2.0
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
