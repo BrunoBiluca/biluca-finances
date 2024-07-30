@@ -7,7 +7,7 @@ class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMon
   SQLiteAccontabilityCurrentMonthService({required this.db, required this.month});
 
   @override
-  Future<double> getBalance() async {
+  Future<double> getSum() async {
     var result = await db.rawQuery(
       """
       SELECT Sum(value) AS total, strftime('%m/%Y', createdAt) AS month
@@ -58,5 +58,15 @@ class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMon
     }
 
     return result.first['total'] as double;
+  }
+
+  @override
+  String get currentMonth => month;
+
+  @override
+  Future<double> getBalance() async {
+    var incomes = await getIncomes();
+    var expenses = (await getExpenses()).abs();
+    return incomes / expenses - 1.0;
   }
 }

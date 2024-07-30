@@ -3,11 +3,12 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
 import 'package:biluca_financas/accountability/current_month_service.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i3;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -32,29 +33,47 @@ class MockAccountabilityCurrentMonthService extends _i1.Mock
   }
 
   @override
-  _i3.Future<double> getBalance() => (super.noSuchMethod(
+  String get currentMonth => (super.noSuchMethod(
+        Invocation.getter(#currentMonth),
+        returnValue: _i3.dummyValue<String>(
+          this,
+          Invocation.getter(#currentMonth),
+        ),
+      ) as String);
+
+  @override
+  _i4.Future<double> getSum() => (super.noSuchMethod(
+        Invocation.method(
+          #getSum,
+          [],
+        ),
+        returnValue: _i4.Future<double>.value(0.0),
+      ) as _i4.Future<double>);
+
+  @override
+  _i4.Future<double> getBalance() => (super.noSuchMethod(
         Invocation.method(
           #getBalance,
           [],
         ),
-        returnValue: _i3.Future<double>.value(0.0),
-      ) as _i3.Future<double>);
+        returnValue: _i4.Future<double>.value(0.0),
+      ) as _i4.Future<double>);
 
   @override
-  _i3.Future<double> getExpenses() => (super.noSuchMethod(
+  _i4.Future<double> getExpenses() => (super.noSuchMethod(
         Invocation.method(
           #getExpenses,
           [],
         ),
-        returnValue: _i3.Future<double>.value(0.0),
-      ) as _i3.Future<double>);
+        returnValue: _i4.Future<double>.value(0.0),
+      ) as _i4.Future<double>);
 
   @override
-  _i3.Future<double> getIncomes() => (super.noSuchMethod(
+  _i4.Future<double> getIncomes() => (super.noSuchMethod(
         Invocation.method(
           #getIncomes,
           [],
         ),
-        returnValue: _i3.Future<double>.value(0.0),
-      ) as _i3.Future<double>);
+        returnValue: _i4.Future<double>.value(0.0),
+      ) as _i4.Future<double>);
 }
