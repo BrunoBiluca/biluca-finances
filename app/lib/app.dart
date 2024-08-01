@@ -46,7 +46,7 @@ class App extends StatelessWidget {
                   child: const Text('Prestação de Contas'),
                 ),
                 const SizedBox(height: 20),
-                const CurrentMonthReport(),
+                const Expanded(child: CurrentMonthReport()),
               ]),
             ),
           );

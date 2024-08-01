@@ -1,3 +1,4 @@
+import 'package:biluca_financas/reports/amount_by_identification_chart.dart';
 import 'package:biluca_financas/reports/current_month_card.dart';
 import 'package:biluca_financas/sqlite/current_month_service.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
@@ -46,6 +47,8 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
         }
 
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
           children: [
             DropdownButton<String>(
               value: _selectedMonth,
@@ -57,19 +60,42 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
             ),
             const SizedBox(height: 20),
-            Text("Resumo do mês $_selectedMonth"),
-            const SizedBox(height: 20),
-            FutureBuilder(
-              future: DBProvider.i.database,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const CircularProgressIndicator();
-                }
-                return CurrentMonthCard(
-                  service: SQLiteAccontabilityCurrentMonthService(db: snapshot.data!, month: _selectedMonth),
-                );
-              },
-            )
+            Expanded(
+              child: FutureBuilder(
+                future: DBProvider.i.database,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return const CircularProgressIndicator();
+                  }
+                  var service = SQLiteAccontabilityCurrentMonthService(db: snapshot.data!, month: _selectedMonth);
+                  return Column(
+                    children: [
+                      CurrentMonthCard(service: service),
+                      const SizedBox(height: 20),
+                      Expanded(
+                          child: FutureBuilder(
+                              future: service.getTotalByIdentification(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState != ConnectionState.done) {
+                                  return const CircularProgressIndicator();
+                                }
+
+                                if (snapshot.data == null || snapshot.data!.isEmpty) {
+                                  return const Text("Nenhum item encontrado");
+                                }
+
+                                return SizedBox(
+                                  width: 400,
+                                  height: 600,
+                                  child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
+                                );
+                              }),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ],
         );
       },

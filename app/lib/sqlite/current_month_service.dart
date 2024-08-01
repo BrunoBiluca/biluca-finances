@@ -1,5 +1,9 @@
 import 'package:biluca_financas/accountability/current_month_service.dart';
+import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:collection/collection.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+
+import '../common/data/grouped_by.dart';
 
 class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMonthService {
   final Database db;
@@ -68,5 +72,27 @@ class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMon
     var incomes = await getIncomes();
     var expenses = (await getExpenses()).abs();
     return incomes / expenses - 1.0;
+  }
+
+  Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification() async {
+    var result = await db.rawQuery(
+      """
+      SELECT ai.id, ai.description, ai.color, Sum(value) AS total, strftime('%m/%Y', createdAt) AS month
+      FROM accountability a
+      INNER JOIN accountability_identifications ai ON a.identification_id = ai.id
+      WHERE month == '$month'
+      GROUP BY ai.id
+      """,
+    );
+
+    return result
+        .map(
+          (e) => GroupedBy(
+            AccountabilityIdentification.fromMap(e),
+            e['total'] as double,
+          ),
+        )
+        .toList()
+        .sorted((a, b) => b.total.compareTo(a.total));
   }
 }
