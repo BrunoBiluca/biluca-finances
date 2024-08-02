@@ -19,12 +19,19 @@ void main() {
     when(mock.getExpenses()).thenAnswer((_) => Future.delayed(callDuration, () => -50.0));
     when(mock.getIncomes()).thenAnswer((_) => Future.delayed(callDuration, () => 150.0));
 
+    final lastMonthMock = MockAccountabilityCurrentMonthService();
+    when(lastMonthMock.currentMonth).thenReturn("06/2024");
+    when(lastMonthMock.getBalance()).thenAnswer((_) => Future.delayed(callDuration, () => 2.0));
+    when(lastMonthMock.getSum()).thenAnswer((_) => Future.delayed(callDuration, () => 200.0));
+    when(lastMonthMock.getExpenses()).thenAnswer((_) => Future.delayed(callDuration, () => -100.0));
+    when(lastMonthMock.getIncomes()).thenAnswer((_) => Future.delayed(callDuration, () => 300.0));
+
     await tester.pumpWidget(
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
           body: FittedBox(
-            child: CurrentMonthCard(service: mock),
+            child: CurrentMonthCard(service: mock, lastMonthService: lastMonthMock),
           ),
         ),
       ),
@@ -37,9 +44,11 @@ void main() {
     await tester.pump(const Duration(seconds: 2));
 
     expect(find.byType(Shimmer), findsNothing);
-    expect(find.text("300.00%"), findsOneWidget);
-    expect(find.text("100.00"), findsOneWidget);
-    expect(find.text("-50.00"), findsOneWidget);
-    expect(find.text("150.00"), findsOneWidget);
+    expect(find.byKey(const Key("total")), findsOneWidget);
+    expect(find.byKey(const Key("total")), findsOneWidget);
+    expect(find.byKey(const Key("expenses_total")), findsOneWidget);
+    expect(find.byKey(const Key("expenses_relative")), findsOneWidget);
+    expect(find.byKey(const Key("incomes_total")), findsOneWidget);
+    expect(find.byKey(const Key("incomes_relative")), findsOneWidget);
   });
 }

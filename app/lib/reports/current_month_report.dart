@@ -68,28 +68,32 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                     return const CircularProgressIndicator();
                   }
                   var service = SQLiteAccontabilityCurrentMonthService(db: snapshot.data!, month: _selectedMonth);
+
+                  var lastMonth = availableMonths[availableMonths.indexOf(_selectedMonth) - 1];
+                  var serviceLastMonth = SQLiteAccontabilityCurrentMonthService(db: snapshot.data!, month: lastMonth);
                   return Column(
                     children: [
-                      CurrentMonthCard(service: service),
+                      CurrentMonthCard(service: service, lastMonthService: serviceLastMonth),
                       const SizedBox(height: 20),
                       Expanded(
-                          child: FutureBuilder(
-                              future: service.getTotalByIdentification(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState != ConnectionState.done) {
-                                  return const CircularProgressIndicator();
-                                }
+                        child: FutureBuilder(
+                          future: service.getTotalByIdentification(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState != ConnectionState.done) {
+                              return const CircularProgressIndicator();
+                            }
 
-                                if (snapshot.data == null || snapshot.data!.isEmpty) {
-                                  return const Text("Nenhum item encontrado");
-                                }
+                            if (snapshot.data == null || snapshot.data!.isEmpty) {
+                              return const Text("Nenhum item encontrado");
+                            }
 
-                                return SizedBox(
-                                  width: 400,
-                                  height: 600,
-                                  child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
-                                );
-                              }),
+                            return SizedBox(
+                              width: 400,
+                              height: 600,
+                              child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   );

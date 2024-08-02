@@ -1,12 +1,39 @@
 import 'package:biluca_financas/accountability/current_month_service.dart';
 import 'package:biluca_financas/common/formatter.dart';
+import 'package:biluca_financas/common/math.dart';
+import 'package:biluca_financas/components/text_shimmer.dart';
 import 'package:flutter/material.dart';
 
 import '../components/future_number.dart';
 
 class CurrentMonthCard extends StatelessWidget {
   final AccountabilityCurrentMonthService service;
-  const CurrentMonthCard({super.key, required this.service});
+  final AccountabilityCurrentMonthService lastMonthService;
+  const CurrentMonthCard({
+    super.key,
+    required this.service,
+    required this.lastMonthService,
+  });
+
+  Future<(double, double)> _expenses() async {
+    var currentExpenses = await service.getExpenses();
+    var lastMonthExpenses = await lastMonthService.getExpenses();
+
+    return (
+      currentExpenses,
+      Math.relativePercentage(currentExpenses, lastMonthExpenses),
+    );
+  }
+
+  Future<(double, double)> _incomes() async {
+    var current = await service.getIncomes();
+    var lastMonth = await lastMonthService.getIncomes();
+
+    return (
+      current,
+      Math.relativePercentage(current, lastMonth),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +60,12 @@ class CurrentMonthCard extends StatelessWidget {
                   children: [
                     const Text("Balanço: "),
                     const SizedBox(width: 5),
-                    FutureNumber(source: service.getSum),
+                    FutureNumber(source: service.getSum, key: const Key("total")),
                     const SizedBox(width: 5),
-                    FutureNumber(source: service.getBalance, formatter: (n) => "${Formatter.number(n * 100)}%"),
+                    FutureNumber(
+                        source: service.getBalance,
+                        formatter: (n) => "${Formatter.number(n * 100)}%",
+                        key: const Key("balance")),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -43,7 +73,22 @@ class CurrentMonthCard extends StatelessWidget {
                   children: [
                     const Text("Gastos: "),
                     const SizedBox(width: 5),
-                    FutureNumber(source: service.getExpenses),
+                    FutureBuilder(
+                      future: _expenses(),
+                      builder: (c, s) {
+                        if (s.connectionState != ConnectionState.done) {
+                          return const TextShimmer();
+                        }
+
+                        return Row(
+                          children: [
+                            Text(Formatter.number(s.data!.$1), key: const Key("expenses_total")),
+                            const SizedBox(width: 5),
+                            Text(Formatter.percent(s.data!.$2), key: const Key("expenses_relative")),
+                          ],
+                        );
+                      },
+                    )
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -51,7 +96,22 @@ class CurrentMonthCard extends StatelessWidget {
                   children: [
                     const Text("Receitas: "),
                     const SizedBox(width: 5),
-                    FutureNumber(source: service.getIncomes),
+                    FutureBuilder(
+                      future: _incomes(),
+                      builder: (c, s) {
+                        if (s.connectionState != ConnectionState.done) {
+                          return const TextShimmer();
+                        }
+
+                        return Row(
+                          children: [
+                            Text(Formatter.number(s.data!.$1), key: const Key("incomes_total")),
+                            const SizedBox(width: 5),
+                            Text(Formatter.percent(s.data!.$2), key: const Key("incomes_relative")),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
               ],

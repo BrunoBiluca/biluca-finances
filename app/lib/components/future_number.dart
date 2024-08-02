@@ -1,6 +1,6 @@
 import 'package:biluca_financas/common/formatter.dart';
+import 'package:biluca_financas/components/text_shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
 
 class FutureNumber extends StatelessWidget {
   final Function source;
@@ -13,7 +13,7 @@ class FutureNumber extends StatelessWidget {
       future: source(),
       builder: (c, s) {
         if (s.connectionState != ConnectionState.done) {
-          return textShimmer();
+          return const TextShimmer();
         }
 
         if (formatter != null) {
@@ -22,25 +22,6 @@ class FutureNumber extends StatelessWidget {
 
         return Text(Formatter.number(s.data! as double));
       },
-    );
-  }
-
-  SizedBox textShimmer() {
-    return SizedBox(
-      width: 200.0,
-      height: 100.0,
-      child: Shimmer.fromColors(
-        baseColor: Colors.red,
-        highlightColor: Colors.yellow,
-        child: const Text(
-          'Shimmer',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 40.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
     );
   }
 }
