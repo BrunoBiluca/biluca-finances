@@ -24,7 +24,10 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
     var lastIndex = availableMonths.length - 1;
     _selectedMonth = availableMonths[lastIndex];
+    updateServices();
+  }
 
+  void updateServices() {
     _currentMonthService = GetIt.I<AccountabilityCurrentMonthService>(param1: _selectedMonth);
     _lastMonthService = GetIt.I<AccountabilityCurrentMonthService>(param1: getLastMonth());
   }
@@ -61,40 +64,40 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           onChanged: (month) {
             setState(() {
               _selectedMonth = month!;
-              _currentMonthService = GetIt.I<AccountabilityCurrentMonthService>(param1: _selectedMonth);
-              _lastMonthService = GetIt.I<AccountabilityCurrentMonthService>(param1: getLastMonth());
+              updateServices();
             });
           },
           items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
         ),
         const SizedBox(height: 20),
         Expanded(
-            child: Column(
-          children: [
-            CurrentMonthCard(service: _currentMonthService, lastMonthService: _lastMonthService),
-            const SizedBox(height: 20),
-            Expanded(
-              child: FutureBuilder(
-                future: _currentMonthService.getTotalByIdentification(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const CircularProgressIndicator();
-                  }
+          child: Column(
+            children: [
+              CurrentMonthCard(service: _currentMonthService, lastMonthService: _lastMonthService),
+              const SizedBox(height: 20),
+              Expanded(
+                child: FutureBuilder(
+                  future: _currentMonthService.getTotalByIdentification(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const CircularProgressIndicator();
+                    }
 
-                  if (snapshot.data == null || snapshot.data!.isEmpty) {
-                    return const Text("Nenhum item encontrado");
-                  }
+                    if (snapshot.data == null || snapshot.data!.isEmpty) {
+                      return const Text("Nenhum item encontrado");
+                    }
 
-                  return SizedBox(
-                    width: 400,
-                    height: 600,
-                    child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
-                  );
-                },
+                    return SizedBox(
+                      width: 400,
+                      height: 600,
+                      child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
-        ))
+            ],
+          ),
+        )
       ],
     );
   }
