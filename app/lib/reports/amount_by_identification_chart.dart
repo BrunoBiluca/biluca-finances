@@ -12,11 +12,7 @@ class AmountByIdentificationChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return BarChart(
       BarChartData(
-        alignment: BarChartAlignment.center,
-        groupsSpace: 30,
-        barTouchData: BarTouchData(
-          enabled: true,
-        ),
+        alignment: BarChartAlignment.spaceEvenly,
         titlesData: FlTitlesData(
           show: true,
           bottomTitles: AxisTitles(
@@ -26,12 +22,10 @@ class AmountByIdentificationChart extends StatelessWidget {
               getTitlesWidget: bottomTitles,
             ),
           ),
-          leftTitles: AxisTitles(
+          leftTitles: const AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 40,
-              getTitlesWidget: leftTitles,
-              interval: 5,
             ),
           ),
           topTitles: const AxisTitles(
@@ -53,56 +47,44 @@ class AmountByIdentificationChart extends StatelessWidget {
         borderData: FlBorderData(
           show: false,
         ),
-        barGroups: accountabilityByIdentification
-            .asMap()
-            .map(
-              (i, e) => MapEntry(
-                i,
-                BarChartGroupData(
-                  x: i,
-                  barRods: [
-                    BarChartRodData(
-                      toY: e.total.abs(),
-                      color: e.field.color,
-                      borderSide: e.total < 0
-                          ? const BorderSide(color: Colors.redAccent, width: 3)
-                          : const BorderSide(color: Colors.green, width: 3),
-                      width: barWidth,
-                    ),
-                  ],
-                ),
-              ),
-            )
-            .values
-            .toList(),
+        barGroups: barGroups(),
       ),
     );
   }
 
-  Widget bottomTitles(double value, TitleMeta meta) {
+  List<BarChartGroupData> barGroups() {
+    return accountabilityByIdentification
+        .asMap()
+        .map(
+          (i, e) => MapEntry(
+            i,
+            BarChartGroupData(
+              x: i,
+              barRods: [
+                BarChartRodData(
+                  toY: e.total.abs(),
+                  color: e.field.color,
+                  borderSide: e.total < 0
+                      ? const BorderSide(color: Colors.redAccent, width: 3)
+                      : const BorderSide(color: Colors.green, width: 3),
+                  width: barWidth,
+                ),
+              ],
+            ),
+          ),
+        )
+        .values
+        .toList();
+  }
+
+  Widget bottomTitles(double groupKey, TitleMeta meta) {
     const style = TextStyle(fontSize: 10);
     return SideTitleWidget(
       axisSide: meta.axisSide,
       angle: 0.5,
       space: 12,
       child: Text(
-        accountabilityByIdentification[value.toInt()].field.description,
-        style: style,
-      ),
-    );
-  }
-
-  Widget leftTitles(double value, TitleMeta meta) {
-    if (value == meta.max) {
-      return Container();
-    }
-    const style = TextStyle(
-      fontSize: 12,
-    );
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: Text(
-        meta.formattedValue,
+        accountabilityByIdentification[groupKey.toInt()].field.description,
         style: style,
       ),
     );
