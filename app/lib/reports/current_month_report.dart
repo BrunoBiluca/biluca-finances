@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:biluca_financas/accountability/current_month_service.dart';
+import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/reports/amount_by_identification_chart.dart';
 import 'package:biluca_financas/reports/current_month_card.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +93,12 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
     );
   }
 
+  Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification() async {
+    var result = await _currentMonthService.getTotalByIdentification();
+    result.addAll(await _lastMonthService.getTotalByIdentification());
+    return result;
+  }
+
   Expanded monthInfo() {
     return Expanded(
       child: Column(
@@ -97,7 +107,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           const SizedBox(height: 20),
           Expanded(
             child: FutureBuilder(
-              future: _currentMonthService.getTotalByIdentification(),
+              future: getTotalByIdentification(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState != ConnectionState.done) {
                   return const CircularProgressIndicator();
@@ -108,7 +118,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                 }
 
                 return SizedBox(
-                  width: 400,
+                  width: 1000,
                   height: 600,
                   child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
                 );
