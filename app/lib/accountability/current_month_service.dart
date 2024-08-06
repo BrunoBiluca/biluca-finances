@@ -3,6 +3,7 @@ import 'package:biluca_financas/common/data/grouped_by.dart';
 
 abstract class AccountabilityCurrentMonthService {
   String get currentMonth;
+  Future<int> count();
   Future<double> getSum();
   Future<double> getBalance();
   Future<double> getExpenses();

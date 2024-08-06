@@ -55,50 +55,68 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        DropdownButton<String>(
-          value: _selectedMonth,
-          onChanged: (month) {
-            setState(() {
-              _selectedMonth = month!;
-              updateServices();
-            });
-          },
-          items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: Column(
-            children: [
-              CurrentMonthCard(service: _currentMonthService, lastMonthService: _lastMonthService),
-              const SizedBox(height: 20),
-              Expanded(
-                child: FutureBuilder(
-                  future: _currentMonthService.getTotalByIdentification(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return const CircularProgressIndicator();
-                    }
+    return FutureBuilder(
+      future: _currentMonthService.count(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const CircularProgressIndicator();
+        }
 
-                    if (snapshot.data == null || snapshot.data!.isEmpty) {
-                      return const Text("Nenhum item encontrado");
-                    }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            DropdownButton<String>(
+              value: _selectedMonth,
+              onChanged: (month) {
+                setState(() {
+                  _selectedMonth = month!;
+                  updateServices();
+                });
+              },
+              items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
+            ),
+            const SizedBox(height: 20),
+            snapshot.data! == 0
+                ? const Text(
+                    "Não existem registros para esse mês",
+                    key: Key("no_entries"),
+                  )
+                : monthInfo()
+          ],
+        );
+      },
+    );
+  }
 
-                    return SizedBox(
-                      width: 400,
-                      height: 600,
-                      child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
-                    );
-                  },
-                ),
-              ),
-            ],
+  Expanded monthInfo() {
+    return Expanded(
+      child: Column(
+        children: [
+          CurrentMonthCard(service: _currentMonthService, lastMonthService: _lastMonthService),
+          const SizedBox(height: 20),
+          Expanded(
+            child: FutureBuilder(
+              future: _currentMonthService.getTotalByIdentification(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const CircularProgressIndicator();
+                }
+
+                if (snapshot.data == null || snapshot.data!.isEmpty) {
+                  return const Text("Nenhum item encontrado");
+                }
+
+                return SizedBox(
+                  width: 400,
+                  height: 600,
+                  child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
+                );
+              },
+            ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }

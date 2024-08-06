@@ -8,6 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'helpers/memory_db_provider.dart';
 
 void main() {
+  var currentMonth = "07/2024";
+
   setUpAll(() async {
     MemoryDBProvider.i.init();
 
@@ -19,7 +21,7 @@ void main() {
     var aid1 = await repo.addIdentification(id1);
     var aid2 = await repo.addIdentification(id2);
 
-    var createdAt = DateTime(2024, 7, 7);
+    var createdAt = DateTime(2024, 7, 7); // 07/07/2024
     await repo.add(AccountabilityEntryRequest(
         description: "Descricão fictício", value: 10.00, createdAt: createdAt, identification: aid1));
     await repo.add(AccountabilityEntryRequest(
@@ -36,8 +38,24 @@ void main() {
     await MemoryDBProvider.i.clear(db);
   });
 
+  test("deve retornar zero quando nenhum registro encontrado", () async {
+    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: "06/2024");
+
+    var count = await service.count();
+
+    expect(count, 0);
+  });
+
+  test("deve retornar a quantidade de registros do mês atual", () async {
+    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: currentMonth);
+
+    var count = await service.count();
+
+    expect(count, 4);
+  });
+
   test("should return balance for the current month", () async {
-    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: "07/2024");
+    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: currentMonth);
 
     var total = await service.getBalance();
 
@@ -45,7 +63,7 @@ void main() {
   });
 
   test("should return sum of accountability expenses for the current month", () async {
-    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: "07/2024");
+    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: currentMonth);
 
     var total = await service.getExpenses();
 
@@ -53,7 +71,7 @@ void main() {
   });
 
   test("should return sum of accountability incomes for the current month", () async {
-    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: "07/2024");
+    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: currentMonth);
 
     var total = await service.getIncomes();
 
@@ -61,7 +79,7 @@ void main() {
   });
 
   test("should return the sum by identification for the current month", () async {
-    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: "07/2024");
+    var service = SQLiteAccontabilityCurrentMonthService(db: await MemoryDBProvider.i.database, month: currentMonth);
 
     var totalByIdentification = await service.getTotalByIdentification();
 

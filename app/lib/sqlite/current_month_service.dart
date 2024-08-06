@@ -74,6 +74,7 @@ class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMon
     return incomes / expenses - 1.0;
   }
 
+  @override
   Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification() async {
     var result = await db.rawQuery(
       """
@@ -94,5 +95,17 @@ class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMon
         )
         .toList()
         .sorted((a, b) => b.total.compareTo(a.total));
+  }
+
+  @override
+  Future<int> count() async {
+    var result = await db.rawQuery(
+      """
+      SELECT Count(*) AS total, strftime('%m/%Y', createdAt) AS month
+      FROM accountability
+      WHERE month == '$month'
+      """,
+    );
+    return result.first['total'] as int;
   }
 }
