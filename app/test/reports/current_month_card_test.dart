@@ -6,7 +6,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'current_month_report_test.mocks.dart';
+import 'current_month_card_test.mocks.dart';
 
 @GenerateMocks([AccountabilityCurrentMonthService])
 void main() {

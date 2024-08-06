@@ -1,6 +1,7 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
+import 'package:biluca_financas/accountability/models/entry.dart';
 import 'package:biluca_financas/accountability/repo.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,6 +37,48 @@ void main() {
     act: (bloc) => bloc..add(AddAccountabilityEntry()),
     verify: (bloc) => {
       verify((bloc.repo as MockAccountabilityRepo).add(any)).called(1),
+      verify(bloc.repo.getEntries()).called(1),
+    },
+    expect: () => [isA<AccountabilityChanged>()],
+  );
+
+  blocTest(
+    "retorna a lista atualiazada quando uma entrada é removida",
+    build: () {
+      return AccountabilityBloc(repo: MockAccountabilityRepo());
+    },
+    act: (bloc) => bloc
+      ..add(DeleteAccountabilityEntry(AccountabilityEntry(
+        id: 0,
+        description: "",
+        value: 0,
+        createdAt: DateTime.now(),
+        insertedAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ))),
+    verify: (bloc) => {
+      verify((bloc.repo as MockAccountabilityRepo).delete(any)).called(1),
+      verify(bloc.repo.getEntries()).called(1),
+    },
+    expect: () => [isA<AccountabilityChanged>()],
+  );
+
+  blocTest(
+    "retorna a lista atualizada quando uma entrada é editada",
+    build: () {
+      return AccountabilityBloc(repo: MockAccountabilityRepo());
+    },
+    act: (bloc) => bloc
+      ..add(UpdateAccountabilityEntry(AccountabilityEntry(
+        id: 0,
+        description: "",
+        value: 0,
+        createdAt: DateTime.now(),
+        insertedAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      ))),
+    verify: (bloc) => {
+      verify((bloc.repo as MockAccountabilityRepo).update(any)).called(1),
       verify(bloc.repo.getEntries()).called(1),
     },
     expect: () => [isA<AccountabilityChanged>()],
