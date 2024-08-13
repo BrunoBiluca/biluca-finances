@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:biluca_financas/accountability/current_month_service.dart';
+import 'package:biluca_financas/accountability/services/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/reports/amount_by_identification_chart.dart';

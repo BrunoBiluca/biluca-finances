@@ -50,6 +50,7 @@ dependencies:
   shimmer: ^3.0.0
   fl_chart: ^0.68.0
   get_it: ^7.7.0
+  file_picker: ^8.1.1
 
 dev_dependencies:
   flutter_test:

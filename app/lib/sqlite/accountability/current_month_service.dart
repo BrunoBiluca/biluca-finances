@@ -1,9 +1,9 @@
-import 'package:biluca_financas/accountability/current_month_service.dart';
+import 'package:biluca_financas/accountability/services/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:collection/collection.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import '../common/data/grouped_by.dart';
+import '../../common/data/grouped_by.dart';
 
 class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMonthService {
   final Database db;

@@ -10,7 +10,7 @@ import 'package:biluca_financas/accountability/models/entry_request.dart'
     as _i6;
 import 'package:biluca_financas/accountability/models/identification.dart'
     as _i3;
-import 'package:biluca_financas/accountability/repo.dart' as _i4;
+import 'package:biluca_financas/accountability/services/repo.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint

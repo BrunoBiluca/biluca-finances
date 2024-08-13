@@ -1,9 +1,9 @@
 import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/accountability/repo.dart';
+import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import '../accountability/models/entry.dart';
-import '../accountability/models/entry_request.dart';
+import '../../accountability/models/entry.dart';
+import '../../accountability/models/entry_request.dart';
 
 class SQLiteAccountabilityRepo implements AccountabilityRepo {
   final Database db;

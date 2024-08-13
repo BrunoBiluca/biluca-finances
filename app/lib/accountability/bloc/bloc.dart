@@ -1,6 +1,6 @@
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
-import 'package:biluca_financas/accountability/repo.dart';
+import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountabilityBloc extends Bloc<AccountabilityEvent, AccountabilityState> {

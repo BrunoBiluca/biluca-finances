@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/current_month_service.dart';
+import 'package:biluca_financas/accountability/services/current_month_service.dart';
 import 'package:biluca_financas/reports/current_month_report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,7 +19,9 @@ void main() {
       const MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: FittedBox(
+          body: SizedBox(
+            height: 200,
+            width: 200,
             child: CurrentMonthReport(),
           ),
         ),

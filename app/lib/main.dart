@@ -1,9 +1,9 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
-import 'package:biluca_financas/accountability/current_month_service.dart';
-import 'package:biluca_financas/accountability/repo.dart';
+import 'package:biluca_financas/accountability/services/current_month_service.dart';
+import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:biluca_financas/app.dart';
-import 'package:biluca_financas/sqlite/accountability_repo.dart';
-import 'package:biluca_financas/sqlite/current_month_service.dart';
+import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
+import 'package:biluca_financas/sqlite/accountability/current_month_service.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/sqlite/accountability_repo.dart';
+import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
