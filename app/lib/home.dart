@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:biluca_financas/accountability/page.dart';
+import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/reports/current_month_report.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -26,7 +29,7 @@ class _HomeState extends State<Home> {
         margin: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Row(children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               ElevatedButton(
                 onPressed: () => Navigator.push(
                   context,
@@ -40,22 +43,52 @@ class _HomeState extends State<Home> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  final file = await FilePicker.platform.pickFiles(
+                  final result = await FilePicker.platform.pickFiles(
                     type: FileType.custom,
                     allowedExtensions: ['csv'],
                   );
-                  if (file == null) return;
+                  if (result == null) return;
 
-                  final contents = await File(file.files.single.path!).readAsString();
-                  print(contents);
+                  var file = File(result.files.single.path!);
+                  await GetIt.I<AccountabilityImportService>().import(file);
+                  GetIt.I<FToast>().showToast(
+                    child: const BaseToast(),
+                    gravity: ToastGravity.TOP,
+                    toastDuration: const Duration(seconds: 2),
+                  );
                 },
-                child: const Text('Carregar Arquivo CSV'),
+                child: const Text('Importar'),
               ),
             ]),
             const SizedBox(height: 20),
             Expanded(child: CurrentMonthReport()),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class BaseToast extends StatelessWidget {
+  const BaseToast({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25.0),
+        color: Colors.greenAccent,
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.check),
+          SizedBox(
+            width: 12.0,
+          ),
+          Text("This is a Custom Toast"),
+        ],
       ),
     );
   }
