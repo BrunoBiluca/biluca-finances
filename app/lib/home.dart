@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
                   var file = File(result.files.single.path!);
                   await GetIt.I<AccountabilityImportService>().import(file);
                   GetIt.I<FToast>().showToast(
-                    child: const BaseToast(),
+                    child: const BaseToast(text: "Arquivo importado"),
                     gravity: ToastGravity.TOP,
                     toastDuration: const Duration(seconds: 2),
                   );
@@ -70,7 +70,8 @@ class _HomeState extends State<Home> {
 }
 
 class BaseToast extends StatelessWidget {
-  const BaseToast({super.key});
+  final String text;
+  const BaseToast({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -80,14 +81,12 @@ class BaseToast extends StatelessWidget {
         borderRadius: BorderRadius.circular(25.0),
         color: Colors.greenAccent,
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.check),
-          SizedBox(
-            width: 12.0,
-          ),
-          Text("This is a Custom Toast"),
+          const Icon(Icons.check),
+          const SizedBox(width: 12.0),
+          Text(text),
         ],
       ),
     );
