@@ -1,7 +1,6 @@
 import csv
 from datetime import datetime
 import os
-from config import output_folder
 
 
 def read(path):
@@ -17,7 +16,7 @@ def read(path):
 def write(name, budget):
     print("Escrevendo o arquivo", name)
     date = datetime.now().strftime("%Y-%m-%d")
-    folder = output_folder() + date
+    folder = "resources/" + date
 
     if not os.path.exists(folder):
         os.mkdir(folder)

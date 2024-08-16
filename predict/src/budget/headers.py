@@ -1,2 +1,2 @@
 def headers():
-    return ["Criação", "Descrição", "Valor", "Tipo", "Identificação"]
+    return ["Criação", "Descrição", "Valor", "Identificação"]

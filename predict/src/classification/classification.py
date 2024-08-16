@@ -6,14 +6,18 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
 
-def categorize_identification(csv_path):
+def categorize_identification(prestacao_contas: pd.DataFrame) -> pd.DataFrame:
     print("Categorizando...")
-    column_to_predict = "Identificação"
+
     value_fn = "Descrição"
     value_feat_name = "Valor"
 
-    prestacao_contas = pd.read_csv(csv_path)
+    mandatory_columns = [value_fn, value_feat_name]
+    
+    if not all([c[0] in mandatory_columns for c in prestacao_contas.items()]):
+        raise AttributeError(f"Os dados para categorização precisam prover os seguintes campos <{mandatory_columns}>")
 
+    column_to_predict = "Identificação"
     train = pd.read_csv("resources/classification_train.csv")
     train = train[train[column_to_predict].notna()]
     train[value_fn] = train[value_fn].apply(lambda d: d.rsplit(" ", -1)[0])
@@ -38,4 +42,4 @@ def categorize_identification(csv_path):
     clf.fit(train_combined, train[column_to_predict])
 
     prestacao_contas[column_to_predict] = clf.predict(features)
-    prestacao_contas.to_csv(csv_path, index=False)
+    return prestacao_contas

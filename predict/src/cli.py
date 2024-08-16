@@ -1,4 +1,6 @@
 import sys
+
+import pandas
 from itau.parser import parse as itau_parse
 from nubank.parser import parse as nubank_parse
 from common.period import by_month
@@ -11,4 +13,4 @@ if parser == "itau":
     categorize_identification(prestacao_contas)
 elif parser == "nubank":
     prestacao_contas = nubank_parse(sys.argv[2])
-    categorize_identification(prestacao_contas)
+    categorize_identification(pandas.read_csv(prestacao_contas))
