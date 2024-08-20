@@ -1,9 +1,13 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
+import 'package:biluca_financas/accountability/components/entry_form.dart';
 import 'package:biluca_financas/accountability/components/table.dart';
+import 'package:biluca_financas/accountability/models/entry_request.dart';
+import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class AccountabilitySection extends StatelessWidget {
   const AccountabilitySection({
@@ -16,7 +20,22 @@ class AccountabilitySection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ElevatedButton(
-          onPressed: () => context.read<AccountabilityBloc>().add(AddAccountabilityEntry()),
+          onPressed: () async {
+            var newEntry = await showDialog<AccountabilityEntryRequest>(
+              context: context,
+              builder: (context) => const AccountabilityEntryForm(),
+            );
+
+            if (newEntry == null) return;
+
+            if (newEntry.identification == null) {
+              var entries = await GetIt.I<PredictService>().predict([newEntry]);
+              newEntry = entries[0];
+            }
+
+            if (!context.mounted) return;
+            context.read<AccountabilityBloc>().add(AddAccountabilityEntry(newEntry));
+          },
           child: const Text('Adicionar Item'),
         ),
         const SizedBox(height: 20),

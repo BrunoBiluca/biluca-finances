@@ -2,9 +2,12 @@ import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/models/entry.dart';
+import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
+import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -34,7 +37,12 @@ void main() {
     build: () {
       return AccountabilityBloc(repo: MockAccountabilityRepo());
     },
-    act: (bloc) => bloc..add(AddAccountabilityEntry()),
+    act: (bloc) => bloc
+      ..add(AddAccountabilityEntry(AccountabilityEntryRequest(
+        description: "Descrição fictícia",
+        value: 10,
+        createdAt: DateTime.now(),
+      ))),
     verify: (bloc) => {
       verify((bloc.repo as MockAccountabilityRepo).add(any)).called(1),
       verify(bloc.repo.getEntries()).called(1),
