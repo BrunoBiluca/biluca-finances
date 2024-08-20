@@ -1,7 +1,7 @@
 from flask import Flask, request
 import pandas
 
-from src.classification.classification import categorize_identification
+from classification.classification import categorize_identification
 
 
 def predict():
