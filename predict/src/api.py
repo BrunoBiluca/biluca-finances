@@ -1,7 +1,7 @@
 from flask import Flask, request
 import pandas
 
-from src.classification.classification import categorize_identification
+from classification.classification import categorize_identification
 
 
 def predict():
@@ -18,3 +18,9 @@ def create_app():
     app = Flask(__name__)
     app.add_url_rule("/predict", view_func=predict, methods=["POST"])
     return app
+
+
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run()

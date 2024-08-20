@@ -1,0 +1,1 @@
+double cast(dynamic v) => v is int ? v.toDouble() : v;
