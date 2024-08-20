@@ -36,7 +36,7 @@ class PredictService {
             description: e[0],
             value: cast(e[1]),
             createdAt: DateTime.parse(e[2]),
-            identification: identifications.firstWhere((i) => i.description == e[3]),
+            identification: identifications.firstWhere((i) => i.description.toLowerCase() == e[3].toLowerCase()),
           ),
         )
         .toList();

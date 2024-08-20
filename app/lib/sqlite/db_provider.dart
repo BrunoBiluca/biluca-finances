@@ -28,7 +28,7 @@ class DBProvider {
       await getDBPath(),
       options: OpenDatabaseOptions(
         version: 1,
-        onCreate: (db, version) => migrate(db, initialSQL),
+        onCreate: (db, version) => create(db, initialSQL),
         onUpgrade: (db, oldVersion, newVersion) async {
           log("Tabelas atualizadas");
           // await migrate(migrationsSQL);
@@ -38,13 +38,13 @@ class DBProvider {
   }
 
   Future<String> getDBPath() async {
-    final io.Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-    String dbPath = p.join(appDocumentsDir.path, "databases", "myDb.db");
+    final io.Directory dir = await getApplicationDocumentsDirectory();
+    String dbPath = p.join(dir.path, "Biluca Finanças", "myDb.db");
     log("Caminho para o banco de dados: $dbPath");
     return dbPath;
   }
 
-  Future migrate(Database db, List<String> migrationsSQL) async {
+  Future create(Database db, List<String> migrationsSQL) async {
     log("Migrando tabelas...");
     for (final migration in migrationsSQL) {
       await db.execute(migration);

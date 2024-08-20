@@ -13,7 +13,7 @@ class MemoryDBProvider extends DBProvider {
       inMemoryDatabasePath,
       options: OpenDatabaseOptions(
         version: 1,
-        onCreate: (db, version) async => await migrate(db, initialSQL),
+        onCreate: (db, version) async => await create(db, initialSQL),
         onUpgrade: (db, oldVersion, newVersion) async {},
         singleInstance: false,
       ),

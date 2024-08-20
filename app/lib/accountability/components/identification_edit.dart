@@ -59,31 +59,36 @@ class _AccountabilityIdentificationEditState extends State<AccountabilityIdentif
                       return const Text('Nenhuma identificação encontrada');
                     }
 
-                    return Column(
-                      children: [
-                        ...identifications.map(
-                          (identification) => GestureDetector(
-                            onTap: () {
-                              widget.onEdit(identification);
-                              close();
-                            },
-                            child: TextBallon(
-                              text: identification.description,
-                              color: identification.color,
-                              onEdit: (String newValue, Color color) => accountabilityBloc.add(
-                                UpdateAccountabilityIdentification(
-                                  identification
-                                    ..color = color
-                                    ..description = newValue,
+                    return Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: [
+                            ...identifications.map(
+                              (identification) => GestureDetector(
+                                onTap: () {
+                                  widget.onEdit(identification);
+                                  close();
+                                },
+                                child: TextBallon(
+                                  text: identification.description,
+                                  color: identification.color,
+                                  onEdit: (String newValue, Color color) => accountabilityBloc.add(
+                                    UpdateAccountabilityIdentification(
+                                      identification
+                                        ..color = color
+                                        ..description = newValue,
+                                    ),
+                                  ),
+                                  onDelete: () => accountabilityBloc.add(
+                                    DeleteAccountabilityIdentification(identification.id),
+                                  ),
                                 ),
                               ),
-                              onDelete: () => accountabilityBloc.add(
-                                DeleteAccountabilityIdentification(identification.id),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
+                            )
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
