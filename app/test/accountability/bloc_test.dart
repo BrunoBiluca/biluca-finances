@@ -4,10 +4,8 @@ import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/models/entry.dart';
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
-import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
