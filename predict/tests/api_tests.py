@@ -35,4 +35,17 @@ def test_deve_receber_os_registros_para_fazer_a_previsão(client):
     assert response.json["cabeçalhos"] == ["Descrição", "Valor", "Identificação"]
     assert len(response.json["registros"]) == 3
     
+
+
+def test_deve_receber_os_registros_com_todos_os_cabeçalhos_enviados(client):
+    response = client.post("/predict", json={
+        "cabeçalhos": ["Descrição", "Valor", "Outro campo", "Mais um campo"],
+        "registros": [
+            ("Descrição 1", 10, "abc", "def"),
+            ("Descrição 2", 20, "abc", "def"),
+            ("Descrição 3", 30, "abc", "def"),
+        ]
+    })
     
+    assert response.status_code == 200
+    assert response.json["cabeçalhos"] == ["Descrição", "Valor", "Outro campo", "Mais um campo", "Identificação"]

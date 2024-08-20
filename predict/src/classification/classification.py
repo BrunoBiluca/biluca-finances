@@ -12,10 +12,11 @@ def categorize_identification(prestacao_contas: pd.DataFrame) -> pd.DataFrame:
     value_fn = "Descrição"
     value_feat_name = "Valor"
 
-    mandatory_columns = [value_fn, value_feat_name]
+    colunas_obrigatórias = [value_fn, value_feat_name]
+    colunas = map(lambda c: c[0], prestacao_contas.items())
     
-    if not all([c[0] in mandatory_columns for c in prestacao_contas.items()]):
-        raise AttributeError(f"Os dados para categorização precisam prover os seguintes campos <{mandatory_columns}>")
+    if not all([c in colunas for c in colunas_obrigatórias]):
+        raise AttributeError(f"Os dados para categorização precisam prover os seguintes campos <{colunas_obrigatórias}>")
 
     column_to_predict = "Identificação"
     train = pd.read_csv("resources/classification_train.csv")

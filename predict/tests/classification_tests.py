@@ -23,3 +23,16 @@ def test_deve_predizer():
     
     assert dataset_preditect.shape[0] == 2
     assert "Identificação" in dataset_preditect.columns
+    
+    
+def test_deve_predizer_e_manter_campos_extras():
+    dataset = pandas.DataFrame({
+        "Descrição": ["Um valor", "Outro valor"],
+        "Valor": [10, 20],
+        "Outro campo": ["abc", "def"]
+    })
+    
+    dataset_preditect = categorize_identification(dataset)
+    
+    assert "Identificação" in dataset_preditect.columns
+    assert "Outro campo" in dataset_preditect.columns
