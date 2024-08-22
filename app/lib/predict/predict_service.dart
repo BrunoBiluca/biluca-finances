@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
@@ -11,6 +12,16 @@ class PredictService {
   PredictService(this.http, this.repo);
 
   Future<List<AccountabilityEntryRequest>> predict(List<AccountabilityEntryRequest> entries) async {
+    try {
+      var categorizedEntries = await _postPredict(entries);
+      return await _relateWithIdentificationsByName(categorizedEntries);
+    } on ClientException catch (e) {
+      log("Serviço de categorização indisponível. <${e.message}>");
+      return entries;
+    }
+  }
+
+  Future<List<dynamic>> _postPredict(List<AccountabilityEntryRequest> entries) async {
     var result = await http.post(
       Uri.parse("http://localhost:5000/predict"),
       headers: {"Content-Type": "application/json"},
@@ -21,16 +32,17 @@ class PredictService {
         },
       ),
     );
-
     if (result.statusCode != 200) {
       throw Exception(result.reasonPhrase);
     }
 
-    var entriesCategorized = jsonDecode(result.body)["registros"] as List<dynamic>;
+    return jsonDecode(result.body)["registros"];
+  }
 
+  Future<List<AccountabilityEntryRequest>> _relateWithIdentificationsByName(List<dynamic> categorizedEntries) async {
     var identifications = await repo.getIdentifications();
 
-    return entriesCategorized
+    return categorizedEntries
         .map(
           (e) => AccountabilityEntryRequest(
             description: e[0],

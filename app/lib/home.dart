@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:biluca_financas/accountability/import_check_page.dart';
 import 'package:biluca_financas/accountability/page.dart';
 import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/reports/current_month_report.dart';
@@ -52,11 +53,19 @@ class _HomeState extends State<Home> {
                   if (result == null) return;
 
                   var file = File(result.files.single.path!);
-                  await GetIt.I<AccountabilityImportService>().import(file);
+                  var importService = GetIt.I<AccountabilityImportService>();
+                  await importService.import(file);
                   GetIt.I<FToast>().showToast(
                     child: const BaseToast(text: "Arquivo importado"),
                     gravity: ToastGravity.TOP,
                     toastDuration: const Duration(seconds: 2),
+                  );
+
+                  if (!context.mounted) return;
+
+                  await showDialog(
+                    context: context,
+                    builder: (c) => AccountabilityImportCheckPage(service: importService),
                   );
                 },
                 child: const Text('Importar'),

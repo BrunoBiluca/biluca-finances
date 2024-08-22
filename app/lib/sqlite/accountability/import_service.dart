@@ -16,12 +16,15 @@ class SQLiteAccountabilityImportService extends AccountabilityImportService {
   @override
   Future import(File importedFile) async {
     var content = importedFile.readAsLinesSync();
-    List<AccountabilityEntryRequest> entries = convert(content);
+    entries = convert(content);
 
     if (predictService != null) {
       entries = await predictService!.predict(entries);
     }
+  }
 
+  @override
+  Future save() async {
     for (var entry in entries) {
       await repo.add(entry);
     }
@@ -29,21 +32,21 @@ class SQLiteAccountabilityImportService extends AccountabilityImportService {
 
   List<AccountabilityEntryRequest> convert(List<String> content) {
     var lines = content.skip(1).toList();
-    
+
     var header = const CsvToListConverter().convert(content[0])[0];
     var descriptionIndex = header.indexOf("Descrição");
     var valueIndex = header.indexOf("Valor");
     var createdAtIndex = header.indexOf("Criação");
-    
+
     var dateFormat = verifyDateFormat(lines[0], createdAtIndex);
-    
+
     List<AccountabilityEntryRequest> entries = [];
     for (var line in lines) {
       var columns = const CsvToListConverter().convert(line)[0];
       var description = columns[descriptionIndex];
       var value = cast(columns[valueIndex]);
       var createdAt = dateFormat.parse(columns[createdAtIndex]);
-    
+
       entries.add(AccountabilityEntryRequest(
         description: description,
         value: value is int ? value.toDouble() : value,
