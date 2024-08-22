@@ -6,9 +6,23 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class AmountByIdentificationChart extends StatelessWidget {
-  final List<GroupedBy<AccountabilityIdentification>> accountabilityByIdentification;
+  final Map<int, List<GroupedBy<AccountabilityIdentification>>> groups;
   final double barWidth = 40;
-  const AmountByIdentificationChart({super.key, required this.accountabilityByIdentification});
+  factory AmountByIdentificationChart({
+    required List<GroupedBy<AccountabilityIdentification>> accountabilityByIdentification,
+    Key? key,
+  }) {
+    var groups = accountabilityByIdentification
+        .groupListsBy((identification) => identification.field.id)
+        .values
+        .sorted((g1, g2) => g2[0].total.abs().compareTo(g1[0].total.abs()))
+        .asMap()
+        .map((index, group) => MapEntry(index, group));
+
+    return AmountByIdentificationChart._(groups, key);
+  }
+
+  const AmountByIdentificationChart._(this.groups, Key? key) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -81,49 +95,35 @@ class AmountByIdentificationChart extends StatelessWidget {
   }
 
   List<BarChartGroupData> barGroups() {
-    return accountabilityByIdentification
-        .groupListsBy((identification) => identification.field.id)
-        .values
-        .sorted(compareGroups)
-        .asMap()
-        .map(
-          (index, group) => MapEntry(
-            index,
-            BarChartGroupData(
-              x: index,
-              barsSpace: 5,
-              barRods: [
-                BarChartRodData(
-                  toY: group[0].total.abs(),
-                  color: group[0].field.color,
-                  borderSide: group[0].total < 0
-                      ? const BorderSide(color: Colors.redAccent, width: 3)
-                      : const BorderSide(color: Colors.green, width: 3),
-                  width: barWidth,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
-                ),
-                BarChartRodData(
-                  toY: group.length == 2 ? group[1].total.abs() : 0,
-                  color: Colors.grey.withOpacity(.7),
-                  borderSide: group[0].total < 0
-                      ? const BorderSide(color: Colors.redAccent, width: 3)
-                      : const BorderSide(color: Colors.green, width: 3),
-                  width: barWidth,
-                  borderRadius: BorderRadius.zero,
-                )
-              ],
-            ),
+    return groups.values
+        .mapIndexed(
+          (index, group) => BarChartGroupData(
+            x: index,
+            barsSpace: 5,
+            barRods: [
+              BarChartRodData(
+                toY: group[0].total.abs(),
+                color: group[0].field.color,
+                borderSide: group[0].total < 0
+                    ? const BorderSide(color: Colors.redAccent, width: 3)
+                    : const BorderSide(color: Colors.green, width: 3),
+                width: barWidth,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+              ),
+              BarChartRodData(
+                toY: group.length == 2 ? group[1].total.abs() : 0,
+                color: Colors.grey.withOpacity(.7),
+                borderSide: group[0].total < 0
+                    ? const BorderSide(color: Colors.redAccent, width: 3)
+                    : const BorderSide(color: Colors.green, width: 3),
+                width: barWidth,
+                borderRadius: BorderRadius.zero,
+              )
+            ],
           ),
         )
-        .values
         .toList();
   }
-
-  int compareGroups(
-    List<GroupedBy<AccountabilityIdentification>> group1,
-    List<GroupedBy<AccountabilityIdentification>> group2,
-  ) =>
-      group2[0].total.abs().compareTo(group1[0].total.abs());
 
   Widget bottomTitles(double groupKey, TitleMeta meta) {
     const style = TextStyle(fontSize: 10);
@@ -132,7 +132,7 @@ class AmountByIdentificationChart extends StatelessWidget {
       angle: 0.5,
       space: 12,
       child: Text(
-        accountabilityByIdentification[groupKey.toInt()].field.description,
+        groups[groupKey.toInt()]![0].field.description,
         style: style,
       ),
     );

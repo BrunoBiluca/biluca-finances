@@ -113,14 +113,19 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                   return const CircularProgressIndicator();
                 }
 
-                if (snapshot.data == null || snapshot.data!.isEmpty) {
+                var data = snapshot.data;
+                if (data == null || data.isEmpty) {
                   return const Text("Nenhum item encontrado");
+                }
+
+                for (var g in data) {
+                  print("${g.field.description} ${g.total}");
                 }
 
                 return SizedBox(
                   width: 1000,
                   height: 600,
-                  child: AmountByIdentificationChart(accountabilityByIdentification: snapshot.data!),
+                  child: AmountByIdentificationChart(accountabilityByIdentification: data),
                 );
               },
             ),
