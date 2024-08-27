@@ -5,6 +5,8 @@ from scipy.sparse import hstack
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
+import bundle_resources
+
 
 def categorize_identification(prestacao_contas: pd.DataFrame) -> pd.DataFrame:
     print("Categorizando...")
@@ -19,7 +21,8 @@ def categorize_identification(prestacao_contas: pd.DataFrame) -> pd.DataFrame:
         raise AttributeError(f"Os dados para categorização precisam prover os seguintes campos <{colunas_obrigatórias}>")
 
     column_to_predict = "Identificação"
-    train = pd.read_csv("resources/classification_train.csv")
+    train_file = bundle_resources.open_file("resources/classification_train.csv")
+    train = pd.read_csv(train_file)
     train = train[train[column_to_predict].notna()]
     train[value_fn] = train[value_fn].apply(lambda d: d.rsplit(" ", -1)[0])
 

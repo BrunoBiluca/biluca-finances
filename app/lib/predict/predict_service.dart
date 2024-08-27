@@ -15,8 +15,8 @@ class PredictService {
     try {
       var categorizedEntries = await _postPredict(entries);
       return await _relateWithIdentificationsByName(categorizedEntries);
-    } on ClientException catch (e) {
-      log("Serviço de categorização indisponível. <${e.message}>");
+    } on Exception catch (e) {
+      log("Serviço de categorização indisponível. <$e>");
       return entries;
     }
   }

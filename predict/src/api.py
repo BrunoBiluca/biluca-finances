@@ -1,5 +1,7 @@
+from logging import warning
 from flask import Flask, request
 import pandas
+import bundle_resources
 
 from classification.classification import categorize_identification
 
@@ -22,5 +24,8 @@ def create_app():
 
 
 if __name__ == "__main__":
+    if bundle_resources.exists("resources/classification.csv"):
+        warning("Arquivo de classificação não encontrado")
+    
     app = create_app()
     app.run()
