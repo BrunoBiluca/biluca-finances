@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/accountability/services/current_month_service.dart';
@@ -13,12 +15,45 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
+import 'package:logging/logging.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 GetIt getIt = GetIt.instance;
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+  await executePredictServer();
+
+  await setupDependencies();
+
+  await initilizeAccountabilityIdentifications();
+
+  runApp(const App());
+}
+
+Future<void> executePredictServer() async {
+  var log = Logger("Execução do servidor de predição");
+  var serverProcess = await Process.start("assets/gen/server/predict_win/predict_win.exe", []);
+  stdout.addStream(serverProcess.stdout);
+  stderr.addStream(serverProcess.stderr);
+
+  int? exitCode;
+  serverProcess.exitCode.then((v) {
+    exitCode = v;
+  });
+  await Future.delayed(const Duration(seconds: 1));
+
+  if (exitCode != null) {
+    log.severe("Servidor de predição não foi inicializado com sucesso");
+  }
+}
+
+Future<void> setupDependencies() async {
   DBProvider.i.init();
   // DBProvider.i.clear(await DBProvider.i.database);
 
@@ -41,10 +76,6 @@ void main() async {
   getIt.registerFactory<FToast>(
     () => FToast()..init(navigatorKey.currentContext!),
   );
-
-  await initilizeAccountabilityIdentifications();
-
-  runApp(const App());
 }
 
 Future<void> initilizeAccountabilityIdentifications() async {
