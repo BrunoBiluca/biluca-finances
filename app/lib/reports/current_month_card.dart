@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/services/current_month_service.dart';
+import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
 import 'package:biluca_financas/components/text_shimmer.dart';

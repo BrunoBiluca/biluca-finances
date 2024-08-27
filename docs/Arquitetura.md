@@ -26,7 +26,7 @@ acc("Accountability")
 common
 components
 predict
-reports
+reports("Relatórios")
 sqlite
 app
 cd("Container de dependências")
@@ -38,6 +38,7 @@ sqlite --> predict
 
 predict -..-> acc
 sqlite -..-> acc
+sqlite -..-> reports
 
 app --> acc
 app --> reports
