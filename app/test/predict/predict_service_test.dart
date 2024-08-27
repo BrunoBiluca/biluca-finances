@@ -12,15 +12,16 @@ import 'package:mocktail/mocktail.dart';
 import '../accountability/mocks/mock_accountability_repo.dart';
 
 void main() {
-  test("deve levantar um erro em caso de qualquer problema com o servidor", () async {
+  test("deve retornar a mesma lista passada quando o serviço estiver indisponível", () async {
     var client = MockClient((req) async {
       return Response("", 500);
     });
     var repo = MockAccountabilityRepo();
 
     var service = PredictService(client, repo);
+    var entries = await service.predict([]);
 
-    expect(() => service.predict([]), throwsException);
+    expect(entries, isEmpty);
   });
 
   test("deve retornar os dados com o campo de identificação preenchido", () async {

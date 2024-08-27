@@ -25,6 +25,7 @@ void main() {
 
     var importedFile = await testFile(DateFormat("yyyy-mm-dd"));
     await service.import(importedFile);
+    await service.save();
 
     var result = await db.rawQuery("select count(*) as total from accountability");
 
@@ -38,6 +39,7 @@ void main() {
 
     var importedFile = await testFile(DateFormat("dd/mm/yyyy"));
     await service.import(importedFile);
+    await service.save();
 
     var result = await db.rawQuery("select count(*) as total from accountability");
     
