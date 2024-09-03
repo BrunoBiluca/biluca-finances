@@ -20,13 +20,14 @@ class AccountabilityIdentificationSelectDialog extends StatelessWidget {
 
           var identifications = snapshot.data!.sorted((i1, i2) => i1.description.compareTo(i2.description));
 
-          return Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  ...identifications.map(
-                    (identification) => GestureDetector(
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                ...identifications.map(
+                  (identification) => Container(
+                    margin: const EdgeInsets.symmetric(vertical: 2),
+                    child: GestureDetector(
                       onTap: () {
                         Navigator.pop(context, identification);
                       },
@@ -35,9 +36,9 @@ class AccountabilityIdentificationSelectDialog extends StatelessWidget {
                         color: identification.color,
                       ),
                     ),
-                  )
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
           );
         },
