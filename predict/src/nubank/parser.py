@@ -17,6 +17,7 @@ def parse(path):
             date = to_date(date_substr)
             date = datetime(day=date.day, month=date.month, year=2024)
             description, value = properties[6:].rsplit(" ", 1)
+            description = description.replace("R$", "")
             description = full_strip(description)
 
             if "Pagamento" in description:
@@ -41,7 +42,6 @@ def parse(path):
             to_str(e["date"]),
             e["description"],
             float(value) * -1.0,
-            "saída",
             ""
         ])
     return write("nubank.csv", [headers(), *formated_budget])

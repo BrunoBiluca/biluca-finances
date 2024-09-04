@@ -38,7 +38,6 @@ def parse(path, period=None):
             to_str(e["date"]),
             e["description"],
             value,
-            "saída" if value[0] == '-' else "entrada",
             ""
         ])
 

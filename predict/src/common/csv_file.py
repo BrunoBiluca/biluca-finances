@@ -16,7 +16,7 @@ def read(path):
 def write(name, budget):
     print("Escrevendo o arquivo", name)
     date = datetime.now().strftime("%Y-%m-%d")
-    folder = "resources/" + date
+    folder = "outputs/" + date
 
     if not os.path.exists(folder):
         os.mkdir(folder)
