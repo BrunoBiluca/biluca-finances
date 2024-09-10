@@ -26,6 +26,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Color(0xFF000000)
       ),
       builder: FToastBuilder(),
       home: const Home(),

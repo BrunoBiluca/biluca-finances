@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:biluca_financas/components/single_value_card.dart';
 import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
@@ -59,6 +60,31 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
   @override
   Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SingleValueCard(
+          title: "Balanço",
+          currentValue: 1000,
+          lastValue: 800,
+        ),
+        SingleValueCard(
+          title: "Receitas",
+          currentValue: 6000,
+          lastValue: 4000,
+        ),
+        SingleValueCard(
+          title: "Despesas",
+          currentValue: 3000,
+          lastValue: 4000,
+          lessIsPositite: true,
+        ),
+      ],
+    );
+    // return buildReport();
+  }
+
+  FutureBuilder<int> buildReport() {
     return FutureBuilder(
       future: _currentMonthService.count(),
       builder: (context, snapshot) {

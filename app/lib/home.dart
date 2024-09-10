@@ -72,7 +72,7 @@ class _HomeState extends State<Home> {
               ),
             ]),
             const SizedBox(height: 20),
-            Expanded(child: CurrentMonthReport()),
+            CurrentMonthReport(),
           ],
         ),
       ),
