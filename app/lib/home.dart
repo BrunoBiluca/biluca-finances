@@ -32,45 +32,48 @@ class _HomeState extends State<Home> {
         margin: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-              ElevatedButton(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AccountabilityPage(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AccountabilityPage(),
+                    ),
+                  ).whenComplete(
+                    () => setState(() {}),
                   ),
-                ).whenComplete(
-                  () => setState(() {}),
+                  child: const Text('Prestação de Contas'),
                 ),
-                child: const Text('Prestação de Contas'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final result = await FilePicker.platform.pickFiles(
-                    type: FileType.custom,
-                    allowedExtensions: ['csv'],
-                  );
-                  if (result == null) return;
+                ElevatedButton(
+                  onPressed: () async {
+                    final result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['csv'],
+                    );
+                    if (result == null) return;
 
-                  var file = File(result.files.single.path!);
-                  var importService = GetIt.I<AccountabilityImportService>();
-                  await importService.import(file);
-                  GetIt.I<FToast>().showToast(
-                    child: const BaseToast(text: "Arquivo importado"),
-                    gravity: ToastGravity.TOP,
-                    toastDuration: const Duration(seconds: 2),
-                  );
+                    var file = File(result.files.single.path!);
+                    var importService = GetIt.I<AccountabilityImportService>();
+                    await importService.import(file);
+                    GetIt.I<FToast>().showToast(
+                      child: const BaseToast(text: "Arquivo importado"),
+                      gravity: ToastGravity.TOP,
+                      toastDuration: const Duration(seconds: 2),
+                    );
 
-                  if (!context.mounted) return;
+                    if (!context.mounted) return;
 
-                  await showDialog(
-                    context: context,
-                    builder: (c) => AccountabilityImportCheckPage(service: importService),
-                  );
-                },
-                child: const Text('Importar'),
-              ),
-            ]),
+                    await showDialog(
+                      context: context,
+                      builder: (c) => AccountabilityImportCheckPage(service: importService),
+                    );
+                  },
+                  child: const Text('Importar'),
+                ),
+              ],
+            ),
             const SizedBox(height: 20),
             CurrentMonthReport(),
           ],

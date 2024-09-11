@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:logging/logging.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -22,12 +23,13 @@ GetIt getIt = GetIt.instance;
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  initializeDateFormatting('pt_BR');
   WidgetsFlutterBinding.ensureInitialized();
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     print('${record.level.name}: ${record.time}: ${record.message}');
   });
-  await executePredictServer();
+  // await executePredictServer();
 
   await setupDependencies();
 

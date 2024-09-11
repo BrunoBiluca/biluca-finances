@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:biluca_financas/common/string_extensions.dart';
 import 'package:biluca_financas/components/single_value_card.dart';
 import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
@@ -8,6 +9,7 @@ import 'package:biluca_financas/reports/amount_by_identification_chart.dart';
 import 'package:biluca_financas/reports/current_month_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 class CurrentMonthReport extends StatefulWidget {
   const CurrentMonthReport({super.key});
@@ -49,7 +51,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
         if (month > now.month && year == now.year) {
           break;
         }
-        availableMonths.add(formatMonth(month, year));
+        availableMonths.add(DateFormat("MMMM yyyy", "pt_BR").format(DateTime(year, month)).capitalize());
       }
     }
   }
@@ -60,28 +62,28 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        SingleValueCard(
-          title: "Balanço",
-          currentValue: 1000,
-          lastValue: 800,
-        ),
-        SingleValueCard(
-          title: "Receitas",
-          currentValue: 6000,
-          lastValue: 4000,
-        ),
-        SingleValueCard(
-          title: "Despesas",
-          currentValue: 3000,
-          lastValue: 4000,
-          lessIsPositite: true,
-        ),
-      ],
-    );
-    // return buildReport();
+    // return Row(
+    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //   children: [
+    //     SingleValueCard(
+    //       title: "Balanço",
+    //       currentValue: 1000,
+    //       lastValue: 1000,
+    //     ),
+    //     SingleValueCard(
+    //       title: "Receitas",
+    //       currentValue: 6000,
+    //       lastValue: 4000,
+    //     ),
+    //     SingleValueCard(
+    //       title: "Despesas",
+    //       currentValue: 3000,
+    //       lastValue: 4000,
+    //       lessIsPositite: true,
+    //     ),
+    //   ],
+    // );
+    return buildReport();
   }
 
   FutureBuilder<int> buildReport() {
@@ -96,15 +98,36 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
           children: [
-            DropdownButton<String>(
-              value: _selectedMonth,
-              onChanged: (month) {
-                setState(() {
-                  _selectedMonth = month!;
-                  updateServices();
-                });
-              },
-              items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
+            DecoratedBox(
+              decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 4, color: Color(0xFFE8E6E3)))),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.calendar_month,
+                    color: Color(0xFFE8E6E3),
+                    size: 32,
+                  ),
+                  SizedBox(width: 10),
+                  DropdownButton<String>(
+                    value: _selectedMonth,
+                    style: TextStyle(
+                      color: Color(0xFFE8E6E3),
+                      fontSize: 24,
+                    ),
+                    iconSize: 36,
+                    iconEnabledColor: Color(0xFFE8E6E3),
+                    dropdownColor: Colors.black,
+                    underline: Container(),
+                    onChanged: (month) {
+                      setState(() {
+                        _selectedMonth = month!;
+                        updateServices();
+                      });
+                    },
+                    items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             snapshot.data! == 0
