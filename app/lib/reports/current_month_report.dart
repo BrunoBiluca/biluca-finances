@@ -62,28 +62,28 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
   @override
   Widget build(BuildContext context) {
-    // return Row(
-    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //   children: [
-    //     SingleValueCard(
-    //       title: "Balanço",
-    //       currentValue: 1000,
-    //       lastValue: 1000,
-    //     ),
-    //     SingleValueCard(
-    //       title: "Receitas",
-    //       currentValue: 6000,
-    //       lastValue: 4000,
-    //     ),
-    //     SingleValueCard(
-    //       title: "Despesas",
-    //       currentValue: 3000,
-    //       lastValue: 4000,
-    //       lessIsPositite: true,
-    //     ),
-    //   ],
-    // );
-    return buildReport();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SingleValueCard(
+          title: "Balanço",
+          currentValue: 1000,
+          lastValue: 1000,
+        ),
+        SingleValueCard(
+          title: "Receitas",
+          currentValue: 6000,
+          lastValue: 4000,
+        ),
+        SingleValueCard(
+          title: "Despesas",
+          currentValue: 3000,
+          lastValue: 4000,
+          lessIsPositite: true,
+        ),
+      ],
+    );
+    // return buildReport();
   }
 
   FutureBuilder<int> buildReport() {
