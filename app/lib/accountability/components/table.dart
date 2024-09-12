@@ -17,55 +17,106 @@ class AccountabilityTable extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: DataTable(
-        columns: const [
-          DataColumn(label: Text('Descrição')),
-          DataColumn(label: Text('Valor')),
-          DataColumn(label: Text('Identificação')),
-          DataColumn(label: Text('Criação')),
-          DataColumn(label: Text('Data da Inserção')),
-          DataColumn(label: Text('')),
+        headingRowColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.hovered)) {
+            return Theme.of(context).colorScheme.secondary.withOpacity(0.8);
+          }
+          return Theme.of(context).colorScheme.secondary;
+        }),
+        dataRowColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+          if (states.contains(WidgetState.hovered)) {
+            return Theme.of(context).colorScheme.tertiary.withOpacity(0.8);
+          }
+          return Theme.of(context).colorScheme.tertiary;
+        }),
+        border: TableBorder.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
+        columns: [
+          _dataColumn(context, "Descrição"),
+          _dataColumn(context, "Valor"),
+          _dataColumn(context, "Identificação"),
+          _dataColumn(context, "Criação"),
+          _dataColumn(context, "Data da Inserção"),
+          _dataColumn(context, ""),
         ],
         rows: [...entries.map((entry) => _tableRow(context, entry))],
       ),
     );
   }
-}
 
-DataRow _tableRow(BuildContext context, AccountabilityEntry entry) {
-  return DataRow(
-    cells: [
-      DataCell(
-        TextFieldEdit(
-          text: entry.description,
-          onEdit: (updatedText) =>
-              context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry..description = updatedText)),
+  DataColumn _dataColumn(BuildContext context, String text) => DataColumn(
+        label: Text(
+          text,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
-      ),
-      DataCell(NumberFieldEdit(
-        number: entry.value,
-        onEdit: (updatedNumber) =>
-            context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry..value = updatedNumber)),
-      )),
-      DataCell(AccountabilityIdentificationEdit(
-        identification: entry.identification,
-        onEdit: (id) {
-          entry.identification = id;
-          context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry));
-        },
-      )),
-      DataCell(Text(Formatter.date(entry.createdAt))),
-      DataCell(Text(Formatter.date(entry.insertedAt))),
-      DataCell(
-        IconButton(
-          onPressed: () => {
-            context.read<AccountabilityBloc>()
-              ..add(
-                DeleteAccountabilityEntry(entry),
-              )
-          },
-          icon: const Icon(Icons.delete),
+      );
+
+  DataRow _tableRow(BuildContext context, AccountabilityEntry entry) {
+    return DataRow(
+      cells: [
+        DataCell(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFieldEdit(
+              text: entry.description,
+              onEdit: (updatedText) => context.read<AccountabilityBloc>().add(
+                    UpdateAccountabilityEntry(entry..description = updatedText),
+                  ),
+            ),
+          ),
         ),
-      ),
-    ],
-  );
+        DataCell(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: NumberFieldEdit(
+            number: entry.value,
+            onEdit: (updatedNumber) => context.read<AccountabilityBloc>().add(
+                  UpdateAccountabilityEntry(entry..value = updatedNumber),
+                ),
+          ),
+        )),
+        DataCell(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AccountabilityIdentificationEdit(
+            identification: entry.identification,
+            onEdit: (id) {
+              entry.identification = id;
+              context.read<AccountabilityBloc>().add(
+                    UpdateAccountabilityEntry(entry),
+                  );
+            },
+          ),
+        )),
+        DataCell(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Formatter.date(entry.createdAt),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        )),
+        DataCell(Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            Formatter.date(entry.insertedAt),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        )),
+        DataCell(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              onPressed: () => {
+                context.read<AccountabilityBloc>()
+                  ..add(
+                    DeleteAccountabilityEntry(entry),
+                  )
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Theme.of(context).textTheme.bodySmall?.color,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

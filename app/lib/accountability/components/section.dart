@@ -16,42 +16,55 @@ class AccountabilitySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton(
-          onPressed: () async {
-            var newEntry = await showDialog<AccountabilityEntryRequest>(
-              context: context,
-              builder: (context) => const AccountabilityEntryForm(),
-            );
+    return Container(
+      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextButton(
+            iconAlignment: IconAlignment.start,
+            onPressed: () async {
+              var newEntry = await showDialog<AccountabilityEntryRequest>(
+                context: context,
+                builder: (context) => const AccountabilityEntryForm(),
+              );
 
-            if (newEntry == null) return;
+              if (newEntry == null) return;
 
-            if (newEntry.identification == null) {
-              var entries = await GetIt.I<PredictService>().predict([newEntry]);
-              newEntry = entries[0];
-            }
+              if (newEntry.identification == null) {
+                var entries = await GetIt.I<PredictService>().predict([newEntry]);
+                newEntry = entries[0];
+              }
 
-            if (!context.mounted) return;
-            context.read<AccountabilityBloc>().add(AddAccountabilityEntry(newEntry));
-          },
-          child: const Text('Adicionar Item'),
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-            builder: (context, state) => AccountabilityTable(entries: state.entries),
+              if (!context.mounted) return;
+              context.read<AccountabilityBloc>().add(AddAccountabilityEntry(newEntry));
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_circle_outline),
+                SizedBox(width: 8),
+                const Text('Nova entrada'),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () => context.read<AccountabilityBloc>().add(LoadMoreAccountabilityEntries()),
-          child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-            builder: (context, state) => Text('(${state.entries.length}) Carregar mais'),
+          const SizedBox(height: 20),
+          Expanded(
+            child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+              builder: (context, state) => AccountabilityTable(entries: state.entries),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => context.read<AccountabilityBloc>().add(LoadMoreAccountabilityEntries()),
+            child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+              builder: (context, state) => Text('(${state.entries.length}) Carregar mais'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

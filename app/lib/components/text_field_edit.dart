@@ -26,7 +26,10 @@ class TextFieldEdit extends StatelessWidget {
           ),
         );
       },
-      child: Text(text),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
     );
   }
 }

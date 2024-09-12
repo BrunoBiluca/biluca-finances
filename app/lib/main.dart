@@ -11,6 +11,8 @@ import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:biluca_financas/sqlite/accountability/current_month_service.dart';
 import 'package:biluca_financas/sqlite/accountability/import_service.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
+import 'package:biluca_financas/theme_manager.dart';
+import 'package:biluca_financas/themes/dark.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
@@ -77,6 +79,13 @@ Future<void> setupDependencies() async {
   );
   getIt.registerFactory<FToast>(
     () => FToast()..init(navigatorKey.currentContext!),
+  );
+
+  getIt.registerSingleton<ThemeManager>(
+    ThemeManager()
+      ..add(DarkTheme())
+      ..setDark("dark")
+      ..setLight("dark"),
   );
 }
 

@@ -7,6 +7,9 @@ class Number extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(Formatter.number(number));
+    return Text(
+      Formatter.number(number),
+      style: Theme.of(context).textTheme.bodySmall,
+    );
   }
 }
