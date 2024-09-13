@@ -1,5 +1,6 @@
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
+import 'package:biluca_financas/components/base_decorated_card.dart';
 import 'package:biluca_financas/components/negative_values_relation_indicator.dart';
 import 'package:biluca_financas/components/neutral_values_relation_indicator.dart';
 import 'package:biluca_financas/components/positive_values_relation_indicator.dart';
@@ -49,50 +50,42 @@ class _SingleValueCardState extends State<SingleValueCard> {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(color: Theme.of(context).colorScheme.outline, width: 4),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      Formatter.value(widget.currentValue),
-                      key: const Key("valor"),
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    const SizedBox(width: 10),
-                    relativePercentage == null
-                        ? Container()
-                        : RelativeValue(type: relativeStatus!, value: relativePercentage!),
-                  ],
-                ),
-                Text(
-                  widget.title,
-                  key: const Key("título"),
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-              ],
-            ),
-            switch (relativeStatus) {
-              ValuesRelation.negative => NegativeValuesRelationIndicator(isUp: relativePercentage! > 0),
-              ValuesRelation.positive => PositiveValuesRelationIndicator(isUp: relativePercentage! > 0),
-              ValuesRelation.neutral => const NeutralValuesRelationIndicator(),
-              ValuesRelation.unknown => const NeutralValuesRelationIndicator(),
-              null => Container(),
-            }
-          ],
-        ),
+    return BaseDecoratedCard(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    Formatter.value(widget.currentValue),
+                    key: const Key("valor"),
+                    style: Theme.of(context).textTheme.displayLarge,
+                  ),
+                  const SizedBox(width: 10),
+                  relativePercentage == null
+                      ? Container()
+                      : RelativeValue(type: relativeStatus!, value: relativePercentage!),
+                ],
+              ),
+              Text(
+                widget.title,
+                key: const Key("título"),
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+            ],
+          ),
+          switch (relativeStatus) {
+            ValuesRelation.negative => NegativeValuesRelationIndicator(isUp: relativePercentage! > 0),
+            ValuesRelation.positive => PositiveValuesRelationIndicator(isUp: relativePercentage! > 0),
+            ValuesRelation.neutral => const NeutralValuesRelationIndicator(),
+            ValuesRelation.unknown => const NeutralValuesRelationIndicator(),
+            null => Container(),
+          }
+        ],
       ),
     );
   }

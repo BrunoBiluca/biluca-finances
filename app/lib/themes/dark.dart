@@ -1,7 +1,7 @@
 import 'package:biluca_financas/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
-class DarkTheme extends AppTheme{
+class DarkTheme extends AppTheme {
   @override
   String get name => "dark";
 
@@ -23,11 +23,12 @@ class DarkTheme extends AppTheme{
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           color: Color(0xFFE8E6E3),
-          fontSize: 32
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
         ),
         displaySmall: TextStyle(
           color: Color(0xFF988F81),
-          fontSize: 16
+          fontSize: 16,
         ),
         headlineSmall: TextStyle(
           color: Color(0xFF988F81),
@@ -36,7 +37,8 @@ class DarkTheme extends AppTheme{
           color: Color(0xFF988F81),
         ),
       ),
-      textButtonTheme: TextButtonThemeData( // botões primários
+      textButtonTheme: TextButtonThemeData(
+        // botões primários
         style: ButtonStyle(
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = Color(0xFFFFFFFF);
@@ -75,8 +77,9 @@ class DarkTheme extends AppTheme{
             return s;
           }),
         ),
-      ),      
-      outlinedButtonTheme: OutlinedButtonThemeData(  // botões secundários
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        // botões secundários
         style: ButtonStyle(
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = Color(0xFFFFFFFF);

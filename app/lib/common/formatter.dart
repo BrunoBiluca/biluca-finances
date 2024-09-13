@@ -24,9 +24,6 @@ class Formatter {
     }
 
     var vTimes = v / 100 + 1;
-    if (vTimes.truncate() == vTimes) {
-      return "$sign${vTimes.truncate()}x";
-    }
-    return "$sign${vTimes}x";
+    return "$sign${vTimes.truncate()}x";
   }
 }

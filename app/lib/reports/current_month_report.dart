@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:biluca_financas/components/base_decorated_card.dart';
 import 'package:biluca_financas/components/single_value_card.dart';
+import 'package:biluca_financas/reports/amount_by_identification_chart.dart';
 import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
@@ -78,12 +80,6 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
     );
   }
 
-  Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification() async {
-    var result = await _currentMonthService.getTotalByIdentification();
-    result.addAll(await _lastMonthService.getTotalByIdentification());
-    return result;
-  }
-
   Expanded monthInfo() {
     return Expanded(
       child: Column(
@@ -91,63 +87,73 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              card(
+              summaryCard(
                 "Balanço",
                 Future.sync(() async => (
                       await _currentMonthService.getBalance(),
                       await _lastMonthService.getBalance(),
                     )),
               ),
-              SizedBox(width: 20),
-              card(
+              const SizedBox(width: 20),
+              summaryCard(
                 "Receitas",
                 Future.sync(() async => (
                       await _currentMonthService.getIncomes(),
                       await _lastMonthService.getIncomes(),
                     )),
               ),
-              SizedBox(width: 20),
-              card(
+              const SizedBox(width: 20),
+              summaryCard(
                 "Despesas",
                 Future.sync(() async => (
-                      await _currentMonthService.getIncomes(),
-                      await _lastMonthService.getIncomes(),
+                      await _currentMonthService.getExpenses(),
+                      await _lastMonthService.getExpenses(),
                     )),
+                lessIsPositite: true,
               ),
             ],
           ),
-          // const SizedBox(height: 20),
-          // Expanded(
-          //   child: FutureBuilder(
-          //     future: getTotalByIdentification(),
-          //     builder: (context, snapshot) {
-          //       if (snapshot.connectionState != ConnectionState.done) {
-          //         return const CircularProgressIndicator();
-          //       }
+          const SizedBox(height: 20),
+          BaseDecoratedCard(
+            child: FutureBuilder(
+              future: Future.sync(
+                () async => (await _currentMonthService.getTotalByIdentification())
+                  ..addAll(await _lastMonthService.getTotalByIdentification()),
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const CircularProgressIndicator();
+                }
 
-          //       var data = snapshot.data;
-          //       if (data == null || data.isEmpty) {
-          //         return const Text("Nenhum item encontrado");
-          //       }
+                var data = snapshot.data;
+                if (data == null || data.isEmpty) {
+                  return const Text("Nenhum item encontrado");
+                }
 
-          //       for (var g in data) {
-          //         print("${g.field.description} ${g.total}");
-          //       }
-
-          //       return SizedBox(
-          //         width: 1000,
-          //         height: 600,
-          //         child: AmountByIdentificationChart(accountabilityByIdentification: data),
-          //       );
-          //     },
-          //   ),
-          // ),
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      "Gastos/Receitas por identificação",
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                    SizedBox(height: 20),
+                    SizedBox(
+                      height: 400,
+                      child: AmountByIdentificationChart(accountabilityByIdentification: data),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget card(String title, Future<(double, double)> computation) {
+  Widget summaryCard(String title, Future<(double, double)> computation, {bool lessIsPositite = false}) {
     return Expanded(
       child: FutureBuilder(
         future: computation,
@@ -158,10 +164,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
           var result = snapshot.data!;
           return SingleValueCard(
-            title: title,
-            currentValue: result.$1,
-            lastValue: result.$2,
-          );
+              title: title, currentValue: result.$1, lastValue: result.$2, lessIsPositite: lessIsPositite);
         },
       ),
     );
