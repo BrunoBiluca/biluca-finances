@@ -43,7 +43,7 @@ class _MonthSelectorState extends State<MonthSelector> {
 
   @override
   Widget build(BuildContext context) {
-    Color color = Theme.of(context).textTheme.displaySmall!.color!;
+    Color color = Theme.of(context).textTheme.displayLarge!.color!;
 
     return DecoratedBox(
       decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 4, color: color))),
@@ -57,7 +57,7 @@ class _MonthSelectorState extends State<MonthSelector> {
           const SizedBox(width: 10),
           DropdownButton<String>(
             value: _selectedMonth,
-            style: Theme.of(context).textTheme.displaySmall,
+            style: Theme.of(context).textTheme.displayLarge,
             iconSize: 36,
             iconEnabledColor: color,
             dropdownColor: Colors.black,

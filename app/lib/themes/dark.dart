@@ -21,6 +21,14 @@ class DarkTheme extends AppTheme{
         ),
       ),
       textTheme: const TextTheme(
+        displayLarge: TextStyle(
+          color: Color(0xFFE8E6E3),
+          fontSize: 32
+        ),
+        displaySmall: TextStyle(
+          color: Color(0xFF988F81),
+          fontSize: 16
+        ),
         headlineSmall: TextStyle(
           color: Color(0xFF988F81),
         ),

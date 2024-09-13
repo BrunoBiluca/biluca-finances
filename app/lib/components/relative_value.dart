@@ -22,7 +22,7 @@ class RelativeValue extends StatelessWidget {
     return Text(
       Formatter.relation(value),
       key: const Key("relação"),
-      style: Theme.of(context).textTheme.displayMedium?.copyWith(color: textColor),
+      style: Theme.of(context).textTheme.displayLarge?.copyWith(color: textColor),
     );
   }
 }

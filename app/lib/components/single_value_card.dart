@@ -71,7 +71,7 @@ class _SingleValueCardState extends State<SingleValueCard> {
                       key: const Key("valor"),
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
-                    SizedBox(width: 10),
+                    const SizedBox(width: 10),
                     relativePercentage == null
                         ? Container()
                         : RelativeValue(type: relativeStatus!, value: relativePercentage!),
