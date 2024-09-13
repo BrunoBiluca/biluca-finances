@@ -29,10 +29,11 @@ class _HomeState extends State<Home> {
             width: 250,
             child: MainDrawner(),
           ),
-          Container(
-            padding: const EdgeInsets.all(20.0),
-            margin: const EdgeInsets.all(20.0),
-            child: CurrentMonthReport(),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: CurrentMonthReport(),
+            ),
           ),
         ],
       ),

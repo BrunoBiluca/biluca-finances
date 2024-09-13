@@ -28,7 +28,7 @@ class DarkTheme extends AppTheme{
           color: Color(0xFF988F81),
         ),
       ),
-      textButtonTheme: TextButtonThemeData(
+      textButtonTheme: TextButtonThemeData( // botões primários
         style: ButtonStyle(
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = Color(0xFFFFFFFF);
@@ -41,6 +41,46 @@ class DarkTheme extends AppTheme{
           alignment: Alignment.center,
           backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = Color(0xFF0073B9);
+            if (states.contains(WidgetState.hovered)) {
+              return color.withOpacity(0.8);
+            }
+            return color;
+          }),
+          padding: WidgetStateProperty.resolveWith<EdgeInsetsGeometry?>((Set<WidgetState> states) {
+            return EdgeInsets.symmetric(horizontal: 32, vertical: 24);
+          }),
+          iconSize: WidgetStateProperty.resolveWith<double?>((Set<WidgetState> states) {
+            return 32;
+          }),
+          shape: WidgetStateProperty.resolveWith<OutlinedBorder?>((Set<WidgetState> states) {
+            return RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)));
+          }),
+          foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+            var color = Color(0xFFFFFFFF);
+            if (states.contains(WidgetState.hovered)) {
+              return color.withOpacity(0.8);
+            }
+            return color;
+          }),
+          textStyle: WidgetStateProperty.resolveWith<TextStyle?>((Set<WidgetState> states) {
+            var s = TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
+            return s;
+          }),
+        ),
+      ),      
+      outlinedButtonTheme: OutlinedButtonThemeData(  // botões secundários
+        style: ButtonStyle(
+          iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+            var color = Color(0xFFFFFFFF);
+            if (states.contains(WidgetState.hovered)) {
+              return color.withOpacity(0.8);
+            }
+            return color;
+          }),
+          animationDuration: Duration(milliseconds: 100),
+          alignment: Alignment.center,
+          backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+            var color = Color(0xFF202B2E);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }

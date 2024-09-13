@@ -54,65 +54,40 @@ class AccountabilityTable extends StatelessWidget {
     return DataRow(
       cells: [
         DataCell(
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFieldEdit(
-              text: entry.description,
-              onEdit: (updatedText) => context.read<AccountabilityBloc>().add(
-                    UpdateAccountabilityEntry(entry..description = updatedText),
-                  ),
-            ),
-          ),
-        ),
-        DataCell(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: NumberFieldEdit(
-            number: entry.value,
-            onEdit: (updatedNumber) => context.read<AccountabilityBloc>().add(
-                  UpdateAccountabilityEntry(entry..value = updatedNumber),
+          TextFieldEdit(
+            text: entry.description,
+            onEdit: (updatedText) => context.read<AccountabilityBloc>().add(
+                  UpdateAccountabilityEntry(entry..description = updatedText),
                 ),
           ),
-        )),
-        DataCell(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AccountabilityIdentificationEdit(
-            identification: entry.identification,
-            onEdit: (id) {
-              entry.identification = id;
-              context.read<AccountabilityBloc>().add(
-                    UpdateAccountabilityEntry(entry),
-                  );
-            },
-          ),
-        )),
-        DataCell(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            Formatter.date(entry.createdAt),
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-        )),
-        DataCell(Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            Formatter.date(entry.insertedAt),
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+        ),
+        DataCell(NumberFieldEdit(
+          number: entry.value,
+          onEdit: (updatedNumber) => context.read<AccountabilityBloc>().add(
+                UpdateAccountabilityEntry(entry..value = updatedNumber),
+              ),
         )),
         DataCell(
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              onPressed: () => {
-                context.read<AccountabilityBloc>()
-                  ..add(
-                    DeleteAccountabilityEntry(entry),
-                  )
-              },
-              icon: Icon(
-                Icons.delete,
-                color: Theme.of(context).textTheme.bodySmall?.color,
-              ),
+          AccountabilityIdentificationEdit(
+            identification: entry.identification,
+            onEdit: (id) =>
+                context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry..identification = id)),
+          ),
+        ),
+        DataCell(Text(
+          Formatter.date(entry.createdAt),
+          style: Theme.of(context).textTheme.bodySmall,
+        )),
+        DataCell(Text(
+          Formatter.date(entry.insertedAt),
+          style: Theme.of(context).textTheme.bodySmall,
+        )),
+        DataCell(
+          IconButton(
+            onPressed: () => {context.read<AccountabilityBloc>()..add(DeleteAccountabilityEntry(entry))},
+            icon: Icon(
+              Icons.delete,
+              color: Theme.of(context).textTheme.bodySmall?.color,
             ),
           ),
         ),

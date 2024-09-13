@@ -1,4 +1,3 @@
-import 'package:biluca_financas/components/single_value_card.dart';
 import 'package:biluca_financas/components/values_relation_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

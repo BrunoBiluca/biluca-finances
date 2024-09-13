@@ -1,4 +1,3 @@
-
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
 import 'package:biluca_financas/components/negative_values_relation_indicator.dart';
@@ -7,7 +6,7 @@ import 'package:biluca_financas/components/positive_values_relation_indicator.da
 import 'package:biluca_financas/components/relative_value.dart';
 import 'package:flutter/material.dart';
 
-enum ValuesRelation { positive, negative, neutral }
+enum ValuesRelation { positive, negative, neutral, unknown }
 
 class SingleValueCard extends StatefulWidget {
   final String title;
@@ -35,11 +34,16 @@ class _SingleValueCardState extends State<SingleValueCard> {
     super.initState();
     if (widget.lastValue != null) {
       relativePercentage = Math.relativePercentage(widget.currentValue, widget.lastValue!);
-      relativeStatus = relativePercentage == 0
-          ? ValuesRelation.neutral
-          : !((relativePercentage! > 0) ^ !widget.lessIsPositite)
-              ? ValuesRelation.positive
-              : ValuesRelation.negative;
+
+      if (relativePercentage == 0) {
+        relativeStatus = ValuesRelation.neutral;
+      } else if (!relativePercentage!.isFinite) {
+        relativeStatus = ValuesRelation.unknown;
+      } else if (!((relativePercentage! > 0) ^ !widget.lessIsPositite)) {
+        relativeStatus = ValuesRelation.positive;
+      } else {
+        relativeStatus = ValuesRelation.negative;
+      }
     }
   }
 
@@ -55,6 +59,7 @@ class _SingleValueCardState extends State<SingleValueCard> {
         padding: const EdgeInsets.all(32.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,23 +84,16 @@ class _SingleValueCardState extends State<SingleValueCard> {
                 ),
               ],
             ),
-            SizedBox(width: 30),
-            relativeBox()
+            switch (relativeStatus) {
+              ValuesRelation.negative => NegativeValuesRelationIndicator(isUp: relativePercentage! > 0),
+              ValuesRelation.positive => PositiveValuesRelationIndicator(isUp: relativePercentage! > 0),
+              ValuesRelation.neutral => const NeutralValuesRelationIndicator(),
+              ValuesRelation.unknown => const NeutralValuesRelationIndicator(),
+              null => Container(),
+            }
           ],
         ),
       ),
     );
-  }
-
-  Widget relativeBox() {
-    if (relativePercentage == null) {
-      return Container();
-    }
-
-    return relativeStatus! == ValuesRelation.positive
-        ? PositiveValuesRelationIndicator(isUp: relativePercentage! > 0)
-        : relativeStatus! == ValuesRelation.negative
-            ? NegativeValuesRelationIndicator(isUp: relativePercentage! > 0)
-            : const NeutralValuesRelationIndicator();
   }
 }

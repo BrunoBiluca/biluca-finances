@@ -23,18 +23,16 @@ class _TextBallonState extends State<TextBallon> {
   bool isEditing = false;
 
   Color textColor() {
-    return widget.color.computeLuminance() > 0.5
-        ? Colors.black
-        : Colors.white;
+    return widget.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
   }
 
   @override
   Widget build(BuildContext context) {
     var cont = TextEditingController(text: widget.text);
     return DecoratedBox(
-      decoration: BoxDecoration(color: widget.color, borderRadius: const BorderRadius.all(Radius.circular(20))),
+      decoration: BoxDecoration(color: widget.color, borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
         child: Row(
           children: [
             Expanded(
@@ -81,9 +79,15 @@ class _TextBallonState extends State<TextBallon> {
                         ),
                       ],
                     )
-                  : Text(
-                      widget.text,
-                      style: TextStyle(color: textColor()),
+                  : Row(
+                      children: [
+                        Icon(Icons.shop, color: textColor()),
+                        SizedBox(width: 10),
+                        Text(
+                          widget.text,
+                          style: TextStyle(color: textColor()),
+                        ),
+                      ],
                     ),
             ),
             widget.onEdit == null

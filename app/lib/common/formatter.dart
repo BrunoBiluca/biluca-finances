@@ -13,6 +13,10 @@ class Formatter {
   static String relation(double relativePercentagem) {
     var v = relativePercentagem * 100;
 
+    if (!v.isFinite) {
+      return "?";
+    }
+
     var sign = v > 0 ? "+" : "";
 
     if (v.abs() < 100) {
