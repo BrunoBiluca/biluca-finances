@@ -2,6 +2,7 @@ import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/accountability/components/identification_edit.dart';
+import 'package:biluca_financas/components/number.dart';
 import 'package:biluca_financas/components/number_field_edit.dart';
 import 'package:biluca_financas/components/text_field_edit.dart';
 import 'package:flutter/material.dart';
@@ -54,19 +55,28 @@ class AccountabilityTable extends StatelessWidget {
     return DataRow(
       cells: [
         DataCell(
-          TextFieldEdit(
-            text: entry.description,
-            onEdit: (updatedText) => context.read<AccountabilityBloc>().add(
+          Text(
+            entry.description,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          onTap: () => editText(
+            context,
+            entry.description,
+            (updatedText) => context.read<AccountabilityBloc>().add(
                   UpdateAccountabilityEntry(entry..description = updatedText),
                 ),
           ),
         ),
-        DataCell(NumberFieldEdit(
-          number: entry.value,
-          onEdit: (updatedNumber) => context.read<AccountabilityBloc>().add(
-                UpdateAccountabilityEntry(entry..value = updatedNumber),
-              ),
-        )),
+        DataCell(
+          Number(number: entry.value),
+          onTap: () => editNumber(
+            context,
+            entry.value,
+            (updatedNumber) => context.read<AccountabilityBloc>().add(
+                  UpdateAccountabilityEntry(entry..value = updatedNumber),
+                ),
+          ),
+        ),
         DataCell(
           AccountabilityIdentificationEdit(
             identification: entry.identification,
@@ -74,14 +84,18 @@ class AccountabilityTable extends StatelessWidget {
                 context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry..identification = id)),
           ),
         ),
-        DataCell(Text(
-          Formatter.date(entry.createdAt),
-          style: Theme.of(context).textTheme.bodySmall,
-        )),
-        DataCell(Text(
-          Formatter.date(entry.insertedAt),
-          style: Theme.of(context).textTheme.bodySmall,
-        )),
+        DataCell(
+          Text(
+            Formatter.date(entry.createdAt),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+        DataCell(
+          Text(
+            Formatter.date(entry.insertedAt),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
         DataCell(
           IconButton(
             onPressed: () => {context.read<AccountabilityBloc>()..add(DeleteAccountabilityEntry(entry))},

@@ -39,10 +39,13 @@ class _TextBallonState extends State<TextBallon> {
               child: isEditing
                   ? Row(
                       children: [
+                        Icon(Icons.shop, color: textColor()),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: TextField(
                             autofocus: true,
                             controller: cont,
+                            cursorColor: textColor(),
                             style: TextStyle(color: textColor()),
                             onEditingComplete: () {
                               setState(() {
@@ -52,37 +55,55 @@ class _TextBallonState extends State<TextBallon> {
                             },
                           ),
                         ),
-                        ElevatedButton(
+                        const SizedBox(width: 20),
+                        IconButton(
+                          icon: const Icon(Icons.colorize),
+                          color: textColor(),
                           onPressed: () {
+                            Color editColor = widget.color;
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Text('Editar Texto'),
-                                content: Column(
-                                  children: [
-                                    ColorPicker(
-                                      pickerColor: Colors.black,
-                                      onColorChanged: (color) {
+                                actions: [
+                                  SizedBox(
+                                    width: 200,
+                                    child: OutlinedButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text("Cancelar"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 200,
+                                    child: TextButton(
+                                      onPressed: () {
                                         setState(() {
-                                          widget.onEdit!.call(widget.text, color);
+                                          widget.onEdit!.call(widget.text, editColor);
                                           isEditing = false;
                                         });
+                                        Navigator.pop(context);
                                       },
+                                      child: const Text("Salvar"),
                                     ),
-                                    ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text("Salvar"))
-                                  ],
+                                  ),
+                                ],
+                                title: const Text('Editar Texto'),
+                                content: SizedBox(
+                                  height: 600,
+                                  child: ColorPicker(
+                                    pickerColor: widget.color,
+                                    onColorChanged: (color) => editColor = color,
+                                  ),
                                 ),
                               ),
                             );
                           },
-                          child: const Text('Cor'),
                         ),
                       ],
                     )
                   : Row(
                       children: [
                         Icon(Icons.shop, color: textColor()),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text(
                           widget.text,
                           style: TextStyle(color: textColor()),
@@ -92,17 +113,21 @@ class _TextBallonState extends State<TextBallon> {
             ),
             widget.onEdit == null
                 ? Container()
-                : IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isEditing = true;
-                      });
-                    },
-                    icon: const Icon(Icons.edit),
-                  ),
+                : isEditing
+                    ? IconButton(
+                        color: textColor(),
+                        onPressed: () => setState(() => isEditing = false),
+                        icon: const Icon(Icons.edit_off),
+                      )
+                    : IconButton(
+                        color: textColor(),
+                        onPressed: () => setState(() => isEditing = true),
+                        icon: const Icon(Icons.edit),
+                      ),
             widget.onDelete == null
                 ? Container()
                 : IconButton(
+                    color: textColor(),
                     onPressed: () => widget.onDelete!.call(),
                     icon: const Icon(Icons.delete),
                   ),

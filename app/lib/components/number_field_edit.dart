@@ -11,25 +11,27 @@ class NumberFieldEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        TextEditingController ctrl = TextEditingController(text: Formatter.number(number));
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Editar valor'),
-            content: TextField(
-              autofocus: true,
-              controller: ctrl,
-              keyboardType: TextInputType.number,
-              onEditingComplete: () {
-                onEdit(double.parse(ctrl.text));
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        );
-      },
+      onTap: () => editNumber(context, number, onEdit),
       child: Number(number: number),
     );
   }
+}
+
+void editNumber(BuildContext context, double number, Function(double) onEdit) {
+  var ctrl = TextEditingController(text: Formatter.number(number));
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Editar valor'),
+      content: TextField(
+        autofocus: true,
+        controller: ctrl,
+        keyboardType: TextInputType.number,
+        onEditingComplete: () {
+          onEdit(double.parse(ctrl.text.replaceAll(".", "").replaceAll(",", ".")));
+          Navigator.pop(context);
+        },
+      ),
+    ),
+  );
 }

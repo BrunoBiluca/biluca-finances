@@ -40,59 +40,68 @@ class _AccountabilityIdentificationEditState extends State<AccountabilityIdentif
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Editar Texto'),
-            content: Column(
-              children: [
-                TextField(
-                  decoration: const InputDecoration(labelText: 'Nova Identificação'),
-                  autofocus: true,
-                  controller: controller,
-                  onEditingComplete: () {
-                    widget.onEdit(AccountabilityIdentification(controller.text, Colors.black));
-                    close();
-                  },
-                ),
-                BlocBuilder<AccountabilityBloc, AccountabilityState>(
-                  bloc: accountabilityBloc,
-                  builder: (context, state) {
-                    var identifications = state.identifications;
-                    if (identifications.isEmpty) {
-                      return const Text('Nenhuma identificação encontrada');
-                    }
-
-                    return Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Column(
-                          children: [
-                            ...identifications.map(
-                              (identification) => GestureDetector(
-                                onTap: () {
-                                  widget.onEdit(identification);
-                                  close();
-                                },
-                                child: TextBallon(
-                                  text: identification.description,
-                                  color: identification.color,
-                                  onEdit: (String newValue, Color color) => accountabilityBloc.add(
-                                    UpdateAccountabilityIdentification(
-                                      identification
-                                        ..color = color
-                                        ..description = newValue,
+            content: SizedBox(
+              height: 600,
+              width: 600,
+              child: Column(
+                children: [
+                  TextField(
+                    decoration: const InputDecoration(labelText: 'Nova Identificação'),
+                    autofocus: true,
+                    controller: controller,
+                    cursorColor: Colors.white,
+                    onEditingComplete: () {
+                      widget.onEdit(AccountabilityIdentification(controller.text, Colors.black));
+                      close();
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  BlocBuilder<AccountabilityBloc, AccountabilityState>(
+                    bloc: accountabilityBloc,
+                    builder: (context, state) {
+                      var identifications = state.identifications;
+                      if (identifications.isEmpty) {
+                        return const Text('Nenhuma identificação encontrada');
+                      }
+              
+                      return Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            children: [
+                              ...identifications.map(
+                                (identification) => Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      widget.onEdit(identification);
+                                      close();
+                                    },
+                                    child: TextBallon(
+                                      text: identification.description,
+                                      color: identification.color,
+                                      onEdit: (String newValue, Color color) => accountabilityBloc.add(
+                                        UpdateAccountabilityIdentification(
+                                          identification
+                                            ..color = color
+                                            ..description = newValue,
+                                        ),
+                                      ),
+                                      onDelete: () => accountabilityBloc.add(
+                                        DeleteAccountabilityIdentification(identification.id),
+                                      ),
                                     ),
                                   ),
-                                  onDelete: () => accountabilityBloc.add(
-                                    DeleteAccountabilityIdentification(identification.id),
-                                  ),
                                 ),
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         );
