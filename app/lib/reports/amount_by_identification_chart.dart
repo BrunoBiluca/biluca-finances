@@ -80,10 +80,17 @@ class AmountByIdentificationChart extends StatelessWidget {
     var idGroup = groups[groupIndex]!;
     var desc = idGroup[0].field.description;
     var current = idGroup[0].total;
-    var last = idGroup[1].total;
-    var rel = Formatter.relation(Math.relativePercentage(current, last));
+    var str = "$desc\n${current.abs().toStringAsFixed(2)}";
 
-    var str = "$desc\n${current.abs().toStringAsFixed(2)}\n$rel";
+    if (idGroup.length > 1) {
+      var last = idGroup[1].total;
+      var rel = Formatter.relation(Math.relativePercentage(current, last));
+      str += "\n$rel";
+    }
+    else {
+      str += "\nN/A";
+    }
+
     return str;
   }
 
@@ -98,16 +105,18 @@ class AmountByIdentificationChart extends StatelessWidget {
         var maxToY = 0.0;
         if (current > last) {
           maxToY = current;
-          items = [
-            BarChartRodStackItem(last, current, Color.fromARGB(255, 214, 63, 63)),
-            BarChartRodStackItem(0, last, color),
-          ];
+          items.add(BarChartRodStackItem(last, current, const Color.fromARGB(255, 214, 63, 63)));
+
+          if (last > 0) {
+            items.add(BarChartRodStackItem(0, last, color));
+          }
         } else {
           maxToY = last;
-          items = [
-            BarChartRodStackItem(0, current, color),
-            BarChartRodStackItem(current, last, Color.fromARGB(255, 83, 211, 149)),
-          ];
+
+          if (current > 0) {
+            items.add(BarChartRodStackItem(0, current, color));
+          }
+          items.add(BarChartRodStackItem(current, last, const Color.fromARGB(255, 83, 211, 149)));
         }
 
         return BarChartGroupData(

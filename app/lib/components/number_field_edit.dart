@@ -26,6 +26,7 @@ void editNumber(BuildContext context, double number, Function(double) onEdit) {
       content: TextField(
         autofocus: true,
         controller: ctrl,
+        cursorColor: Colors.white,
         keyboardType: TextInputType.number,
         onEditingComplete: () {
           onEdit(double.parse(ctrl.text.replaceAll(".", "").replaceAll(",", ".")));

@@ -54,28 +54,26 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           return const CircularProgressIndicator();
         }
 
-        return Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              MonthSelector(
-                current: _selectedDate,
-                onDateChanged: (date) => setState(
-                  () {
-                    _selectedDate = date;
-                    updateServices();
-                  },
-                ),
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            MonthSelector(
+              current: _selectedDate,
+              onDateChanged: (date) => setState(
+                () {
+                  _selectedDate = date;
+                  updateServices();
+                },
               ),
-              const SizedBox(height: 20),
-              snapshot.data! == 0
-                  ? const Text(
-                      "Não existem registros para esse mês",
-                      key: Key("no_entries"),
-                    )
-                  : monthInfo()
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            snapshot.data! == 0
+                ? const Text(
+                    "Não existem registros para esse mês",
+                    key: Key("no_entries"),
+                  )
+                : monthInfo()
+          ],
         );
       },
     );
@@ -96,7 +94,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                         await _lastMonthService.getBalance(),
                       )),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 summaryCard(
                   "Receitas",
                   Future.sync(() async => (
@@ -104,7 +102,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                         await _lastMonthService.getIncomes(),
                       )),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 summaryCard(
                   "Despesas",
                   Future.sync(() async => (
@@ -116,7 +114,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               ],
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           SizedBox(
             height: 500,
             child: Row(
@@ -128,7 +126,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                     accountabilityByIdentification: data.where((i) => i.total > 0).toList(),
                   ),
                 ),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 identificationsChart(
                   "Gastos por identificação",
                   2,

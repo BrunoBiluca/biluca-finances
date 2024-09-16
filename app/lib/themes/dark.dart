@@ -41,39 +41,39 @@ class DarkTheme extends AppTheme {
         // botões primários
         style: ButtonStyle(
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-            var color = Color(0xFFFFFFFF);
+            var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
             return color;
           }),
-          animationDuration: Duration(milliseconds: 100),
+          animationDuration: const Duration(milliseconds: 100),
           alignment: Alignment.center,
           backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-            var color = Color(0xFF0073B9);
+            var color = const Color(0xFF0073B9);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
             return color;
           }),
           padding: WidgetStateProperty.resolveWith<EdgeInsetsGeometry?>((Set<WidgetState> states) {
-            return EdgeInsets.symmetric(horizontal: 32, vertical: 24);
+            return const EdgeInsets.symmetric(horizontal: 32, vertical: 24);
           }),
           iconSize: WidgetStateProperty.resolveWith<double?>((Set<WidgetState> states) {
             return 32;
           }),
           shape: WidgetStateProperty.resolveWith<OutlinedBorder?>((Set<WidgetState> states) {
-            return RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)));
+            return const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)));
           }),
           foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-            var color = Color(0xFFFFFFFF);
+            var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
             return color;
           }),
           textStyle: WidgetStateProperty.resolveWith<TextStyle?>((Set<WidgetState> states) {
-            var s = TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
+            var s = const TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
             return s;
           }),
         ),
@@ -82,39 +82,39 @@ class DarkTheme extends AppTheme {
         // botões secundários
         style: ButtonStyle(
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-            var color = Color(0xFFFFFFFF);
+            var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
             return color;
           }),
-          animationDuration: Duration(milliseconds: 100),
+          animationDuration: const Duration(milliseconds: 100),
           alignment: Alignment.center,
           backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-            var color = Color(0xFF202B2E);
+            var color = const Color(0xFF202B2E);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
             return color;
           }),
           padding: WidgetStateProperty.resolveWith<EdgeInsetsGeometry?>((Set<WidgetState> states) {
-            return EdgeInsets.symmetric(horizontal: 32, vertical: 24);
+            return const EdgeInsets.symmetric(horizontal: 32, vertical: 24);
           }),
           iconSize: WidgetStateProperty.resolveWith<double?>((Set<WidgetState> states) {
             return 32;
           }),
           shape: WidgetStateProperty.resolveWith<OutlinedBorder?>((Set<WidgetState> states) {
-            return RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)));
+            return const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5)));
           }),
           foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-            var color = Color(0xFFFFFFFF);
+            var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
             return color;
           }),
           textStyle: WidgetStateProperty.resolveWith<TextStyle?>((Set<WidgetState> states) {
-            var s = TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
+            var s = const TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
             return s;
           }),
         ),
