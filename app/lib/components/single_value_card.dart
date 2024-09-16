@@ -57,6 +57,7 @@ class _SingleValueCardState extends State<SingleValueCard> {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
                 children: [

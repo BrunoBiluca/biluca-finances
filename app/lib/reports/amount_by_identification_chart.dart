@@ -1,5 +1,6 @@
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
+import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -30,14 +31,9 @@ class AmountByIdentificationChart extends StatelessWidget {
       BarChartData(
         barTouchData: BarTouchData(
           touchTooltipData: BarTouchTooltipData(
-            getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
-              tooltip(group, rod, rodIndex),
-              const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
+            getTooltipColor: (group) => Theme.of(context).colorScheme.primary,
+            getTooltipItem: (group, groupIndex, rod, rodIndex) =>
+                BarTooltipItem(tooltip(group, groupIndex, rod, rodIndex), Theme.of(context).textTheme.displaySmall!),
           ),
         ),
         alignment: BarChartAlignment.spaceEvenly,
@@ -46,8 +42,8 @@ class AmountByIdentificationChart extends StatelessWidget {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 28,
-              getTitlesWidget: bottomTitles,
+              reservedSize: 30,
+              getTitlesWidget: (double groupKey, TitleMeta meta) => bottomTitles(groupKey, meta, context),
             ),
           ),
           leftTitles: const AxisTitles(
@@ -68,7 +64,7 @@ class AmountByIdentificationChart extends StatelessWidget {
           checkToShowHorizontalLine: (value) => value % 5 == 0,
           getDrawingHorizontalLine: (value) => FlLine(
             color: Colors.grey.withOpacity(.5),
-            strokeWidth: 1,
+            strokeWidth: .5,
           ),
           drawVerticalLine: false,
         ),
@@ -80,60 +76,63 @@ class AmountByIdentificationChart extends StatelessWidget {
     );
   }
 
-  String tooltip(BarChartGroupData group, BarChartRodData rod, int rodIndex) {
-    var nextRodIndex = (rodIndex + 1) % group.barRods.length;
-    var nextValue = group.barRods[nextRodIndex].toY;
-    var multiplier = (Math.relativeMultiplier(rod.toY, nextValue));
+  String tooltip(BarChartGroupData group, int groupIndex, BarChartRodData rod, int rodIndex) {
+    var idGroup = groups[groupIndex]!;
+    var desc = idGroup[0].field.description;
+    var current = idGroup[0].total;
+    var last = idGroup[1].total;
+    var rel = Formatter.relation(Math.relativePercentage(current, last));
 
-    var multiplierStr = "\n${multiplier.toStringAsFixed(2)}x";
-    if (multiplier == double.infinity) {
-      multiplierStr = "";
-    }
-
-    var valueStr = rod.toY.toStringAsFixed(2);
-    return valueStr + multiplierStr;
+    var str = "$desc\n${current.abs().toStringAsFixed(2)}\n$rel";
+    return str;
   }
 
   List<BarChartGroupData> barGroups() {
-    return groups.values
-        .mapIndexed(
-          (index, group) => BarChartGroupData(
-            x: index,
-            barsSpace: 5,
-            barRods: [
-              BarChartRodData(
-                toY: group[0].total.abs(),
-                color: group[0].field.color,
-                borderSide: group[0].total < 0
-                    ? const BorderSide(color: Colors.redAccent, width: 3)
-                    : const BorderSide(color: Colors.green, width: 3),
-                width: barWidth,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
-              ),
-              BarChartRodData(
-                toY: group.length == 2 ? group[1].total.abs() : 0,
-                color: Colors.grey.withOpacity(.7),
-                borderSide: group[0].total < 0
-                    ? const BorderSide(color: Colors.redAccent, width: 3)
-                    : const BorderSide(color: Colors.green, width: 3),
-                width: barWidth,
-                borderRadius: BorderRadius.zero,
-              )
-            ],
-          ),
-        )
-        .toList();
+    return groups.values.mapIndexed(
+      (index, group) {
+        var color = group[0].field.color;
+        var current = group[0].total.abs();
+        var last = group.length > 1 ? group[1].total.abs() : 0.0;
+
+        List<BarChartRodStackItem> items = [];
+        var maxToY = 0.0;
+        if (current > last) {
+          maxToY = current;
+          items = [
+            BarChartRodStackItem(last, current, Color.fromARGB(255, 214, 63, 63)),
+            BarChartRodStackItem(0, last, color),
+          ];
+        } else {
+          maxToY = last;
+          items = [
+            BarChartRodStackItem(0, current, color),
+            BarChartRodStackItem(current, last, Color.fromARGB(255, 83, 211, 149)),
+          ];
+        }
+
+        return BarChartGroupData(
+          x: index,
+          barsSpace: 5,
+          barRods: [
+            BarChartRodData(
+              toY: maxToY,
+              width: barWidth,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+              borderSide: BorderSide(color: color, width: 4),
+              rodStackItems: items,
+            )
+          ],
+        );
+      },
+    ).toList();
   }
 
-  Widget bottomTitles(double groupKey, TitleMeta meta) {
-    const style = TextStyle(fontSize: 10);
+  Widget bottomTitles(double groupKey, TitleMeta meta, BuildContext context) {
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      angle: 0.5,
-      space: 12,
       child: Text(
         groups[groupKey.toInt()]![0].field.description,
-        style: style,
+        style: Theme.of(context).textTheme.displaySmall,
       ),
     );
   }

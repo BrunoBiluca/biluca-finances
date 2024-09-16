@@ -6,6 +6,7 @@ import 'package:biluca_financas/reports/amount_by_identification_chart.dart';
 import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
+import 'package:biluca_financas/reports/identifications_by_pie.dart';
 import 'package:biluca_financas/reports/month_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -80,74 +81,64 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
     );
   }
 
-  Expanded monthInfo() {
+  Widget monthInfo() {
     return Expanded(
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              summaryCard(
-                "Balanço",
-                Future.sync(() async => (
-                      await _currentMonthService.getBalance(),
-                      await _lastMonthService.getBalance(),
-                    )),
-              ),
-              const SizedBox(width: 20),
-              summaryCard(
-                "Receitas",
-                Future.sync(() async => (
-                      await _currentMonthService.getIncomes(),
-                      await _lastMonthService.getIncomes(),
-                    )),
-              ),
-              const SizedBox(width: 20),
-              summaryCard(
-                "Despesas",
-                Future.sync(() async => (
-                      await _currentMonthService.getExpenses(),
-                      await _lastMonthService.getExpenses(),
-                    )),
-                lessIsPositite: true,
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          BaseDecoratedCard(
-            child: FutureBuilder(
-              future: Future.sync(
-                () async => (await _currentMonthService.getTotalByIdentification())
-                  ..addAll(await _lastMonthService.getTotalByIdentification()),
-              ),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const CircularProgressIndicator();
-                }
-
-                var data = snapshot.data;
-                if (data == null || data.isEmpty) {
-                  return const Text("Nenhum item encontrado");
-                }
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      "Gastos/Receitas por identificação",
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    SizedBox(height: 20),
-                    SizedBox(
-                      height: 400,
-                      child: AmountByIdentificationChart(accountabilityByIdentification: data),
-                    ),
-                  ],
-                );
-              },
+          SizedBox(
+            height: 150,
+            child: Row(
+              children: [
+                summaryCard(
+                  "Balanço",
+                  Future.sync(() async => (
+                        await _currentMonthService.getBalance(),
+                        await _lastMonthService.getBalance(),
+                      )),
+                ),
+                SizedBox(width: 20),
+                summaryCard(
+                  "Receitas",
+                  Future.sync(() async => (
+                        await _currentMonthService.getIncomes(),
+                        await _lastMonthService.getIncomes(),
+                      )),
+                ),
+                SizedBox(width: 20),
+                summaryCard(
+                  "Despesas",
+                  Future.sync(() async => (
+                        await _currentMonthService.getExpenses(),
+                        await _lastMonthService.getExpenses(),
+                      )),
+                  lessIsPositite: true,
+                ),
+              ],
             ),
           ),
+          SizedBox(height: 20),
+          SizedBox(
+            height: 500,
+            child: Row(
+              children: [
+                identificationsChart(
+                  "Receitas por identificação",
+                  1,
+                  (data) => IdentificationsByPie(
+                    accountabilityByIdentification: data.where((i) => i.total > 0).toList(),
+                  ),
+                ),
+                SizedBox(width: 20),
+                identificationsChart(
+                  "Gastos por identificação",
+                  2,
+                  (data) => AmountByIdentificationChart(
+                    accountabilityByIdentification: data.where((i) => i.total < 0).toList(),
+                  ),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -155,6 +146,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
   Widget summaryCard(String title, Future<(double, double)> computation, {bool lessIsPositite = false}) {
     return Expanded(
+      flex: 1,
       child: FutureBuilder(
         future: computation,
         builder: (context, snapshot) {
@@ -164,7 +156,52 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
           var result = snapshot.data!;
           return SingleValueCard(
-              title: title, currentValue: result.$1, lastValue: result.$2, lessIsPositite: lessIsPositite);
+            title: title,
+            currentValue: result.$1,
+            lastValue: result.$2,
+            lessIsPositite: lessIsPositite,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget identificationsChart(
+    String title,
+    int flex,
+    Widget Function(List<GroupedBy<AccountabilityIdentification>>) identificationsCallback,
+  ) {
+    return Expanded(
+      flex: flex,
+      child: FutureBuilder(
+        future: Future.sync(
+          () async => (await _currentMonthService.getTotalByIdentification())
+            ..addAll(await _lastMonthService.getTotalByIdentification()),
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const CircularProgressIndicator();
+          }
+
+          var data = snapshot.data;
+          if (data == null || data.isEmpty) {
+            return const Text("Nenhum item encontrado");
+          }
+
+          return BaseDecoratedCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  title,
+                  textAlign: TextAlign.left,
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+                const SizedBox(height: 20),
+                Expanded(child: identificationsCallback(data)),
+              ],
+            ),
+          );
         },
       ),
     );
