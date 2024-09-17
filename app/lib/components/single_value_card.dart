@@ -55,29 +55,36 @@ class _SingleValueCardState extends State<SingleValueCard> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    Formatter.value(widget.currentValue),
-                    key: const Key("valor"),
-                    style: Theme.of(context).textTheme.displayLarge,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Text(
+                          Formatter.value(widget.currentValue),
+                          key: const Key("valor"),
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      relativePercentage == null
+                          ? Container()
+                          : RelativeValue(type: relativeStatus!, value: relativePercentage!),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  relativePercentage == null
-                      ? Container()
-                      : RelativeValue(type: relativeStatus!, value: relativePercentage!),
-                ],
-              ),
-              Text(
-                widget.title,
-                key: const Key("título"),
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-            ],
+                ),
+                Text(
+                  widget.title,
+                  key: const Key("título"),
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
+              ],
+            ),
           ),
           switch (relativeStatus) {
             ValuesRelation.negative => NegativeValuesRelationIndicator(isUp: relativePercentage! > 0),
