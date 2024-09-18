@@ -1,4 +1,4 @@
-import 'package:biluca_financas/reports/month_info_card.dart';
+import 'package:biluca_financas/reports/components/month_info_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';

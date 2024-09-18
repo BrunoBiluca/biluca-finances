@@ -1,15 +1,15 @@
 import 'dart:async';
 
-import 'package:biluca_financas/common/datetime_extensions.dart';
-import 'package:biluca_financas/components/base_decorated_card.dart';
-import 'package:biluca_financas/components/single_value_card.dart';
-import 'package:biluca_financas/reports/charts/identifications_by_barchart.dart';
-import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
+import 'package:biluca_financas/common/datetime_extensions.dart';
+import 'package:biluca_financas/components/base_decorated_card.dart';
+import 'package:biluca_financas/reports/components/single_value_card/single_value_card.dart';
+import 'package:biluca_financas/reports/charts/identifications_by_barchart.dart';
+import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/reports/charts/identifications_by_pie.dart';
-import 'package:biluca_financas/reports/month_info_card.dart';
-import 'package:biluca_financas/reports/month_selector.dart';
+import 'package:biluca_financas/reports/components/month_info_card.dart';
+import 'package:biluca_financas/reports/components/month_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 

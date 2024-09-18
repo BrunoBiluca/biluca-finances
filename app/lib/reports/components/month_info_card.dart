@@ -1,7 +1,7 @@
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/common/string_extensions.dart';
 import 'package:biluca_financas/components/base_decorated_card.dart';
-import 'package:biluca_financas/components/relative_value.dart';
+import 'package:biluca_financas/reports/components/single_value_card/values_relation_text.dart';
 import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -73,7 +73,7 @@ class MonthInfoCard extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              RelativeValue.withValues(
+                              ValuesRelationText.withValues(
                                 result.$1,
                                 result.$3,
                                 key: const Key("receitas relativas"),
@@ -102,7 +102,7 @@ class MonthInfoCard extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              RelativeValue.withValues(
+                              ValuesRelationText.withValues(
                                 result.$1,
                                 result.$3,
                                 key: const Key("despesas relativas"),

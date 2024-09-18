@@ -1,4 +1,4 @@
-import 'package:biluca_financas/components/single_value_card.dart';
+import 'package:biluca_financas/reports/components/single_value_card/single_value_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
