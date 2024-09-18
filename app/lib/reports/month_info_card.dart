@@ -1,0 +1,128 @@
+import 'package:biluca_financas/common/formatter.dart';
+import 'package:biluca_financas/common/string_extensions.dart';
+import 'package:biluca_financas/components/base_decorated_card.dart';
+import 'package:biluca_financas/components/relative_value.dart';
+import 'package:biluca_financas/reports/current_month_service.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class MonthInfoCard extends StatelessWidget {
+  final AccountabilityCurrentMonthService service;
+  final AccountabilityCurrentMonthService relatedMonthService;
+  const MonthInfoCard({
+    super.key,
+    required this.service,
+    required this.relatedMonthService,
+  });
+
+  String formatDate(int year, int month) => DateFormat("MMMM yyyy", "pt_BR").format(DateTime(year, month)).capitalize();
+
+  String title() {
+    var str = service.currentMonth.split("/");
+    return formatDate(int.parse(str[1]), int.parse(str[0]));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BaseDecoratedCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title(),
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: FutureBuilder(
+              future: Future.sync(() async {
+                var incomes = await service.getIncomes();
+                var expenses = await service.getExpenses();
+
+                var relIncomes = await relatedMonthService.getIncomes();
+                var relExpenses = await relatedMonthService.getExpenses();
+
+                return (
+                  incomes,
+                  expenses,
+                  relIncomes,
+                  relExpenses,
+                );
+              }),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const CircularProgressIndicator();
+                }
+
+                var result = snapshot.data!;
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  Formatter.value(result.$1),
+                                  key: const Key("receitas"),
+                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 26),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              RelativeValue.withValues(
+                                result.$1,
+                                result.$3,
+                                key: const Key("receitas relativas"),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "Receitas",
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  Formatter.value(result.$2),
+                                  key: const Key("despesas"),
+                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 26),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              RelativeValue.withValues(
+                                result.$1,
+                                result.$3,
+                                key: const Key("despesas relativas"),
+                              )
+                            ],
+                          ),
+                          Text(
+                            "Despesas",
+                            style: Theme.of(context).textTheme.displaySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

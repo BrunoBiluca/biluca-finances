@@ -6,10 +6,10 @@ import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class AmountByIdentificationChart extends StatelessWidget {
+class IdentificationsByBarChart extends StatelessWidget {
   final Map<int, List<GroupedBy<AccountabilityIdentification>>> groups;
   final double barWidth = 40;
-  factory AmountByIdentificationChart({
+  factory IdentificationsByBarChart({
     required List<GroupedBy<AccountabilityIdentification>> accountabilityByIdentification,
     Key? key,
   }) {
@@ -20,10 +20,10 @@ class AmountByIdentificationChart extends StatelessWidget {
         .asMap()
         .map((index, group) => MapEntry(index, group));
 
-    return AmountByIdentificationChart._(groups, key);
+    return IdentificationsByBarChart._(groups, key);
   }
 
-  const AmountByIdentificationChart._(this.groups, Key? key) : super(key: key);
+  const IdentificationsByBarChart._(this.groups, Key? key) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -1,12 +1,14 @@
 import 'dart:async';
 
+import 'package:biluca_financas/common/datetime_extensions.dart';
 import 'package:biluca_financas/components/base_decorated_card.dart';
 import 'package:biluca_financas/components/single_value_card.dart';
-import 'package:biluca_financas/reports/amount_by_identification_chart.dart';
+import 'package:biluca_financas/reports/charts/identifications_by_barchart.dart';
 import 'package:biluca_financas/reports/current_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
-import 'package:biluca_financas/reports/identifications_by_pie.dart';
+import 'package:biluca_financas/reports/charts/identifications_by_pie.dart';
+import 'package:biluca_financas/reports/month_info_card.dart';
 import 'package:biluca_financas/reports/month_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -32,11 +34,16 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
   }
 
   void updateServices() {
-    var lastMonth = _selectedDate.subtract(Duration(days: _selectedDate.day + 1));
     _currentMonthService = GetIt.I<AccountabilityCurrentMonthService>(
       param1: formatMonth(_selectedDate.month, _selectedDate.year),
     );
-    _lastMonthService = GetIt.I<AccountabilityCurrentMonthService>(
+
+    _lastMonthService = getMonthService(1);
+  }
+
+  AccountabilityCurrentMonthService getMonthService(int monthBefore) {
+    var lastMonth = _selectedDate.subtractMonth(monthBefore);
+    return GetIt.I<AccountabilityCurrentMonthService>(
       param1: formatMonth(lastMonth.month, lastMonth.year),
     );
   }
@@ -72,7 +79,12 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                     "Não existem registros para esse mês",
                     key: Key("no_entries"),
                   )
-                : monthInfo()
+                : Expanded(
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: monthInfo(),
+                    ),
+                )
           ],
         );
       },
@@ -80,63 +92,94 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
   }
 
   Widget monthInfo() {
-    return Expanded(
-      child: Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        headlines(),
+        const SizedBox(height: 20),
+        charts(),
+        const SizedBox(height: 20),
+        Text(
+          "Últimos meses",
+          style: Theme.of(context).textTheme.displayLarge,
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 180,
+          child: Row(
+            children: [
+              Expanded(
+                child: MonthInfoCard(service: _lastMonthService, relatedMonthService: _currentMonthService),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: MonthInfoCard(service: getMonthService(2), relatedMonthService: _currentMonthService),
+              ),
+              const SizedBox(width: 20),
+              Expanded(
+                child: MonthInfoCard(service: getMonthService(3), relatedMonthService: _currentMonthService),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  SizedBox charts() {
+    return SizedBox(
+      height: 500,
+      child: Row(
         children: [
-          SizedBox(
-            height: 150,
-            child: Row(
-              children: [
-                summaryCard(
-                  "Balanço",
-                  Future.sync(() async => (
-                        await _currentMonthService.getBalance(),
-                        await _lastMonthService.getBalance(),
-                      )),
-                ),
-                const SizedBox(width: 20),
-                summaryCard(
-                  "Receitas",
-                  Future.sync(() async => (
-                        await _currentMonthService.getIncomes(),
-                        await _lastMonthService.getIncomes(),
-                      )),
-                ),
-                const SizedBox(width: 20),
-                summaryCard(
-                  "Despesas",
-                  Future.sync(() async => (
-                        await _currentMonthService.getExpenses(),
-                        await _lastMonthService.getExpenses(),
-                      )),
-                  lessIsPositite: true,
-                ),
-              ],
+          identificationsChart(
+            "Receitas por identificação",
+            1,
+            (data) => IdentificationsByPie(
+              accountabilityByIdentification: data.where((i) => i.total > 0).toList(),
             ),
           ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 500,
-            child: Row(
-              children: [
-                identificationsChart(
-                  "Receitas por identificação",
-                  1,
-                  (data) => IdentificationsByPie(
-                    accountabilityByIdentification: data.where((i) => i.total > 0).toList(),
-                  ),
-                ),
-                const SizedBox(width: 20),
-                identificationsChart(
-                  "Gastos por identificação",
-                  2,
-                  (data) => AmountByIdentificationChart(
-                    accountabilityByIdentification: data.where((i) => i.total < 0).toList(),
-                  ),
-                )
-              ],
+          const SizedBox(width: 20),
+          identificationsChart(
+            "Gastos por identificação",
+            2,
+            (data) => IdentificationsByBarChart(
+              accountabilityByIdentification: data.where((i) => i.total < 0).toList(),
             ),
           )
+        ],
+      ),
+    );
+  }
+
+  SizedBox headlines() {
+    return SizedBox(
+      height: 150,
+      child: Row(
+        children: [
+          summaryCard(
+            "Balanço",
+            Future.sync(() async => (
+                  await _currentMonthService.getBalance(),
+                  await _lastMonthService.getBalance(),
+                )),
+          ),
+          const SizedBox(width: 20),
+          summaryCard(
+            "Receitas",
+            Future.sync(() async => (
+                  await _currentMonthService.getIncomes(),
+                  await _lastMonthService.getIncomes(),
+                )),
+          ),
+          const SizedBox(width: 20),
+          summaryCard(
+            "Despesas",
+            Future.sync(() async => (
+                  await _currentMonthService.getExpenses(),
+                  await _lastMonthService.getExpenses(),
+                )),
+            lessIsPositite: true,
+          ),
         ],
       ),
     );

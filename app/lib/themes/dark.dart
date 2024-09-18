@@ -26,6 +26,10 @@ class DarkTheme extends AppTheme {
           fontSize: 32,
           fontWeight: FontWeight.bold,
         ),
+        displayMedium: TextStyle(
+          color: Color(0xFFE8E6E3),
+          fontSize: 28,
+        ),
         displaySmall: TextStyle(
           color: Color(0xFF988F81),
           fontSize: 16,
