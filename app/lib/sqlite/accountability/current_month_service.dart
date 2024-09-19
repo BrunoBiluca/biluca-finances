@@ -1,11 +1,12 @@
-import 'package:biluca_financas/reports/current_month_service.dart';
+import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-import '../../common/data/grouped_by.dart';
+import 'package:biluca_financas/common/data/grouped_by.dart';
 
-class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMonthService {
+class SQLiteAccontabilityCurrentMonthService implements AccountabilityMonthService {
   final Database db;
   final String month;
   SQLiteAccontabilityCurrentMonthService({required this.db, required this.month});
@@ -90,11 +91,11 @@ class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMon
         .map(
           (e) => GroupedBy(
             AccountabilityIdentification.fromMap(e),
-            e['total'] as double,
+            total: e['total'] as double,
           ),
         )
         .toList()
-        .sorted((a, b) => b.total.compareTo(a.total));
+        .sorted((a, b) => b.total!.compareTo(a.total!));
   }
 
   @override
@@ -107,5 +108,31 @@ class SQLiteAccontabilityCurrentMonthService implements AccountabilityCurrentMon
       """,
     );
     return result.first['total'] as int;
+  }
+
+  @override
+  Future<List<GroupedBy<AccountabilityIdentification>>> getAccumulatedMeansByIdentification() async {
+    var str = currentMonth.split("/");
+    var date = DateTime(int.parse(str[1]), int.parse(str[0]), 1);
+    var datef = DateFormat("yyyy-MM-dd").format(date);
+
+    var result = await db.rawQuery(
+      """
+      SELECT ai.id, ai.description, ai.color, AVG(value) AS mean
+      FROM accountability a
+      INNER JOIN accountability_identifications ai ON a.identification_id = ai.id
+      WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef')
+      GROUP BY ai.id;
+      """,
+    );
+
+    return result
+        .map(
+          (e) => GroupedBy(
+            AccountabilityIdentification.fromMap(e),
+            mean: e['mean'] as double,
+          ),
+        )
+        .toList();
   }
 }

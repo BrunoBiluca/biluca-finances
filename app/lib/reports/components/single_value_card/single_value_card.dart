@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 class SingleValueCard extends StatefulWidget {
   final String title;
   final double currentValue;
-  final double? lastValue;
+  final double? relatedValue;
   final bool lessIsPositite;
   const SingleValueCard({
     super.key,
     required this.title,
     required this.currentValue,
-    this.lastValue,
+    this.relatedValue,
     this.lessIsPositite = false,
   });
 
@@ -28,8 +28,8 @@ class _SingleValueCardState extends State<SingleValueCard> {
   @override
   void initState() {
     super.initState();
-    if (widget.lastValue != null) {
-      values = ValuesRelation(widget.currentValue, widget.lastValue!, lessIsPositite: widget.lessIsPositite);
+    if (widget.relatedValue != null) {
+      values = ValuesRelation(widget.currentValue, widget.relatedValue!, lessIsPositite: widget.lessIsPositite);
     }
   }
 

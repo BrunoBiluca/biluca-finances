@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/reports/current_month_service.dart';
+import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:biluca_financas/app.dart';
@@ -27,10 +27,6 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   initializeDateFormatting('pt_BR');
   WidgetsFlutterBinding.ensureInitialized();
-  Logger.root.level = Level.ALL; // defaults to Level.INFO
-  Logger.root.onRecord.listen((record) {
-    print('${record.level.name}: ${record.time}: ${record.message}');
-  });
   // await executePredictServer();
 
   await setupDependencies();
@@ -62,7 +58,7 @@ Future<void> setupDependencies() async {
   // DBProvider.i.clear(await DBProvider.i.database);
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
-  getIt.registerFactoryParam<AccountabilityCurrentMonthService, String, void>(
+  getIt.registerFactoryParam<AccountabilityMonthService, String, void>(
     (month, _) => SQLiteAccontabilityCurrentMonthService(db: getIt<Database>(), month: month),
   );
   getIt.registerFactory<AccountabilityRepo>(

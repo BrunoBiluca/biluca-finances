@@ -16,7 +16,7 @@ class IdentificationsByBarChart extends StatelessWidget {
     var groups = accountabilityByIdentification
         .groupListsBy((identification) => identification.field.id)
         .values
-        .sorted((g1, g2) => g2[0].total.abs().compareTo(g1[0].total.abs()))
+        .sorted((g1, g2) => g2[0].total!.abs().compareTo(g1[0].total!.abs()))
         .asMap()
         .map((index, group) => MapEntry(index, group));
 
@@ -80,11 +80,11 @@ class IdentificationsByBarChart extends StatelessWidget {
     var idGroup = groups[groupIndex]!;
     var desc = idGroup[0].field.description;
     var current = idGroup[0].total;
-    var str = "$desc\n${current.abs().toStringAsFixed(2)}";
+    var str = "$desc\n${current!.abs().toStringAsFixed(2)}";
 
     if (idGroup.length > 1) {
       var last = idGroup[1].total;
-      var rel = Formatter.relation(Math.relativePercentage(current, last));
+      var rel = Formatter.relation(Math.relativePercentage(current, last!));
       str += "\n$rel";
     }
     else {
@@ -98,8 +98,8 @@ class IdentificationsByBarChart extends StatelessWidget {
     return groups.values.mapIndexed(
       (index, group) {
         var color = group[0].field.color;
-        var current = group[0].total.abs();
-        var last = group.length > 1 ? group[1].total.abs() : 0.0;
+        var current = group[0].total!.abs();
+        var last = group.length > 1 ? group[1].total!.abs() : 0.0;
 
         List<BarChartRodStackItem> items = [];
         var maxToY = 0.0;

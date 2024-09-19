@@ -18,7 +18,7 @@ class IdentificationsByPie extends StatelessWidget {
     var groups = accountabilityByIdentification
         .groupListsBy((identification) => identification.field.id)
         .values
-        .sorted((g1, g2) => g2[0].total.abs().compareTo(g1[0].total.abs()))
+        .sorted((g1, g2) => g2[0].total!.abs().compareTo(g1[0].total!.abs()))
         .asMap()
         .map((index, group) => MapEntry(index, group));
 
@@ -56,7 +56,7 @@ class IdentificationsByPie extends StatelessWidget {
     return groups.values.mapIndexed(
       (index, group) {
         var color = group[0].field.color;
-        var current = group[0].total.abs();
+        var current = group[0].total!.abs();
 
         return PieChartSectionData(
           color: color,

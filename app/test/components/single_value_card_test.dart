@@ -31,7 +31,7 @@ void main() {
       const SingleValueCard(
         title: "Balanço",
         currentValue: 11,
-        lastValue: 10,
+        relatedValue: 10,
       ),
     );
 
@@ -45,7 +45,7 @@ void main() {
       const SingleValueCard(
         title: "Balanço",
         currentValue: 20,
-        lastValue: 10,
+        relatedValue: 10,
       ),
     );
 

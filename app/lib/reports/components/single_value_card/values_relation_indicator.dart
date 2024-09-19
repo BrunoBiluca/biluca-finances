@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/components/single_value_card/values_relation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,23 +25,12 @@ class ValuesRelationIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: theme["bgColor"],
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(color: positiveBorder, width: 4),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Transform.rotate(
-          angle: theme["rotation"],
-          child: Icon(
-            theme["icon"],
-            color: theme["txtColor"],
-            size: Theme.of(context).textTheme.displayLarge?.fontSize,
-          ),
-        ),
-      ),
+    return IconHighlight(
+      bgColor: theme["bgColor"],
+      borderColor: positiveBorder,
+      txtColor: theme["txtColor"],
+      icon: theme["icon"],
+      rotation: theme["rotation"],
     );
   }
 
