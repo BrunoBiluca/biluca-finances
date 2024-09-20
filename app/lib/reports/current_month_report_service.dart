@@ -46,18 +46,27 @@ class CurrentMonthReportService {
   }
 
   Future<Map<dynamic, dynamic>> getMeansByIdentification() async {
-    var identifications = await current.getAccumulatedMeansByIdentification();
+    var incomes = await current.getIncomes();
+    var expenses = await current.getExpenses();
+
+    var accIncomes = await current.getAccumulatedIncomes();
+    var accExpenses = await current.getAccumulatedExpenses();
+
     var values = {};
+    values["Receitas"] = {"field": "Receitas", "mean": accIncomes, "current": incomes};
+    values["Despesas"] = {"field": "Despesas", "mean": accExpenses, "current": expenses};
+
+    var identifications = await current.getAccumulatedMeansByIdentification();
     for (var i in identifications) {
-      values[i.field.description] = {"field": i.field, "mean": i, "current": null};
+      values[i.field.description] = {"field": i.field.description, "mean": i.mean, "current": null};
     }
 
     var currIdentifications = await current.getTotalByIdentification();
     for (var i in currIdentifications) {
       if (!values.containsKey(i.field.description)) {
-        values[i.field.description] = {"field": i.field, "mean": null, "current": i};
+        values[i.field.description] = {"field": i.field.description, "mean": null, "current": i.total};
       } else {
-        values[i.field.description]["current"] = i;
+        values[i.field.description]["current"] = i.total;
       }
     }
 

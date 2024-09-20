@@ -135,4 +135,46 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
         )
         .toList();
   }
+
+  @override
+  Future<double> getAccumulatedExpenses() async {
+    var str = currentMonth.split("/");
+    var date = DateTime(int.parse(str[1]), int.parse(str[0]), 1);
+    var datef = DateFormat("yyyy-MM-dd").format(date);
+
+    var result = await db.rawQuery(
+      """
+      SELECT AVG(value) AS total
+      FROM accountability
+      WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value < 0
+      """,
+    );
+
+    if (result.isEmpty) {
+      return 0.00;
+    }
+
+    return result.first['total'] as double;
+  }
+
+  @override
+  Future<double> getAccumulatedIncomes() async {
+    var str = currentMonth.split("/");
+    var date = DateTime(int.parse(str[1]), int.parse(str[0]), 1);
+    var datef = DateFormat("yyyy-MM-dd").format(date);
+
+    var result = await db.rawQuery(
+      """
+      SELECT AVG(value) AS total
+      FROM accountability
+      WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value > 0
+      """,
+    );
+
+    if (result.isEmpty) {
+      return 0.00;
+    }
+
+    return result.first['total'] as double;
+  }
 }

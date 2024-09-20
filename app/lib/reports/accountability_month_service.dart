@@ -7,7 +7,9 @@ abstract class AccountabilityMonthService {
   Future<double> getSum();
   Future<double> getBalance();
   Future<double> getExpenses();
+  Future<double> getAccumulatedExpenses();
   Future<double> getIncomes();
+  Future<double> getAccumulatedIncomes();
   Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification();
   Future<List<GroupedBy<AccountabilityIdentification>>> getAccumulatedMeansByIdentification();
 }

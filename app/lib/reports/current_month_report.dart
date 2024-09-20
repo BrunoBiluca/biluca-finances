@@ -235,6 +235,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           _service.getMeansByIdentification(),
           (data) {
             var d = data.values.toList();
+            
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
@@ -248,9 +249,10 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                 var item = d[index];
 
                 return SingleValueCard(
-                  title: item["field"].description,
-                  currentValue: item["mean"] != null ? item["mean"].mean! : 0,
-                  relatedValue: item["current"] != null ? item["current"].total! : 0,
+                  title: item["field"],
+                  currentValue: item["mean"] != null ? item["mean"]! : 0,
+                  relatedValue: item["current"] != null ? item["current"]! : 0,
+                  lessIsPositite: item["field"] == "Despesas",
                 );
               },
             );
