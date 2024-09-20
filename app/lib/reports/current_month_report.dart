@@ -101,24 +101,25 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           child: Row(
             children: [
               Expanded(
-                child: MonthInfoCard(service: _service.related, relatedMonthService: _service.current),
+                child: MonthInfoCard(service: _service.current, relatedMonthService: _service.related),
               ),
               const SizedBox(width: 20),
               Expanded(
                 child: MonthInfoCard(
-                  service: GetIt.I<AccountabilityMonthService>(
+                  service: _service.current,
+                  relatedMonthService: GetIt.I<AccountabilityMonthService>(
                     param1: _selectedDate.subtractMonth(2),
                   ),
-                  relatedMonthService: _service.current,
                 ),
               ),
               const SizedBox(width: 20),
               Expanded(
                 child: MonthInfoCard(
-                    service: GetIt.I<AccountabilityMonthService>(
-                      param1: _selectedDate.subtractMonth(3),
-                    ),
-                    relatedMonthService: _service.current),
+                  service: _service.current,
+                  relatedMonthService: GetIt.I<AccountabilityMonthService>(
+                    param1: _selectedDate.subtractMonth(3),
+                  ),
+                ),
               ),
             ],
           ),
@@ -243,12 +244,14 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               itemCount: d.length,
               itemBuilder: (context, index) {
                 var item = d[index];
+                var mean = item["mean"] != null ? item["mean"]! : 0.0;
+                var current = item["current"] != null ? item["current"]! : 0.0;
 
                 return SingleValueCard(
                   title: item["field"],
-                  currentValue: item["mean"] != null ? item["mean"]! : 0,
-                  relatedValue: item["current"] != null ? item["current"]! : 0,
-                  lessIsPositite: item["field"] == "Despesas",
+                  currentValue: mean,
+                  relatedValue: current,
+                  lessIsPositite: mean < 0,
                 );
               },
             );

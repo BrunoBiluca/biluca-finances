@@ -1,6 +1,6 @@
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/components/base_decorated_card.dart';
-import 'package:biluca_financas/reports/components/single_value_card/values_relation.dart';
+import 'package:biluca_financas/reports/models/values_relation.dart';
 import 'package:biluca_financas/reports/components/single_value_card/values_relation_indicator.dart';
 import 'package:biluca_financas/reports/components/single_value_card/values_relation_text.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +56,7 @@ class _SingleValueCardState extends State<SingleValueCard> {
                           style: Theme.of(context).textTheme.displayLarge,
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 20),
                       values == null ? Container() : ValuesRelationText(values: values!),
                     ],
                   ),

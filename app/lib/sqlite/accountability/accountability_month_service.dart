@@ -118,11 +118,18 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
 
     var result = await db.rawQuery(
       """
-      SELECT ai.id, ai.description, ai.color, AVG(value) AS mean
-      FROM accountability a
+      select ai.id, ai.description, ai.color, a.mean
+      from (
+        select identification_id,  AVG(total) as mean 
+        from(
+          SELECT identification_id, strftime('%m/%Y', createdAt) AS month, SUM(value) AS total
+          FROM accountability
+          WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef')
+          GROUP BY identification_id, month
+        )
+        group by identification_id
+      ) a
       INNER JOIN accountability_identifications ai ON a.identification_id = ai.id
-      WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef')
-      GROUP BY ai.id;
       """,
     );
 
@@ -142,9 +149,13 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
 
     var result = await db.rawQuery(
       """
-      SELECT AVG(value) AS total
-      FROM accountability
-      WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value < 0
+      Select AVG(a.total) as mean
+      from (
+        SELECT SUM(value) AS total, strftime('%m/%Y', createdAt) AS month
+        FROM accountability
+        WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value < 0
+        group by month
+      ) a
       """,
     );
 
@@ -152,7 +163,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       return 0.00;
     }
 
-    return result.first['total'] as double;
+    return result.first['mean'] as double;
   }
 
   @override
@@ -161,9 +172,13 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
 
     var result = await db.rawQuery(
       """
-      SELECT AVG(value) AS total
-      FROM accountability
-      WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value > 0
+      Select AVG(a.total) as mean
+      from (
+        SELECT SUM(value) AS total, strftime('%m/%Y', createdAt) AS month
+        FROM accountability
+        WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value > 0
+        group by month
+      ) a
       """,
     );
 
@@ -171,6 +186,6 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       return 0.00;
     }
 
-    return result.first['total'] as double;
+    return result.first['mean'] as double;
   }
 }

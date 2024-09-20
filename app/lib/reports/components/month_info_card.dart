@@ -67,7 +67,7 @@ class MonthInfoCard extends StatelessWidget {
                             children: [
                               Flexible(
                                 child: Text(
-                                  Formatter.value(result.$1),
+                                  Formatter.value(result.$3),
                                   key: const Key("receitas"),
                                   style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 26),
                                 ),
@@ -96,16 +96,17 @@ class MonthInfoCard extends StatelessWidget {
                             children: [
                               Flexible(
                                 child: Text(
-                                  Formatter.value(result.$2),
+                                  Formatter.value(result.$4),
                                   key: const Key("despesas"),
                                   style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 26),
                                 ),
                               ),
                               const SizedBox(width: 10),
                               ValuesRelationText.withValues(
-                                result.$1,
-                                result.$3,
+                                result.$2,
+                                result.$4,
                                 key: const Key("despesas relativas"),
+                                lessIsPositite: true,
                               )
                             ],
                           ),

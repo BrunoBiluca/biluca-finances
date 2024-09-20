@@ -80,7 +80,7 @@ class IdentificationsByBarChart extends StatelessWidget {
     var idGroup = groups[groupIndex]!;
     var desc = idGroup[0].field.description;
     var current = idGroup[0].total;
-    var str = "$desc\n${current!.abs().toStringAsFixed(2)}";
+    var str = "$desc\nR\$ ${current!.abs().toStringAsFixed(2)}";
 
     if (idGroup.length > 1) {
       var last = idGroup[1].total;
