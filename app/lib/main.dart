@@ -58,7 +58,7 @@ Future<void> setupDependencies() async {
   // DBProvider.i.clear(await DBProvider.i.database);
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
-  getIt.registerFactoryParam<AccountabilityMonthService, String, void>(
+  getIt.registerFactoryParam<AccountabilityMonthService, DateTime, void>(
     (month, _) => SQLiteAccontabilityMonthService(db: getIt<Database>(), month: month),
   );
   getIt.registerFactory<AccountabilityRepo>(

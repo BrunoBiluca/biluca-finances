@@ -87,10 +87,6 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
     );
   }
 
-  static String formatMonth(int month, int year) {
-    return "${month < 10 ? '0' : ''}$month/$year";
-  }
-
   Column lastMonths(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +107,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               Expanded(
                 child: MonthInfoCard(
                   service: GetIt.I<AccountabilityMonthService>(
-                    param1: formatMonth(_selectedDate.subtractMonth(2).month, _selectedDate.subtractMonth(2).year),
+                    param1: _selectedDate.subtractMonth(2),
                   ),
                   relatedMonthService: _service.current,
                 ),
@@ -120,7 +116,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               Expanded(
                 child: MonthInfoCard(
                     service: GetIt.I<AccountabilityMonthService>(
-                      param1: formatMonth(_selectedDate.subtractMonth(3).month, _selectedDate.subtractMonth(2).year),
+                      param1: _selectedDate.subtractMonth(3),
                     ),
                     relatedMonthService: _service.current),
               ),
@@ -235,7 +231,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           _service.getMeansByIdentification(),
           (data) {
             var d = data.values.toList();
-            
+
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,

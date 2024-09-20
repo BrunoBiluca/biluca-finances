@@ -8,8 +8,10 @@ import 'package:biluca_financas/common/data/grouped_by.dart';
 
 class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
   final Database db;
-  final String month;
+  final DateTime month;
   SQLiteAccontabilityMonthService({required this.db, required this.month});
+
+  String get monthf => DateFormat("MM/yyyy").format(month);
 
   @override
   Future<double> getSum() async {
@@ -17,7 +19,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       """
       SELECT Sum(value) AS total, strftime('%m/%Y', createdAt) AS month
       FROM accountability
-      WHERE month == '$month'
+      WHERE month == '$monthf'
       GROUP BY month
       """,
     );
@@ -35,7 +37,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       """
       SELECT Sum(value) AS total, strftime('%m/%Y', createdAt) AS month
       FROM accountability
-      WHERE month == '$month' AND value < 0
+      WHERE month == '$monthf' AND value < 0
       GROUP BY month
       """,
     );
@@ -53,7 +55,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       """
       SELECT Sum(value) AS total, strftime('%m/%Y', createdAt) AS month
       FROM accountability
-      WHERE month == '$month' AND value > 0
+      WHERE month == '$monthf' AND value > 0
       GROUP BY month
       """,
     );
@@ -66,7 +68,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
   }
 
   @override
-  String get currentMonth => month;
+  String get currentMonth => monthf;
 
   @override
   Future<double> getBalance() async {
@@ -82,7 +84,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       SELECT ai.id, ai.description, ai.color, Sum(value) AS total, strftime('%m/%Y', createdAt) AS month
       FROM accountability a
       INNER JOIN accountability_identifications ai ON a.identification_id = ai.id
-      WHERE month == '$month'
+      WHERE month == '$monthf'
       GROUP BY ai.id
       """,
     );
@@ -104,7 +106,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       """
       SELECT Count(*) AS total, strftime('%m/%Y', createdAt) AS month
       FROM accountability
-      WHERE month == '$month'
+      WHERE month == '$monthf'
       """,
     );
     return result.first['total'] as int;
@@ -112,9 +114,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
 
   @override
   Future<List<GroupedBy<AccountabilityIdentification>>> getAccumulatedMeansByIdentification() async {
-    var str = currentMonth.split("/");
-    var date = DateTime(int.parse(str[1]), int.parse(str[0]), 1);
-    var datef = DateFormat("yyyy-MM-dd").format(date);
+    var datef = DateFormat("yyyy-MM-dd").format(month);
 
     var result = await db.rawQuery(
       """
@@ -138,9 +138,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
 
   @override
   Future<double> getAccumulatedExpenses() async {
-    var str = currentMonth.split("/");
-    var date = DateTime(int.parse(str[1]), int.parse(str[0]), 1);
-    var datef = DateFormat("yyyy-MM-dd").format(date);
+    var datef = DateFormat("yyyy-MM-dd").format(month);
 
     var result = await db.rawQuery(
       """
@@ -159,9 +157,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
 
   @override
   Future<double> getAccumulatedIncomes() async {
-    var str = currentMonth.split("/");
-    var date = DateTime(int.parse(str[1]), int.parse(str[0]), 1);
-    var datef = DateFormat("yyyy-MM-dd").format(date);
+    var datef = DateFormat("yyyy-MM-dd").format(month);
 
     var result = await db.rawQuery(
       """

@@ -10,15 +10,10 @@ class CurrentMonthReportService {
   CurrentMonthReportService._(this.current, this.related);
 
   factory CurrentMonthReportService(DateTime month) {
-    var relatedMonth = month.subtractMonth(1);
     return CurrentMonthReportService._(
-      GetIt.I<AccountabilityMonthService>(param1: formatMonth(month.month, month.year)),
-      GetIt.I<AccountabilityMonthService>(param1: formatMonth(relatedMonth.month, relatedMonth.year)),
+      GetIt.I<AccountabilityMonthService>(param1: month),
+      GetIt.I<AccountabilityMonthService>(param1: month.subtractMonth(1)),
     );
-  }
-
-  static String formatMonth(int month, int year) {
-    return "${month < 10 ? '0' : ''}$month/$year";
   }
 
   Future<dynamic> summaryBalance() async {

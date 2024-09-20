@@ -1,5 +1,6 @@
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/common/datetime_extensions.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_month_service.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'helpers/memory_db_provider.dart';
 
 void main() {
-  var currentMonth = "07/2024";
+  var currentMonth = DateTime(2024, 7);
 
   setUpAll(() async {
     MemoryDBProvider.i.init();
@@ -39,7 +40,10 @@ void main() {
   });
 
   test("deve retornar zero quando nenhum registro encontrado", () async {
-    var service = SQLiteAccontabilityMonthService(db: await MemoryDBProvider.i.database, month: "06/2024");
+    var service = SQLiteAccontabilityMonthService(
+      db: await MemoryDBProvider.i.database,
+      month: currentMonth.subtractMonth(1),
+    );
 
     var count = await service.count();
 
