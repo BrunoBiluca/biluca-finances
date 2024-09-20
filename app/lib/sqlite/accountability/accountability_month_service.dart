@@ -74,7 +74,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
   Future<double> getBalance() async {
     var incomes = await getIncomes();
     var expenses = (await getExpenses()).abs();
-    return incomes / expenses - 1.0;
+    return incomes - expenses;
   }
 
   @override

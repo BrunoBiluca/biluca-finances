@@ -10,11 +10,13 @@ import 'helpers/memory_db_provider.dart';
 
 void main() {
   var currentMonth = DateTime(2024, 7);
+  SQLiteAccountabilityRepo? arepo;
 
-  setUpAll(() async {
+  setUp(() async {
     MemoryDBProvider.i.init();
 
-    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    arepo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    var repo = arepo!;
 
     var id1 = AccountabilityIdentification("Descricão fictício 1", Colors.red);
     var id2 = AccountabilityIdentification("Descricão fictício 2", Colors.blue);
@@ -33,7 +35,8 @@ void main() {
         description: "Descricão fictício", value: -10.00, createdAt: createdAt, identification: aid2));
   });
 
-  tearDownAll(() async {
+  tearDown(() async {
+    arepo = null;
     var db = await MemoryDBProvider.i.database;
     await db.close();
     await MemoryDBProvider.i.clear(db);
@@ -58,7 +61,7 @@ void main() {
     expect(count, 4);
   });
 
-  test("should return balance for the current month", () async {
+  test("should return zero balance for the current month", () async {
     var service = SQLiteAccontabilityMonthService(db: await MemoryDBProvider.i.database, month: currentMonth);
 
     var total = await service.getBalance();
@@ -66,6 +69,43 @@ void main() {
     expect(total, 0.00);
   });
 
+  test("should return positive balance", () async {
+    await arepo!.add(
+      AccountabilityEntryRequest(
+        description: "Descricão fictício",
+        value: 10.00,
+        createdAt: currentMonth,
+      ),
+    );
+
+    var service = SQLiteAccontabilityMonthService(
+      db: await MemoryDBProvider.i.database,
+      month: currentMonth,
+    );
+
+    var total = await service.getBalance();
+
+    expect(total, 10.00);
+  });
+
+  test("should return negative balance", () async {
+    await arepo!.add(
+      AccountabilityEntryRequest(
+        description: "Descricão fictício",
+        value: -10.00,
+        createdAt: currentMonth,
+      ),
+    );
+
+    var service = SQLiteAccontabilityMonthService(
+      db: await MemoryDBProvider.i.database,
+      month: currentMonth,
+    );
+
+    var total = await service.getBalance();
+
+    expect(total, -10.00);
+  });
   test("should return sum of accountability expenses for the current month", () async {
     var service = SQLiteAccontabilityMonthService(db: await MemoryDBProvider.i.database, month: currentMonth);
 
