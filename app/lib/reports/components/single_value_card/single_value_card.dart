@@ -9,12 +9,14 @@ class SingleValueCard extends StatefulWidget {
   final String title;
   final double currentValue;
   final double? relatedValue;
+  final double? displayValue;
   final bool lessIsPositite;
   const SingleValueCard({
     super.key,
     required this.title,
     required this.currentValue,
     this.relatedValue,
+    this.displayValue,
     this.lessIsPositite = false,
   });
 
@@ -51,7 +53,7 @@ class _SingleValueCardState extends State<SingleValueCard> {
                       Flexible(
                         flex: 1,
                         child: Text(
-                          Formatter.value(widget.currentValue),
+                          Formatter.value(widget.displayValue != null ? widget.displayValue! : widget.currentValue),
                           key: const Key("valor"),
                           style: Theme.of(context).textTheme.displayLarge,
                         ),

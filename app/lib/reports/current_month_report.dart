@@ -224,7 +224,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Médias dos últimos meses",
+          "Médias dos últimos 12 meses",
           style: Theme.of(context).textTheme.displayLarge,
         ),
         const SizedBox(height: 20),
@@ -249,8 +249,9 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
                 return SingleValueCard(
                   title: item["field"],
-                  currentValue: mean,
-                  relatedValue: current,
+                  currentValue: current,
+                  relatedValue: mean,
+                  displayValue: mean,
                   lessIsPositite: mean < 0,
                 );
               },
