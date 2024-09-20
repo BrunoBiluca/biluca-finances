@@ -1,0 +1,66 @@
+import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/common/data/grouped_by.dart';
+import 'package:biluca_financas/common/datetime_extensions.dart';
+import 'package:biluca_financas/reports/accountability_month_service.dart';
+import 'package:get_it/get_it.dart';
+
+class CurrentMonthReportService {
+  final AccountabilityMonthService current;
+  final AccountabilityMonthService related;
+  CurrentMonthReportService._(this.current, this.related);
+
+  factory CurrentMonthReportService(DateTime month) {
+    var relatedMonth = month.subtractMonth(1);
+    return CurrentMonthReportService._(
+      GetIt.I<AccountabilityMonthService>(param1: formatMonth(month.month, month.year)),
+      GetIt.I<AccountabilityMonthService>(param1: formatMonth(relatedMonth.month, relatedMonth.year)),
+    );
+  }
+
+  static String formatMonth(int month, int year) {
+    return "${month < 10 ? '0' : ''}$month/$year";
+  }
+
+  Future<dynamic> summaryBalance() async {
+    return {"balance": await current.getBalance(), "related": await related.getBalance()};
+  }
+
+  Future<dynamic> summaryIncomes() async {
+    return {"incomes": await current.getIncomes(), "related": await related.getIncomes()};
+  }
+
+  Future<dynamic> summaryExpenses() async {
+    return {"expenses": await current.getExpenses(), "related": await related.getExpenses()};
+  }
+
+  Future<List<GroupedBy<AccountabilityIdentification>>> expensesByIdentification() async {
+    var identifications = await current.getTotalByIdentification();
+    identifications.addAll(await related.getTotalByIdentification());
+    return identifications.where((i) => i.total! < 0).toList();
+  }
+
+  Future<List<GroupedBy<AccountabilityIdentification>>> incomesByIdentification() async {
+    var identifications = await current.getTotalByIdentification();
+    identifications.addAll(await related.getTotalByIdentification());
+    return identifications.where((i) => i.total! > 0).toList();
+  }
+
+  Future<Map<dynamic, dynamic>> getMeansByIdentification() async {
+    var identifications = await current.getAccumulatedMeansByIdentification();
+    var values = {};
+    for (var i in identifications) {
+      values[i.field.description] = {"field": i.field, "mean": i, "current": null};
+    }
+
+    var currIdentifications = await current.getTotalByIdentification();
+    for (var i in currIdentifications) {
+      if (!values.containsKey(i.field.description)) {
+        values[i.field.description] = {"field": i.field, "mean": null, "current": i};
+      } else {
+        values[i.field.description]["current"] = i;
+      }
+    }
+
+    return values;
+  }
+}

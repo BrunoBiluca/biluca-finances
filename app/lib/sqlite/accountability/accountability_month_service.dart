@@ -6,10 +6,10 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:biluca_financas/common/data/grouped_by.dart';
 
-class SQLiteAccontabilityCurrentMonthService implements AccountabilityMonthService {
+class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
   final Database db;
   final String month;
-  SQLiteAccontabilityCurrentMonthService({required this.db, required this.month});
+  SQLiteAccontabilityMonthService({required this.db, required this.month});
 
   @override
   Future<double> getSum() async {

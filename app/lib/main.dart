@@ -8,7 +8,7 @@ import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:biluca_financas/app.dart';
 import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
-import 'package:biluca_financas/sqlite/accountability/current_month_service.dart';
+import 'package:biluca_financas/sqlite/accountability/accountability_month_service.dart';
 import 'package:biluca_financas/sqlite/accountability/import_service.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
 import 'package:biluca_financas/theme_manager.dart';
@@ -59,7 +59,7 @@ Future<void> setupDependencies() async {
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
   getIt.registerFactoryParam<AccountabilityMonthService, String, void>(
-    (month, _) => SQLiteAccontabilityCurrentMonthService(db: getIt<Database>(), month: month),
+    (month, _) => SQLiteAccontabilityMonthService(db: getIt<Database>(), month: month),
   );
   getIt.registerFactory<AccountabilityRepo>(
     () => SQLiteAccountabilityRepo(getIt<Database>()),

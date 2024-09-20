@@ -3,17 +3,16 @@ import 'dart:async';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/common/datetime_extensions.dart';
-import 'package:biluca_financas/components/base_decorated_card.dart';
+import 'package:biluca_financas/components/column_decorated_card.dart';
 import 'package:biluca_financas/reports/components/single_value_card/single_value_card.dart';
 import 'package:biluca_financas/reports/charts/identifications_by_barchart.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:biluca_financas/reports/charts/identifications_by_pie.dart';
 import 'package:biluca_financas/reports/components/month_info_card.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
-import 'package:collection/collection.dart';
+import 'package:biluca_financas/reports/current_month_report_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:path/path.dart';
 
 class CurrentMonthReport extends StatefulWidget {
   const CurrentMonthReport({super.key});
@@ -23,8 +22,7 @@ class CurrentMonthReport extends StatefulWidget {
 }
 
 class _CurrentMonthReportState extends State<CurrentMonthReport> {
-  late AccountabilityMonthService _currentMonthService;
-  late AccountabilityMonthService _lastMonthService;
+  late CurrentMonthReportService _service;
 
   late DateTime _selectedDate;
 
@@ -36,28 +34,13 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
   }
 
   void updateServices() {
-    _currentMonthService = GetIt.I<AccountabilityMonthService>(
-      param1: formatMonth(_selectedDate.month, _selectedDate.year),
-    );
-
-    _lastMonthService = getMonthService(1);
-  }
-
-  AccountabilityMonthService getMonthService(int monthBefore) {
-    var lastMonth = _selectedDate.subtractMonth(monthBefore);
-    return GetIt.I<AccountabilityMonthService>(
-      param1: formatMonth(lastMonth.month, lastMonth.year),
-    );
-  }
-
-  String formatMonth(int month, int year) {
-    return "${month < 10 ? '0' : ''}$month/$year";
+    _service = CurrentMonthReportService(_selectedDate);
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _currentMonthService.count(),
+      future: _service.current.count(),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const CircularProgressIndicator();
@@ -84,7 +67,18 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                 : Expanded(
                     child: SingleChildScrollView(
                       scrollDirection: Axis.vertical,
-                      child: monthInfo(context),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          headlines(),
+                          const SizedBox(height: 20),
+                          charts(),
+                          const SizedBox(height: 20),
+                          lastMonths(context),
+                          const SizedBox(height: 20),
+                          lastMonthsMeans(context)
+                        ],
+                      ),
                     ),
                   )
           ],
@@ -93,19 +87,8 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
     );
   }
 
-  Widget monthInfo(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        headlines(),
-        const SizedBox(height: 20),
-        charts(),
-        const SizedBox(height: 20),
-        lastMonths(context),
-        const SizedBox(height: 20),
-        lastMonthsMeans(context)
-      ],
-    );
+  static String formatMonth(int month, int year) {
+    return "${month < 10 ? '0' : ''}$month/$year";
   }
 
   Column lastMonths(BuildContext context) {
@@ -122,15 +105,24 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           child: Row(
             children: [
               Expanded(
-                child: MonthInfoCard(service: _lastMonthService, relatedMonthService: _currentMonthService),
+                child: MonthInfoCard(service: _service.related, relatedMonthService: _service.current),
               ),
               const SizedBox(width: 20),
               Expanded(
-                child: MonthInfoCard(service: getMonthService(2), relatedMonthService: _currentMonthService),
+                child: MonthInfoCard(
+                  service: GetIt.I<AccountabilityMonthService>(
+                    param1: formatMonth(_selectedDate.subtractMonth(2).month, _selectedDate.subtractMonth(2).year),
+                  ),
+                  relatedMonthService: _service.current,
+                ),
               ),
               const SizedBox(width: 20),
               Expanded(
-                child: MonthInfoCard(service: getMonthService(3), relatedMonthService: _currentMonthService),
+                child: MonthInfoCard(
+                    service: GetIt.I<AccountabilityMonthService>(
+                      param1: formatMonth(_selectedDate.subtractMonth(3).month, _selectedDate.subtractMonth(2).year),
+                    ),
+                    relatedMonthService: _service.current),
               ),
             ],
           ),
@@ -144,19 +136,25 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
       height: 500,
       child: Row(
         children: [
-          identificationsChart(
-            "Receitas por identificação",
-            1,
-            (data) => IdentificationsByPie(
-              accountabilityByIdentification: data.where((i) => i.total! > 0).toList(),
+          Expanded(
+            flex: 1,
+            child: ColumnDecoratedCard(
+              title: "Receitas por identificação",
+              future: _service.incomesByIdentification(),
+              child: (d) => IdentificationsByPie(
+                accountabilityByIdentification: d as List<GroupedBy<AccountabilityIdentification>>,
+              ),
             ),
           ),
           const SizedBox(width: 20),
-          identificationsChart(
-            "Gastos por identificação",
-            2,
-            (data) => IdentificationsByBarChart(
-              accountabilityByIdentification: data.where((i) => i.total! < 0).toList(),
+          Expanded(
+            flex: 2,
+            child: ColumnDecoratedCard(
+              title: "Gastos por identificação",
+              future: _service.expensesByIdentification(),
+              child: (d) => IdentificationsByBarChart(
+                accountabilityByIdentification: d as List<GroupedBy<AccountabilityIdentification>>,
+              ),
             ),
           )
         ],
@@ -169,95 +167,58 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
       height: 150,
       child: Row(
         children: [
-          summaryCard(
-            "Balanço",
-            Future.sync(() async => (
-                  await _currentMonthService.getBalance(),
-                  await _lastMonthService.getBalance(),
-                )),
+          Expanded(
+            flex: 1,
+            child: reportFuture(
+              _service.summaryBalance(),
+              (d) => SingleValueCard(
+                title: "Balanço",
+                currentValue: d["balance"],
+                relatedValue: d["related"],
+              ),
+            ),
           ),
           const SizedBox(width: 20),
-          summaryCard(
-            "Receitas",
-            Future.sync(() async => (
-                  await _currentMonthService.getIncomes(),
-                  await _lastMonthService.getIncomes(),
-                )),
+          Expanded(
+            flex: 1,
+            child: reportFuture(
+              _service.summaryIncomes(),
+              (d) => SingleValueCard(
+                title: "Receitas",
+                currentValue: d["incomes"],
+                relatedValue: d["related"],
+              ),
+            ),
           ),
           const SizedBox(width: 20),
-          summaryCard(
-            "Despesas",
-            Future.sync(() async => (
-                  await _currentMonthService.getExpenses(),
-                  await _lastMonthService.getExpenses(),
-                )),
-            lessIsPositite: true,
-          ),
+          Expanded(
+            flex: 1,
+            child: reportFuture(
+              _service.summaryExpenses(),
+              (d) => SingleValueCard(
+                title: "Despesas",
+                currentValue: d["expenses"],
+                relatedValue: d["related"],
+                lessIsPositite: true,
+              ),
+            ),
+          )
         ],
       ),
     );
   }
 
-  Widget summaryCard(String title, Future<(double, double)> computation, {bool lessIsPositite = false}) {
-    return Expanded(
-      flex: 1,
-      child: FutureBuilder(
-        future: computation,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const CircularProgressIndicator();
-          }
+  Widget reportFuture(Future<dynamic> future, Widget Function(dynamic) child) {
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const CircularProgressIndicator();
+        }
 
-          var result = snapshot.data!;
-          return SingleValueCard(
-            title: title,
-            currentValue: result.$1,
-            relatedValue: result.$2,
-            lessIsPositite: lessIsPositite,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget identificationsChart(
-    String title,
-    int flex,
-    Widget Function(List<GroupedBy<AccountabilityIdentification>>) identificationsCallback,
-  ) {
-    return Expanded(
-      flex: flex,
-      child: FutureBuilder(
-        future: Future.sync(
-          () async => (await _currentMonthService.getTotalByIdentification())
-            ..addAll(await _lastMonthService.getTotalByIdentification()),
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const CircularProgressIndicator();
-          }
-
-          var data = snapshot.data;
-          if (data == null || data.isEmpty) {
-            return const Text("Nenhum item encontrado");
-          }
-
-          return BaseDecoratedCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  title,
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-                const SizedBox(height: 20),
-                Expanded(child: identificationsCallback(data)),
-              ],
-            ),
-          );
-        },
-      ),
+        var result = snapshot.data!;
+        return child(result);
+      },
     );
   }
 
@@ -270,41 +231,10 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           style: Theme.of(context).textTheme.displayLarge,
         ),
         const SizedBox(height: 20),
-        FutureBuilder(
-          future: Future.sync(
-            () async {
-              var identifications = await _lastMonthService.getAccumulatedMeansByIdentification();
-              var values = {};
-              for (var i in identifications) {
-                values[i.field.description] = {"field": i.field, "mean": i, "current": null};
-              }
-
-              var currIdentifications = await _currentMonthService.getTotalByIdentification();
-              for (var i in currIdentifications) {
-                if (!values.containsKey(i.field.description)) {
-                  values[i.field.description] = {"field": i.field, "mean": null, "current": i};
-                } else {
-                  values[i.field.description]["current"] = i;
-                }
-              }
-
-              return values;
-            },
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              print(snapshot.error);
-              print(snapshot.stackTrace);
-            }
-
-            if (snapshot.data == null) {
-              return Container();
-            }
-            var data = snapshot.data!.values.toList();
-            print(data.length);
-
+        reportFuture(
+          _service.getMeansByIdentification(),
+          (data) {
+            var d = data.values.toList();
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
@@ -313,9 +243,9 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                 mainAxisExtent: 150.0,
               ),
               shrinkWrap: true,
-              itemCount: data.length,
+              itemCount: d.length,
               itemBuilder: (context, index) {
-                var item = data[index];
+                var item = d[index];
 
                 return SingleValueCard(
                   title: item["field"].description,
@@ -325,7 +255,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               },
             );
           },
-        ),
+        )
       ],
     );
   }
