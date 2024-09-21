@@ -19,7 +19,7 @@ class Formatter {
 
     var sign = v > 0 ? "+" : "";
 
-    if (v.abs() < 100) {
+    if (v.abs() <= 100) {
       return "$sign${v.round()}%";
     }
 

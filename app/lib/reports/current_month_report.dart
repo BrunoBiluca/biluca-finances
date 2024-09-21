@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/common/color_extensions.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/common/datetime_extensions.dart';
 import 'package:biluca_financas/components/column_decorated_card.dart';
+import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/components/single_value_card/single_value_card.dart';
 import 'package:biluca_financas/reports/charts/identifications_by_barchart.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
@@ -250,11 +252,19 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                 var current = item["current"] != null ? item["current"]! : 0.0;
 
                 return SingleValueCard(
-                  title: item["field"],
+                  title: item["desc"],
                   currentValue: current,
                   relatedValue: mean,
                   displayValue: mean,
                   lessIsPositite: mean < 0,
+                  side: item["field"] != null
+                      ? IconHighlight(
+                          bgColor: item["field"].color,
+                          borderColor: const Color(0xFF122622),
+                          txtColor: (item["field"].color as Color).adaptByLuminance(),
+                          icon: Icons.photo_size_select_actual_outlined,
+                        )
+                      : null,
                 );
               },
             );

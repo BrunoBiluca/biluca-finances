@@ -18,7 +18,7 @@ class MonthInfoCard extends StatelessWidget {
   String formatDate(int year, int month) => DateFormat("MMMM yyyy", "pt_BR").format(DateTime(year, month)).capitalize();
 
   String title() {
-    var str = service.currentMonth.split("/");
+    var str = relatedMonthService.currentMonth.split("/");
     return formatDate(int.parse(str[1]), int.parse(str[0]));
   }
 

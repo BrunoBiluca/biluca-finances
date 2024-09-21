@@ -11,6 +11,7 @@ class SingleValueCard extends StatefulWidget {
   final double? relatedValue;
   final double? displayValue;
   final bool lessIsPositite;
+  final Widget? side;
   const SingleValueCard({
     super.key,
     required this.title,
@@ -18,6 +19,7 @@ class SingleValueCard extends StatefulWidget {
     this.relatedValue,
     this.displayValue,
     this.lessIsPositite = false,
+    this.side,
   });
 
   @override
@@ -71,7 +73,11 @@ class _SingleValueCardState extends State<SingleValueCard> {
               ],
             ),
           ),
-          values == null ? Container() : ValuesRelationIndicator(values: values!),
+          widget.side != null
+              ? widget.side!
+              : values != null
+                  ? ValuesRelationIndicator(values: values!)
+                  : Container(),
         ],
       ),
     );

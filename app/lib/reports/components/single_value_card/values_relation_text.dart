@@ -38,9 +38,12 @@ class ValuesRelationText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      Formatter.relation(values.percentage),
+      values.type == ValuesRelationType.unknown ? "?" : Formatter.relation(values.percentage),
       key: const Key("relação"),
-      style: Theme.of(context).textTheme.displayMedium?.copyWith(color: textColor()),
+      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            color: textColor(),
+            fontWeight: FontWeight.bold,
+          ),
     );
   }
 }

@@ -48,18 +48,18 @@ class CurrentMonthReportService {
     var accExpenses = await current.getAccumulatedExpenses();
 
     var values = {};
-    values["Receitas"] = {"field": "Receitas", "mean": accIncomes, "current": incomes};
-    values["Despesas"] = {"field": "Despesas", "mean": accExpenses, "current": expenses};
+    values["Receitas"] = {"desc": "Receitas", "field": null, "mean": accIncomes, "current": incomes};
+    values["Despesas"] = {"desc": "Despesas", "field": null, "mean": accExpenses, "current": expenses};
 
     var identifications = await current.getAccumulatedMeansByIdentification();
     for (var i in identifications) {
-      values[i.field.description] = {"field": i.field.description, "mean": i.mean, "current": null};
+      values[i.field.description] = {"desc": i.field.description, "field": i.field, "mean": i.mean, "current": null};
     }
 
     var currIdentifications = await current.getTotalByIdentification();
     for (var i in currIdentifications) {
       if (!values.containsKey(i.field.description)) {
-        values[i.field.description] = {"field": i.field.description, "mean": null, "current": i.total};
+        values[i.field.description] = {"desc": i.field.description, "field": i.field, "mean": null, "current": i.total};
       } else {
         values[i.field.description]["current"] = i.total;
       }
