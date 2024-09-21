@@ -61,6 +61,7 @@ class _MonthSelectorState extends State<MonthSelector> {
             iconSize: 36,
             iconEnabledColor: color,
             dropdownColor: Colors.black,
+            focusColor: Colors.black,
             menuMaxHeight: 400,
             underline: Container(),
             onChanged: (month) {

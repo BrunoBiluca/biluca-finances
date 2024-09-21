@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/common/datetime_extensions.dart';
@@ -51,19 +53,32 @@ class CurrentMonthReportService {
     values["Receitas"] = {"desc": "Receitas", "field": null, "mean": accIncomes, "current": incomes};
     values["Despesas"] = {"desc": "Despesas", "field": null, "mean": accExpenses, "current": expenses};
 
+    var valuesByIdentifications = SplayTreeMap();
     var identifications = await current.getAccumulatedMeansByIdentification();
     for (var i in identifications) {
-      values[i.field.description] = {"desc": i.field.description, "field": i.field, "mean": i.mean, "current": null};
+      valuesByIdentifications[i.field.description] = {
+        "desc": i.field.description,
+        "field": i.field,
+        "mean": i.mean,
+        "current": null
+      };
     }
 
     var currIdentifications = await current.getTotalByIdentification();
     for (var i in currIdentifications) {
-      if (!values.containsKey(i.field.description)) {
-        values[i.field.description] = {"desc": i.field.description, "field": i.field, "mean": null, "current": i.total};
+      if (!valuesByIdentifications.containsKey(i.field.description)) {
+        valuesByIdentifications[i.field.description] = {
+          "desc": i.field.description,
+          "field": i.field,
+          "mean": null,
+          "current": i.total
+        };
       } else {
-        values[i.field.description]["current"] = i.total;
+        valuesByIdentifications[i.field.description]["current"] = i.total;
       }
     }
+
+    values.addAll(valuesByIdentifications);
 
     return values;
   }

@@ -20,18 +20,26 @@ class IconHighlight extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(color: borderColor, width: 4),
+        color: Theme.of(context).colorScheme.outline,
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Transform.rotate(
-          angle: rotation,
-          child: Icon(
-            icon,
-            color: txtColor,
-            size: Theme.of(context).textTheme.displayLarge?.fontSize,
+        padding: const EdgeInsets.all(4.0),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: bgColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Transform.rotate(
+              angle: rotation,
+              child: Icon(
+                icon,
+                color: txtColor,
+                size: Theme.of(context).textTheme.displayLarge?.fontSize,
+              ),
+            ),
           ),
         ),
       ),
