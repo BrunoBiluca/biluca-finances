@@ -39,51 +39,53 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _service.current.count(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const CircularProgressIndicator();
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        MonthSelector(
+          current: _selectedDate,
+          onDateChanged: (date) => setState(
+            () {
+              _selectedDate = date;
+              updateServices();
+            },
+          ),
+        ),
+        const SizedBox(height: 20),
+        FutureBuilder(
+          future: _service.current.count(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const CircularProgressIndicator();
+            }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            MonthSelector(
-              current: _selectedDate,
-              onDateChanged: (date) => setState(
-                () {
-                  _selectedDate = date;
-                  updateServices();
-                },
+            if (snapshot.data! == 0) {
+              return const Text(
+                "Não existem registros para esse mês",
+                key: Key("no_entries"),
+              );
+            }
+
+            return Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    headlines(),
+                    const SizedBox(height: 20),
+                    charts(),
+                    const SizedBox(height: 20),
+                    lastMonths(context),
+                    const SizedBox(height: 20),
+                    lastMonthsMeans(context)
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            snapshot.data! == 0
-                ? const Text(
-                    "Não existem registros para esse mês",
-                    key: Key("no_entries"),
-                  )
-                : Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          headlines(),
-                          const SizedBox(height: 20),
-                          charts(),
-                          const SizedBox(height: 20),
-                          lastMonths(context),
-                          const SizedBox(height: 20),
-                          lastMonthsMeans(context)
-                        ],
-                      ),
-                    ),
-                  )
-          ],
-        );
-      },
+            );
+          },
+        )
+      ],
     );
   }
 
