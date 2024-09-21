@@ -6,42 +6,37 @@ from nubank.entry import to_date
 from common.str_extensions import full_strip
 
 
-def parse(path):
+def parse(pages):
     print("Início do parse do Nubank")
-    invoice = []
-    for e in read(path):
-        properties = full_strip(e)
 
-        try:
-            date_substr = properties[0:6]
-            date = to_date(date_substr)
-            date = datetime(day=date.day, month=date.month, year=2024)
-            description, value = properties[6:].rsplit(" ", 1)
-            description = description.replace("R$", "")
-            description = full_strip(description)
+    entradas = []
+    for p in pages[3:]:
+        linhas = p.extract_text().split("\n")
+        linhas_relevantes = linhas[3:len(linhas)-3]
+        linhas_por_entrada = 4
+        for i in range(0, len(linhas_relevantes), linhas_por_entrada):
+            entrada = avaliar_linhas(
+                linhas_relevantes[i: i+linhas_por_entrada])
 
-            if "Pagamento" in description:
+            if "Pagamento" in entrada[1]:
                 continue
 
-            if "Estorno" in description:
-                continue
+            entradas.append(entrada)
 
-            description = description.replace('"', "")
-            invoice.append({
-                "date": date,
-                "description": description,
-                "value": value
-            })
-        except ValueError:
-            continue
+    print(f"Recuperado  um total de {len(entradas)} entradas.")
+    print("Parse do Nubank concluído")
+    return entradas
 
-    formated_budget = []
-    for e in invoice:
-        value = e["value"].replace(".", "").replace(",", ".")
-        formated_budget.append([
-            to_str(e["date"]),
-            e["description"],
-            float(value) * -1.0,
-            ""
-        ])
-    return write("nubank.csv", [headers(), *formated_budget])
+
+def avaliar_linhas(l):
+    data_criação = full_strip(l[0]) + " " + str(datetime.now().year)
+    descrição = full_strip(l[2])
+    preço = full_strip(l[3]).replace(".", "").replace(",", ".")
+
+    descrição = descrição.replace('"', "")
+
+    return (
+        to_date(data_criação),
+        descrição,
+        float(preço) * -1.0
+    )
