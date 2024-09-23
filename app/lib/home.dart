@@ -23,15 +23,15 @@ class _HomeState extends State<Home> {
           style: Theme.of(context).textTheme.headlineLarge,
         ),
       ),
-      body: Row(
+      body: const Row(
         children: [
-          const SizedBox(
+          SizedBox(
             width: 250,
             child: MainDrawner(),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(20.0),
               child: CurrentMonthReport(),
             ),
           ),
@@ -40,31 +40,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-
-                    // ElevatedButton(
-                    //   onPressed: () async {
-                    //     final result = await FilePicker.platform.pickFiles(
-                    //       type: FileType.custom,
-                    //       allowedExtensions: ['csv'],
-                    //     );
-                    //     if (result == null) return;
-
-                    //     var file = File(result.files.single.path!);
-                    //     var importService = GetIt.I<AccountabilityImportService>();
-                    //     await importService.import(file);
-                    //     GetIt.I<FToast>().showToast(
-                    //       child: const BaseToast(text: "Arquivo importado"),
-                    //       gravity: ToastGravity.TOP,
-                    //       toastDuration: const Duration(seconds: 2),
-                    //     );
-
-                    //     if (!context.mounted) return;
-
-                    //     await showDialog(
-                    //       context: context,
-                    //       builder: (c) => AccountabilityImportCheckPage(service: importService),
-                    //     );
-                    //   },
-                    //   child: const Text('Importar'),
-                    // ),
