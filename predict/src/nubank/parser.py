@@ -7,8 +7,6 @@ from common.str_extensions import full_strip
 
 
 def parse(pages):
-    print("Início do parse do Nubank")
-
     entradas = []
     for p in pages[3:]:
         linhas = p.extract_text().split("\n")
@@ -23,8 +21,6 @@ def parse(pages):
 
             entradas.append(entrada)
 
-    print(f"Recuperado  um total de {len(entradas)} entradas.")
-    print("Parse do Nubank concluído")
     return entradas
 
 

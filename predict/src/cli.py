@@ -2,29 +2,30 @@ import sys
 
 import pandas
 from pypdf import PdfReader
-from itau.parser import parse as itau_parse
-from nubank.parser import parse as nubank_parse
-from common.period import by_month
-from common.csv_file import write
+from itau import é_itau_extrato, itau_parse
+from nubank import é_nubank_extrato, nubank_parse
 from classification.classification import categorize_identification
-from budget import headers
 
 
 file_path = sys.argv[1]
-print(file_path)
+print("Avaliando arquivo:", file_path)
 
 reader = PdfReader(file_path)
 
-entradas = nubank_parse(reader.pages)
-print(entradas)
-df = pandas.DataFrame(entradas, columns=["Criação", "Descrição", "Valor"])
-result = categorize_identification(df)
-print(result)
+analisadores = {
+    "itau": [é_itau_extrato, itau_parse],
+    "nubank": [é_nubank_extrato, nubank_parse]
+}
 
-# with open("./resources/nubank_sample.txt", "w", encoding="utf8") as f:
-#     i = 0
-#     for p in reader.pages:
-#         i += 1
-#         f.writelines(["\n", "Página " + str(i), "\n"])
-#         f.writelines(p.extract_text())
+for a in analisadores:
+    avaliador = analisadores[a][0]
+    if avaliador(reader.pages):
+        print("Avaliando um extrato de:", a)
+        parser = analisadores[a][1]
+        entradas = parser(reader.pages)
+        print("Foram encontrados", len(entradas), "entradas")
 
+        df = pandas.DataFrame(
+            entradas, columns=["Criação", "Descrição", "Valor"])
+        result = categorize_identification(df)
+        print("Foram predizidos", len(result), "registros")
