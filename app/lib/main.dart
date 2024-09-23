@@ -27,7 +27,7 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   initializeDateFormatting('pt_BR');
   WidgetsFlutterBinding.ensureInitialized();
-  // await executePredictServer();
+  await executePredictServer();
 
   await setupDependencies();
 

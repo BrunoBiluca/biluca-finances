@@ -137,7 +137,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
         .map(
           (e) => GroupedBy(
             AccountabilityIdentification.fromMap(e),
-            mean: e['mean'] as double,
+            mean: e['mean'] == null ? 0.00 : e['mean'] as double,
           ),
         )
         .toList();
@@ -159,7 +159,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       """,
     );
 
-    if (result.isEmpty) {
+    if (result.first['mean'] == null) {
       return 0.00;
     }
 
@@ -182,7 +182,7 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
       """,
     );
 
-    if (result.isEmpty) {
+    if (result.first['mean'] == null) {
       return 0.00;
     }
 

@@ -217,6 +217,10 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           return const CircularProgressIndicator();
         }
 
+        if(snapshot.data == null) {
+          return const Text("Nenhum item encontrado");
+        }
+
         var result = snapshot.data!;
         return child(result);
       },
