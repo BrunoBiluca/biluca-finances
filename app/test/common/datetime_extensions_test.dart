@@ -18,11 +18,11 @@ void main() {
   });
 
     test("deve retornar ao mês e ano anteriores", () {
-    var date = DateTime(2024, 2, 1);
+    var date = DateTime(2024, 1, 1);
 
     var result = date.subtractMonth(2);
     expect(result.day, 1);
-    expect(result.month, 12);
+    expect(result.month, 11);
     expect(result.year, 2023);
   });
 }

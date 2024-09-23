@@ -15,11 +15,8 @@ class SQLiteAccountabilityImportService extends AccountabilityImportService {
 
   @override
   Future import(File importedFile) async {
-    var content = importedFile.readAsLinesSync();
-    entries = convert(content);
-
     if (predictService != null) {
-      entries = await predictService!.predict(entries);
+      entries = await predictService!.predict(importedFile: importedFile);
     }
   }
 
@@ -30,7 +27,9 @@ class SQLiteAccountabilityImportService extends AccountabilityImportService {
     }
   }
 
-  List<AccountabilityEntryRequest> convert(List<String> content) {
+  List<AccountabilityEntryRequest> _convertCsv(File importedFile) {
+    var content = importedFile.readAsLinesSync();
+
     var lines = content.skip(1).toList();
 
     var header = const CsvToListConverter().convert(content[0])[0];
@@ -55,6 +54,7 @@ class SQLiteAccountabilityImportService extends AccountabilityImportService {
     }
     return entries;
   }
+
 
   DateFormat verifyDateFormat(String line, int dateIndex) {
     var csvLine = const CsvToListConverter().convert(line)[0];

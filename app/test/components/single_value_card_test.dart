@@ -50,6 +50,6 @@ void main() {
     );
 
     expect(find.byKey(const Key("relação")), findsOneWidget);
-    expect(find.text("+2x"), findsOneWidget);
+    expect(find.text("+100%"), findsOneWidget);
   });
 }

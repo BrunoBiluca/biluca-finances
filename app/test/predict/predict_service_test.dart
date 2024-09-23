@@ -14,12 +14,12 @@ import '../accountability/mocks/mock_accountability_repo.dart';
 void main() {
   test("deve retornar a mesma lista passada quando o serviço estiver indisponível", () async {
     var client = MockClient((req) async {
-      return Response("", 500);
+      return Response("", 500, reasonPhrase: "ERROR");
     });
     var repo = MockAccountabilityRepo();
 
     var service = PredictService(client, repo);
-    var entries = await service.predict([]);
+    var entries = await service.predict(entries: []);
 
     expect(entries, isEmpty);
   });
@@ -32,16 +32,16 @@ void main() {
       var expectedBody = data["cabeçalhos"] != null && data["registros"] != null;
 
       if (!expectedPath) {
-        return Response("", 404);
+        return Response("", 404, reasonPhrase: "Not found");
       }
 
       if (!expectedBody) {
-        return Response("", 400);
+        return Response("", 400, reasonPhrase: "Bad request");
       }
 
       return Response(
         jsonEncode({
-          "cabeçalhos": ["Descrição", "Valor", "Identificação"],
+          "cabeçalhos": [...data["cabeçalhos"], "Identificação"],
           "registros": data["registros"].map((r) => [...r, "supermercado"]).toList()
         }),
         200,
@@ -56,7 +56,7 @@ void main() {
 
     final service = PredictService(client, repo);
 
-    var result = await service.predict([
+    var result = await service.predict(entries: [
       AccountabilityEntryRequest(description: "Descricão fictício", value: 10, createdAt: DateTime.now()),
       AccountabilityEntryRequest(description: "Descricão fictício", value: 20, createdAt: DateTime.now()),
       AccountabilityEntryRequest(description: "Descricão fictício", value: 30, createdAt: DateTime.now()),

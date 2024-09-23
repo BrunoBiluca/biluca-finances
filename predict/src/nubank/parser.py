@@ -1,9 +1,7 @@
 from datetime import datetime
-from budget import headers
-from budget.budget_date import to_str
-from common.csv_file import read, write
 from nubank.entry import to_date
 from common.str_extensions import full_strip
+from budget.budget_date import to_str
 
 
 def parse(pages):
@@ -32,7 +30,7 @@ def avaliar_linhas(l):
     descrição = descrição.replace('"', "")
 
     return (
-        to_date(data_criação),
+        to_str(to_date(data_criação)),
         descrição,
         float(preço) * -1.0
     )

@@ -1,7 +1,7 @@
 from datetime import datetime
 
 date_pattern = "%d/%m/%Y"
-output_pattern = "%m/%d/%Y"
+output_pattern = "%d/%m/%Y"
 
 
 def to_date(str):

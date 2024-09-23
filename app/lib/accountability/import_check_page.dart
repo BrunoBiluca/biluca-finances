@@ -70,7 +70,7 @@ class _AccountabilityImportCheckPageState extends State<AccountabilityImportChec
         ),
       ),
       actions: [
-        ElevatedButton(
+        TextButton(
           onPressed: () async {
             await widget.service.save();
             if (context.mounted) Navigator.pop(context);

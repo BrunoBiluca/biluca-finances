@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/components/entry_form.dart';
 import 'package:biluca_financas/accountability/components/table.dart';
+import 'package:biluca_financas/accountability/import_check_page.dart';
 import 'package:biluca_financas/accountability/models/entry_request.dart';
+import 'package:biluca_financas/accountability/services/import_service.dart';
+import 'package:biluca_financas/components/base_toast.dart';
 import 'package:biluca_financas/predict/predict_service.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 
@@ -24,12 +31,34 @@ class AccountabilitySection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               SizedBox(
                 width: 250,
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final result = await FilePicker.platform.pickFiles(
+                      type: FileType.custom,
+                      allowedExtensions: ['pdf'],
+                    );
+                    if (result == null) return;
+
+                    var file = File(result.files.single.path!);
+                    var importService = GetIt.I<AccountabilityImportService>();
+                    await importService.import(file);
+                    GetIt.I<FToast>().showToast(
+                      child: const BaseToast(text: "Arquivo importado"),
+                      gravity: ToastGravity.TOP,
+                      toastDuration: const Duration(seconds: 2),
+                    );
+
+                    if (!context.mounted) return;
+
+                    await showDialog(
+                      context: context,
+                      builder: (c) => AccountabilityImportCheckPage(service: importService),
+                    );
+                  },
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -50,14 +79,14 @@ class AccountabilitySection extends StatelessWidget {
                       context: context,
                       builder: (context) => const AccountabilityEntryForm(),
                     );
-                
+
                     if (newEntry == null) return;
-                
+
                     if (newEntry.identification == null) {
-                      var entries = await GetIt.I<PredictService>().predict([newEntry]);
+                      var entries = await GetIt.I<PredictService>().predict(entries: [newEntry]);
                       newEntry = entries[0];
                     }
-                
+
                     if (!context.mounted) return;
                     context.read<AccountabilityBloc>().add(AddAccountabilityEntry(newEntry));
                   },

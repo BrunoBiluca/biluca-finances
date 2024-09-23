@@ -55,7 +55,6 @@ Future<void> executePredictServer() async {
 
 Future<void> setupDependencies() async {
   DBProvider.i.init();
-  // DBProvider.i.clear(await DBProvider.i.database);
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
   getIt.registerFactoryParam<AccountabilityMonthService, DateTime, void>(

@@ -2,6 +2,7 @@ import pytest
 
 from src.api import create_app
 
+
 @pytest.fixture()
 def app():
     app = create_app()
@@ -30,11 +31,11 @@ def test_deve_receber_os_registros_para_fazer_a_previsão(client):
             ("Descrição 3", 30),
         ]
     })
-    
+
     assert response.status_code == 200
-    assert response.json["cabeçalhos"] == ["Descrição", "Valor", "Identificação"]
+    assert response.json["cabeçalhos"] == [
+        "Descrição", "Valor", "Identificação"]
     assert len(response.json["registros"]) == 3
-    
 
 
 def test_deve_receber_os_registros_com_todos_os_cabeçalhos_enviados(client):
@@ -46,6 +47,17 @@ def test_deve_receber_os_registros_com_todos_os_cabeçalhos_enviados(client):
             ("Descrição 3", 30, "abc", "def"),
         ]
     })
-    
+
     assert response.status_code == 200
-    assert response.json["cabeçalhos"] == ["Descrição", "Valor", "Outro campo", "Mais um campo", "Identificação"]
+    assert response.json["cabeçalhos"] == [
+        "Descrição", "Valor", "Outro campo", "Mais um campo", "Identificação"]
+
+
+def test_deve_receber_os_registros_como_arquivo_de_extrato_do_banco(client):
+    response = client.post("/predict", content_type="multipart/form-data", data={
+        "extrato": (open("resources/nubank_sample.pdf", "rb"), "nubank_sample.pdf")
+    })
+
+    assert response.status_code == 200
+    assert response.json["cabeçalhos"] == ["Criado em", "Descrição", "Valor", "Identificação"]
+    assert len(response.json["registros"]) > 0

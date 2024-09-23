@@ -2,7 +2,6 @@ extension DatetimeExtensions on DateTime {
   DateTime subtractMonth(int amount) {
     int newMonth = month - amount;
     int newYear = year + (newMonth ~/ 12);
-    newMonth = (newMonth % 12);
 
     if (newMonth <= 0) {
       newMonth += 12;
