@@ -1,8 +1,6 @@
-
 import 'package:biluca_financas/main_drawner.dart';
 import 'package:biluca_financas/reports/current_month_report.dart';
 import 'package:flutter/material.dart';
-
 
 class Home extends StatefulWidget {
   const Home({
@@ -23,18 +21,21 @@ class _HomeState extends State<Home> {
           style: Theme.of(context).textTheme.headlineLarge,
         ),
       ),
-      body: const Row(
+      body: Row(
         children: [
-          SizedBox(
+          const SizedBox(
             width: 250,
             child: MainDrawner(),
           ),
-          Expanded(
+          Expanded(child: Container()),
+          const SizedBox(
+            width: 1500,
             child: Padding(
               padding: EdgeInsets.all(20.0),
               child: CurrentMonthReport(),
             ),
           ),
+          Expanded(child: Container()),
         ],
       ),
     );
