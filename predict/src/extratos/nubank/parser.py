@@ -1,5 +1,5 @@
 from datetime import datetime
-from nubank.entry import to_date
+from extratos.nubank.entry import to_date
 from common.str_extensions import full_strip
 from budget.budget_date import to_str
 

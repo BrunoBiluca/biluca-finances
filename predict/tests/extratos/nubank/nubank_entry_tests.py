@@ -1,4 +1,4 @@
-from src.nubank.entry import to_date
+from src.extratos.nubank.entry import to_date
 
 
 def test_deve_converter_data_encontrada_no_extrato():

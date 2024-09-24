@@ -1,6 +1,6 @@
 from pypdf import PdfReader
 
-from src.nubank import é_nubank_extrato
+from src.extratos.nubank import é_nubank_extrato
 
 
 def test_deve_averiguar_que_o_extrato_não_é_nubank():

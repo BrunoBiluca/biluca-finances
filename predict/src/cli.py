@@ -2,8 +2,8 @@ import sys
 
 import pandas
 from pypdf import PdfReader
-from itau import é_itau_extrato, itau_parse
-from nubank import é_nubank_extrato, nubank_parse
+from extratos.itau import é_itau_extrato, itau_parse
+from extratos.nubank import é_nubank_extrato, nubank_parse
 from classification.classification import categorize_identification
 
 

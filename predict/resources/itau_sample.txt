@@ -1,200 +1,185 @@
-"BRUNO BERNARDES DA COSTA          073.137.876-85    agência: 4451   conta: 19629-1"
-""
-""
-""
-""
-"saldo em conta              Limite da Conta utilizado               Limite da Conta disponível                Limite da Conta total *"
-"R$ 3.577,22                 R$ 0,00                                 R$ 2.400,00                               R$ 2.400,00"
-""
-"* Total contratado. O uso do Limite da Conta e Limite da Conta adicional poderá ter cobrança de juros + IOF."
-""
-""
-"extrato conta corrente / lançamentos"
-"período de visualização: 26/12/2023 até 24/02/2024                                                          emitido em: 24/02/2024      14:27:00"
-""
-""
-"data             lançamentos                                                                          valor (R$)                   saldo (R$)"
-""
-"24/02/2024 SALDO DO DIA                                                                                                              3.577,22"
-"23/02/2024 SALDO DO DIA                                                                                                              3.577,05"
-"23/02/2024 REND PAGO APLIC AUT APR                                                                           0,02"
-"23/02/2024 RSCCS SUPERMERCADO2302                                                                       -246,44"
-"23/02/2024 RSCSS SUPERMERCADO2302                                                                         -93,79"
-"22/02/2024 SALDO DO DIA                                                                                                              3.917,26"
-"22/02/2024 RSCSS SUPERMERCADO2202                                                                          -61,10"
-"21/02/2024 SALDO DO DIA                                                                                                              3.978,36"
-"21/02/2024 REND PAGO APLIC AUT MAIS                                                                          0,02"
-"21/02/2024 RSCSS SUPERMERCADO2102                                                                         -59,73"
-"21/02/2024 SAQUE S/CARTAO 24H 587025493                                                                 -200,00"
-"19/02/2024 SALDO DO DIA                                                                                                              4.238,07"
-"19/02/2024 REND PAGO APLIC AUT MAIS                                                                          0,01"
-"19/02/2024 PIX QRS AMADO LOURD19/02                                                                       -38,92"
-"19/02/2024 RSCSS SUPERMERCADO1902                                                                        -103,64"
-"19/02/2024 PIX TRANSF GLAUBER19/02                                                                         -27,55"
-"16/02/2024 SALDO DO DIA                                                                                                              4.408,17"
-"16/02/2024 REND PAGO APLIC AUT MAIS                                                                          0,01"
-"16/02/2024 PIX TRANSF MICHELE16/02                                                                        -79,90"
-"16/02/2024 PIX QRS Adyen do Br16/02                                                                     -276,00"
-"16/02/2024 RSCSS MERCEARIA SA1602                                                                         -84,35"
-"14/02/2024 SALDO DO DIA                                                                                                              4.848,41"
-"14/02/2024 REND PAGO APLIC AUT MAIS                                                                          0,01"
-"14/02/2024 PIX TRANSF GIORDAN14/02                                                                      -200,00"
-"14/02/2024 PIX QRS Maria Rosel11/02                                                                       -14,00"
-"14/02/2024 PIX TRANSF UEDER P10/02                                                                        -10,00"
-"14/02/2024 PIX TRANSF ALTAIR 10/02                                                                        -13,40"
-"14/02/2024 PIX TRANSF MARLEID10/02                                                                        -13,00"
-"14/02/2024 PIX TRANSF MARLEID12/02                                                                        -13,00"
-"09/02/2024 SALDO DO DIA                           5.111,80"
-"09/02/2024 PIX TRANSF Milena 09/02      -76,00"
-"09/02/2024 RSCSS SUPERMERCADO0902       -15,86"
-"09/02/2024 RSCSS MERCEARIA SA0902       -20,70"
-"08/02/2024 SALDO DO DIA                           5.224,36"
-"08/02/2024 REND PAGO APLIC AUT MAIS       0,02"
-"08/02/2024 MOBILE PAG TIT BANCO 260   -2.897,19"
-"08/02/2024 RSCSS PIZZARIA E R0802       -16,00"
-"07/02/2024 SALDO DO DIA                           8.137,53"
-"07/02/2024 RSCSS-SUPERMERCAD-07/02       -19,35"
-"07/02/2024 RSCSS NOVA ERA AGR0702       -33,80"
-"05/02/2024 SALDO DO DIA                           8.190,68"
-"05/02/2024 RSCSS-PIZZARIA E -03/02      -50,00"
-"05/02/2024 RSCSS SUPERMERCADO0502       -68,77"
-"05/02/2024 RSCSS SUPERMERCADO0502       -45,03"
-"05/02/2024 PIX TRANSF BRUNO B05/02    8.000,00"
-"02/02/2024 SALDO DO DIA                            354,48"
-"02/02/2024 RSCSS-SUPERMERCAD-02/02      -47,85"
-"02/02/2024 PIX QRS Maria Rosel02/02     -14,00"
-"01/02/2024 SALDO DO DIA                            416,33"
-"01/02/2024 REND PAGO APLIC AUT MAIS       0,01"
-"01/02/2024 PIX TRANSF GIORDAN01/02     -140,00"
-"01/02/2024 RSCSS SUPERMERCADO0102       -101,27"
-"31/01/2024 SALDO DO DIA                            657,59"
-"31/01/2024 RSCSS-SUPERMERCAD-31/01      -42,56"
-"30/01/2024 SALDO DO DIA                            700,15"
-"30/01/2024 RSCSS-SUPERMERCAD-30/01      -53,01"
-"29/01/2024 SALDO DO DIA                             753,16"
-"29/01/2024 RSCSS-PADARIA DO -27/01      -25,30"
-"29/01/2024 RSCSS-SUPERMERCAD-28/01     -106,95"
-"29/01/2024 RSCSS DROGARIA POU2901       -29,06"
-"25/01/2024 SALDO DO DIA                            914,47"
-"25/01/2024 RSCSS-PIZZARIA E -25/01      -30,00"
-"25/01/2024 REND PAGO APLIC AUT MAIS       0,01"
-"25/01/2024 PIX QRS ESCRITORIO 25/01    -185,00"
-"24/01/2024 SALDO DO DIA                           1.129,46"
-"24/01/2024 RSCSS-PAG*MASENDE-24/01      -24,00"
-"24/01/2024 RSCSS SUPERMERCADO2401        -51,27"
-"24/01/2024 PIX TRANSF DATA GU24/01    1.088,80"
-"22/01/2024 SALDO DO DIA                             115,93"
-"22/01/2024 REND PAGO APLIC AUT MAIS       0,03"
-"22/01/2024 RSCSS-ELDORADO DI-20/01      -24,75"
-"22/01/2024 RSCSS-PADARIA DO -22/01       -12,68"
-"22/01/2024 RSCSS-SUPERMERCAD-22/01       -31,98"
-"22/01/2024 RSCSS-PADARIA DO -20/01       -19,30"
-"22/01/2024 RSCCS SUPERMERCADO2201       -219,59"
-"22/01/2024 PIX QRS KABUM COMER20/01       -35,13"
-"22/01/2024 PIX QRS MICHELE HER20/01      -89,60"
-"19/01/2024 SALDO DO DIA                             548,93"
-"19/01/2024 RSCSS-MERCEARIA S-19/01       -70,86"
-"18/01/2024 RSCSS-SUPERMERCAD-18/01      -108,10"
-"18/01/2024 RSCSS-SUPERMERCAD-18/01       -73,80"
-"18/01/2024 REND PAGO APLIC AUT MAIS        0,01"
-"18/01/2024 SALDO DO DIA                             619,79"
-"17/01/2024 SALDO DO DIA                             801,68"
-"17/01/2024 PIX QRS KABUM COMER17/01     -125,80"
-"16/01/2024 SALDO DO DIA                             927,48"
-"16/01/2024 REND PAGO APLIC AUT MAIS        0,01"
-"16/01/2024 PIX QRS GRUPO PRATI16/01      -40,00"
-"16/01/2024 PIX TRANSF Pollyan16/01      -300,00"
-"15/01/2024 SALDO DO DIA                            1.267,47"
-"15/01/2024 RSCSS-MERCEARIA S-13/01       -73,00"
-"15/01/2024 REND PAGO APLIC AUT MAIS        0,02"
-"15/01/2024 RSCSS-PIZZARIA E -14/01       -45,00"
-"15/01/2024 PIX TRANSF Guilher14/01       -16,60"
-"15/01/2024 MOBILE PAG TIT BANCO 001      -99,99"
-"15/01/2024 INT COPASA 0124017906931      -75,70"
-"15/01/2024 INT CEMIG DISTRIBUICA 02     -149,20"
-"15/01/2024 INT VIVO-MG 460588719240      -57,00"
-"12/01/2024 SALDO DO DIA                            1.783,94"
-"12/01/2024 RSCSS-SUPERMERCAD-12/01       -63,09"
-"11/01/2024   SALDO DO DIA                          1.847,03"
-"11/01/2024   RSCSS-SUPERMERCAD-11/01     -26,48"
-"11/01/2024   RSCSS-PAG*VIACAOS-11/01     -92,25"
-"10/01/2024 SALDO DO DIA                            1.965,76"
-"10/01/2024 RSCSS-FEIRA DO MA-10/01        -8,65"
-"09/01/2024 SALDO DO DIA                            1.974,41"
-"09/01/2024 REND PAGO APLIC AUT MAIS       10,40"
-"09/01/2024 RSCSS-MERCEARIA S-09/01       -61,00"
-"09/01/2024 MOBILE PAG TIT BANCO 260    -1.957,29"
-"08/01/2024 SALDO DO DIA                            3.982,30"
-"08/01/2024 RSCSS-MP *LADEIRA-06/01       -33,00"
-"08/01/2024 RSCSS-MP *LADEIRA-06/01       -10,00"
-"08/01/2024 RSCSS-SUPERMERCAD-08/01       -31,60"
-"08/01/2024 REND PAGO APLIC AUT MAIS       3,61"
-"08/01/2024 RSCSS-PIZZARIA E -06/01      -34,00"
-"08/01/2024 RSCSS-PADARIA DO -06/01      -17,64"
-"08/01/2024 RSCSS-PAG*MERCADO-07/01      -69,40"
-"05/01/2024 REND PAGO APLIC AUT MAIS       0,51"
-"05/01/2024 RSCSS-MP *LADEIRA-05/01      -25,00"
-"05/01/2024 SALDO DO DIA                          4.174,33"
-"04/01/2024 SALDO DO DIA                          4.198,82"
-"04/01/2024 RSCSS-SUPERMERCAD-04/01     -133,16"
-"04/01/2024 RSCSS-LOJA PONTO -04/01     -44,60"
-"04/01/2024 RSCSS-SUP LAGOA -04/01       -49,90"
-"04/01/2024 TED 140.0001.BRUNO B D C   3.500,00"
-"03/01/2024 SALDO DO DIA                           926,48"
-"03/01/2024 RSCSS-SUPERMERCAD-03/01      -21,85"
-"03/01/2024 REND PAGO APLIC AUT MAIS       2,36"
-"03/01/2024 RSCSS-SUPERMERCAD-03/01      -95,36"
-"02/01/2024 SALDO DO DIA                          1.041,33"
-"02/01/2024 RSCSS-PAG*ARIANEC-01/01     -46,40"
-"02/01/2024 RSCSS-PIZZARIA E -02/01      -34,00"
-"02/01/2024 REND PAGO APLIC AUT MAIS       5,08"
-"02/01/2024 RSCSS-PAG*ARTURHE-01/01     -69,00"
-"02/01/2024 RSCSS-PADARIA DO -02/01       -8,85"
-"02/01/2024 RSCSS-PAG*BECOMIN-31/12      -38,00"
-"02/01/2024 RSCSS-MP *COZINHA-01/01      -28,00"
-"02/01/2024 PIX TRANSF Annalyn01/01      -10,00"
-"02/01/2024 PIX QRS RICARDO LAR01/01     -20,00"
-"29/12/2023 SALDO DO DIA                          1.290,50"
-"29/12/2023 RSCSS-PADARIA DO -29/12     -48,00"
-"29/12/2023 REND PAGO APLIC AUT MAIS      0,96"
-"28/12/2023 SALDO DO DIA                          1.337,54"
-"28/12/2023 RSCSS-MERCEARIA S-28/12      -42,25"
-"28/12/2023 REND PAGO APLIC AUT MAIS       1,10"
-"28/12/2023 RSCSS-SUPERMERCAD-28/12      -13,47"
-"27/12/2023 REND PAGO APLIC AUT MAIS       5,62"
-"27/12/2023 RSCSS-SUP LAGOA -27/12       -36,39"
-"27/12/2023 RSCSS-PAG*ADEVALD-27/12      -17,00"
-"27/12/2023 RSCSS-SUP LAGOA -27/12        -6,99"
-"27/12/2023 SALDO DO DIA                          1.392,16"
-"27/12/2023 PIX TRANSF Pollyan27/12     -225,00"
-"26/12/2023 SALDO DO DIA                          1.671,92"
-"26/12/2023 REND PAGO APLIC AUT MAIS      25,98"
-"26/12/2023 INT COPASA 0123772284721     -53,64"
-"26/12/2023 RSCSS-MP *LADEIRA-24/12                                                                         -14,00"
-"26/12/2023 RSCSS-SUPERMERCAD-24/12                                                                        -80,66"
-"26/12/2023 INT CEMIG DISTRIBUICA 02                                                                       -133,22"
-"26/12/2023 RSCSS-POSTO LAGOA-23/12                                                                        -95,00"
-"26/12/2023 PIX TRANSF Izabel 23/12                                                                      -400,00"
-"26/12/2023 MOBILE PAG TIT BANCO 001                                                                      -103,62"
-"26/12/2023 PIX TRANSF CHRISTI26/12                                                                      -200,00"
-"26/12/2023 RSCSS MP LADEIRAS2312                                                                          -28,00"
-"26/12/2023 RSCSS SUPERMERCADO2312                                                                         -106,13"
-"26/12/2023 RSCSS ELDORADO DIS2412                                                                          -42,50"
-"26/12/2023 RSCSS SUPERMERCADO2312                                                                         -69,40"
-"25/12/2023 SALDO DO DIA                                                                                                              1.671,92"
-""
-""
-"Aviso!"
-"Os saldos acima são baseados nas informações disponíveis até esse instante e poderão ser alterados a qualquer momento em função de novos"
-"lançamentos. Operação pós-fixada: valor meramente indicativo. O valor do débito será determinado na data de liquidação da operação,"
-"conforme contratado. Consulte a última versão das Condições Gerais da sua Conta Universitária Itaú e dos Serviços no site www.itau.com.br"
-"/contacorrente/conveniencia. Conforme Resolução 4.292/13 do CMN/BANCEN, as operações de crédito podem ser transferidas para outra"
-"instituição Financeira por meio da Portabilidade. Para mais informações, consulte: www.itau.com.br no menu: Serviços>Portabilidade de crédito"
-""
-""
-"Consultas, informações e serviços transacionais, acesse itau.com.br ou ligue 4004 4828 (capitais e regiões metropolitanas) ou 0800 970 4828"
-"(demais localidades), todos os dias, 24 horas por dia ou procure sua agência. Reclamações, cancelamentos e informações gerais, ligue para o SAC:"
-"0800 728 0728, todos os dias, 24 horas por dia. Se não ficar satisfeito com a solução apresentada, de posse do protocolo, contate a Ouvidoria:"
-"0800 570 0011, em dias úteis, das 9h às 18h. Deficiente auditivo/fala: 0800 722 1722, todos os dias, 24 horas por dia. Ou entre em contato agora"
-"mesmo através do Fale conosco, no site do Itaú."
-""
+   BRUNO BERNARDES DA COSTA 073.137.876-85 agência: 4451 conta: 19629-1
+saldo em conta Limite da Conta utilizado Limite da Conta disponível Limite da Conta total *
+R$ 3.577,22 R$ 0,00 R$ 2.400,00 R$ 2.400,00
+* Total contratado. O uso do Limite da Conta e Limite da Conta adicional poderá ter cobrança de juros + IOF.
+extrato conta corrente / lançamentos
+período de visualização: 26/12/2023 até 24/02/2024  emitido em: 24/02/2024 14:27:00
+data lançamentos valor (R$) saldo (R$)
+24/02/2024 SALDO DO DIA 3.577,22
+23/02/2024 SALDO DO DIA 3.577,05
+23/02/2024 REND PAGO APLIC AUT APR 0,02
+23/02/2024 RSCCS SUPERMERCADO2302 -246,44
+23/02/2024 RSCSS SUPERMERCADO2302 -93,79
+22/02/2024 SALDO DO DIA 3.917,26
+22/02/2024 RSCSS SUPERMERCADO2202 -61,10
+21/02/2024 SALDO DO DIA 3.978,36
+21/02/2024 REND PAGO APLIC AUT MAIS 0,02
+21/02/2024 RSCSS SUPERMERCADO2102 -59,73
+21/02/2024 SAQUE S/CARTAO 24H 587025493 -200,00
+19/02/2024 SALDO DO DIA 4.238,07
+19/02/2024 REND PAGO APLIC AUT MAIS 0,01
+19/02/2024 PIX QRS AMADO LOURD19/02 -38,92
+19/02/2024 RSCSS SUPERMERCADO1902 -103,64
+19/02/2024 PIX TRANSF GLAUBER19/02 -27,55
+16/02/2024 SALDO DO DIA 4.408,17
+16/02/2024 REND PAGO APLIC AUT MAIS 0,01
+16/02/2024 PIX TRANSF MICHELE16/02 -79,90
+16/02/2024 PIX QRS Adyen do Br16/02 -276,00
+16/02/2024 RSCSS MERCEARIA SA1602 -84,35
+14/02/2024 SALDO DO DIA 4.848,41
+14/02/2024 REND PAGO APLIC AUT MAIS 0,01
+14/02/2024 PIX TRANSF GIORDAN14/02 -200,00
+14/02/2024 PIX QRS Maria Rosel11/02 -14,00
+14/02/2024 PIX TRANSF UEDER P10/02 -10,00
+14/02/2024 PIX TRANSF ALTAIR 10/02 -13,40
+14/02/2024 PIX TRANSF MARLEID10/02 -13,00
+14/02/2024 PIX TRANSF MARLEID12/02 -13,00
+09/02/2024 SALDO DO DIA 5.111,80
+09/02/2024 PIX TRANSF Milena 09/02 -76,00
+09/02/2024 RSCSS SUPERMERCADO0902 -15,86
+09/02/2024 RSCSS MERCEARIA SA0902 -20,70
+08/02/2024 SALDO DO DIA 5.224,36
+08/02/2024 REND PAGO APLIC AUT MAIS 0,02
+08/02/2024 MOBILE PAG TIT BANCO 260 -2.897,19
+08/02/2024 RSCSS PIZZARIA E R0802 -16,00
+07/02/2024 SALDO DO DIA 8.137,53
+07/02/2024 RSCSS-SUPERMERCAD-07/02 -19,35
+07/02/2024 RSCSS NOVA ERA AGR0702 -33,80
+05/02/2024 SALDO DO DIA 8.190,68
+05/02/2024 RSCSS-PIZZARIA E -03/02 -50,00
+05/02/2024 RSCSS SUPERMERCADO0502 -68,77
+05/02/2024 RSCSS SUPERMERCADO0502 -45,03
+05/02/2024 PIX TRANSF BRUNO B05/02 8.000,00
+02/02/2024 SALDO DO DIA 354,48
+02/02/2024 RSCSS-SUPERMERCAD-02/02 -47,85
+02/02/2024 PIX QRS Maria Rosel02/02 -14,00
+01/02/2024 SALDO DO DIA 416,33
+01/02/2024 REND PAGO APLIC AUT MAIS 0,01
+01/02/2024 PIX TRANSF GIORDAN01/02 -140,00
+01/02/2024 RSCSS SUPERMERCADO0102 -101,27
+31/01/2024 SALDO DO DIA 657,59
+31/01/2024 RSCSS-SUPERMERCAD-31/01 -42,56
+30/01/2024 SALDO DO DIA 700,15
+30/01/2024 RSCSS-SUPERMERCAD-30/01 -53,01
+29/01/2024 SALDO DO DIA 753,16
+29/01/2024 RSCSS-PADARIA DO -27/01 -25,30
+29/01/2024 RSCSS-SUPERMERCAD-28/01 -106,95
+29/01/2024 RSCSS DROGARIA POU2901 -29,06
+25/01/2024 SALDO DO DIA 914,47
+25/01/2024 RSCSS-PIZZARIA E -25/01 -30,00
+25/01/2024 REND PAGO APLIC AUT MAIS 0,01
+25/01/2024 PIX QRS ESCRITORIO 25/01 -185,00
+24/01/2024 SALDO DO DIA 1.129,46
+24/01/2024 RSCSS-PAG*MASENDE-24/01 -24,00
+24/01/2024 RSCSS SUPERMERCADO2401 -51,27
+24/01/2024 PIX TRANSF DATA GU24/01 1.088,80
+22/01/2024 SALDO DO DIA 115,93
+22/01/2024 REND PAGO APLIC AUT MAIS 0,03
+22/01/2024 RSCSS-ELDORADO DI-20/01 -24,75
+22/01/2024 RSCSS-PADARIA DO -22/01 -12,68
+22/01/2024 RSCSS-SUPERMERCAD-22/01 -31,98
+22/01/2024 RSCSS-PADARIA DO -20/01 -19,30
+22/01/2024 RSCCS SUPERMERCADO2201 -219,59
+22/01/2024 PIX QRS KABUM COMER20/01 -35,13
+22/01/2024 PIX QRS MICHELE HER20/01 -89,60
+19/01/2024 SALDO DO DIA 548,93
+19/01/2024 RSCSS-MERCEARIA S-19/01 -70,86
+18/01/2024 RSCSS-SUPERMERCAD-18/01 -108,10
+18/01/2024 RSCSS-SUPERMERCAD-18/01 -73,80
+18/01/2024 REND PAGO APLIC AUT MAIS 0,01
+18/01/2024 SALDO DO DIA 619,79
+17/01/2024 SALDO DO DIA 801,68
+17/01/2024 PIX QRS KABUM COMER17/01 -125,80
+16/01/2024 SALDO DO DIA 927,48
+16/01/2024 REND PAGO APLIC AUT MAIS 0,01
+16/01/2024 PIX QRS GRUPO PRATI16/01 -40,00
+16/01/2024 PIX TRANSF Pollyan16/01 -300,00
+15/01/2024 SALDO DO DIA 1.267,47
+15/01/2024 RSCSS-MERCEARIA S-13/01 -73,00
+15/01/2024 REND PAGO APLIC AUT MAIS 0,02
+15/01/2024 RSCSS-PIZZARIA E -14/01 -45,00
+15/01/2024 PIX TRANSF Guilher14/01 -16,60
+15/01/2024 MOBILE PAG TIT BANCO 001 -99,99
+15/01/2024 INT COPASA 0124017906931 -75,70
+15/01/2024 INT CEMIG DISTRIBUICA 02 -149,20
+15/01/2024 INT VIVO-MG 460588719240 -57,00
+12/01/2024 SALDO DO DIA 1.783,94
+12/01/2024 RSCSS-SUPERMERCAD-12/01 -63,09
+11/01/2024 SALDO DO DIA 1.847,03
+11/01/2024 RSCSS-SUPERMERCAD-11/01 -26,48
+11/01/2024 RSCSS-PAG*VIACAOS-11/01 -92,25
+10/01/2024 SALDO DO DIA 1.965,76
+10/01/2024 RSCSS-FEIRA DO MA-10/01 -8,65
+09/01/2024 SALDO DO DIA 1.974,41
+09/01/2024 REND PAGO APLIC AUT MAIS 10,40
+09/01/2024 RSCSS-MERCEARIA S-09/01 -61,00
+09/01/2024 MOBILE PAG TIT BANCO 260 -1.957,29
+08/01/2024 SALDO DO DIA 3.982,30
+08/01/2024 RSCSS-MP *LADEIRA-06/01 -33,00
+08/01/2024 RSCSS-MP *LADEIRA-06/01 -10,00
+08/01/2024 RSCSS-SUPERMERCAD-08/01 -31,60
+08/01/2024 REND PAGO APLIC AUT MAIS 3,61
+08/01/2024 RSCSS-PIZZARIA E -06/01 -34,00
+08/01/2024 RSCSS-PADARIA DO -06/01 -17,64
+08/01/2024 RSCSS-PAG*MERCADO-07/01 -69,40
+05/01/2024 REND PAGO APLIC AUT MAIS 0,51
+05/01/2024 RSCSS-MP *LADEIRA-05/01 -25,00
+05/01/2024 SALDO DO DIA 4.174,33
+04/01/2024 SALDO DO DIA 4.198,82
+04/01/2024 RSCSS-SUPERMERCAD-04/01 -133,16
+04/01/2024 RSCSS-LOJA PONTO -04/01 -44,60
+04/01/2024 RSCSS-SUP LAGOA -04/01 -49,90
+04/01/2024 TED 140.0001.BRUNO B D C 3.500,00
+03/01/2024 SALDO DO DIA 926,48
+03/01/2024 RSCSS-SUPERMERCAD-03/01 -21,85
+03/01/2024 REND PAGO APLIC AUT MAIS 2,36
+03/01/2024 RSCSS-SUPERMERCAD-03/01 -95,36
+02/01/2024 SALDO DO DIA 1.041,33
+02/01/2024 RSCSS-PAG*ARIANEC-01/01 -46,40
+02/01/2024 RSCSS-PIZZARIA E -02/01 -34,00
+02/01/2024 REND PAGO APLIC AUT MAIS 5,08
+02/01/2024 RSCSS-PAG*ARTURHE-01/01 -69,00
+02/01/2024 RSCSS-PADARIA DO -02/01 -8,85
+02/01/2024 RSCSS-PAG*BECOMIN-31/12 -38,00
+02/01/2024 RSCSS-MP *COZINHA-01/01 -28,00
+02/01/2024 PIX TRANSF Annalyn01/01 -10,00
+02/01/2024 PIX QRS RICARDO LAR01/01 -20,00
+29/12/2023 SALDO DO DIA 1.290,50
+29/12/2023 RSCSS-PADARIA DO -29/12 -48,00
+29/12/2023 REND PAGO APLIC AUT MAIS 0,96
+28/12/2023 SALDO DO DIA 1.337,54
+28/12/2023 RSCSS-MERCEARIA S-28/12 -42,25
+28/12/2023 REND PAGO APLIC AUT MAIS 1,10
+28/12/2023 RSCSS-SUPERMERCAD-28/12 -13,47
+27/12/2023 REND PAGO APLIC AUT MAIS 5,62
+27/12/2023 RSCSS-SUP LAGOA -27/12 -36,39
+27/12/2023 RSCSS-PAG*ADEVALD-27/12 -17,00
+27/12/2023 RSCSS-SUP LAGOA -27/12 -6,99
+27/12/2023 SALDO DO DIA 1.392,16
+27/12/2023 PIX TRANSF Pollyan27/12 -225,00
+26/12/2023 SALDO DO DIA 1.671,92
+26/12/2023 REND PAGO APLIC AUT MAIS 25,98
+26/12/2023 INT COPASA 0123772284721 -53,64
+26/12/2023 RSCSS-MP *LADEIRA-24/12 -14,00
+26/12/2023 RSCSS-SUPERMERCAD-24/12 -80,66
+26/12/2023 INT CEMIG DISTRIBUICA 02 -133,22
+26/12/2023 RSCSS-POSTO LAGOA-23/12 -95,00
+26/12/2023 PIX TRANSF Izabel 23/12 -400,00
+26/12/2023 MOBILE PAG TIT BANCO 001 -103,62
+26/12/2023 PIX TRANSF CHRISTI26/12 -200,00
+26/12/2023 RSCSS MP LADEIRAS2312 -28,00
+26/12/2023 RSCSS SUPERMERCADO2312 -106,13
+26/12/2023 RSCSS ELDORADO DIS2412 -42,50
+26/12/2023 RSCSS SUPERMERCADO2312 -69,40
+25/12/2023 SALDO DO DIA 1.671,92
+Aviso!
+Os saldos acima são baseados nas informações disponíveis até esse instante e poderão ser alterados a qualquer momento em função de novos 
+lançamentos. Operação pós-fixada: valor meramente indicativo. O valor do débito será determinado na data de liquidação da operação, 
+conforme contratado. Consulte a última versão das Condições Gerais da sua Conta Universitária Itaú e dos Serviços no site www.itau.com.br
+/contacorrente/conveniencia. Conforme Resolução 4.292/13 do CMN/BANCEN, as operações de crédito podem ser transferidas para outra 
+instituição Financeira por meio da Portabilidade. Para mais informações, consulte: www.itau.com.br no menu: Serviços>Portabilidade de crédito
+Consultas, informações e serviços transacionais, acesse itau.com.br ou ligue 4004 4828 (capitais e regiões metropolitanas) ou 0800 970 4828 
+(demais localidades), todos os dias, 24 horas por dia ou procure sua agência. Reclamações, cancelamentos e informações gerais, ligue para o SAC: 
+0800 728 0728, todos os dias, 24 horas por dia. Se não ficar satisfeito com a solução apresentada, de posse do protocolo, contate a Ouvidoria: 
+0800 570 0011, em dias úteis, das 9h às 18h. Deficiente auditivo/fala: 0800 722 1722, todos os dias, 24 horas por dia. Ou entre em contato agora 
+mesmo através do Fale conosco, no site do Itaú.

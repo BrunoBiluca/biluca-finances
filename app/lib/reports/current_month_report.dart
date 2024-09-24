@@ -77,9 +77,9 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                     headlines(),
                     const SizedBox(height: 20),
                     charts(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 100),
                     lastMonths(context),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 100),
                     lastMonthsMeans(context)
                   ],
                 ),

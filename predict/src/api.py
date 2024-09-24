@@ -3,8 +3,7 @@ from flask import Flask, request
 import pandas
 from pypdf import PdfReader
 import bundle_resources
-from itau import é_itau_extrato, itau_parse
-from nubank import é_nubank_extrato, nubank_parse
+from extratos import analisadores
 
 from classification.classification import categorize_identification
 
@@ -17,11 +16,6 @@ def predict():
             data["registros"], columns=data["cabeçalhos"])
     elif (request.content_type.startswith("multipart/form-data")):
         reader = PdfReader(request.files["extrato"])
-        analisadores = {
-            "itau": [é_itau_extrato, itau_parse],
-            "nubank": [é_nubank_extrato, nubank_parse]
-        }
-
         for a in analisadores:
             avaliador = analisadores[a][0]
             if avaliador(reader.pages):

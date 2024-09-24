@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
           ),
           Expanded(child: Container()),
           const SizedBox(
-            width: 1500,
+            width: 1800,
             child: Padding(
               padding: EdgeInsets.all(20.0),
               child: CurrentMonthReport(),
