@@ -2,6 +2,7 @@ import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/components/text_ballon.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../models/identification.dart';
@@ -63,37 +64,39 @@ class _AccountabilityIdentificationEditState extends State<AccountabilityIdentif
                       if (identifications.isEmpty) {
                         return const Text('Nenhuma identificação encontrada');
                       }
-              
+
+                      identifications = identifications.sorted((i1, i2) => i1.description.compareTo(i2.description));
+
                       return Expanded(
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Column(
                             children: [
                               ...identifications.map(
-                                (identification) => Padding(
+                                (i) => Padding(
                                   padding: const EdgeInsets.all(4.0),
                                   child: GestureDetector(
                                     onTap: () {
-                                      widget.onEdit(identification);
+                                      widget.onEdit(i);
                                       close();
                                     },
                                     child: TextBallon(
-                                      text: identification.description,
-                                      color: identification.color,
+                                      text: i.description,
+                                      color: i.color,
                                       onEdit: (String newValue, Color color) => accountabilityBloc.add(
                                         UpdateAccountabilityIdentification(
-                                          identification
+                                          i
                                             ..color = color
                                             ..description = newValue,
                                         ),
                                       ),
                                       onDelete: () => accountabilityBloc.add(
-                                        DeleteAccountabilityIdentification(identification.id),
+                                        DeleteAccountabilityIdentification(i.id),
                                       ),
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
