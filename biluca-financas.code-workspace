@@ -11,8 +11,24 @@
 		}
 	],
 	"settings": {
+		"dart.flutterSdkPath": "C:\\bprojs\\flutter\\flutter",
+		"editor.wordWrapColumn": 120,
+		"dart.lineLength": 120,
+		"workbench.activityBar.location": "top",
+		"editor.rulers": [
+			120
+		],
+		"workbench.colorCustomizations": {
+			"editorRuler.foreground": "#505050"
+		},
+		"workbench.iconTheme": "vscode-icons",
+		"workbench.sideBar.location": "right",
 		"[python]": {
-			"editor.defaultFormatter": "ms-python.autopep8"
-		}
+			"editor.defaultFormatter": "ms-python.autopep8",
+		},
+		"autopep8.args": [
+			"--max-line-length",
+			"120"
+		]
 	}
 }

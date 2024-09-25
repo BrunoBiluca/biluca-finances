@@ -3,6 +3,10 @@ import pytest
 from src.api import create_app
 
 
+endpoint_predição = "/predict"
+campos_obrigatórios = ["Descrição", "Valor"]
+
+
 @pytest.fixture()
 def app():
     app = create_app()
@@ -23,8 +27,8 @@ def runner(app):
 
 
 def test_deve_receber_os_registros_para_fazer_a_previsão(client):
-    response = client.post("/predict", json={
-        "cabeçalhos": ["Descrição", "Valor"],
+    response = client.post(endpoint_predição, json={
+        "cabeçalhos": campos_obrigatórios,
         "registros": [
             ("Descrição 1", 10),
             ("Descrição 2", 20),
@@ -33,14 +37,14 @@ def test_deve_receber_os_registros_para_fazer_a_previsão(client):
     })
 
     assert response.status_code == 200
-    assert response.json["cabeçalhos"] == [
-        "Descrição", "Valor", "Identificação"]
+    assert response.json["cabeçalhos"] == campos_obrigatórios + ["Identificação"]
     assert len(response.json["registros"]) == 3
 
 
 def test_deve_receber_os_registros_com_todos_os_cabeçalhos_enviados(client):
-    response = client.post("/predict", json={
-        "cabeçalhos": ["Descrição", "Valor", "Outro campo", "Mais um campo"],
+    campos_extras = ["Outro campo", "Mais um campo"]
+    response = client.post(endpoint_predição, json={
+        "cabeçalhos": campos_obrigatórios + campos_extras,
         "registros": [
             ("Descrição 1", 10, "abc", "def"),
             ("Descrição 2", 20, "abc", "def"),
@@ -49,15 +53,15 @@ def test_deve_receber_os_registros_com_todos_os_cabeçalhos_enviados(client):
     })
 
     assert response.status_code == 200
-    assert response.json["cabeçalhos"] == [
-        "Descrição", "Valor", "Outro campo", "Mais um campo", "Identificação"]
+    assert response.json["cabeçalhos"] == campos_obrigatórios + campos_extras + ["Identificação"]
 
 
 def test_deve_receber_os_registros_como_arquivo_de_extrato_do_banco(client):
-    response = client.post("/predict", content_type="multipart/form-data", data={
+    response = client.post(endpoint_predição, content_type="multipart/form-data", data={
         "extrato": (open("resources/nubank_sample.pdf", "rb"), "nubank_sample.pdf")
     })
 
     assert response.status_code == 200
-    assert response.json["cabeçalhos"] == ["Criado em", "Descrição", "Valor", "Identificação"]
+    assert response.json["cabeçalhos"] == [
+        "Criado em", "Descrição", "Valor", "Identificação"]
     assert len(response.json["registros"]) > 0
