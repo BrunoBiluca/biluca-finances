@@ -5,11 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   testWidgets('AccountabilityTable vazia apenas com o cabeçalho quando criada', (tester) async {
     await tester.pumpWidget(
-      const MaterialApp(
+      MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
           body: FittedBox(
-            child: AccountabilityTable(entries: []),
+            child: AccountabilityTable(entries: [], onUpdate: (entry) {}, onRemove: (entry) {}),
           ),
         ),
       ),
@@ -19,6 +19,5 @@ void main() {
     expect(find.text("Valor"), findsOneWidget);
     expect(find.text("Identificação"), findsOneWidget);
     expect(find.text("Criação"), findsOneWidget);
-    expect(find.text("Data da Inserção"), findsOneWidget);
   });
 }

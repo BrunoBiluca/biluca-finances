@@ -1,17 +1,20 @@
-import 'package:biluca_financas/accountability/bloc/bloc.dart';
-import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/common/formatter.dart';
 import 'package:biluca_financas/accountability/components/identification_edit.dart';
 import 'package:biluca_financas/components/number.dart';
 import 'package:biluca_financas/components/number_field_edit.dart';
 import 'package:biluca_financas/components/text_field_edit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/entry.dart';
 
 class AccountabilityTable extends StatelessWidget {
-  final List<AccountabilityEntry> entries;
-  const AccountabilityTable({super.key, required this.entries});
+  final List<dynamic> entries;
+  final void Function(dynamic) onUpdate;
+  final void Function(dynamic) onRemove;
+  const AccountabilityTable({
+    super.key,
+    required this.entries,
+    required this.onUpdate,
+    required this.onRemove,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +35,10 @@ class AccountabilityTable extends StatelessWidget {
         }),
         border: TableBorder.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
         columns: [
+          _dataColumn(context, "Criação"),
           _dataColumn(context, "Descrição"),
           _dataColumn(context, "Valor"),
           _dataColumn(context, "Identificação"),
-          _dataColumn(context, "Criação"),
-          _dataColumn(context, "Data da Inserção"),
           _dataColumn(context, ""),
         ],
         rows: [...entries.map((entry) => _tableRow(context, entry))],
@@ -51,39 +53,9 @@ class AccountabilityTable extends StatelessWidget {
         ),
       );
 
-  DataRow _tableRow(BuildContext context, AccountabilityEntry entry) {
+  DataRow _tableRow(BuildContext context, dynamic entry) {
     return DataRow(
       cells: [
-        DataCell(
-          Text(
-            entry.description,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          onTap: () => editText(
-            context,
-            entry.description,
-            (updatedText) => context.read<AccountabilityBloc>().add(
-                  UpdateAccountabilityEntry(entry..description = updatedText),
-                ),
-          ),
-        ),
-        DataCell(
-          Number(number: entry.value),
-          onTap: () => editNumber(
-            context,
-            entry.value,
-            (updatedNumber) => context.read<AccountabilityBloc>().add(
-                  UpdateAccountabilityEntry(entry..value = updatedNumber),
-                ),
-          ),
-        ),
-        DataCell(
-          AccountabilityIdentificationEdit(
-            identification: entry.identification,
-            onEdit: (id) =>
-                context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry..identification = id)),
-          ),
-        ),
         DataCell(
           Text(
             Formatter.date(entry.createdAt),
@@ -92,13 +64,32 @@ class AccountabilityTable extends StatelessWidget {
         ),
         DataCell(
           Text(
-            Formatter.date(entry.insertedAt),
+            entry.description,
             style: Theme.of(context).textTheme.bodySmall,
+          ),
+          onTap: () => editText(
+            context,
+            entry.description,
+            (updatedText) => onUpdate(entry..description = updatedText),
+          ),
+        ),
+        DataCell(
+          Number(number: entry.value),
+          onTap: () => editNumber(
+            context,
+            entry.value,
+            (updatedNumber) => onUpdate(entry..value = updatedNumber),
+          ),
+        ),
+        DataCell(
+          AccountabilityIdentificationEdit(
+            identification: entry.identification,
+            onEdit: (id) => onUpdate(entry..identification = id),
           ),
         ),
         DataCell(
           IconButton(
-            onPressed: () => {context.read<AccountabilityBloc>()..add(DeleteAccountabilityEntry(entry))},
+            onPressed: () => onRemove(entry),
             icon: Icon(
               Icons.delete,
               color: Theme.of(context).textTheme.bodySmall?.color,
