@@ -1,5 +1,6 @@
 import 'package:biluca_financas/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class DarkTheme extends AppTheme {
   @override
@@ -20,27 +21,33 @@ class DarkTheme extends AppTheme {
           secondary: Color(0xFF737373),
         ),
       ),
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          color: Color(0xFFE8E6E3),
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-        ),
-        displayMedium: TextStyle(
-          color: Color(0xFFE8E6E3),
-          fontSize: 28,
-        ),
-        displaySmall: TextStyle(
-          color: Color(0xFF988F81),
-          fontSize: 16,
-        ),
-        headlineSmall: TextStyle(
-          color: Color(0xFF988F81),
-        ),
-        bodySmall: TextStyle(
-          color: Color(0xFF988F81),
-        ),
+      textSelectionTheme: const TextSelectionThemeData(
+        selectionColor: Color(0xFF988F81),
+        cursorColor: Color(0xFF988F81),
       ),
+      textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            color: Color(0xFFE8E6E3),
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+          displayMedium: TextStyle(
+            color: Color(0xFFE8E6E3),
+            fontSize: 28,
+          ),
+          displaySmall: TextStyle(
+            color: Color(0xFF988F81),
+            fontSize: 16,
+          ),
+          headlineSmall: TextStyle(
+            color: Color(0xFF988F81),
+          ),
+          bodySmall: TextStyle(
+            color: Color(0xFF988F81),
+          ),
+          labelLarge: TextStyle(
+            color: Color(0xFF988F81),
+          )),
       textButtonTheme: TextButtonThemeData(
         // botões primários
         style: ButtonStyle(

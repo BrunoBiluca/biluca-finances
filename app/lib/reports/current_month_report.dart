@@ -80,7 +80,8 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                     const SizedBox(height: 100),
                     lastMonths(context),
                     const SizedBox(height: 100),
-                    lastMonthsMeans(context)
+                    lastMonthsMeans(context),
+                    const SizedBox(height: 100),
                   ],
                 ),
               ),
@@ -217,7 +218,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           return const CircularProgressIndicator();
         }
 
-        if(snapshot.data == null) {
+        if (snapshot.data == null) {
           return const Text("Nenhum item encontrado");
         }
 

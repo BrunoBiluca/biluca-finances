@@ -30,5 +30,26 @@
 			"--max-line-length",
 			"120"
 		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Predict server",
+				"type": "debugpy",
+				"request": "launch",
+				"program": "api.py",
+				"console": "integratedTerminal"
+			},
+			{
+				"name": "App",
+				"request": "launch",
+				"program": "app/lib/main.dart",
+				"type": "dart",
+				"windows": {
+					"program": "app\\lib\\main.dart"
+				}
+			}
+		]
 	}
 }

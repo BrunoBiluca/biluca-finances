@@ -1,4 +1,5 @@
 import 'package:biluca_financas/accountability/models/entry_request.dart';
+import 'package:biluca_financas/common/formatter.dart';
 import 'package:flutter/material.dart';
 
 class AccountabilityEntryForm extends StatefulWidget {
@@ -23,15 +24,21 @@ class _AccountabilityEntryFormState extends State<AccountabilityEntryForm> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextField(
-              cursorColor: Colors.white,
-              decoration: const InputDecoration(labelText: 'Descrição'),
+              cursorColor: Theme.of(context).textTheme.labelLarge?.color,
+              decoration: InputDecoration(
+                labelText: 'Descrição',
+                labelStyle: Theme.of(context).textTheme.labelLarge,
+              ),
               autofocus: true,
               controller: descriptionCtrl,
             ),
             const SizedBox(height: 20),
             TextField(
-              cursorColor: Colors.white,
-              decoration: const InputDecoration(labelText: 'Valor'),
+              cursorColor: Theme.of(context).textTheme.labelLarge?.color,
+              decoration: InputDecoration(
+                labelText: 'Valor',
+                labelStyle: Theme.of(context).textTheme.labelLarge,
+              ),
               controller: valueCtrl,
               keyboardType: TextInputType.number,
             ),
@@ -43,19 +50,29 @@ class _AccountabilityEntryFormState extends State<AccountabilityEntryForm> {
                   initialDate: DateTime.now(),
                   firstDate: DateTime(2022),
                   lastDate: DateTime.now(),
-                  currentDate: createdAt,
+                  currentDate: DateTime.now(),
                 );
                 if (date != null) {
                   setState(() => createdAt = date);
                 }
               },
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.calendar_month),
-                  SizedBox(width: 20),
-                  Text('Data de entrada'),
+                  Icon(
+                    Icons.calendar_month,
+                    color: Theme.of(context).textTheme.labelLarge?.color,
+                  ),
+                  const SizedBox(width: 20),
+                  Text(
+                    'Data de entrada',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  const SizedBox(width: 20),
+                  Text(
+                    Formatter.date(createdAt),
+                  ),
                 ],
               ),
             )
