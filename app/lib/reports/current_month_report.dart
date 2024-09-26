@@ -13,6 +13,7 @@ import 'package:biluca_financas/reports/charts/identifications_by_pie.dart';
 import 'package:biluca_financas/reports/components/month_info_card.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
 import 'package:biluca_financas/reports/current_month_report_service.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -75,8 +76,6 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     headlines(),
-                    const SizedBox(height: 20),
-                    charts(),
                     const SizedBox(height: 100),
                     lastMonths(context),
                     const SizedBox(height: 100),
@@ -89,6 +88,93 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           },
         ),
       ],
+    );
+  }
+
+  Widget headlines() {
+    return StaggeredGrid.count(
+      crossAxisCount: 3,
+      crossAxisSpacing: 20,
+      mainAxisSpacing: 40,
+      children: [
+        StaggeredGridTile.extent(
+          crossAxisCellCount: 1,
+          mainAxisExtent: 150,
+          child: reportFuture(
+            _service.summaryBalance(),
+            (d) => SingleValueCard(
+              title: "Balanço",
+              currentValue: d["balance"],
+              relatedValue: d["related"],
+            ),
+          ),
+        ),
+        StaggeredGridTile.extent(
+          crossAxisCellCount: 1,
+          mainAxisExtent: 150,
+          child: reportFuture(
+            _service.summaryIncomes(),
+            (d) => SingleValueCard(
+              title: "Receitas",
+              currentValue: d["incomes"],
+              relatedValue: d["related"],
+            ),
+          ),
+        ),
+        StaggeredGridTile.extent(
+          crossAxisCellCount: 1,
+          mainAxisExtent: 150,
+          child: reportFuture(
+            _service.summaryExpenses(),
+            (d) => SingleValueCard(
+              title: "Despesas",
+              currentValue: d["expenses"],
+              relatedValue: d["related"],
+              lessIsPositite: true,
+            ),
+          ),
+        ),
+        StaggeredGridTile.extent(
+          crossAxisCellCount: 1,
+          mainAxisExtent: 500,
+          child: ColumnDecoratedCard(
+            title: "Receitas por identificação",
+            future: _service.incomesByIdentification(),
+            child: (d) => IdentificationsByPie(
+              accountabilityByIdentification: d as List<GroupedBy<AccountabilityIdentification>>,
+            ),
+          ),
+        ),
+        StaggeredGridTile.extent(
+          crossAxisCellCount: 2,
+          mainAxisExtent: 500,
+          child: ColumnDecoratedCard(
+            title: "Gastos por identificação",
+            future: _service.expensesByIdentification(),
+            child: (d) => IdentificationsByBarChart(
+              accountabilityByIdentification: d as List<GroupedBy<AccountabilityIdentification>>,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget reportFuture(Future<dynamic> future, Widget Function(dynamic) child) {
+    return FutureBuilder(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const CircularProgressIndicator();
+        }
+
+        if (snapshot.data == null) {
+          return const Text("Nenhum item encontrado");
+        }
+
+        var result = snapshot.data!;
+        return child(result);
+      },
     );
   }
 
@@ -133,101 +219,6 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
     );
   }
 
-  SizedBox charts() {
-    return SizedBox(
-      height: 500,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: ColumnDecoratedCard(
-              title: "Receitas por identificação",
-              future: _service.incomesByIdentification(),
-              child: (d) => IdentificationsByPie(
-                accountabilityByIdentification: d as List<GroupedBy<AccountabilityIdentification>>,
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            flex: 2,
-            child: ColumnDecoratedCard(
-              title: "Gastos por identificação",
-              future: _service.expensesByIdentification(),
-              child: (d) => IdentificationsByBarChart(
-                accountabilityByIdentification: d as List<GroupedBy<AccountabilityIdentification>>,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  SizedBox headlines() {
-    return SizedBox(
-      height: 150,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: reportFuture(
-              _service.summaryBalance(),
-              (d) => SingleValueCard(
-                title: "Balanço",
-                currentValue: d["balance"],
-                relatedValue: d["related"],
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            flex: 1,
-            child: reportFuture(
-              _service.summaryIncomes(),
-              (d) => SingleValueCard(
-                title: "Receitas",
-                currentValue: d["incomes"],
-                relatedValue: d["related"],
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            flex: 1,
-            child: reportFuture(
-              _service.summaryExpenses(),
-              (d) => SingleValueCard(
-                title: "Despesas",
-                currentValue: d["expenses"],
-                relatedValue: d["related"],
-                lessIsPositite: true,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget reportFuture(Future<dynamic> future, Widget Function(dynamic) child) {
-    return FutureBuilder(
-      future: future,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return const CircularProgressIndicator();
-        }
-
-        if (snapshot.data == null) {
-          return const Text("Nenhum item encontrado");
-        }
-
-        var result = snapshot.data!;
-        return child(result);
-      },
-    );
-  }
-
   Widget lastMonthsMeans(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,8 +236,8 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                crossAxisSpacing: 20.0,
-                mainAxisSpacing: 20.0,
+                crossAxisSpacing: 30.0,
+                mainAxisSpacing: 40.0,
                 mainAxisExtent: 150.0,
               ),
               shrinkWrap: true,
