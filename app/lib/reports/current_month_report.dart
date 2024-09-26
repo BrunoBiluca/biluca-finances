@@ -87,7 +87,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               ),
             );
           },
-        )
+        ),
       ],
     );
   }

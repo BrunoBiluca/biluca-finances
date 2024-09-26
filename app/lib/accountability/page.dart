@@ -1,5 +1,6 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
+import 'package:biluca_financas/common/base_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -14,9 +15,11 @@ class AccountabilityPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Prestação de Contas'),
       ),
-      body: BlocProvider(
-        create: (_) => GetIt.I<AccountabilityBloc>()..add(FetchAccountabilityEntries()),
-        child: const AccountabilitySection(),
+      body: BasePage(
+        child: BlocProvider(
+          create: (_) => GetIt.I<AccountabilityBloc>()..add(FetchAccountabilityEntries()),
+          child: const AccountabilitySection(),
+        ),
       ),
     );
   }
