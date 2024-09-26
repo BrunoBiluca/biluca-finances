@@ -180,4 +180,34 @@ void main() {
     var identifications = await repo.getIdentifications();
     expect(identifications, isEmpty);
   });
+
+  test("deve retornar nada se a entrada de contabilidade não existe na base", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    var result = await repo.exists(
+      AccountabilityEntryRequest(
+        description: "Descrição 1",
+        value: 10.00,
+        createdAt: DateTime.now(),
+      ),
+    );
+    expect(result, isNull);
+  });
+
+  test("deve retornar a entrada se existe na base", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+
+    var req = AccountabilityEntryRequest(
+      description: "Descrição 1",
+      value: 10.00,
+      createdAt: DateTime.now(),
+    );
+
+    await repo.add(req);
+
+    var result = await repo.exists(req);
+    expect(result, isNotNull);
+    expect(result!.description, req.description);
+    expect(result.value, req.value);
+    expect(result.createdAt, req.createdAt);
+  });
 }

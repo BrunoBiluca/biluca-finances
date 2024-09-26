@@ -69,10 +69,13 @@ class AccountabilitySection extends StatelessWidget {
           const SizedBox(height: 20),
           Expanded(
             child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-              builder: (context, state) => AccountabilityTable(
-                entries: state.entries,
-                onUpdate: (entry) => context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry)),
-                onRemove: (entry) => context.read<AccountabilityBloc>()..add(DeleteAccountabilityEntry(entry)),
+              builder: (context, state) => SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: AccountabilityTable(
+                  entries: state.entries,
+                  onUpdate: (entry) => context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry)),
+                  onRemove: (entry) => context.read<AccountabilityBloc>()..add(DeleteAccountabilityEntry(entry)),
+                ),
               ),
             ),
           ),

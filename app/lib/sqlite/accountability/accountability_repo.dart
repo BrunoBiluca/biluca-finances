@@ -161,4 +161,23 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   Future<void> deleteIdentification(String id) async {
     await db.delete("accountability_identifications", where: "id = ?", whereArgs: [id]);
   }
+
+  @override
+  Future<AccountabilityEntry?> exists(AccountabilityEntryRequest req) async {
+    var result = await db.query(
+      tableName,
+      where: "description = ? AND value = ? AND createdAt = ?",
+      whereArgs: [req.description, req.value, req.createdAt.toIso8601String()],
+    );
+    if (result.isEmpty) {
+      return null;
+    }
+    var entry = AccountabilityEntry.fromMap(result.first);
+
+    if (entry.identificationId != null) {
+      entry.identification = await getIdentification(entry.identificationId!);
+    }
+
+    return entry;
+  }
 }
