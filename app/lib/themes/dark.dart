@@ -1,6 +1,5 @@
 import 'package:biluca_financas/themes/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class DarkTheme extends AppTheme {
   @override

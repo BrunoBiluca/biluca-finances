@@ -9,7 +9,7 @@ void main() {
         title: 'Flutter Demo',
         home: Scaffold(
           body: FittedBox(
-            child: AccountabilityTable(entries: [], onUpdate: (entry) {}, onRemove: (entry) {}),
+            child: AccountabilityTable(entries: const [], onUpdate: (entry) {}, onRemove: (entry) {}),
           ),
         ),
       ),
