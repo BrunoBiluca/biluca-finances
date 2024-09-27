@@ -6,6 +6,7 @@ class TextBallon extends StatefulWidget {
   final Color color;
   final Function(String, Color)? onEdit;
   final VoidCallback? onDelete;
+  final EdgeInsets padding;
 
   const TextBallon({
     super.key,
@@ -13,6 +14,7 @@ class TextBallon extends StatefulWidget {
     required this.color,
     this.onEdit,
     this.onDelete,
+    this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
   });
 
   @override
@@ -32,7 +34,7 @@ class _TextBallonState extends State<TextBallon> {
     return DecoratedBox(
       decoration: BoxDecoration(color: widget.color, borderRadius: const BorderRadius.all(Radius.circular(10))),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        padding: widget.padding,
         child: Row(
           children: [
             Expanded(
@@ -46,7 +48,7 @@ class _TextBallonState extends State<TextBallon> {
                             autofocus: true,
                             controller: cont,
                             cursorColor: textColor(),
-                            style: TextStyle(color: textColor()),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor()),
                             onEditingComplete: () {
                               setState(() {
                                 widget.onEdit!.call(cont.text, widget.color);

@@ -98,9 +98,11 @@ class AccountabilityTable extends StatelessWidget {
               ),
             ),
             DataCell(
-              AccountabilityIdentificationEdit(
-                identification: entry.identification,
-                onEdit: (id) => onUpdate(entry..identification = id),
+              Center(
+                child: AccountabilityIdentificationEdit(
+                  identification: entry.identification,
+                  onEdit: (id) => onUpdate(entry..identification = id),
+                ),
               ),
             ),
             DataCell(

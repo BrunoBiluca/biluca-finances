@@ -110,10 +110,19 @@ class _AccountabilityIdentificationEditState extends State<AccountabilityIdentif
         );
       },
       child: widget.identification == null
-          ? const Text('Não identificado')
-          : TextBallon(
-              text: widget.identification!.description,
-              color: widget.identification!.color,
+          ? Text(
+              'Não identificado',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            )
+          : SizedBox(
+              height: 32,
+              width: 200,
+              child: TextBallon(
+                text: widget.identification!.description,
+                color: widget.identification!.color,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+              ),
             ),
     );
   }
