@@ -1,4 +1,5 @@
 import 'package:biluca_financas/accountability/models/entry_request.dart';
+import 'package:biluca_financas/common/real_input_formatter.dart';
 import 'package:biluca_financas/components/forms/data_picker_field.dart';
 import 'package:biluca_financas/components/forms/primary_text_field.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,9 @@ class AccountabilityEntryForm extends StatefulWidget {
 }
 
 class _AccountabilityEntryFormState extends State<AccountabilityEntryForm> {
-  late TextEditingController descriptionCtrl = TextEditingController();
-  late TextEditingController valueCtrl = TextEditingController();
+  var descriptionCtrl = TextEditingController();
+  var valueCtrl = TextEditingController();
+  var inputFormatter = RealInputFormatter();
   DateTime createdAt = DateTime.now();
 
   @override
@@ -20,7 +22,7 @@ class _AccountabilityEntryFormState extends State<AccountabilityEntryForm> {
     return AlertDialog(
       title: const Text("Nova entrada"),
       content: SizedBox(
-        height: 200,
+        height: 300,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -28,12 +30,15 @@ class _AccountabilityEntryFormState extends State<AccountabilityEntryForm> {
               labelText: 'Descrição',
               autofocus: true,
               controller: descriptionCtrl,
+              validateEmpty: true,
             ),
             const SizedBox(height: 20),
             PrimaryTextField(
               labelText: 'Valor',
               controller: valueCtrl,
               keyboardType: TextInputType.number,
+              validateEmpty: true,
+              formatters: [inputFormatter],
             ),
             const SizedBox(height: 20),
             DatePickerField(
@@ -50,17 +55,25 @@ class _AccountabilityEntryFormState extends State<AccountabilityEntryForm> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(
-            context,
-            AccountabilityEntryRequest(
-              description: descriptionCtrl.text,
-              value: double.parse(valueCtrl.text),
-              createdAt: createdAt,
-            ),
-          ),
+          onPressed: () => save(context),
           child: const Text("Salvar"),
         )
       ],
+    );
+  }
+
+  void save(BuildContext context) {
+    if (descriptionCtrl.text.isEmpty || valueCtrl.text.isEmpty) {
+      return;
+    }
+
+    return Navigator.pop(
+      context,
+      AccountabilityEntryRequest(
+        description: descriptionCtrl.text,
+        value: inputFormatter.parse(valueCtrl.text),
+        createdAt: createdAt,
+      ),
     );
   }
 }

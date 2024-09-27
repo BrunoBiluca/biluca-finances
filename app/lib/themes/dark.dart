@@ -25,48 +25,60 @@ class DarkTheme extends AppTheme {
         cursorColor: Color(0xFF988F81),
       ),
       textTheme: const TextTheme(
-          displayLarge: TextStyle(
-            color: Color(0xFFE8E6E3),
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-          ),
-          displayMedium: TextStyle(
-            color: Color(0xFFE8E6E3),
-            fontSize: 28,
-          ),
-          displaySmall: TextStyle(
-            color: Color(0xFF988F81),
-            fontSize: 16,
-          ),
-          titleMedium: TextStyle(
-            color: Color(0xFF988F81),
-          ),
-          headlineSmall: TextStyle(
-            color: Color(0xFF988F81),
-          ),
-          bodySmall: TextStyle(
-            color: Color(0xFF988F81),
-          ),
-          labelLarge: TextStyle(
-            color: Color(0xFF988F81),
-          )),
+        displayLarge: TextStyle(
+          color: Color(0xFFE8E6E3),
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+        ),
+        displayMedium: TextStyle(
+          color: Color(0xFFE8E6E3),
+          fontSize: 28,
+        ),
+        displaySmall: TextStyle(
+          color: Color(0xFF988F81),
+          fontSize: 16,
+        ),
+        titleMedium: TextStyle(
+          color: Color(0xFF988F81),
+        ),
+        headlineSmall: TextStyle(
+          color: Color(0xFF988F81),
+        ),
+        bodySmall: TextStyle(
+          color: Color(0xFF988F81),
+        ),
+        labelLarge: TextStyle(
+          color: Color(0xFF988F81),
+        ),
+      ),
       textButtonTheme: TextButtonThemeData(
-        // botões primários
         style: ButtonStyle(
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
+
+            if (states.contains(WidgetState.disabled)) {
+              return const Color(0xFF988F81);
+            }
+
             return color;
           }),
           animationDuration: const Duration(milliseconds: 100),
           alignment: Alignment.center,
           backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = const Color(0xFF0073B9);
+            var disabledColor = const Color.fromARGB(255, 58, 62, 65);
+
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
+
+            if (states.contains(WidgetState.disabled)) {
+              return disabledColor;
+            }
+
             return color;
           }),
           padding: WidgetStateProperty.resolveWith<EdgeInsetsGeometry?>((Set<WidgetState> states) {
@@ -83,6 +95,11 @@ class DarkTheme extends AppTheme {
             if (states.contains(WidgetState.hovered)) {
               return color.withOpacity(0.8);
             }
+
+            if (states.contains(WidgetState.disabled)) {
+              return const Color(0xFF988F81);
+            }
+
             return color;
           }),
           textStyle: WidgetStateProperty.resolveWith<TextStyle?>((Set<WidgetState> states) {
