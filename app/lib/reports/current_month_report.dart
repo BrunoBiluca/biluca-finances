@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/common/color_extensions.dart';
+import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
-import 'package:biluca_financas/common/datetime_extensions.dart';
+import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/components/column_decorated_card.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/components/single_value_card/single_value_card.dart';

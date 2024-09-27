@@ -38,6 +38,9 @@ class DarkTheme extends AppTheme {
             color: Color(0xFF988F81),
             fontSize: 16,
           ),
+          titleMedium: TextStyle(
+            color: Color(0xFF988F81),
+          ),
           headlineSmall: TextStyle(
             color: Color(0xFF988F81),
           ),

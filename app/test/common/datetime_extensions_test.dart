@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/datetime_extensions.dart';
+import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

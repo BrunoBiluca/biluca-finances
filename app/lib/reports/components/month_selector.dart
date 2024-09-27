@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/string_extensions.dart';
+import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

@@ -1,5 +1,5 @@
 import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/common/color_extensions.dart';
+import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/reports/charts/indicator.dart';
 import 'package:collection/collection.dart';

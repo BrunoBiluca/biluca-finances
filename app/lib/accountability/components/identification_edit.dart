@@ -1,6 +1,7 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
+import 'package:biluca_financas/components/forms/primary_text_field.dart';
 import 'package:biluca_financas/components/text_ballon.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -46,11 +47,10 @@ class _AccountabilityIdentificationEditState extends State<AccountabilityIdentif
               width: 600,
               child: Column(
                 children: [
-                  TextField(
-                    decoration: const InputDecoration(labelText: 'Nova Identificação'),
-                    autofocus: true,
+                  PrimaryTextField(
+                    labelText: 'Nova Identificação',
                     controller: controller,
-                    cursorColor: Colors.white,
+                    autofocus: true,
                     onEditingComplete: () {
                       widget.onEdit(AccountabilityIdentification(controller.text, Colors.black));
                       close();

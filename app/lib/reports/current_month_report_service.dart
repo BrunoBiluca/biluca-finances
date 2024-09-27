@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
-import 'package:biluca_financas/common/datetime_extensions.dart';
+import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:get_it/get_it.dart';
 

@@ -1,6 +1,6 @@
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
-import 'package:biluca_financas/common/formatter.dart';
+import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';

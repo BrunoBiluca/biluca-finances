@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/formatter.dart';
+import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/accountability/components/identification_edit.dart';
 import 'package:biluca_financas/components/number.dart';
 import 'package:biluca_financas/components/number_field_edit.dart';

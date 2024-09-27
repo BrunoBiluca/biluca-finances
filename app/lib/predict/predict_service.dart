@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
-import 'package:biluca_financas/common/number_extensions.dart';
+import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 

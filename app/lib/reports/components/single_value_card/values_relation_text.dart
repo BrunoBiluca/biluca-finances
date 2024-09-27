@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/formatter.dart';
+import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
 import 'package:flutter/material.dart';
 
