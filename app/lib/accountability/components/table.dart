@@ -90,7 +90,7 @@ class AccountabilityTable extends StatelessWidget {
               ),
             ),
             DataCell(
-              Number(number: entry.value),
+              RealCurrency(number: entry.value),
               onTap: () => editNumber(
                 context,
                 entry.value,

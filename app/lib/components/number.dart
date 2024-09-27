@@ -1,14 +1,14 @@
-import 'package:biluca_financas/formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class Number extends StatelessWidget {
+class RealCurrency extends StatelessWidget {
   final double number;
-  const Number({required this.number, super.key});
+  const RealCurrency({required this.number, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      Formatter.number(number),
+      NumberFormat.simpleCurrency(locale: "pt_Br").format(number),
       style: Theme.of(context).textTheme.bodySmall,
     );
   }

@@ -12,7 +12,7 @@ class NumberFieldEdit extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => editNumber(context, number, onEdit),
-      child: Number(number: number),
+      child: RealCurrency(number: number),
     );
   }
 }
