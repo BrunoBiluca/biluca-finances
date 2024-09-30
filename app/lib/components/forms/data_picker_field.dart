@@ -18,11 +18,20 @@ class _DatePickerFieldState extends State<DatePickerField> {
     return OutlinedButton(
       onPressed: () async {
         var date = await showDatePicker(
-            context: context,
-            initialDate: DateTime.now(),
-            firstDate: DateTime(2022),
-            lastDate: DateTime.now(),
-            currentDate: widget.current);
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime(2022),
+          lastDate: DateTime.now(),
+          currentDate: widget.current,
+          builder: (context, child) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 450,
+              width: 700,
+              child: child,
+            ),
+          ),
+        );
 
         widget.onSelected(date);
       },

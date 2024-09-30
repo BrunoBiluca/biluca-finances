@@ -45,9 +45,10 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
       ),
     );
 
-    var errorInputBorder = const UnderlineInputBorder(
+    var errorColor = Theme.of(context).colorScheme.error;
+    var errorInputBorder = UnderlineInputBorder(
       borderSide: BorderSide(
-        color: Colors.purple,
+        color: errorColor,
       ),
     );
 
@@ -55,13 +56,13 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
       cursorColor: style?.color,
       decoration: InputDecoration(
         labelText: widget.labelText,
-        labelStyle: errorText == null ? style : style?.copyWith(color: Colors.purple),
+        labelStyle: errorText == null ? style : style?.copyWith(color: errorColor),
         border: inputBorder,
         focusedBorder: inputBorder,
         enabledBorder: inputBorder,
         focusedErrorBorder: errorInputBorder,
         errorBorder: errorInputBorder,
-        errorStyle: theme.textTheme.bodySmall?.copyWith(color: Colors.purple),
+        errorStyle: theme.textTheme.bodySmall?.copyWith(color: errorColor),
         errorText: errorText,
       ),
       autofocus: widget.autofocus,
