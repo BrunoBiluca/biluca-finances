@@ -10,11 +10,20 @@ class RealInputFormatter extends TextInputFormatter {
     if (newValue.selection.baseOffset == 0) {
       return newValue;
     }
+
+    String currText = newValue.text;
+    if (newValue.text == "-") {
+      currText = "-0";
+    }
+
     final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
-    String newText = formatter.format(parse(newValue.text));
+    String newText = formatter.format(parse(currText)).replaceAll('\u00A0', " ");
     return newValue.copyWith(text: newText, selection: TextSelection.collapsed(offset: newText.length));
   }
 
   double parse(String value) =>
-      double.parse(value.replaceAll('.', '').replaceAll(",", "").replaceAll("R\$", "").trim()) / 100;
+      double.parse(
+        value.replaceAll('.', '').replaceAll(",", "").replaceAll("R\$", "").replaceAll(" ", "").trim(),
+      ) /
+      100;
 }

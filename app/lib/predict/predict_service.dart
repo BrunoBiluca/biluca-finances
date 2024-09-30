@@ -28,7 +28,7 @@ class PredictService {
         List<String>.from(result["cabeçalhos"] as List),
         result["registros"],
       );
-    } on HttpException catch (e) {
+    } on Exception catch (e) {
       log("Serviço de categorização indisponível. <$e>");
 
       if (entries != null) {
