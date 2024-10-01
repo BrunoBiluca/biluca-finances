@@ -24,6 +24,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addObserver(this);
     return MaterialApp(
+      restorationScopeId: "biluca-financas",
       title: 'Flutter Demo',
       theme: GetIt.I<ThemeManager>().light,
       darkTheme: GetIt.I<ThemeManager>().dark,

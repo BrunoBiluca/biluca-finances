@@ -1,5 +1,7 @@
-import 'dart:developer';
 import 'dart:io' as io;
+import 'package:biluca_financas/common/logging/logger_manager.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -10,6 +12,7 @@ class DBProvider {
   static DBProvider get i => instance;
 
   Database? _database;
+  Logger log = GetIt.I<LoggerManager>().instance("DBProvider");
 
   Future<Database> get database async {
     if (_database != null) return _database!;
@@ -30,7 +33,7 @@ class DBProvider {
         version: 1,
         onCreate: (db, version) => create(db, initialSQL),
         onUpgrade: (db, oldVersion, newVersion) async {
-          log("Tabelas atualizadas");
+          log.info("Tabelas atualizadas");
           // await migrate(migrationsSQL);
         },
       ),
@@ -40,23 +43,23 @@ class DBProvider {
   Future<String> getDBPath() async {
     final io.Directory dir = await getApplicationDocumentsDirectory();
     String dbPath = p.join(dir.path, "Biluca Finanças", "myDb.db");
-    log("Caminho para o banco de dados: $dbPath");
+    log.info("Caminho para o banco de dados: $dbPath");
     return dbPath;
   }
 
   Future create(Database db, List<String> migrationsSQL) async {
-    log("Migrando tabelas...");
+    log.info("Migrando tabelas...");
     for (final migration in migrationsSQL) {
       await db.execute(migration);
     }
-    log("Migrations concluídas");
+    log.info("Migrations concluídas");
   }
 
   Future clear(Database db) async {
-    log("Limpando banco de dados...");
+    log.info("Limpando banco de dados...");
     await databaseFactory.deleteDatabase(db.path);
     _database = null;
-    log("Banco de dados limpo");
+    log.info("Banco de dados limpo");
   }
 
   final initialSQL = [

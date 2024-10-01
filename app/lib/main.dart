@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/common/logging/console_listener.dart';
+import 'package:biluca_financas/common/logging/file_listener.dart';
+import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
@@ -27,18 +30,19 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   initializeDateFormatting('pt_BR');
   WidgetsFlutterBinding.ensureInitialized();
-  await executePredictServer();
 
   await setupDependencies();
 
   await initilizeAccountabilityIdentifications();
+
+  await executePredictServer();
 
   runApp(const App());
 }
 
 Future<void> executePredictServer() async {
   var log = Logger("Execução do servidor de predição");
-  var serverProcess = await Process.start("assets/gen/server/predict_win/predict_win.exe", []);
+  var serverProcess = await Process.start("assets/gen/predict_win/predict_win.exe", []);
   stdout.addStream(serverProcess.stdout);
   stderr.addStream(serverProcess.stderr);
 
@@ -54,6 +58,12 @@ Future<void> executePredictServer() async {
 }
 
 Future<void> setupDependencies() async {
+  getIt.registerSingleton<LoggerManager>(LoggerManager()
+    ..init([
+      ConsoleLoggingListener(),
+      FileLoggingListener(),
+    ]));
+
   DBProvider.i.init();
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
