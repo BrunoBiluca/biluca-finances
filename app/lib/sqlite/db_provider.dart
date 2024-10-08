@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 import 'package:biluca_financas/common/logging/logger_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
@@ -41,7 +42,11 @@ class DBProvider {
   }
 
   Future<String> getDBPath() async {
-    final io.Directory dir = await getApplicationDocumentsDirectory();
+    var dir = io.Directory.current;
+    if (kReleaseMode) {
+      dir = await getApplicationDocumentsDirectory();
+    }
+
     String dbPath = p.join(dir.path, "Biluca Finanças", "myDb.db");
     log.info("Caminho para o banco de dados: $dbPath");
     return dbPath;

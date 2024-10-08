@@ -14,12 +14,12 @@ As mensagem de commits deve seguir o seguinte formato:
 	- A justificativa é opcional já que muitas vezes a própria descrição do conteúdo já explana a justificativa da alteração.
 
 
-| Emoji | Tipo                                                  | Possíveis descrições                                                     |
-| ----- | ----------------------------------------------------- | ------------------------------------------------------------------------ |
-| 📖     | Alteração de documentação                             | 📖 Adição de documentação referente a ...<br>📖 Melhoria na escrita de ... |
-| ♻️     | Refatoração de código                                 | ♻️ Melhoria de ... para ...                                               |
-| ✨     | Funcionalidade                                        | ✨ <Funcionalidade> .... para ....                                        |
-| 💄     | Alteração visual                                      | 💄 <Alteração visual feita> .... para ....                                |
-| 🔥     | Remoção de código ou arquivos                         | 🔥 <Código ou arquivo removido> .... por causa ....                       |
-| ✅     | Adição ou correção de testes                          | ✅ .... relacionados à ....                                               |
-| 🔧     | Adição ou alteração de ferramentas de desenvolvimento | 🔧 Ferramenta ....... adicionada para .....                               |
+| Emoji | Tipo                                                            | Possíveis descrições                                                       |
+| ----- | --------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 📖    | Alteração de documentação                                       | 📖 Adição de documentação referente a ...<br>📖 Melhoria na escrita de ... |
+| ♻️    | Refatoração de código                                           | ♻️ Melhoria de ... para ...                                                |
+| ✨     | Funcionalidade                                                  | ✨ <Funcionalidade> .... para ....                                          |
+| 💄    | Alteração visual                                                | 💄 <Alteração visual feita> .... para ....                                 |
+| 🔥    | Remoção de código ou arquivos                                   | 🔥 <Código ou arquivo removido> .... por causa ....                        |
+| ✅     | Adição ou correção de testes                                    | ✅ .... relacionados à ....                                                 |
+| 🔧    | Adição ou alteração de ferramentas ou código de desenvolvimento | 🔧 Ferramenta ....... adicionada para .....                                |

@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "app (Flutter Windows)",
+            "program": "lib/main.dart",
+            "deviceId": "windows",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+}
