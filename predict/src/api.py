@@ -1,3 +1,4 @@
+import argparse
 from logging import basicConfig, warning
 from flask import Flask, request
 import pandas
@@ -45,4 +46,7 @@ if __name__ == "__main__":
         warning("Arquivo de classificação não encontrado")
 
     app = create_app()
-    app.run(debug=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--debug", action="store_true", help="Habilita o modo debug")
+    args = parser.parse_args()
+    app.run(debug=args.debug, port=5666)

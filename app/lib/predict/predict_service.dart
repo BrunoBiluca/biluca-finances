@@ -5,6 +5,7 @@ import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
+import 'package:biluca_financas/predict/predict_local.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
@@ -42,7 +43,8 @@ class PredictService {
   }
 
   Future<dynamic> _postFile(File importedFile) async {
-    MultipartRequest request = MultipartRequest('POST', Uri.parse('http://localhost:5000/predict'));
+    var server = GetIt.I<PredictLocal>();
+    MultipartRequest request = MultipartRequest('POST', Uri.parse('${server.host}/predict'));
     request.files.add(await MultipartFile.fromPath('extrato', importedFile.path));
     var result = await request.send();
 
@@ -53,8 +55,9 @@ class PredictService {
   }
 
   Future<dynamic> _postPredict(List<AccountabilityEntryRequest> entries) async {
+    var server = GetIt.I<PredictLocal>();
     var result = await http.post(
-      Uri.parse("http://localhost:5000/predict"),
+      Uri.parse("${server.host}/predict"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(
         {

@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 
 class PredictLocal {
   var log = GetIt.I<LoggerManager>().instance("Execução do servidor de predição");
+  final String host = "http://localhost:5666/";
 
   void init() async {
     log.info("Iniciando servidor de predição...");
@@ -31,7 +32,7 @@ class PredictLocal {
       exitCode = v;
     });
     await Future.delayed(const Duration(seconds: 1));
-    log.info("Servidor de predição iniciado com sucesso. HOST: http://localhost:5000/predict");
+    log.info("Servidor de predição iniciado com sucesso. HOST: $host/predict");
 
     if (exitCode != null) {
       log.severe("Servidor de predição parou de executar. Exit code: $exitCode");
