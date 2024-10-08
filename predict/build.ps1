@@ -1,5 +1,2 @@
-# Set-Location src
-
-pyinstaller --noconfirm --clean --log-level=WARN .\predict_win.spec
-
-# Set-Location $PSScriptRoot
+$env:PYDEVD_DISABLE_FILE_VALIDATION=1
+pyinstaller --noconfirm --clean .\predict_win.spec

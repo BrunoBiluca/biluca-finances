@@ -50,6 +50,7 @@ flutter:
   assets:
     - assets/
     - assets/gen/predict_win/
+    - assets/gen/predict_win/resources/
 
 msix_config:
   display_name: Biluca Finanças

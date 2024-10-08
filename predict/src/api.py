@@ -1,4 +1,4 @@
-from logging import warning
+from logging import basicConfig, warning
 from flask import Flask, request
 import pandas
 from pypdf import PdfReader
@@ -40,7 +40,8 @@ def create_app():
 
 
 if __name__ == "__main__":
-    if bundle_resources.exists("resources/classification.csv"):
+    basicConfig(level="INFO")
+    if not bundle_resources.exists("resources/classification_train.csv"):
         warning("Arquivo de classificação não encontrado")
 
     app = create_app()

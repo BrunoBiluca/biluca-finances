@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/logging/console_listener.dart';
 import 'package:biluca_financas/common/logging/file_listener.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
+import 'package:biluca_financas/predict/predict_local.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
@@ -21,7 +20,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:logging/logging.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 GetIt getIt = GetIt.instance;
@@ -35,26 +33,7 @@ void main() async {
 
   await initilizeAccountabilityIdentifications();
 
-  await executePredictServer();
-
   runApp(const App());
-}
-
-Future<void> executePredictServer() async {
-  var log = Logger("Execução do servidor de predição");
-  var serverProcess = await Process.start("assets/gen/predict_win/predict_win.exe", []);
-  stdout.addStream(serverProcess.stdout);
-  stderr.addStream(serverProcess.stderr);
-
-  int? exitCode;
-  serverProcess.exitCode.then((v) {
-    exitCode = v;
-  });
-  await Future.delayed(const Duration(seconds: 1));
-
-  if (exitCode != null) {
-    log.severe("Servidor de predição não foi inicializado com sucesso");
-  }
 }
 
 Future<void> setupDependencies() async {
@@ -85,13 +64,15 @@ Future<void> setupDependencies() async {
   getIt.registerFactory<FToast>(
     () => FToast()..init(navigatorKey.currentContext!),
   );
-
+  
   getIt.registerSingleton<ThemeManager>(
     ThemeManager()
       ..add(DarkTheme())
       ..setDark("dark")
       ..setLight("dark"),
   );
+
+  getIt.registerSingleton<PredictLocal>(PredictLocal()..init());
 }
 
 Future<void> initilizeAccountabilityIdentifications() async {

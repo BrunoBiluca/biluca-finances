@@ -1,19 +1,23 @@
+from logging import info
 import os
 import sys
 
 
-def base_path():
-    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-        print('running in a PyInstaller bundle')
-        return os.path.abspath(os.path.dirname(__file__)) + "/"
+def resource_path(relative_path):
+    # determine if application is a script file or frozen exe
+    if getattr(sys, 'frozen', False):
+        application_path = os.path.dirname(sys.executable)
+    elif __file__:
+        application_path = ""
 
-    print('running in a normal Python process')
-    return ""
+    return os.path.join(application_path, relative_path)
 
 
 def open_file(file_name):
-    return open(base_path() + file_name, encoding="utf8")
+    return open(resource_path(file_name), encoding="utf8")
 
 
 def exists(file_name):
-    return os.path.isfile(base_path() + file_name)
+    file_path = resource_path(file_name)
+    info("Verificando se o arquivo existe no caminho: " + file_path)
+    return os.path.exists(file_path)

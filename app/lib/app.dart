@@ -1,7 +1,7 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:biluca_financas/main.dart';
+import 'package:biluca_financas/predict/predict_local.dart';
 import 'package:biluca_financas/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,9 +14,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
-    print("Encerrando servidor de predição...");
-    await Process.run('taskkill', ['/F', '/IM', "predict_win.exe"]);
-    print("Servidor de predição encerrado com sucesso");
+    GetIt.I<PredictLocal>().terminate();
     return super.didRequestAppExit();
   }
 

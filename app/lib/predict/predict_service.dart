@@ -1,16 +1,19 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
+import 'package:biluca_financas/common/logging/logger_manager.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 
 class PredictService {
   final Client http;
   final AccountabilityRepo repo;
+  final Logger log = GetIt.I<LoggerManager>().instance("PredictService");
   PredictService(this.http, this.repo);
 
   Future<List<AccountabilityEntryRequest>> predict({
@@ -28,8 +31,8 @@ class PredictService {
         List<String>.from(result["cabeçalhos"] as List),
         result["registros"],
       );
-    } on Exception catch (e) {
-      log("Serviço de categorização indisponível. <$e>");
+    } on Exception catch (e, s) {
+      log.severe("Serviço de categorização indisponível.", e, s);
 
       if (entries != null) {
         return entries;
@@ -100,7 +103,9 @@ class PredictService {
     for (var format in formats) {
       try {
         return DateFormat(format).parse(date);
-      } on FormatException {}
+      } on FormatException {
+        log.warning("Formato de data inválido: $date");
+      }
     }
     throw FormatException("Formato de data desconhecido", date);
   }
