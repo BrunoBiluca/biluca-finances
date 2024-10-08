@@ -39,17 +39,10 @@
 				"type": "debugpy",
 				"request": "launch",
 				"program": "api.py",
+				"python": "${workspaceFolder:predict}/venv/Scripts/python",
+				"args": ["-d"],
 				"console": "integratedTerminal"
 			},
-			{
-				"name": "App",
-				"request": "launch",
-				"program": "app/lib/main.dart",
-				"type": "dart",
-				"windows": {
-					"program": "app\\lib\\main.dart"
-				}
-			}
 		]
 	}
 }
