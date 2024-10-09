@@ -15,6 +15,7 @@ import 'package:biluca_financas/reports/components/month_selector.dart';
 import 'package:biluca_financas/reports/current_month_report_service.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 
 class CurrentMonthReport extends StatefulWidget {
@@ -105,7 +106,19 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
             (d) => SingleValueCard(
               title: "Balanço",
               currentValue: d["balance"],
-              relatedValue: d["related"],
+              side: d["balance"] > 0
+                  ? const IconHighlight(
+                      bgColor: Color(0xFF122622),
+                      borderColor: Color(0xFF232428),
+                      txtColor: Color(0xFF43C67C),
+                      icon: FontAwesomeIcons.plus,
+                    )
+                  : const IconHighlight(
+                      bgColor: Color(0xFF24141B),
+                      borderColor: Color(0xFF232428),
+                      txtColor: Color(0xFFF54149),
+                      icon: FontAwesomeIcons.minus,
+                    ),
             ),
           ),
         ),

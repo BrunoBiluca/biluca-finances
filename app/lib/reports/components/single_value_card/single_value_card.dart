@@ -49,21 +49,19 @@ class _SingleValueCardState extends State<SingleValueCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Flexible(
-                  child: Row(
-                    children: [
-                      Flexible(
-                        flex: 1,
-                        child: Text(
-                          Formatter.value(widget.displayValue != null ? widget.displayValue! : widget.currentValue),
-                          key: const Key("valor"),
-                          style: Theme.of(context).textTheme.displayLarge,
-                        ),
+                Row(
+                  children: [
+                    Flexible(
+                      flex: 1,
+                      child: Text(
+                        Formatter.value(widget.displayValue != null ? widget.displayValue! : widget.currentValue),
+                        key: const Key("valor"),
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
-                      const SizedBox(width: 20),
-                      values == null ? Container() : ValuesRelationText(values: values!),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 20),
+                    values == null ? Container() : ValuesRelationText(values: values!),
+                  ],
                 ),
                 Text(
                   widget.title,
