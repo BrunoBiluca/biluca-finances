@@ -56,6 +56,13 @@ class MonthInfoCard extends StatelessWidget {
 
                 var result = snapshot.data!;
 
+                if (result.$3 == 0 && result.$4 == 0) {
+                  return Text(
+                    "Sem registros para esse mês",
+                    style: Theme.of(context).textTheme.displaySmall,
+                  );
+                }
+
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
