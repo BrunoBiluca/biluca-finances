@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/common/logging/logger_manager.dart';
+import 'package:biluca_financas/predict/predict_local.dart';
 import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
 import 'package:mocktail/mocktail.dart';
@@ -12,6 +15,11 @@ import 'package:mocktail/mocktail.dart';
 import '../accountability/mocks/mock_accountability_repo.dart';
 
 void main() {
+  setUpAll(() {
+    GetIt.I.registerSingleton<LoggerManager>(LoggerManager());
+    GetIt.I.registerSingleton<PredictLocal>(PredictLocal());
+  });
+
   test("deve retornar a mesma lista passada quando o serviço estiver indisponível", () async {
     var client = MockClient((req) async {
       return Response("", 500, reasonPhrase: "ERROR");

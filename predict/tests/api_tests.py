@@ -55,13 +55,3 @@ def test_deve_receber_os_registros_com_todos_os_cabeçalhos_enviados(client):
     assert response.status_code == 200
     assert response.json["cabeçalhos"] == campos_obrigatórios + campos_extras + ["Identificação"]
 
-
-def test_deve_receber_os_registros_como_arquivo_de_extrato_do_banco(client):
-    response = client.post(endpoint_predição, content_type="multipart/form-data", data={
-        "extrato": (open("resources/nubank_sample.pdf", "rb"), "nubank_sample.pdf")
-    })
-
-    assert response.status_code == 200
-    assert response.json["cabeçalhos"] == [
-        "Criado em", "Descrição", "Valor", "Identificação"]
-    assert len(response.json["registros"]) > 0

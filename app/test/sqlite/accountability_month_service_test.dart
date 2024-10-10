@@ -1,14 +1,20 @@
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
+import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_month_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 
 import 'helpers/memory_db_provider.dart';
 
 void main() {
+  setUpAll(() {
+    GetIt.I.registerSingleton<LoggerManager>(LoggerManager());
+  });
+
   var currentMonth = DateTime(2024, 7);
   SQLiteAccountabilityRepo? arepo;
 

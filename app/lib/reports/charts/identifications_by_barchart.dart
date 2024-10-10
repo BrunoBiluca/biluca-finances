@@ -1,26 +1,21 @@
-import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
+import 'package:biluca_financas/reports/current_month_report_service.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class IdentificationsByBarChart extends StatelessWidget {
-  final Map<int, List<GroupedBy<AccountabilityIdentification>>> groups;
+  final List<IdentificationRelation> groups;
   final double barWidth = 40;
   factory IdentificationsByBarChart({
-    required List<GroupedBy<AccountabilityIdentification>> accountabilityByIdentification,
+    required List<IdentificationRelation> accountabilityByIdentification,
     Key? key,
   }) {
-    var groups = accountabilityByIdentification
-        .groupListsBy((identification) => identification.field.id)
-        .values
-        .sorted((g1, g2) => g2[0].total!.abs().compareTo(g1[0].total!.abs()))
-        .asMap()
-        .map((index, group) => MapEntry(index, group));
-
-    return IdentificationsByBarChart._(groups, key);
+    var sorted = accountabilityByIdentification.sorted(
+      (a, b) => a.identification.description.compareTo(b.identification.description),
+    );
+    return IdentificationsByBarChart._(sorted, key);
   }
 
   const IdentificationsByBarChart._(this.groups, Key? key) : super(key: key);
@@ -77,17 +72,16 @@ class IdentificationsByBarChart extends StatelessWidget {
   }
 
   String tooltip(BarChartGroupData group, int groupIndex, BarChartRodData rod, int rodIndex) {
-    var idGroup = groups[groupIndex]!;
-    var desc = idGroup[0].field.description;
-    var current = idGroup[0].total;
-    var str = "$desc\nR\$ ${current!.abs().toStringAsFixed(2)}";
+    var idGroup = groups[groupIndex];
+    var desc = idGroup.identification.description;
+    var current = idGroup.current.abs();
+    var str = "$desc\nR\$ ${current.abs().toStringAsFixed(2)}";
 
-    if (idGroup.length > 1) {
-      var last = idGroup[1].total;
-      var rel = Formatter.relation(Math.relativePercentage(current, last!));
+    var last = idGroup.related.abs();
+    if (last > 1) {
+      var rel = Formatter.relation(Math.relativePercentage(current, last));
       str += "\n$rel";
-    }
-    else {
+    } else {
       str += "\nN/A";
     }
 
@@ -95,11 +89,11 @@ class IdentificationsByBarChart extends StatelessWidget {
   }
 
   List<BarChartGroupData> barGroups() {
-    return groups.values.mapIndexed(
+    return groups.mapIndexed(
       (index, group) {
-        var color = group[0].field.color;
-        var current = group[0].total!.abs();
-        var last = group.length > 1 ? group[1].total!.abs() : 0.0;
+        var color = group.identification.color;
+        var current = group.current.abs();
+        var last = group.related.abs();
 
         List<BarChartRodStackItem> items = [];
         var maxToY = 0.0;
@@ -127,7 +121,7 @@ class IdentificationsByBarChart extends StatelessWidget {
               toY: maxToY,
               width: barWidth,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
-              borderSide: BorderSide(color: color, width: 4),
+              borderSide: BorderSide(color: color, width: 12),
               rodStackItems: items,
             )
           ],
@@ -140,7 +134,7 @@ class IdentificationsByBarChart extends StatelessWidget {
     return SideTitleWidget(
       axisSide: meta.axisSide,
       child: Text(
-        groups[groupKey.toInt()]![0].field.description,
+        groups[groupKey.toInt()].identification.description,
         style: Theme.of(context).textTheme.displaySmall,
       ),
     );

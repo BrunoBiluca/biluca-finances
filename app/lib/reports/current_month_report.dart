@@ -164,9 +164,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
           child: ColumnDecoratedCard(
             title: "Gastos por identificação",
             future: _service.expensesByIdentification(),
-            child: (d) => IdentificationsByBarChart(
-              accountabilityByIdentification: d as List<GroupedBy<AccountabilityIdentification>>,
-            ),
+            child: (d) => IdentificationsByBarChart(accountabilityByIdentification: d),
           ),
         ),
       ],
