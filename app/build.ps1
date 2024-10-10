@@ -18,4 +18,4 @@ if (-Not (Test-Path ./dist)) {
 }
 
 
-Move-item $archivePath -Destination "./dist"
+Move-item $archivePath -Destination "./dist" -Force
