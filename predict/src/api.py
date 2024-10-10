@@ -1,5 +1,5 @@
 import argparse
-from logging import basicConfig, warning
+from logging import basicConfig, info, warning
 from flask import Flask, request
 import pandas
 from pypdf import PdfReader
@@ -10,9 +10,11 @@ from classification.classification import categorize_identification
 
 
 def predict():
+    info('Request de {} {} {}'.format(request.remote_addr, request.method, request.content_type))
     entradas = None
-    if (request.content_type == "application/json"):
+    if ("application/json" in request.content_type):
         data = request.get_json()
+        info(f"Fazendo predição para os registros: {data["registros"]}")
         entradas = pandas.DataFrame(
             data["registros"], columns=data["cabeçalhos"])
     elif (request.content_type.startswith("multipart/form-data")):
@@ -20,10 +22,10 @@ def predict():
         for a in analisadores:
             avaliador = analisadores[a][0]
             if avaliador(reader.pages):
-                print("Avaliando um extrato de:", a)
+                info("Avaliando um extrato de:", a)
                 parser = analisadores[a][1]
                 entradas = parser(reader.pages)
-                print("Foram encontrados", len(entradas), "entradas")
+                info("Foram encontrados", len(entradas), "entradas")
                 entradas = pandas.DataFrame(
                     entradas, columns=["Criado em", "Descrição", "Valor"])
 
