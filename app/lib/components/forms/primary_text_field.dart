@@ -5,9 +5,11 @@ class PrimaryTextField extends StatefulWidget {
   final String labelText;
   final bool autofocus;
   final TextEditingController? controller;
+  final Function(String)? onChanged;
   final Function()? onEditingComplete;
   final TextInputType? keyboardType;
   final bool validateEmpty;
+  final bool validateEmptyOnTapOutside;
   final List<TextInputFormatter> formatters;
   const PrimaryTextField({
     super.key,
@@ -15,10 +17,12 @@ class PrimaryTextField extends StatefulWidget {
     this.autofocus = false,
     this.controller,
     this.keyboardType,
+    this.onChanged,
     this.onEditingComplete,
     this.validateEmpty = false,
     this.formatters = const [],
-  });
+    bool? validateOnTapOutside,
+  }) : validateEmptyOnTapOutside = validateOnTapOutside ?? validateEmpty;
 
   @override
   State<PrimaryTextField> createState() => _PrimaryTextFieldState();
@@ -69,24 +73,30 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
       controller: controller,
       keyboardType: widget.keyboardType,
       onChanged: (value) {
-        valide();
+        isValid();
+        widget.onChanged?.call(value);
       },
       inputFormatters: widget.formatters,
-      onTapOutside: (event) => valide(),
-      onEditingComplete: widget.onEditingComplete,
+      onTapOutside: (event) => widget.validateEmptyOnTapOutside && isValid(),
+      onEditingComplete: () {
+        if (isValid()) {
+          widget.onEditingComplete?.call();
+        }
+      },
     );
   }
 
-  void valide() {
+  bool isValid() {
+    errorText = null;
     if (!widget.validateEmpty) {
-      return;
+      return true;
     }
 
-    setState(() {
-      errorText = null;
-      if (controller.text.isEmpty) {
-        errorText = 'Preencha o campo, por favor';
-      }
-    });
+    if (controller.text.isEmpty) {
+      setState(() => errorText = 'Preencha o campo, por favor');
+      return false;
+    }
+
+    return true;
   }
 }
