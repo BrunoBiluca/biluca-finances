@@ -1,4 +1,3 @@
-
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/components/identification_edit_selector.dart';
@@ -18,7 +17,10 @@ void main() {
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityIdentificationSelector(accountabilityBloc: bloc),
+          body: AccountabilityIdentificationSelector(
+            accountabilityBloc: bloc,
+            identifications: bloc.state.identifications,
+          ),
         ),
       ),
     );
@@ -43,7 +45,10 @@ void main() {
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityIdentificationSelector(accountabilityBloc: accountabilityBloc),
+          body: AccountabilityIdentificationSelector(
+            accountabilityBloc: accountabilityBloc,
+            identifications: accountabilityBloc.state.identifications,
+          ),
         ),
       ),
     );

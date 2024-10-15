@@ -13,6 +13,7 @@ class DarkTheme extends AppTheme {
         secondary: Color(0xFF2C2C2C),
         tertiary: Color(0xFF191919),
         outline: Color(0xFF232428),
+        inversePrimary: Colors.white,
         error: Colors.redAccent,
       ),
       typography: Typography.material2021(

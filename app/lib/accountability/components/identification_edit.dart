@@ -1,4 +1,5 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
+import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/components/identification_edit_selector.dart';
 import 'package:biluca_financas/components/text_ballon.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,15 @@ class _AccountabilityIdentificationEditState extends State<AccountabilityIdentif
         var bloc = c.read<AccountabilityBloc>();
         showDialog(
           context: c,
-          builder: (context) => AccountabilityIdentificationSelector(
-            accountabilityBloc: bloc,
-            onEdit: widget.onEdit,
+          builder: (context) => BlocBuilder<AccountabilityBloc, AccountabilityState>(
+            bloc: bloc,
+            builder: (context, state) {
+              return AccountabilityIdentificationSelector(
+                accountabilityBloc: bloc,
+                identifications: state.identifications,
+                onEdit: widget.onEdit,
+              );
+            },
           ),
         );
       },
