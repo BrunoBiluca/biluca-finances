@@ -257,6 +257,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                 var item = d[index];
                 var mean = item["mean"] != null ? item["mean"]! : 0.0;
                 var current = item["current"] != null ? item["current"]! : 0.0;
+                var field = item["field"];
 
                 return SingleValueCard(
                   title: item["desc"],
@@ -264,12 +265,12 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                   relatedValue: mean,
                   displayValue: mean,
                   lessIsPositite: mean < 0,
-                  side: item["field"] != null
+                  side: field != null
                       ? IconHighlight(
-                          bgColor: item["field"].color,
+                          bgColor: field.color,
                           borderColor: const Color(0xFF122622),
-                          txtColor: (item["field"].color as Color).adaptByLuminance(),
-                          icon: Icons.photo_size_select_actual_outlined,
+                          txtColor: (field.color as Color).adaptByLuminance(),
+                          icon: field.icon,
                         )
                       : null,
                 );

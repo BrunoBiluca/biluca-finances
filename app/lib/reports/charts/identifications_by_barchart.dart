@@ -1,3 +1,4 @@
+
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
 import 'package:biluca_financas/reports/current_month_report_service.dart';
@@ -131,11 +132,20 @@ class IdentificationsByBarChart extends StatelessWidget {
   }
 
   Widget bottomTitles(double groupKey, TitleMeta meta, BuildContext context) {
+    var id = groups[groupKey.toInt()].identification;
+    var style = Theme.of(context).textTheme.displaySmall!;
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      child: Text(
-        groups[groupKey.toInt()].identification.description,
-        style: Theme.of(context).textTheme.displaySmall,
+      child: Tooltip(
+        message: id.description,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Icon(
+            id.icon,
+            size: style.fontSize! + 8.0,
+            color: style.color,
+          ),
+        ),
       ),
     );
   }
