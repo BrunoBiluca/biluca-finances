@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_iconpicker/Models/configuration.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 class TextBallon extends StatefulWidget {
+  final IconData icon;
   final String text;
   final Color color;
-  final Function(String, Color)? onEdit;
+  final Function({String? text, Color? color, IconData? icon})? onEdit;
   final VoidCallback? onDelete;
   final EdgeInsets padding;
 
@@ -15,6 +18,7 @@ class TextBallon extends StatefulWidget {
     this.onEdit,
     this.onDelete,
     this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+    required this.icon,
   });
 
   @override
@@ -41,7 +45,10 @@ class _TextBallonState extends State<TextBallon> {
               child: isEditing
                   ? Row(
                       children: [
-                        Icon(Icons.shop, color: textColor()),
+                        IconButton(
+                          icon: Icon(widget.icon, color: textColor()),
+                          onPressed: _pickIcon,
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: TextField(
@@ -51,7 +58,7 @@ class _TextBallonState extends State<TextBallon> {
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor()),
                             onEditingComplete: () {
                               setState(() {
-                                widget.onEdit!.call(cont.text, widget.color);
+                                widget.onEdit!.call(text: cont.text);
                                 isEditing = false;
                               });
                             },
@@ -79,7 +86,7 @@ class _TextBallonState extends State<TextBallon> {
                                     child: TextButton(
                                       onPressed: () {
                                         setState(() {
-                                          widget.onEdit!.call(widget.text, editColor);
+                                          widget.onEdit!.call(color: editColor);
                                           isEditing = false;
                                         });
                                         Navigator.pop(context);
@@ -104,7 +111,7 @@ class _TextBallonState extends State<TextBallon> {
                     )
                   : Row(
                       children: [
-                        Icon(Icons.shop, color: textColor()),
+                        Icon(widget.icon, color: textColor()),
                         const SizedBox(width: 10),
                         Text(
                           widget.text,
@@ -137,5 +144,26 @@ class _TextBallonState extends State<TextBallon> {
         ),
       ),
     );
+  }
+
+  Future<void> _pickIcon() async {
+    IconPickerIcon? newIcon = await showIconPicker(
+      context,
+      configuration: SinglePickerConfiguration(
+        title: const Text("Selecione o ícone"),
+        adaptiveDialog: true,
+        showTooltips: true,
+        showSearchBar: true,
+        iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        iconPackModes: [IconPack.fontAwesomeIcons, IconPack.material, IconPack.cupertino],
+        searchComparator: (String search, IconPickerIcon icon) =>
+            search.toLowerCase().contains(icon.name.replaceAll('_', ' ').toLowerCase()) ||
+            icon.name.toLowerCase().contains(search.toLowerCase()),
+      ),
+    );
+
+    if (newIcon != null) {
+      widget.onEdit!.call(icon: newIcon.data);
+    }
   }
 }

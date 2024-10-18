@@ -31,11 +31,16 @@ class DBProvider {
     return await databaseFactory.openDatabase(
       await getDBPath(),
       options: OpenDatabaseOptions(
-        version: 1,
-        onCreate: (db, version) => create(db, initialSQL),
+        version: migrationsSQL.length + 1,
+        onCreate: (db, version) async {
+          log.info("Criando tabelas na versão $version...");
+          await execute(db, initialSQL + migrationsSQL);
+          log.info("Tabelas criadas");
+        },
         onUpgrade: (db, oldVersion, newVersion) async {
+          log.info("Atualizando tabelas...");
+          await execute(db, migrationsSQL.sublist(oldVersion - 1));
           log.info("Tabelas atualizadas");
-          // await migrate(migrationsSQL);
         },
       ),
     );
@@ -47,17 +52,17 @@ class DBProvider {
       dir = await getApplicationDocumentsDirectory();
     }
 
-    String dbPath = p.join(dir.path, "Biluca Finanças", "myDb.db");
+    String dbPath = p.join(dir.path, "Biluca Finanças", "myDb - old.db");
     log.info("Caminho para o banco de dados: $dbPath");
     return dbPath;
   }
 
-  Future create(Database db, List<String> migrationsSQL) async {
-    log.info("Migrando tabelas...");
+  Future execute(Database db, List<String> migrationsSQL) async {
+    log.info("Executando...");
     for (final migration in migrationsSQL) {
+      log.info(migration);
       await db.execute(migration);
     }
-    log.info("Migrations concluídas");
   }
 
   Future clear(Database db) async {
@@ -95,5 +100,14 @@ class DBProvider {
     '''
   ];
 
-  final migrationsSQL = [];
+  final migrationsSQL = [
+    '''
+    ALTER TABLE accountability_identifications ADD COLUMN icon TEXT
+    ''',
+    '''
+    UPDATE accountability_identifications
+    SET icon = '{"code":58123,"fontFamily":"MaterialIcons","fontPackage":null}'
+    where icon is null
+    '''
+  ];
 }

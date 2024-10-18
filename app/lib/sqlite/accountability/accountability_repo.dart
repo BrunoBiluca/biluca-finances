@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -19,7 +21,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
       a.*, 
       ai.id as ai_id,
       ai.description as ai_description,
-      ai.color as ai_color
+      ai.color as ai_color,
+      ai.icon as ai_icon
     from $tableName a
     left join accountability_identifications ai on a.identification_id = ai.id
     order by createdAt desc
@@ -127,18 +130,26 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
       return null;
     }
 
-    return AccountabilityIdentification.fromMap(result.first);
+    var idResult = {
+      ...result.first,
+      "icon": json.decode(result.first["icon"] as String),
+    };
+
+    return AccountabilityIdentification.fromMap(idResult);
   }
 
   @override
   Future<AccountabilityIdentification> addIdentification(AccountabilityIdentification identification) async {
+    var identificationMap = identification.toMap();
+
     await db.rawInsert("""
-    INSERT INTO accountability_identifications (id, description, color, insertedAt, updatedAt)
-    VALUES (?, ?, ?, ?, ?);
+    INSERT INTO accountability_identifications (id, description, color, icon, insertedAt, updatedAt)
+    VALUES (?, ?, ?, ?, ?, ?);
     """, [
-      identification.id,
-      identification.description,
-      identification.color.value,
+      identificationMap["id"],
+      identificationMap["description"],
+      identificationMap["color"],
+      json.encode(identificationMap["icon"]),
       DateTime.now().toIso8601String(),
       DateTime.now().toIso8601String()
     ]);
@@ -148,6 +159,7 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   @override
   Future<void> updateIdentification(AccountabilityIdentification updatedIdentification) async {
     var map = updatedIdentification.toMap();
+    map["icon"] = json.encode(map["icon"]);
     map["updatedAt"] = DateTime.now().toIso8601String();
     await db.update(
       "accountability_identifications",

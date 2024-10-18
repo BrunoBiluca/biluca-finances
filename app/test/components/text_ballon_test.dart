@@ -8,6 +8,7 @@ void main() {
       title: 'Flutter Demo',
       home: Scaffold(
         body: TextBallon(
+          icon: Icons.abc,
           text: "Balão",
           color: Colors.black,
         ),
@@ -23,6 +24,7 @@ void main() {
       title: 'Flutter Demo',
       home: Scaffold(
         body: TextBallon(
+          icon: Icons.abc,
           text: "Balão",
           color: Colors.black,
           onDelete: () {
@@ -46,11 +48,12 @@ void main() {
       title: 'Flutter Demo',
       home: Scaffold(
         body: TextBallon(
+          icon: Icons.abc,
           text: "Balão",
           color: Colors.black,
-          onEdit: (String newValue, Color color) {
+          onEdit: ({String? text, Color? color, IconData? icon}) {
             onEditCalled = true;
-            actualNewValue = newValue;
+            actualNewValue = text!;
             color = color;
           },
         ),

@@ -8,15 +8,7 @@ class MemoryDBProvider extends DBProvider {
   static MemoryDBProvider get i => instance;
 
   @override
-  Future<Database> open() async {
-    return await databaseFactory.openDatabase(
-      inMemoryDatabasePath,
-      options: OpenDatabaseOptions(
-        version: 1,
-        onCreate: (db, version) async => await create(db, initialSQL),
-        onUpgrade: (db, oldVersion, newVersion) async {},
-        singleInstance: false,
-      ),
-    );
+  Future<String> getDBPath() async {
+    return inMemoryDatabasePath;
   }
 }

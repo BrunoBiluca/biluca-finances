@@ -44,6 +44,7 @@ class _AccountabilityIdentificationEditState extends State<AccountabilityIdentif
               style: Theme.of(c).textTheme.bodySmall,
             )
           : TextBallon(
+              icon: widget.identification!.icon,
               text: widget.identification!.description,
               color: widget.identification!.color,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
