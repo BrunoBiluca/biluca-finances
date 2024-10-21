@@ -1,3 +1,4 @@
+import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/Models/configuration.dart';
@@ -28,10 +29,6 @@ class TextBallon extends StatefulWidget {
 class _TextBallonState extends State<TextBallon> {
   bool isEditing = false;
 
-  Color textColor() {
-    return widget.color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-  }
-
   @override
   Widget build(BuildContext context) {
     var cont = TextEditingController(text: widget.text);
@@ -46,16 +43,17 @@ class _TextBallonState extends State<TextBallon> {
                   ? Row(
                       children: [
                         IconButton(
-                          icon: Icon(widget.icon, color: textColor()),
-                          onPressed: _pickIcon,
+                          icon: Icon(widget.icon, color: widget.color.adaptByLuminance()),
+                          onPressed: () => _pickIcon(widget.text),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: TextField(
                             autofocus: true,
                             controller: cont,
-                            cursorColor: textColor(),
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: textColor()),
+                            cursorColor: widget.color.adaptByLuminance(),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(color: widget.color.adaptByLuminance()),
                             onEditingComplete: () {
                               setState(() {
                                 widget.onEdit!.call(text: cont.text);
@@ -67,7 +65,7 @@ class _TextBallonState extends State<TextBallon> {
                         const SizedBox(width: 20),
                         IconButton(
                           icon: const Icon(Icons.colorize),
-                          color: textColor(),
+                          color: widget.color.adaptByLuminance(),
                           onPressed: () {
                             Color editColor = widget.color;
                             showDialog(
@@ -111,11 +109,11 @@ class _TextBallonState extends State<TextBallon> {
                     )
                   : Row(
                       children: [
-                        Icon(widget.icon, color: textColor()),
+                        Icon(widget.icon, color: widget.color.adaptByLuminance()),
                         const SizedBox(width: 10),
                         Text(
                           widget.text,
-                          style: TextStyle(color: textColor()),
+                          style: TextStyle(color: widget.color.adaptByLuminance()),
                         ),
                       ],
                     ),
@@ -124,19 +122,19 @@ class _TextBallonState extends State<TextBallon> {
                 ? Container()
                 : isEditing
                     ? IconButton(
-                        color: textColor(),
+                        color: widget.color.adaptByLuminance(),
                         onPressed: () => setState(() => isEditing = false),
                         icon: const Icon(Icons.edit_off),
                       )
                     : IconButton(
-                        color: textColor(),
+                        color: widget.color.adaptByLuminance(),
                         onPressed: () => setState(() => isEditing = true),
                         icon: const Icon(Icons.edit),
                       ),
             widget.onDelete == null
                 ? Container()
                 : IconButton(
-                    color: textColor(),
+                    color: widget.color.adaptByLuminance(),
                     onPressed: () => widget.onDelete!.call(),
                     icon: const Icon(Icons.delete),
                   ),
@@ -146,14 +144,19 @@ class _TextBallonState extends State<TextBallon> {
     );
   }
 
-  Future<void> _pickIcon() async {
+  Future<void> _pickIcon(String description) async {
     IconPickerIcon? newIcon = await showIconPicker(
       context,
       configuration: SinglePickerConfiguration(
-        title: const Text("Selecione o ícone"),
+        title: Text("Selecione o ícone para '$description'"),
         adaptiveDialog: true,
         showTooltips: true,
+        searchHintText: "Procure pelo ícone",
         showSearchBar: true,
+        noResultsText: "Sem resultados para:",
+        crossAxisSpacing: 24,
+        mainAxisSpacing: 24,
+        iconSize: 24,
         iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         iconPackModes: [IconPack.fontAwesomeIcons, IconPack.material, IconPack.cupertino],
         searchComparator: (String search, IconPickerIcon icon) =>
