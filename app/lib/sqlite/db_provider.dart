@@ -52,7 +52,7 @@ class DBProvider {
       dir = await getApplicationDocumentsDirectory();
     }
 
-    String dbPath = p.join(dir.path, "Biluca Finanças", "myDb - old.db");
+    String dbPath = p.join(dir.path, "Biluca Finanças", "myDb.db");
     log.info("Caminho para o banco de dados: $dbPath");
     return dbPath;
   }
