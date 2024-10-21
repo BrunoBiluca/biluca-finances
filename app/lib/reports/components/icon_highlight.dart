@@ -1,3 +1,4 @@
+import 'package:biluca_financas/common/centered_icon.dart';
 import 'package:flutter/material.dart';
 
 class IconHighlight extends StatelessWidget {
@@ -18,6 +19,8 @@ class IconHighlight extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = Theme.of(context).textTheme.displayLarge!.fontSize!;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.outline,
@@ -34,10 +37,10 @@ class IconHighlight extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Transform.rotate(
               angle: rotation,
-              child: Icon(
-                icon,
+              child: CenteredIcon(
+                icon: icon,
                 color: txtColor,
-                size: Theme.of(context).textTheme.displayLarge?.fontSize,
+                size: size,
               ),
             ),
           ),
