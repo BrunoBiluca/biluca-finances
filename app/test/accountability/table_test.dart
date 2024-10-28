@@ -8,9 +8,7 @@ void main() {
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: FittedBox(
-            child: AccountabilityTable(entries: const [], onUpdate: (entry) {}, onRemove: (entry) {}),
-          ),
+          body: AccountabilityTable(entries: const [], onUpdate: (entry) {}, onRemove: (entry) {}),
         ),
       ),
     );

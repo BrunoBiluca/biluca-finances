@@ -3,6 +3,7 @@ import 'package:biluca_financas/accountability/components/identification_edit.da
 import 'package:biluca_financas/components/number.dart';
 import 'package:biluca_financas/components/number_field_edit.dart';
 import 'package:biluca_financas/components/text_field_edit.dart';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
 class AccountabilityTable extends StatelessWidget {
@@ -24,36 +25,53 @@ class AccountabilityTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-      headingRowColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-        if (states.contains(WidgetState.hovered)) {
-          return Theme.of(context).colorScheme.secondary.withOpacity(0.8);
-        }
-        return Theme.of(context).colorScheme.secondary;
-      }),
-      dataRowColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-        if (states.contains(WidgetState.hovered)) {
-          return Theme.of(context).colorScheme.tertiary.withOpacity(0.8);
-        }
-        return Theme.of(context).colorScheme.tertiary;
-      }),
+    var columnStyle = Theme.of(context).textTheme.headlineSmall!;
+
+    var columns = [
+      _dataColumn("Criação", columnStyle, ColumnSize.S),
+      _dataColumn("Descrição", columnStyle, ColumnSize.L),
+      _dataColumn("Valor", columnStyle, ColumnSize.S),
+      _dataColumn("Identificação", columnStyle, ColumnSize.S),
+      _dataColumn("", columnStyle, ColumnSize.S),
+    ];
+
+    if (showInsertedAt) {
+      columns.insert(0, _dataColumn("Inserido em", columnStyle, ColumnSize.S));
+    }
+
+    return DataTable2(
+      scrollController: ScrollController(),
+      isHorizontalScrollBarVisible: false,
+      empty: Text("Nenhum registro encontrado", style: Theme.of(context).textTheme.bodySmall),
+      showBottomBorder: false,
+      dividerThickness: 0,
+      headingRowColor: rowColor(Theme.of(context).colorScheme.secondary),
+      dataRowColor: rowColor(Theme.of(context).colorScheme.tertiary),
       border: TableBorder.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
-      columns: [
-        showInsertedAt ? "Inserido em" : null,
-        "Criação",
-        "Descrição",
-        "Valor",
-        "Identificação",
-        "",
-      ].where((t) => t != null).map((t) => _dataColumn(context, t!)).toList(),
+      columns: columns,
       rows: [...entries.map((entry) => _tableRow(context, entry))],
     );
   }
 
-  DataColumn _dataColumn(BuildContext context, String text) => DataColumn(
+  WidgetStateProperty<Color?> rowColor(Color c) {
+    return WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
+      if (states.contains(WidgetState.hovered)) {
+        return c.withOpacity(0.8);
+      }
+      return c;
+    });
+  }
+
+  DataColumn _dataColumn(
+    String text,
+    TextStyle style,
+    ColumnSize size,
+  ) =>
+      DataColumn2(
+        size: size,
         label: Text(
           text,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: style.copyWith(fontWeight: FontWeight.bold),
         ),
       );
 
@@ -99,9 +117,12 @@ class AccountabilityTable extends StatelessWidget {
             ),
             DataCell(
               Center(
-                child: AccountabilityIdentificationEdit(
-                  identification: entry.identification,
-                  onEdit: (id) => onUpdate(entry..identification = id),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AccountabilityIdentificationEdit(
+                    identification: entry.identification,
+                    onEdit: (id) => onUpdate(entry..identification = id),
+                  ),
                 ),
               ),
             ),

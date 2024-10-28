@@ -39,8 +39,9 @@ class DBProvider {
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           log.info("Atualizando tabelas...");
+          log.info("Versão atual: $oldVersion");
           await execute(db, migrationsSQL.sublist(oldVersion - 1));
-          log.info("Tabelas atualizadas");
+          log.info("Tabelas atualizadas para versão $newVersion");
         },
       ),
     );
