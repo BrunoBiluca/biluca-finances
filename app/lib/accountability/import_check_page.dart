@@ -29,13 +29,16 @@ class _AccountabilityImportCheckPageState extends State<AccountabilityImportChec
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 20),
-              AccountabilityTable(
-                entries: widget.service.entries,
-                onUpdate: (updatedEntry) => setState(() {
-                  var index = widget.service.entries.indexOf(updatedEntry);
-                  widget.service.entries[index] = updatedEntry;
-                }),
-                onRemove: (entry) => setState(() => widget.service.entries.remove(entry)),
+              SizedBox(
+                height: 400,
+                child: AccountabilityTable(
+                  entries: widget.service.entries,
+                  onUpdate: (updatedEntry) => setState(() {
+                    var index = widget.service.entries.indexOf(updatedEntry);
+                    widget.service.entries[index] = updatedEntry;
+                  }),
+                  onRemove: (entry) => setState(() => widget.service.entries.remove(entry)),
+                ),
               ),
               const SizedBox(height: 20),
               Text(
@@ -43,16 +46,19 @@ class _AccountabilityImportCheckPageState extends State<AccountabilityImportChec
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 20),
-              AccountabilityTable(
-                entries: widget.service.duplicatedEntries,
-                onUpdate: (updatedEntry) => setState(() {
-                  var index = widget.service.duplicatedEntries.indexOf(updatedEntry);
-                  widget.service.duplicatedEntries[index] = updatedEntry;
-                }),
-                onRemove: (entry) => setState(() => widget.service.cancelDuplication(entry)),
-                showInsertedAt: true,
-                removeIcon: Icons.arrow_upward_rounded,
-                removeTooltip: "Desconsiderar duplicata",
+              SizedBox(
+                height: 400,
+                child: AccountabilityTable(
+                  entries: widget.service.duplicatedEntries,
+                  onUpdate: (updatedEntry) => setState(() {
+                    var index = widget.service.duplicatedEntries.indexOf(updatedEntry);
+                    widget.service.duplicatedEntries[index] = updatedEntry;
+                  }),
+                  onRemove: (entry) => setState(() => widget.service.cancelDuplication(entry)),
+                  showInsertedAt: true,
+                  removeIcon: Icons.arrow_upward_rounded,
+                  removeTooltip: "Desconsiderar duplicata",
+                ),
               ),
             ],
           ),

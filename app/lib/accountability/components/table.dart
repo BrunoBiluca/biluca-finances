@@ -1,3 +1,4 @@
+import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/accountability/components/identification_edit.dart';
 import 'package:biluca_financas/components/number.dart';
@@ -5,8 +6,9 @@ import 'package:biluca_financas/components/number_field_edit.dart';
 import 'package:biluca_financas/components/text_field_edit.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class AccountabilityTable extends StatelessWidget {
+class AccountabilityTable extends StatefulWidget {
   final List<dynamic> entries;
   final void Function(dynamic) onUpdate;
   final void Function(dynamic) onRemove;
@@ -24,32 +26,58 @@ class AccountabilityTable extends StatelessWidget {
   });
 
   @override
+  State<AccountabilityTable> createState() => _AccountabilityTableState();
+}
+
+class _AccountabilityTableState extends State<AccountabilityTable> {
+  final ScrollController _scrollController = ScrollController();
+  String createAtMonth = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    var dateFormat = DateFormat("MMM yyyy", "pt_BR");
+    if (widget.entries.isNotEmpty) {
+      createAtMonth = dateFormat.format(widget.entries[0].createdAt).capitalize();
+    }
+
+    _scrollController.addListener(() {
+      var rowIndex = (_scrollController.position.pixels / 48).truncate();
+      var currentMonth = dateFormat.format(widget.entries[rowIndex.toInt()].createdAt).capitalize();
+      if (currentMonth != createAtMonth) {
+        setState(() => createAtMonth = currentMonth);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var columnStyle = Theme.of(context).textTheme.headlineSmall!;
 
     var columns = [
-      _dataColumn("Criação", columnStyle, ColumnSize.S),
+      _dataColumn("Criação - $createAtMonth", columnStyle, ColumnSize.S),
       _dataColumn("Descrição", columnStyle, ColumnSize.L),
       _dataColumn("Valor", columnStyle, ColumnSize.S),
-      _dataColumn("Identificação", columnStyle, ColumnSize.S),
+      _dataColumn("Identificação", columnStyle, ColumnSize.L),
       _dataColumn("", columnStyle, ColumnSize.S),
     ];
 
-    if (showInsertedAt) {
+    if (widget.showInsertedAt) {
       columns.insert(0, _dataColumn("Inserido em", columnStyle, ColumnSize.S));
     }
 
     return DataTable2(
-      scrollController: ScrollController(),
+      scrollController: _scrollController,
       isHorizontalScrollBarVisible: false,
-      empty: Text("Nenhum registro encontrado", style: Theme.of(context).textTheme.bodySmall),
       showBottomBorder: false,
       dividerThickness: 0,
+      bottomMargin: 0,
       headingRowColor: rowColor(Theme.of(context).colorScheme.secondary),
       dataRowColor: rowColor(Theme.of(context).colorScheme.tertiary),
       border: TableBorder.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
       columns: columns,
-      rows: [...entries.map((entry) => _tableRow(context, entry))],
+      rows: [...widget.entries.map((entry) => _tableRow(context, entry))],
     );
   }
 
@@ -78,7 +106,7 @@ class AccountabilityTable extends StatelessWidget {
   DataRow _tableRow(BuildContext context, dynamic entry) {
     List<DataCell> optionalCells = [];
 
-    if (showInsertedAt) {
+    if (widget.showInsertedAt) {
       optionalCells.add(DataCell(
         Text(
           Formatter.date(entry.insertedAt),
@@ -104,7 +132,7 @@ class AccountabilityTable extends StatelessWidget {
               onTap: () => editText(
                 context,
                 entry.description,
-                (updatedText) => onUpdate(entry..description = updatedText),
+                (updatedText) => widget.onUpdate(entry..description = updatedText),
               ),
             ),
             DataCell(
@@ -112,7 +140,7 @@ class AccountabilityTable extends StatelessWidget {
               onTap: () => editNumber(
                 context,
                 entry.value,
-                (updatedNumber) => onUpdate(entry..value = updatedNumber),
+                (updatedNumber) => widget.onUpdate(entry..value = updatedNumber),
               ),
             ),
             DataCell(
@@ -121,18 +149,18 @@ class AccountabilityTable extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: AccountabilityIdentificationEdit(
                     identification: entry.identification,
-                    onEdit: (id) => onUpdate(entry..identification = id),
+                    onEdit: (id) => widget.onUpdate(entry..identification = id),
                   ),
                 ),
               ),
             ),
             DataCell(
               Tooltip(
-                message: removeTooltip,
+                message: widget.removeTooltip,
                 child: IconButton(
-                  onPressed: () => onRemove(entry),
+                  onPressed: () => widget.onRemove(entry),
                   icon: Icon(
-                    removeIcon,
+                    widget.removeIcon,
                     color: Theme.of(context).textTheme.bodySmall?.color,
                   ),
                 ),
