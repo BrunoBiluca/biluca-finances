@@ -1,21 +1,24 @@
 flutter build windows
 
-Copy-Item ./windows/sqlite3.dll ./build\windows\x64\runner\Release
+$publish_path = "./build\windows\x64\runner\Release"
+$output_path = "./dist"
+$package_name = "biluca_financas.zip"
+$package_path = "$publish_path\$package_name"
 
-if (Test-Path ./build\windows\x64\runner\biluca-financas.zip) {
-    Remove-Item ./build\windows\x64\runner\biluca-financas.zip
+Copy-Item ./windows/sqlite3.dll $publish_path
+
+if (Test-Path $package_path) {
+    Remove-Item $package_path
 }
 
-$archivePath = "./build\windows\x64\runner\biluca-financas.zip"
-Compress-Archive -Path "./build\windows\x64\runner\Release\*" -DestinationPath $archivePath
+Compress-Archive -Path "$publish_path/*" -DestinationPath $package_path
 
-while (!(Test-Path $archivePath)) {
+while (!(Test-Path $package_path)) {
     Start-Sleep -s 1
 }
 
-if (-Not (Test-Path ./dist)) {
-    New-Item -Name "./dist" -ItemType Directory
+if (-Not (Test-Path $output_path)) {
+    New-Item -Name $output_path -ItemType Directory
 }
 
-
-Move-item $archivePath -Destination "./dist" -Force
+Move-item $package_path -Destination $output_path -Force

@@ -1,6 +1,4 @@
 name: biluca_financas
-description: "A new Flutter project."
-publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -45,6 +43,7 @@ dev_dependencies:
   build_runner: ^2.4.11
   bloc_test: ^9.1.7
   mocktail: ^1.0.4
+  flutter_launcher_icons: ^0.14.1
 
 flutter:
   uses-material-design: true
@@ -53,10 +52,3 @@ flutter:
     - assets/
     - assets/gen/predict_win/
     - assets/gen/predict_win/resources/
-
-msix_config:
-  display_name: Biluca Finanças
-  publisher_display_name: bilucacom
-  identity_name: bilucacom.bilucafinancas
-  msix_version: 1.0.0.0
-  logo_path: assets\logo.png
