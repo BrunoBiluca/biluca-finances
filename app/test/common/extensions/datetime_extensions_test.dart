@@ -8,7 +8,6 @@ void main() {
     expect(now.subtractMonth(0), now);
   });
 
-  
   test("deve retornar o mês anterior", () {
     var date = DateTime(2024, 9, 1);
 
@@ -17,7 +16,7 @@ void main() {
     expect(date.subtractMonth(1).year, date.year);
   });
 
-    test("deve retornar ao mês e ano anteriores", () {
+  test("deve retornar ao mês e ano anteriores", () {
     var date = DateTime(2024, 1, 1);
 
     var result = date.subtractMonth(2);
