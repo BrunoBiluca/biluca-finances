@@ -1,4 +1,5 @@
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
+import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/Models/configuration.dart';
@@ -70,7 +71,7 @@ class _TextBallonState extends State<TextBallon> {
                             Color editColor = widget.color;
                             showDialog(
                               context: context,
-                              builder: (context) => AlertDialog(
+                              builder: (context) => BaseDialog(
                                 actions: [
                                   SizedBox(
                                     width: 200,
@@ -93,7 +94,7 @@ class _TextBallonState extends State<TextBallon> {
                                     ),
                                   ),
                                 ],
-                                title: const Text('Editar Texto'),
+                                title: 'Editar Texto',
                                 content: SizedBox(
                                   height: 600,
                                   child: ColorPicker(

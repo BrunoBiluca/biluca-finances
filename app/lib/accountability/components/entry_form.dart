@@ -1,5 +1,6 @@
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/common/real_input_formatter.dart';
+import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/components/forms/data_picker_field.dart';
 import 'package:biluca_financas/components/forms/primary_text_field.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,8 @@ class _AccountabilityEntryFormState extends State<AccountabilityEntryForm> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Nova entrada"),
+    return BaseDialog(
+      title: "Nova entrada",
       content: SizedBox(
         height: 300,
         child: Column(

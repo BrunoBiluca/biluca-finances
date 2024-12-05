@@ -1,5 +1,6 @@
 import 'package:biluca_financas/accountability/components/table.dart';
 import 'package:biluca_financas/accountability/services/import_service.dart';
+import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:flutter/material.dart';
 
 class AccountabilityImportCheckPage extends StatefulWidget {
@@ -13,8 +14,8 @@ class AccountabilityImportCheckPage extends StatefulWidget {
 class _AccountabilityImportCheckPageState extends State<AccountabilityImportCheckPage> {
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text("Conferência das entradas importadas"),
+    return BaseDialog(
+      title: "Conferência das entradas importadas",
       content: SizedBox(
         width: 1500,
         child: SingleChildScrollView(

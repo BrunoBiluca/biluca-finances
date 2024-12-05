@@ -1,6 +1,7 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/components/forms/primary_text_field.dart';
 import 'package:biluca_financas/components/text_ballon.dart';
 import 'package:collection/collection.dart';
@@ -78,8 +79,8 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Editar identificação'),
+    return BaseDialog(
+      title: 'Editar identificação',
       content: SizedBox(
         height: 600,
         width: 600,

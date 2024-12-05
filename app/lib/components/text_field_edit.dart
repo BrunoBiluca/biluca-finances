@@ -1,3 +1,4 @@
+import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldEdit extends StatelessWidget {
@@ -22,8 +23,8 @@ void editText(BuildContext context, String text, Function(String) onEdit) {
   TextEditingController ctrl = TextEditingController(text: text);
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Editar Texto'),
+    builder: (context) => BaseDialog(
+      title: 'Editar Texto',
       content: TextField(
         autofocus: true,
         controller: ctrl,

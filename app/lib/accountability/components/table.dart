@@ -15,6 +15,7 @@ class AccountabilityTable extends StatefulWidget {
   final bool showInsertedAt;
   final IconData removeIcon;
   final String removeTooltip;
+
   const AccountabilityTable({
     super.key,
     required this.entries,

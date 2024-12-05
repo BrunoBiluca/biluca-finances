@@ -1,3 +1,4 @@
+import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/components/number.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,8 @@ void editNumber(BuildContext context, double number, Function(double) onEdit) {
   var ctrl = TextEditingController(text: Formatter.number(number));
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Editar valor'),
+    builder: (context) => BaseDialog(
+      title: 'Editar valor',
       content: TextField(
         autofocus: true,
         controller: ctrl,
