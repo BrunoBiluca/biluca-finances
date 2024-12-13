@@ -2,7 +2,6 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Biluca Finanças"
-#define MyAppVersion "1.0"
 #define MyAppPublisher "Biluca Studios"
 #define MyAppURL "https://brunobiluca.github.io/web"
 #define MyAppExeName "biluca_financas.exe"
@@ -13,8 +12,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{3C2D5AE6-8DD9-483E-A048-F35D9ECCE85C}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVersion={#Version}
+;AppVerName={#MyAppName} {#Version}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -32,7 +31,7 @@ DisableProgramGroupPage=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=dist
-OutputBaseFilename=biluca-financas-setup
+OutputBaseFilename=biluca-financas-setup-{#Version}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
