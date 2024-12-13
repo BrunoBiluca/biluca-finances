@@ -56,6 +56,7 @@ if ($version -match "version:\s(\d+)\.(\d+)\.(\d+)") {
     $major = [int]$matches[1]
     $minor = [int]$matches[2]
     $patch = [int]$matches[3]
+    $currVersion = "$major.$minor.$patch"
 
     if ($update_version_type -eq "major") {
         $major++
@@ -118,7 +119,11 @@ $deploy_icon_value = [System.Convert]::toInt32("1f680", 16)
 $deploy_icon = ([System.Char]::ConvertFromUtf32($deploy_icon_value))
 
 git commit -m "$deploy_icon Deployment of version $newVersionLine"
-git tag $newVersionLine
+
+$log = git log --oneline --decorate "$currVersion..HEAD"
+$msg = [system.String]::Join([System.Environment]::NewLine, $log)
+git tag $newVersionLine -m $msg
+
 git push
 git push origin $newVersionLine
 
