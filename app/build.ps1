@@ -119,6 +119,10 @@ Write-Host "Nome do instalador: $package_filename" -ForegroundColor Green
 
 Write-Host "Registrando a nova versão..." -ForegroundColor Green
 
+$token = Get-Content "./secrets/release_token.txt"
+$github_username = "BrunoBiluca"
+$github_repo = "biluca-finances"
+
 git add $versionFilePath
 
 $deploy_icon_value = [System.Convert]::toInt32("1f680", 16)
@@ -141,8 +145,6 @@ Write-Host "Tag: $newVersionLine criado." -ForegroundColor Green
 
 Write-Host "Criando a publicação..." -ForegroundColor Green
 
-$token = Get-Content "./secrets/release_token.txt"
-
 $body = @{
     tag_name = $newVersionLine
     target_commitish = "main"
@@ -154,7 +156,7 @@ $body = @{
 
 Write-Output $body
 
-$api_uri = "https://api.github.com/repos/BrunoBiluca/biluca-finances"
+$api_uri = "https://api.github.com/repos/$github_username/$github_repo"
 
 $r = Invoke-WebRequest `
   -Uri "$api_uri/releases" `
