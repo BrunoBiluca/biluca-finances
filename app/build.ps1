@@ -109,9 +109,15 @@ iscc ./setup.iss "/DVersion=$newVersionLine" | Foreach-Object { Write-Host $_ -F
 
 Write-Host "Instalador criado com sucesso." -ForegroundColor Green
 
+$package_filename = "biluca-financas-setup-$newVersionLine.exe"
+
+Write-Host "Nome do instalador: $package_filename" -ForegroundColor Green
+
 # ####
 # Commitar as alterações
 # ####
+
+Write-Host "Registrando a nova versão..." -ForegroundColor Green
 
 git add $versionFilePath
 
@@ -128,3 +134,55 @@ git push
 git push origin $newVersionLine
 
 Write-Host "Tag: $newVersionLine criado." -ForegroundColor Green
+
+# ####
+# Publicação
+# ####
+
+Write-Host "Criando a publicação..." -ForegroundColor Green
+
+$token = Get-Content "./secrets/release_token.txt"
+
+$body = @{
+    tag_name = $newVersionLine
+    target_commitish = "main"
+    name = $newVersionLine
+    draft = $false
+    prerelease = $false
+    generate_release_notes = $true
+} | ConvertTo-Json
+
+Write-Output $body
+
+$api_uri = "https://api.github.com/repos/BrunoBiluca/biluca-finances"
+
+$r = Invoke-WebRequest `
+  -Uri "$api_uri/releases" `
+  -Method Post `
+  -Headers @{
+      "Accept" = "application/vnd.github+json"
+      "Authorization" = "Bearer $token"
+      "X-GitHub-Api-Version" = "2022-11-28"
+  } `
+  -Body $body
+
+Write-Host "Release $newVersionLine criado." -ForegroundColor Green
+
+$release_content = ConvertFrom-Json $r.Content
+$assets_url = $release_content.assets_url
+
+Write-Host "Enviando o pacote para o GitHub no caminho: $assets_url"
+
+$ProgressPreference = 'SilentlyContinue'
+Invoke-WebRequest `
+  -Uri "$assets_url?name=$package_filename" `
+  -Method Post `
+  -Headers @{
+    "Authorization" = "Bearer $token"
+    "Content-Type" = "application/octet-stream"
+  } `
+  -InFile "./dist/$package_filename"
+
+Write-Host "Pacoto enviado para o GitHub." -ForegroundColor Green
+Write-Host "https://github.com/BrunoBiluca/biluca-finances/releases/tag/$newVersionLine" -ForegroundColor Green
+

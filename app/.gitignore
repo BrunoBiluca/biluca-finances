@@ -53,3 +53,4 @@ windows/assets/gen/*
 coverage/*
 Biluca Finanças/*
 dist/*
+secrets/*
