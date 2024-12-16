@@ -169,13 +169,14 @@ $r = Invoke-WebRequest `
 Write-Host "Release $newVersionLine criado." -ForegroundColor Green
 
 $release_content = ConvertFrom-Json $r.Content
-$assets_url = $release_content.assets_url
+$upload_url = $release_content.upload_url
+$upload_url = $upload_url -replace '\{\?name,label\}', "?name=$package_filename"
 
 Write-Host "Enviando o pacote para o GitHub no caminho: $assets_url"
 
 $ProgressPreference = 'SilentlyContinue'
 Invoke-WebRequest `
-  -Uri "$assets_url?name=$package_filename" `
+  -Uri $upload_url `
   -Method Post `
   -Headers @{
     "Authorization" = "Bearer $token"
