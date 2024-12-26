@@ -1,0 +1,50 @@
+/******************** Centralização de imagens **********************/
+
+/* PLUGIN: Image Captions */
+.image-captions-figure {
+	display: table;
+	max-width: 50% !important;
+	width: 50%;
+	margin: 0 auto;
+}
+
+.image-embed[alt$="|%cheio"]>.image-captions-figure {
+	max-width: 100% !important;
+	width: 100%;
+}
+
+/* PLUGIN: Obsidian Mermaid */
+.mermaid>svg {
+	display: block;
+	max-width: 50% !important;
+	width: 50%;
+	margin: 0 auto;
+}
+
+/* PLUGIN: Excalidraw */
+.excalidraw-embedded-img {
+	display: block;
+	max-width: 50% !important;
+	width: 50%;
+	margin: 0 auto;
+}
+
+.excalidraw-embedded-img.excalidraw-svg-\%cheio {
+	max-width: 100% !important;
+	width: 100%;
+}
+
+.image-captions-figure>.excalidraw-embedded-img {
+	display: table;
+	max-width: 100% !important;
+	width: 100%;
+	margin: 0 auto;
+}
+
+/* Geral */
+.internal-embed>img:not([width]) {
+	display: block;
+	max-width: 50% !important;
+	width: 50% !important;
+	margin: 0 auto;
+}

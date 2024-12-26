@@ -1,3 +1,17 @@
 {
+  "attachmentFolderPath": "./",
+  "alwaysUpdateLinks": true,
+  "pdfExportSettings": {
+    "includeName": false,
+    "pageSize": "A4",
+    "landscape": false,
+    "margin": "0",
+    "downscalePercent": 100
+  },
+  "newFileLocation": "current",
+  "readableLineLength": true,
+  "showUnsupportedFiles": true,
+  "showRibbon": false,
+  "promptDelete": false,
   "showInlineTitle": false
 }

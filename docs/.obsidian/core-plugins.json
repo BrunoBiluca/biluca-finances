@@ -7,9 +7,8 @@
   "canvas": true,
   "outgoing-link": true,
   "tag-pane": true,
-  "properties": false,
   "page-preview": true,
-  "daily-notes": true,
+  "daily-notes": false,
   "templates": true,
   "note-composer": true,
   "command-palette": true,
@@ -26,5 +25,6 @@
   "workspaces": false,
   "file-recovery": true,
   "publish": false,
-  "sync": false
+  "sync": false,
+  "properties": true
 }

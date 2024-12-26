@@ -1,0 +1,160 @@
+{
+  "targetAttributes": [
+    "categoria"
+  ],
+  "targetTags": true,
+  "getFromInlineField": true,
+  "enableTabHeader": true,
+  "activateSnippet": false,
+  "enableEditor": true,
+  "enableFileList": true,
+  "enableBacklinks": true,
+  "enableQuickSwitcher": true,
+  "enableSuggestor": true,
+  "selectors": [
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "biblioteca",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "d315-5744",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "framework",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "da31-54f5",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "linguagem",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "8867-ab25",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": ".png",
+      "matchCaseSensitive": false,
+      "match": "endswith",
+      "uid": "93ff-5f29",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Exemplo - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "07e1-ff8d",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Livro - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "6ad7-d866",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Tutorial - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "430c-40d2",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "attribute",
+      "name": "categoria",
+      "value": "prática",
+      "matchCaseSensitive": false,
+      "match": "exact",
+      "uid": "fa8e-eb44",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Certificação - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "6f5d-f272",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Curso - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "c41c-1669",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Projeto - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "ae3c-4e22",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    },
+    {
+      "type": "path",
+      "name": "categoria",
+      "value": "Desafios - ",
+      "matchCaseSensitive": false,
+      "match": "contains",
+      "uid": "6cde-fb16",
+      "selectText": true,
+      "selectAppend": true,
+      "selectPrepend": true,
+      "selectBackground": true
+    }
+  ]
+}
