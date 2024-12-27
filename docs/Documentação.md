@@ -4,10 +4,16 @@ Para a documentação estamos utilizando o [Obsidian](https://obsidian.md/). Ele
 
 Tipos de documentações mantidos no projeto:
 
-- **Documentação de sistema:** ela é mantida junto ao repositório do projeto ([[Versionamento]]) na pasta `docs`.
+- **Documentação de sistema:** ela é mantida junto ao repositório do projeto ([[Versionamento]]) na pasta `sistema`.
 	- As documentações da API estão definidas no Swagger criado.
-- **Documentação do processo:** ela é mantida junto ao sistema organizador: [Notion](https://www.notion.so/Biluca-Finan-as-d7f96b9542534c14901e84ff17466f5d?pvs=4).
+- **Documentação do produto:** ele é mantida junto ao repositório do projeto ([[Versionamento]]) na pasta `produto`.
+- **Documentação do processo:** ela é mantida junto ao repositório do projeto ([[Versionamento]]) na pasta `processo`.
 - **Documentação do usuário:** os usuários não terão nenhum tipo de documentação junto a aplicação. Todas as informações devem estar contidas e facilmente encontradas dentro da própria aplicação.
+
+
+# Documentação de projeto
+
+Essa documentação consiste em definir de forma clara a todos os envolvidos no projeto seus objetivos, metas, prazos, responsabilidades e progresso.
 
 # Documentação de sistema
 
@@ -23,5 +29,20 @@ Essa seção descreve os elementos necessários para a elaboração da documenta
     - Descrição do processo de publicação e disponibilização a fim de demonstrar como ter acesso ao projeto desenvolvido
 - [[Versionamento]]
     - Principalmente para novos integrantes, saber como são feitas as contribuições e seus formatos
-- Guia inicial de execução
+
+
+## READMEs
+
+- Descrição geral da pasta que ele se encontra
+- Guia inicial de execução (caso seja uma pasta de aplicação)
     - Para novos integrantes conseguirem executar o projeto sem problemas
+
+
+# Documentação de processo
+
+
+Descrição do processo de coordenação do projeto, com suas entidades, rituais, integrações e visualizações.
+
+# Documentação de produto
+
+Requisitos de produtos, entrevistas com usuários, feedbacks, métricas de produto.
