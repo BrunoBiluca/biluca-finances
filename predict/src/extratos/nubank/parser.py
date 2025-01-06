@@ -17,25 +17,58 @@ def parse(pages):
     for p in pages[índice_página_transações:]:
         linhas = p.extract_text().split("\n")
         linhas_relevantes = linhas[3:len(linhas)-1]
-        linhas_por_entrada = 2
-        for i in range(0, len(linhas_relevantes), linhas_por_entrada):
-            try:
-                entrada = avaliar_linhas(linhas_relevantes[i: i+linhas_por_entrada])
-            except ValueError:
-                continue
+        
+        print("\n".join(linhas_relevantes))
 
-            if "Pagamento" in entrada[1]:
-                continue
+        linhas_da_entrada = []
+        for i in range(len(linhas_relevantes)):
+            linha = linhas_relevantes[i]
+            linhas_da_entrada.append(linha)
 
-            if entrada[2] == 0:
-                continue
+            if i + 1 < len(linhas_relevantes):
+                próxima_linha = linhas_relevantes[i + 1]
+            
 
-            entradas.append(entrada)
+            if é_data(próxima_linha):
+                print("Avaliando", linhas_da_entrada)
+                avaliar_linhas(entradas, linhas_da_entrada)
+                linhas_da_entrada = []
+        else:
+            avaliar_linhas(entradas, linhas_da_entrada)
+
 
     return entradas
 
 
-def avaliar_linhas(l):
+def avaliar_linhas(entradas, l):
+    entrada = None
+    try:
+        if 2 <= len(l) < 4:
+            entrada = avaliar_linhas_formato_padrão(l[0:2])
+        elif len(l) == 4:
+            if l[3].startswith("Conversão:"):
+                entrada = avaliar_linhas_formato_conversão(l)
+            else:
+                entrada = avaliar_linhas_formato_padrão(l[0:2])
+    except ValueError:
+        return
+    
+    if entrada is None:
+        return
+
+    if "IOF" in entrada[1]:
+        return
+
+    if "Pagamento" in entrada[1]:
+        return
+
+    if entrada[2] == 0:
+        return
+
+    entradas.append(entrada)
+
+
+def avaliar_linhas_formato_padrão(l):
     primeira_linha = full_strip(l[0])
     data_criação = primeira_linha + " " + str(datetime.now().year)
     data_criação = to_str(to_date(data_criação))
@@ -57,3 +90,32 @@ def avaliar_linhas(l):
         descrição,
         preço
     )
+
+
+def avaliar_linhas_formato_conversão(l):
+    primeira_linha = full_strip(l[0])
+    data_criação = primeira_linha + " " + str(datetime.now().year)
+    data_criação = to_str(to_date(data_criação))
+
+    descrição = full_strip(l[1])
+
+    preço = full_strip(l[3])
+    preço = preço.rsplit(" ", 1)[1].replace(".", "").replace(",", ".").replace("R$", "")
+    preço = float(preço) * -1.0
+
+    return (
+        data_criação,
+        descrição,
+        preço
+    )
+
+
+def é_data(linha):
+    primeira_linha = full_strip(linha)
+    data_criação = primeira_linha + " " + str(datetime.now().year)
+
+    try:
+        to_date(data_criação)
+        return True
+    except ValueError:
+        return False
