@@ -18,8 +18,6 @@ def parse(pages):
         linhas = p.extract_text().split("\n")
         linhas_relevantes = linhas[3:len(linhas)-1]
         
-        print("\n".join(linhas_relevantes))
-
         linhas_da_entrada = []
         for i in range(len(linhas_relevantes)):
             linha = linhas_relevantes[i]
@@ -30,7 +28,6 @@ def parse(pages):
             
 
             if é_data(próxima_linha):
-                print("Avaliando", linhas_da_entrada)
                 avaliar_linhas(entradas, linhas_da_entrada)
                 linhas_da_entrada = []
         else:
