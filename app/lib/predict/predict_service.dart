@@ -98,7 +98,7 @@ class PredictService {
         .toList();
   }
 
-  _parseDate(String date) {
+  DateTime _parseDate(String date) {
     var formats = [
       "dd/MM/yyyy",
       "yyyy-MM-ddTHH:mm:ss",

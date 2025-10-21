@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['src\\api.py'],
+    ['src/api.py'],
     pathex=['src'],
     binaries=[],
     datas=[('resources/classification_train.csv', 'resources')],

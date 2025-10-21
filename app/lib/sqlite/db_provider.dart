@@ -48,12 +48,20 @@ class DBProvider {
   }
 
   Future<String> getDBPath() async {
-    var dir = io.Directory.current;
+    var dirPath = io.Directory.current.path;
     if (kReleaseMode) {
-      dir = await getApplicationDocumentsDirectory();
+      try {
+        dirPath = (await getApplicationDocumentsDirectory()).path; 
+      }
+      catch(e) {}
+
+      if(io.Platform.isLinux) {
+        dirPath = "/var/home/bruno-note/Documentos";
+      } 
     }
 
-    String dbPath = p.join(dir.path, "Biluca Finanças", "myDb.db");
+
+    String dbPath = p.join(dirPath, "Biluca Finanças", "myDb.db");
     log.info("Caminho para o banco de dados: $dbPath");
     return dbPath;
   }

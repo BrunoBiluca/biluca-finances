@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "pkief.material-icon-theme",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "codeium.codeium",
+        "ms-python.vscode-python-envs"
+    ]
+}

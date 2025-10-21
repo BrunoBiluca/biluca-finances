@@ -135,7 +135,7 @@ class IdentificationsByBarChart extends StatelessWidget {
     var id = groups[groupKey.toInt()].identification;
     var style = Theme.of(context).textTheme.displaySmall!;
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: Tooltip(
         message: id.description,
         child: Padding(
