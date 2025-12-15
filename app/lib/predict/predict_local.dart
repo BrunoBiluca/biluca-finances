@@ -13,7 +13,7 @@ class PredictLocal {
     log.info("Iniciando servidor de predição...");
 
     var path = Directory.current.path;
-    if (kReleaseMode && io.Platform.isWindows) {
+    if (kReleaseMode) {
       path += "/data/flutter_assets";
     }
     path += "/assets/gen/predict_win/";
