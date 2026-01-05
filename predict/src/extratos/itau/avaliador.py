@@ -1,4 +1,4 @@
-def é_extrato(pages):
-    if "itau" in pages[-1].extract_text().lower():
+def é_extrato(filename):
+    if "itau" in filename.lower():
         return True
     return False

@@ -33,13 +33,14 @@ def predict():
         if "extrato" not in request.files:
             raise Exception("Nenhum arquivo de extrato foi enviado")
         
-        reader = PdfReader(request.files["extrato"])
-        analisador = AvaliadorExtrato().avaliar_extrato(reader)
+        extrato_file = request.files["extrato"]
+        analisador = AvaliadorExtrato().avaliar_extrato(extrato_file.filename)
 
         if analisador is None:
             info("Não foi possivel identificar o extrato")
             return {"error": "Nao foi possivel identificar o extrato"}, 422
 
+        reader = PdfReader(extrato_file)
         entradas = analisador(reader.pages)
         info("Foram encontrados {} entradas".format(len(entradas)))
         entradas = pandas.DataFrame(entradas, columns=["Criado em", "Descrição", "Valor"])

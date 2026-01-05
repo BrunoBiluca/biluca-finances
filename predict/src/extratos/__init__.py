@@ -17,10 +17,10 @@ class AvaliadorExtrato():
             cls._instance = super().__new__(cls)
         return cls._instance
     
-    def avaliar_extrato(self, reader):
+    def avaliar_extrato(self, filename):
         for a in analisadores:
             avaliador = analisadores[a][0]
-            if avaliador(reader.pages):
+            if avaliador(filename):
                 info("Avaliando um extrato de: {}".format(a))
                 return analisadores[a][1]
 
