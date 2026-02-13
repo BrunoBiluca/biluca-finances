@@ -1,0 +1,11 @@
+{
+	"id": "biluca-proj-doc-helper",
+	"name": "Biluca project documentation helper",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Ferramenta para ajudar na documentação de projetos no modelo Biluca",
+	"author": "Obsidian",
+	"authorUrl": "https://obsidian.md",
+	"fundingUrl": "https://obsidian.md/pricing",
+	"isDesktopOnly": false
+}
