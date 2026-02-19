@@ -1,11 +1,11 @@
-# DRP 03 - Painel de relatório mensal
+# DRP 04 - Relatório últimos 12 meses
 
 > [!important] Resumo
-> O relatório mensal agrega várias informações para o usuário tomar decisões sobre seu controle financeiro.
+> Relatório dos últimos 12 meses é um agregado de todas as informações buscando apresentar uma visão de longo prazo a fim de entender o comportamento removendo diferenças sezonais.
 
 Objetivos:
 
-- Disponibilizar uma visão clara de toda a contabilidade no mês selecionado
+- Permitir ao usuário verificar informações em relação a um longo período de tempo
 
 Métricas para monitorar:
 

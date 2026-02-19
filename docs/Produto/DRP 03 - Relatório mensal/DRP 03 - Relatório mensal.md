@@ -1,15 +1,15 @@
-# DRP - <ID - título>
+# DRP 03 - Relatório mensal
 
 > [!important] Resumo
-> Catalogar as entradas e saídas a fim de ter histórico desses registros para fazer vários tipos de análises.
+> O relatório mensal agrega várias informações para o usuário tomar decisões sobre seu controle financeiro.
 
 Objetivos:
 
-- Ter o histórico de entradas e saídas
+- Disponibilizar uma visão clara de toda a contabilidade no mês selecionado
 
 Métricas para monitorar:
 
-- 
+- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
 
 # Contexto
 
@@ -41,16 +41,17 @@ Métricas para monitorar:
 
 # Usuários
 
-- Qualquer usuário
+- 
 
 # Requisitos
 
-- [[RF 01.01 - Registro de entradas e saídas]]
-- [[RF 01.02 - Tabela de registros]]
-- [[RF 01.03 - Identificação]]
-- [[RF 01.04 - Remoção de registros]]
-- [[RF 01.05 - Alteração de informações nos registros]]
-- [[RF 01.06 - Nome representativo]]
+- [[RF 03.01 - Resumo geral]]
+- [[RF 03.02 - Visualização por identificação]]
+- [[RF 03.03 - Comparações gerais com Últimos meses]]
+- [[RF 03.04 - Comparações de identificadores em relação mês anterior]]
+- [[RF 03.05 - Comparações de identificadores em relação aos últimos X meses]]
+- [[RF 03.06 - Porcentagem representativa por identificador]]
+- [[RF 03.07 - Discretização dos registros de identificadores]]
 
 # Especificação de arquitetura
 

@@ -1,15 +1,15 @@
-# DRP - <ID - título>
+# DRP 05 - Menu de navegação
 
 > [!important] Resumo
-> Catalogar as entradas e saídas a fim de ter histórico desses registros para fazer vários tipos de análises.
+> O menu de navegação está disponível a qualquer momento para o usuário poder navegar para os principais recursos da aplicação
 
 Objetivos:
 
-- Ter o histórico de entradas e saídas
+- __- Objetivo 1 com a realização do projeto -__
 
 Métricas para monitorar:
 
-- 
+- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
 
 # Contexto
 
@@ -41,16 +41,10 @@ Métricas para monitorar:
 
 # Usuários
 
-- Qualquer usuário
+- 
 
 # Requisitos
 
-- [[RF 01.01 - Registro de entradas e saídas]]
-- [[RF 01.02 - Tabela de registros]]
-- [[RF 01.03 - Identificação]]
-- [[RF 01.04 - Remoção de registros]]
-- [[RF 01.05 - Alteração de informações nos registros]]
-- [[RF 01.06 - Nome representativo]]
 
 # Especificação de arquitetura
 
