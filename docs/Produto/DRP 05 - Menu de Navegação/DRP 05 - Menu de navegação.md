@@ -54,6 +54,7 @@ Métricas para monitorar:
 ## Requisitos não funcionais
 
 
+
 ## Descrição de estratégias e soluções técnicas
 
 

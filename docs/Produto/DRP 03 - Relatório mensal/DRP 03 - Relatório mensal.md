@@ -51,7 +51,7 @@ Métricas para monitorar:
 - [[RF 03.04 - Comparações de identificadores em relação mês anterior]]
 - [[RF 03.05 - Comparações de identificadores em relação aos últimos X meses]]
 - [[RF 03.06 - Porcentagem representativa por identificador]]
-- [[RF 03.07 - Discretização dos registros de identificadores]]
+- [[RF 03.07 - Discretização dos identificadores pelos registros]]
 
 # Especificação de arquitetura
 
@@ -59,6 +59,8 @@ Métricas para monitorar:
 
 
 ## Requisitos não funcionais
+
+- 
 
 
 ## Descrição de estratégias e soluções técnicas
