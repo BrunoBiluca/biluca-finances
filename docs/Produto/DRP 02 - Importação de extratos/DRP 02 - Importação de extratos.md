@@ -9,7 +9,7 @@ Objetivos:
 
 Métricas para monitorar:
 
-- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
+- 
 
 # Contexto
 
@@ -48,6 +48,7 @@ Métricas para monitorar:
 - [[RF 02.01 - Extratos do Itaú]]
 - [[RF 02.02 - Extratos do Nubank]]
 - [[RF 02.03 - Predição dos identificadores de registros]]
+- [[RF 02.04 - Checagem de duplicatas]]
 
 # Especificação de arquitetura
 
@@ -56,6 +57,7 @@ Métricas para monitorar:
 
 ## Requisitos não funcionais
 
+- [[RNF 01 - Atualização do modelo de predição]]
 
 ## Descrição de estratégias e soluções técnicas
 

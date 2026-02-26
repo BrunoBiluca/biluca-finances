@@ -9,7 +9,7 @@ Objetivos:
 
 Métricas para monitorar:
 
-- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
+- 
 
 # Contexto
 

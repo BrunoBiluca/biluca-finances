@@ -5,11 +5,11 @@
 
 Objetivos:
 
-- __- Objetivo 1 com a realização do projeto -__
+- Permitir que o usuário possa movimentar pela aplicação para realizar suas necessidades da forma mais rápida possível
 
 Métricas para monitorar:
 
-- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
+- 
 
 # Contexto
 

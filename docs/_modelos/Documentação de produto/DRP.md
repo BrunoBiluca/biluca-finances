@@ -39,10 +39,6 @@ Métricas para monitorar:
 
 - __Referências de concorrentes ou inspirações__
 
-# Usuários
-
-- 
-
 # Requisitos
 
 

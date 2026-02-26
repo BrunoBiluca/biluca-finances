@@ -22,7 +22,7 @@
 			"editorRuler.foreground": "#505050"
 		},
 		"workbench.iconTheme": "vscode-icons",
-		"workbench.sideBar.location": "right",
+		"workbench.sideBar.location": "left",
 		"[python]": {
 			"editor.defaultFormatter": "ms-python.autopep8",
 		},

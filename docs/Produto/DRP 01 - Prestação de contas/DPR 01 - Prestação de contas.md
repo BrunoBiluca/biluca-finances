@@ -1,4 +1,4 @@
-# DRP - <ID - título>
+# DPR 01 - Prestação de contas
 
 > [!important] Resumo
 > Catalogar as entradas e saídas a fim de ter histórico desses registros para fazer vários tipos de análises.
@@ -6,6 +6,7 @@
 Objetivos:
 
 - Ter o histórico de entradas e saídas
+- Permitir gerar diversas análises em relação a esses registros
 
 Métricas para monitorar:
 
@@ -39,15 +40,12 @@ Métricas para monitorar:
 
 - __Referências de concorrentes ou inspirações__
 
-# Usuários
-
-- Qualquer usuário
-
 # Requisitos
 
 - [[RF 01.01 - Registro de entradas e saídas]]
 - [[RF 01.02 - Tabela de registros]]
 - [[RF 01.03 - Identificação de registros]]
+- [[RF 01.03.01 - Tipos de identificações]]
 - [[RF 01.04 - Remoção de registros]]
 - [[RF 01.05 - Alteração de informações nos registros]]
 - [[RF 01.06 - Nome representativo]]
