@@ -1,4 +1,5 @@
 import 'package:biluca_financas/accountability/page.dart';
+import 'package:biluca_financas/reports/monthly_report/monthly_report.dart';
 import 'package:flutter/material.dart';
 
 class MainDrawner extends StatelessWidget {
@@ -25,6 +26,18 @@ class MainDrawner extends StatelessWidget {
             Colors.purpleAccent,
             "Relatório do mês",
             () {},
+          ),
+          item(
+            context,
+            Icons.home,
+            Colors.purpleAccent,
+            "Relatório do mês (Novo)",
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MonthlyReport(),
+              ),
+            ),
           ),
           item(
             context,
