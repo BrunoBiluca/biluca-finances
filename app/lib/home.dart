@@ -1,5 +1,5 @@
 import 'package:biluca_financas/components/base_page.dart';
-import 'package:biluca_financas/reports/current_month_report.dart';
+import 'package:biluca_financas/reports/monthly_report/current_month_report.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {

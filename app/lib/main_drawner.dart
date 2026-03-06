@@ -1,5 +1,5 @@
 import 'package:biluca_financas/accountability/page.dart';
-import 'package:biluca_financas/reports/monthly_report/monthly_report.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/monthly_report_v2.dart';
 import 'package:flutter/material.dart';
 
 class MainDrawner extends StatelessWidget {
@@ -35,7 +35,7 @@ class MainDrawner extends StatelessWidget {
             () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const MonthlyReport(),
+                builder: (context) => const MonthlyReportV2(),
               ),
             ),
           ),
