@@ -151,7 +151,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
               title: "Despesas",
               currentValue: d["expenses"],
               relatedValue: d["related"],
-              lessIsPositite: true,
+              lessIsPositive: true,
             ),
           ),
         ),
@@ -272,7 +272,7 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
                   currentValue: current,
                   relatedValue: mean,
                   displayValue: mean,
-                  lessIsPositite: mean < 0,
+                  lessIsPositive: mean < 0,
                   side: field != null
                       ? IconHighlight(
                           bgColor: field.color,

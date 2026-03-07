@@ -1,4 +1,6 @@
 import 'package:biluca_financas/reports/monthly_report_v2/summary_balance_card.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/summary_expenses_card.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/summary_incomes_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -10,7 +12,7 @@ class MonthlyHeadlinesSection extends StatelessWidget {
     return StaggeredGrid.count(
       crossAxisCount: 3,
       crossAxisSpacing: 20,
-      mainAxisSpacing: 40,
+      mainAxisSpacing: 20,
       children: [
         StaggeredGridTile.extent(
           crossAxisCellCount: 1,
@@ -20,12 +22,12 @@ class MonthlyHeadlinesSection extends StatelessWidget {
         StaggeredGridTile.extent(
           crossAxisCellCount: 1,
           mainAxisExtent: 150,
-          child: Placeholder(),
+          child: SummaryIncomesCard(),
         ),
         StaggeredGridTile.extent(
           crossAxisCellCount: 1,
           mainAxisExtent: 150,
-          child: Placeholder(),
+          child: SummaryExpensesCard(),
         )
       ],
     );

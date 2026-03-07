@@ -10,7 +10,7 @@ class SingleValueCard extends StatefulWidget {
   final double currentValue;
   final double? relatedValue;
   final double? displayValue;
-  final bool lessIsPositite;
+  final bool lessIsPositive;
   final Widget? side;
   const SingleValueCard({
     super.key,
@@ -18,7 +18,7 @@ class SingleValueCard extends StatefulWidget {
     required this.currentValue,
     this.relatedValue,
     this.displayValue,
-    this.lessIsPositite = false,
+    this.lessIsPositive = false,
     this.side,
   });
 
@@ -33,7 +33,7 @@ class _SingleValueCardState extends State<SingleValueCard> {
   void initState() {
     super.initState();
     if (widget.relatedValue != null) {
-      values = ValuesRelation(widget.currentValue, widget.relatedValue!, lessIsPositite: widget.lessIsPositite);
+      values = ValuesRelation(widget.currentValue, widget.relatedValue!, lessIsPositite: widget.lessIsPositive);
     }
   }
 

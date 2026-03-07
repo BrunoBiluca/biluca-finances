@@ -23,7 +23,7 @@ class Formatter {
       return "$sign${v.round()}%";
     }
 
-    var vTimes = v / 100 + 1;
-    return "$sign${vTimes.truncate()}x";
+    var vTimes = v / 100;
+    return "$sign${vTimes.toStringAsFixed(2)}x";
   }
 }
