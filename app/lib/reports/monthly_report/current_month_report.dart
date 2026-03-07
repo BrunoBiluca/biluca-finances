@@ -4,7 +4,9 @@ import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
+import 'package:biluca_financas/components/base_page.dart';
 import 'package:biluca_financas/components/column_decorated_card.dart';
+import 'package:biluca_financas/components/mouse_back_button_listener.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/components/single_value_card/single_value_card.dart';
 import 'package:biluca_financas/reports/charts/identifications_by_barchart.dart';
@@ -43,53 +45,59 @@ class _CurrentMonthReportState extends State<CurrentMonthReport> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        MonthSelector(
-          current: _selectedDate,
-          onDateChanged: (date) => setState(
-            () {
-              _selectedDate = date;
-              updateServices();
-            },
-          ),
-        ),
-        const SizedBox(height: 20),
-        FutureBuilder(
-          future: _service.current.count(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const CircularProgressIndicator();
-            }
-
-            if (snapshot.data! == 0) {
-              return const Text(
-                "Não existem registros para esse mês",
-                key: Key("no_entries"),
-              );
-            }
-
-            return Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
+    return MouseBackButtonListener(
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Relatório mensal'),
+            ),
+            body: BasePage(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headlines(),
-                    const SizedBox(height: 100),
-                    lastMonths(context),
-                    const SizedBox(height: 100),
-                    lastMonthsMeans(context),
-                    const SizedBox(height: 100),
-                  ],
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                MonthSelector(
+                  current: _selectedDate,
+                  onDateChanged: (date) => setState(
+                    () {
+                      _selectedDate = date;
+                      updateServices();
+                    },
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-      ],
-    );
+                const SizedBox(height: 20),
+                FutureBuilder(
+                  future: _service.current.count(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const CircularProgressIndicator();
+                    }
+
+                    if (snapshot.data! == 0) {
+                      return const Text(
+                        "Não existem registros para esse mês",
+                        key: Key("no_entries"),
+                      );
+                    }
+
+                    return Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            headlines(),
+                            const SizedBox(height: 100),
+                            lastMonths(context),
+                            const SizedBox(height: 100),
+                            lastMonthsMeans(context),
+                            const SizedBox(height: 100),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ))));
   }
 
   Widget headlines() {

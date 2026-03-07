@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:biluca_financas/main.dart';
 import 'package:biluca_financas/predict/predict_local.dart';
+import 'package:biluca_financas/sidebar.dart';
 import 'package:biluca_financas/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,11 +24,19 @@ class App extends StatelessWidget with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     return MaterialApp(
       restorationScopeId: "biluca-financas",
-      title: 'Flutter Demo',
+      title: 'Biluca Finanças',
       theme: GetIt.I<ThemeManager>().light,
       darkTheme: GetIt.I<ThemeManager>().dark,
       builder: FToastBuilder(),
-      home: const Home(),
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Biluca Finanças',
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.white),
+            ),
+          ),
+          drawer: Sidebar(),
+          body: const Home()),
       navigatorKey: navigatorKey,
     );
   }
