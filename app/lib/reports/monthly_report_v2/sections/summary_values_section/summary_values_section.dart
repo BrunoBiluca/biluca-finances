@@ -1,11 +1,11 @@
-import 'package:biluca_financas/reports/monthly_report_v2/summary_balance_card.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/summary_expenses_card.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/summary_incomes_card.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/summary_values_section/summary_balance_card.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/summary_values_section/summary_expenses_card.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/summary_values_section/summary_incomes_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class MonthlyHeadlinesSection extends StatelessWidget {
-  const MonthlyHeadlinesSection({super.key});
+class SummaryValuesSection extends StatelessWidget {
+  const SummaryValuesSection({super.key});
 
   @override
   Widget build(BuildContext context) {

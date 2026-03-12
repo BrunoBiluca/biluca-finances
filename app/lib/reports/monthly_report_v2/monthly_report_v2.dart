@@ -1,10 +1,11 @@
 import 'package:biluca_financas/components/base_page.dart';
 import 'package:biluca_financas/components/mouse_back_button_listener.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
-import 'package:biluca_financas/reports/current_month_report_service.dart';
-import 'package:biluca_financas/reports/monthly_report_service_provider.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/monthly_headlines_section.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/summary_values_section/summary_values_section.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class MonthlyReportV2 extends StatefulWidget {
   const MonthlyReportV2({super.key});
@@ -27,7 +28,7 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
   void updateDateSelected(DateTime date) {
     setState(() {
       _selectedDate = date;
-      _service = CurrentMonthReportService(_selectedDate);
+      _service = GetIt.I<CurrentMonthReportService>(param1: _selectedDate);
     });
   }
 
@@ -68,7 +69,7 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.vertical,
-                        child: MonthlyHeadlinesSection(),
+                        child: SummaryValuesSection(),
                       ),
                     )
                   ],

@@ -14,7 +14,7 @@ import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:biluca_financas/reports/charts/identifications_by_pie.dart';
 import 'package:biluca_financas/reports/components/month_info_card.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
-import 'package:biluca_financas/reports/current_month_report_service.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
