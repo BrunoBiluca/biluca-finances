@@ -6,10 +6,14 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../_helpers/ignore_overflow_erros.dart';
+
 class MockMonthlyReportService extends Mock implements CurrentMonthReportService {}
 
 void main() {
-  testWidgets("should start showing shimmer when loading and show values when loaded", (tester) async {
+  testWidgets("should show summary values", (tester) async {
+    FlutterError.onError = ignoreOverflowErrors;
+
     final mock = MockMonthlyReportService();
     when(
       () => mock.summaryBalance(),
@@ -42,17 +46,14 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         title: 'Flutter Demo',
-        home: Scaffold(
-          body: MonthlyReportV2(),
-        ),
+        home: MonthlyReportV2(),
       ),
     );
 
     await tester.pump(const Duration(seconds: 4));
 
-    expect(find.byKey(const Key("despesas")), findsOneWidget);
-    expect(find.byKey(const Key("despesas relativas")), findsOneWidget);
-    expect(find.byKey(const Key("receitas")), findsOneWidget);
-    expect(find.byKey(const Key("receitas relativas")), findsOneWidget);
+    expect(find.byKey(const Key("summary_balance")), findsOneWidget);
+    expect(find.byKey(const Key("summary_expenses")), findsOneWidget);
+    expect(find.byKey(const Key("summary_incomes")), findsOneWidget);
   });
 }

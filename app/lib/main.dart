@@ -9,6 +9,7 @@ import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:biluca_financas/app.dart';
 import 'package:biluca_financas/predict/predict_service.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_month_service.dart';
 import 'package:biluca_financas/sqlite/accountability/import_service.dart';
@@ -64,7 +65,10 @@ Future<void> setupDependencies() async {
   getIt.registerFactory<FToast>(
     () => FToast()..init(navigatorKey.currentContext!),
   );
-  
+  getIt.registerFactoryParam<CurrentMonthReportService, DateTime, void>(
+    (date, _) => CurrentMonthReportService(date),
+  );
+
   getIt.registerSingleton<ThemeManager>(
     ThemeManager()
       ..add(DarkTheme())

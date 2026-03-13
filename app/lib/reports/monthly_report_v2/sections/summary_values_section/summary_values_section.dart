@@ -17,17 +17,23 @@ class SummaryValuesSection extends StatelessWidget {
         StaggeredGridTile.extent(
           crossAxisCellCount: 1,
           mainAxisExtent: 150,
-          child: SummaryBalanceCard(),
+          child: SummaryBalanceCard(
+            key: const Key("summary_balance"),
+          ),
         ),
         StaggeredGridTile.extent(
           crossAxisCellCount: 1,
           mainAxisExtent: 150,
-          child: SummaryIncomesCard(),
+          child: SummaryIncomesCard(
+            key: const Key("summary_incomes"),
+          ),
         ),
         StaggeredGridTile.extent(
           crossAxisCellCount: 1,
           mainAxisExtent: 150,
-          child: SummaryExpensesCard(),
+          child: SummaryExpensesCard(
+            key: const Key("summary_expenses"),
+          ),
         )
       ],
     );
