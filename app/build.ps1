@@ -8,7 +8,7 @@
 $update_version_type = $args[0]
 
 if (-Not $update_version_type) {
-    Write-Error "[ERRO] Argumento inválido. Use 'major', 'minor' ou 'patch'."
+    Write-Error "[ERRO] Argumento inválido. Use 'major', 'minor', 'patch' ou 'current'."
     Exit 1
 }
 
@@ -112,6 +112,10 @@ Write-Host "Instalador criado com sucesso." -ForegroundColor Green
 $package_filename = "biluca-financas-setup-$newVersionLine.exe"
 
 Write-Host "Nome do instalador: $package_filename" -ForegroundColor Green
+
+if ($update_version_type -eq "current") {
+    Exit 0
+}
 
 # ####
 # Commitar as alterações
