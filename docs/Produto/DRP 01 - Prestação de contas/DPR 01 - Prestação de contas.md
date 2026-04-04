@@ -50,7 +50,7 @@ Métricas para monitorar:
 - [[RF 01.03 - Identificação de registros]]
 - [[RF 01.04 - Remoção de registros]]
 - [[RF 01.05 - Alteração de informações nos registros]]
-- [[RF 01.06 - Nome representativo]]
+- [[RF 01.06 - Descrição alternativa]]
 
 # Especificação de arquitetura
 

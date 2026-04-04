@@ -9,6 +9,7 @@ class AccountabilityEntry {
   final DateTime createdAt;
   final DateTime insertedAt;
   final DateTime updatedAt;
+  String? descriptionAlt;
 
   AccountabilityEntry({
     required this.id,
@@ -18,6 +19,7 @@ class AccountabilityEntry {
     required this.insertedAt,
     required this.updatedAt,
     this.identificationId,
+    this.descriptionAlt,
   });
 
   factory AccountabilityEntry.fromMap(Map<String, dynamic> map) {
@@ -29,23 +31,12 @@ class AccountabilityEntry {
       createdAt: DateTime.parse(map['createdAt']),
       insertedAt: DateTime.parse(map['insertedAt']),
       updatedAt: DateTime.parse(map['updatedAt']),
+      descriptionAlt: map['description_alt'],
     );
 
     if (map['identification'] != null) {
-      entry.identification = AccountabilityIdentification.fromMap(map['identification']);  
+      entry.identification = AccountabilityIdentification.fromMap(map['identification']);
     }
     return entry;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'description': description,
-      'value': value,
-      'createdAt': createdAt.toIso8601String(),
-      'insertedAt': insertedAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'identification_id': identification?.id,
-    };
   }
 }

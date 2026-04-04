@@ -60,15 +60,16 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
     String? identificationId = await addOrGetIdentification(req.identification);
 
     var newId = await db.rawInsert("""
-    INSERT INTO $tableName (description, value, createdAt, insertedAt, updatedAt, identification_id)
-    VALUES (?, ?, ?, ?, ?, ?);
+    INSERT INTO $tableName (description, value, createdAt, insertedAt, updatedAt, identification_id, description_alt)
+    VALUES (?, ?, ?, ?, ?, ?, ?);
     """, [
       req.description,
       req.value,
       req.createdAt.toIso8601String(),
       DateTime.now().toIso8601String(),
       DateTime.now().toIso8601String(),
-      identificationId
+      identificationId,
+      null,
     ]);
 
     return getById(newId);
@@ -99,12 +100,14 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   Future<AccountabilityEntry> update(AccountabilityEntry entry) async {
     String? identificationId = await addOrGetIdentification(entry.identification);
 
-    var updatedEntry = entry.toMap();
-    updatedEntry["updatedAt"] = DateTime.now().toIso8601String();
-    updatedEntry["identification_id"] = identificationId;
     await db.update(
       tableName,
-      updatedEntry,
+      {
+        "value": entry.value,
+        "updatedAt": DateTime.now().toIso8601String(),
+        "description_alt": entry.descriptionAlt,
+        "identification_id": identificationId,
+      },
       where: "id = ?",
       whereArgs: [entry.id],
     );

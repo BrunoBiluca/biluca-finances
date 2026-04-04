@@ -10,6 +10,6 @@ class AccountabilityEntryRequest {
     required this.description,
     required this.value,
     this.identification,
-    required this.createdAt,
+    required this.createdAt
   });
 }

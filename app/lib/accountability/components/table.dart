@@ -85,7 +85,7 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
   WidgetStateProperty<Color?> rowColor(Color c) {
     return WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
       if (states.contains(WidgetState.hovered)) {
-        return c.withOpacity(0.8);
+        return c.withValues(alpha: 0.8);
       }
       return c;
     });
@@ -127,13 +127,13 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
             ),
             DataCell(
               Text(
-                entry.description,
+                entry.descriptionAlt ?? entry.description,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               onTap: () => editText(
                 context,
-                entry.description,
-                (updatedText) => widget.onUpdate(entry..description = updatedText),
+                entry.descriptionAlt ?? entry.description,
+                (updatedText) => widget.onUpdate(entry..descriptionAlt = updatedText),
               ),
             ),
             DataCell(

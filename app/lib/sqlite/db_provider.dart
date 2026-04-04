@@ -31,7 +31,7 @@ class DBProvider {
     return await databaseFactory.openDatabase(
       await getDBPath(),
       options: OpenDatabaseOptions(
-        version: migrationsSQL.length + 1,
+        version: initialSQL.length + migrationsSQL.length + 1,
         onCreate: (db, version) async {
           log.info("Criando tabelas na versão $version...");
           await execute(db, initialSQL + migrationsSQL);
@@ -51,15 +51,13 @@ class DBProvider {
     var dirPath = io.Directory.current.path;
     if (kReleaseMode) {
       try {
-        dirPath = (await getApplicationDocumentsDirectory()).path; 
-      }
-      catch(e) {}
+        dirPath = (await getApplicationDocumentsDirectory()).path;
+      } catch (e) {}
 
-      if(io.Platform.isLinux) {
+      if (io.Platform.isLinux) {
         dirPath = "/var/home/bruno-note/Documentos";
-      } 
+      }
     }
-
 
     String dbPath = p.join(dirPath, "Biluca Finanças", "myDb.db");
     log.info("Caminho para o banco de dados: $dbPath");
@@ -117,6 +115,9 @@ class DBProvider {
     UPDATE accountability_identifications
     SET icon = '{"code":58123,"fontFamily":"MaterialIcons","fontPackage":null}'
     where icon is null
+    ''',
     '''
+    ALTER TABLE accountability ADD COLUMN description_alt TEXT
+    ''',
   ];
 }

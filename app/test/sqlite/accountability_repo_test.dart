@@ -89,7 +89,7 @@ void main() {
     expect(entries, isEmpty);
   });
 
-  test("should update an accountability entry", () async {
+  test("should not update an accountability entry original description", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
     var req = AccountabilityEntryRequest(description: "Descricão fictício", value: 10.00, createdAt: DateTime.now());
@@ -100,30 +100,47 @@ void main() {
     await repo.update(newEntry);
     final updatedEntry = (await repo.getEntries()).first;
 
-    expect(updatedEntry.description, "Descricão atualizada");
+    expect(updatedEntry.description, "Descricão fictício");
+    expect(updatedEntry.updatedAt.microsecondsSinceEpoch, greaterThan(newEntry.updatedAt.microsecondsSinceEpoch));
+  });
+
+  test("should update an accountability entry alternative description", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+
+    var req = AccountabilityEntryRequest(description: "Descricão fictício", value: 10.00, createdAt: DateTime.now());
+    var newEntry = await repo.add(req);
+    newEntry.descriptionAlt = "Descricão atualizada";
+
+    sleep(const Duration(milliseconds: 10));
+    await repo.update(newEntry);
+    final updatedEntry = (await repo.getEntries()).first;
+
+    expect(updatedEntry.description, "Descricão fictício");
+    expect(updatedEntry.descriptionAlt, "Descricão atualizada");
     expect(updatedEntry.updatedAt.microsecondsSinceEpoch, greaterThan(newEntry.updatedAt.microsecondsSinceEpoch));
   });
 
   test("should update an accountability entry with identification", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
+    var expectedIdentification = AccountabilityIdentification("Identificação fictício", Colors.blue);
+
     var req = AccountabilityEntryRequest(
       description: "Descricão fictício",
       value: 10.00,
       createdAt: DateTime.now(),
     );
-    var newEntry = await repo.add(req);
 
+    var newEntry = await repo.add(req);
     sleep(const Duration(milliseconds: 10));
-    var expectedIdentification = AccountabilityIdentification("Identificação fictício", Colors.blue);
+
     newEntry.identification = expectedIdentification;
-    await repo.update(newEntry);
-    final updatedEntry = await repo.getById(newEntry.id);
+    final updatedEntry = await repo.update(newEntry);
 
     expect(updatedEntry, isNotNull);
     expect(updatedEntry.identification, isNotNull);
     expect(updatedEntry.identification!.description, expectedIdentification.description);
-    expect(updatedEntry.identification!.color.value, expectedIdentification.color.value);
+    expect(updatedEntry.identification!.color.toARGB32(), expectedIdentification.color.toARGB32());
 
     final entries = await repo.getEntries();
 
@@ -132,7 +149,7 @@ void main() {
     expect(entries[0].identification, isNotNull);
     expect(entries[0].identification!.id, expectedIdentification.id);
     expect(entries[0].identification!.description, expectedIdentification.description);
-    expect(entries[0].identification!.color.value, expectedIdentification.color.value);
+    expect(entries[0].identification!.color.toARGB32(), expectedIdentification.color.toARGB32());
   });
 
   test("should add entry with identification", () async {
