@@ -2,27 +2,27 @@
 # ./build.ps1 [major|minor|patch]
 
 # ####
-# VerificaÁ„o dos argumentos
+# Verifica√ß√£o dos argumentos
 # ####
 
 $update_version_type = $args[0]
 
 if (-Not $update_version_type) {
-    Write-Error "[ERRO] Argumento inv·lido. Use 'major', 'minor' ou 'patch'."
+    Write-Error "[ERRO] Argumento invÔøΩlido. Use 'major', 'minor' ou 'patch'."
     Exit 1
 }
 
 # ####
-# VerificaÁ„o de dependÍncias para o processo de empacotamento
+# Verifica√ß√£o de depend√™ncias para o processo de empacotamento
 # ####
 
-Write-Host "Verificando dependÍncias..." -ForegroundColor Gray
+Write-Host "Verificando depend√™ncias..." -ForegroundColor Gray
 
 if (Get-Command iscc -ErrorAction SilentlyContinue) {
-    Write-Host "Inno Setup est· instalado." -ForegroundColor Green
+    Write-Host "Inno Setup est√° instalado." -ForegroundColor Green
 }
 else {
-    Write-Error "[ERRO] Inno Setup n„o est· instalado. Instale-o e rode o script novamente."
+    Write-Error "[ERRO] Inno Setup n√£o est√° instalado. Instale-o e rode o script novamente."
     Exit 1
 }
 
@@ -43,14 +43,14 @@ if (-Not $summary.success) {
 Write-Host "Os testes passaram." -ForegroundColor Green
 
 # ####
-# Controle de vers„o da aplicaÁ„o
+# Controle de vers√£o da aplica√ß√£o
 # ####
 
 $versionFilePath = "./pubspec.yaml"
 $fileContent = Get-Content $versionFilePath
 
 $version = $fileContent | Select-String "version:"
-Write-Host "Vers„o atual da aplicaÁ„o: $version"
+Write-Host "Vers√£o atual da aplica√ß√£o: $version"
 
 if ($version -match "version:\s(\d+)\.(\d+)\.(\d+)") {
     $major = [int]$matches[1]
@@ -72,20 +72,20 @@ if ($version -match "version:\s(\d+)\.(\d+)\.(\d+)") {
     }
 
     $newVersionLine = "$major.$minor.$patch"
-    Write-Host "Nova vers„o da aplicaÁ„o: $newVersionLine"
+    Write-Host "Nova vers√£o da aplica√ß√£o: $newVersionLine"
 
     $updatedContent = $fileContent -replace "version:\s+\d+\.\d+\.\d+", "version: $newVersionLine"
     $updatedContent | Set-Content $versionFilePath
     
-    Write-Host "A vers„o foi atualizada para '$newVersionLine'"  -ForegroundColor Green
+    Write-Host "A vers√£o foi atualizada para '$newVersionLine'"  -ForegroundColor Green
 }
 else {
-    Write-Error "[ERRO] Nenhuma vers„o encontrada ou vers„o inv·lida no arquivo $filePath"
+    Write-Error "[ERRO] Nenhuma vers√£o encontrada ou vers√£o inv√°lida no arquivo $filePath"
     Exit 1
 }
 
 # ####
-# CriaÁ„o do pacote windows
+# Cria√ß√£o do pacote windows
 # ####
 
 Write-Host "Criando o pacote windows..."
@@ -97,7 +97,7 @@ Write-Host "O pacote windows foi criado." -ForegroundColor Green
 Write-Host ""
 
 # ####
-# CompilaÁ„o do Inno Setup
+# Compila√ß√£o do Inno Setup
 # ####
 
 $output_path = "./dist"
@@ -114,10 +114,10 @@ $package_filename = "biluca-financas-setup-$newVersionLine.exe"
 Write-Host "Nome do instalador: $package_filename" -ForegroundColor Green
 
 # ####
-# Commitar as alteraÁıes
+# Commitar as altera√ß√µes
 # ####
 
-Write-Host "Registrando a nova vers„o..." -ForegroundColor Green
+Write-Host "Registrando a nova vers√£o..." -ForegroundColor Green
 
 $token = Get-Content "./secrets/release_token.txt"
 $github_username = "BrunoBiluca"
@@ -140,10 +140,10 @@ git push origin $newVersionLine
 Write-Host "Tag: $newVersionLine criado." -ForegroundColor Green
 
 # ####
-# PublicaÁ„o
+# Publica√ß√£o
 # ####
 
-Write-Host "Criando a publicaÁ„o..." -ForegroundColor Green
+Write-Host "Criando a publica√ß√£o..." -ForegroundColor Green
 
 $body = @{
     tag_name = $newVersionLine
