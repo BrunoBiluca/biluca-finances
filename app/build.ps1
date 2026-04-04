@@ -8,7 +8,7 @@
 $update_version_type = $args[0]
 
 if (-Not $update_version_type) {
-    Write-Error "[ERRO] Argumento inv�lido. Use 'major', 'minor' ou 'patch'."
+    Write-Error "[ERRO] Argumento inválido. Use 'major', 'minor' ou 'patch'."
     Exit 1
 }
 
