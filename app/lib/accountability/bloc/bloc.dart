@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountabilityBloc extends Bloc<AccountabilityEvent, AccountabilityState> {
   final AccountabilityRepo repo;
+  int get limit => loadedPages * 100;
   int loadedPages = 1;
 
   AccountabilityBloc({required this.repo}) : super(const AccountabilityInitial()) {
@@ -63,6 +64,4 @@ class AccountabilityBloc extends Bloc<AccountabilityEvent, AccountabilityState> 
       ));
     });
   }
-
-  int get limit => loadedPages * 100;
 }

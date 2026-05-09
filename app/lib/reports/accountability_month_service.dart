@@ -1,7 +1,8 @@
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/accountability/services/repo.dart';
 import 'package:biluca_financas/common/data/grouped_by.dart';
 
-abstract class AccountabilityMonthService {
+abstract class AccountabilityMonthService extends AccountabilityRepo {
   String get currentMonth;
   Future<int> count();
   Future<double> getSum();

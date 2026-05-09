@@ -1,3 +1,9 @@
+import 'package:biluca_financas/accountability/bloc/bloc.dart';
+import 'package:biluca_financas/accountability/bloc/events.dart';
+import 'package:biluca_financas/accountability/bloc/states.dart';
+import 'package:biluca_financas/accountability/components/table.dart';
+import 'package:biluca_financas/common/extensions/string_extensions.dart';
+import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/components/base_page.dart';
 import 'package:biluca_financas/components/mouse_back_button_listener.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
@@ -5,7 +11,9 @@ import 'package:biluca_financas/reports/monthly_report_v2/services/current_month
 import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/summary_values_section/summary_values_section.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 class MonthlyReportV2 extends StatefulWidget {
   const MonthlyReportV2({super.key});
@@ -32,7 +40,51 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
     });
   }
 
-  void displayReportData() {}
+  void displayReportData() async {
+    var date = DateFormat("MMMM yyyy", "pt_BR").format(_selectedDate).capitalize();
+    var changedAccountability = false;
+
+    Size size = MediaQuery.of(context).size;
+
+    double width = size.width;
+    double height = size.height;
+
+    if (mounted) {
+      await showDialog(
+          context: context,
+          builder: (context) => BaseDialog(
+              title: "Registros de $date",
+              content: SizedBox(
+                  width: width - 300,
+                  height: height - 300,
+                  child: BlocProvider(
+                    create: (_) => AccountabilityBloc(repo: _service.current)..add(FetchAccountabilityEntries()),
+                    child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+                      builder: (context, state) {
+                        if (state.entries.isEmpty) {
+                          return const Center(child: Text('Nenhuma entrada registrada'));
+                        }
+
+                        return AccountabilityTable(
+                          entries: state.entries,
+                          onUpdate: (entry) {
+                            context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry));
+                            changedAccountability = true;
+                          },
+                          onRemove: (entry) {
+                            context.read<AccountabilityBloc>().add(DeleteAccountabilityEntry(entry));
+                            changedAccountability = true;
+                          },
+                        );
+                      },
+                    ),
+                  ))));
+
+      if (changedAccountability) {
+        updateDateSelected(_selectedDate);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

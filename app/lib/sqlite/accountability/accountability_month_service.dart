@@ -1,15 +1,16 @@
+import 'package:biluca_financas/accountability/models/entry.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:biluca_financas/common/data/grouped_by.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
-  final Database db;
+class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implements AccountabilityMonthService {
   final DateTime month;
-  SQLiteAccontabilityMonthService({required this.db, required this.month});
+  SQLiteAccontabilityMonthService({required Database db, required this.month}) : super(db);
 
   String get monthf => DateFormat("MM/yyyy").format(month);
 
@@ -187,5 +188,37 @@ class SQLiteAccontabilityMonthService implements AccountabilityMonthService {
     }
 
     return result.first['mean'] as double;
+  }
+
+  @override
+  Future<List<AccountabilityEntry>> getEntries({int limit = 10, int offset = 0}) async {
+    return await db.rawQuery(
+      """
+    select 
+      a.*, 
+      ai.id as ai_id,
+      ai.description as ai_description,
+      ai.color as ai_color,
+      ai.icon as ai_icon,
+      strftime('%m/%Y', a.createdAt) AS month
+    from accountability a
+    left join accountability_identifications ai on a.identification_id = ai.id
+    where month == '$monthf'
+    order by a.createdAt desc
+    """,
+    ).then((value) => value.map(
+          (e) {
+            var ai = <String, dynamic>{};
+            for (var key in e.keys) {
+              if (key.startsWith('ai_') && e[key] != null) {
+                ai[key.replaceFirst('ai_', '')] = e[key];
+              }
+            }
+            return AccountabilityEntry.fromMap({
+              'identification': ai.isEmpty ? null : ai,
+              ...e,
+            });
+          },
+        ).toList());
   }
 }
