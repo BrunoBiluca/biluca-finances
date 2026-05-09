@@ -46,12 +46,15 @@ Métricas para monitorar:
 # Requisitos
 
 - [[RF 03.01 - Resumo geral]]
+- [[RF 03.01.01 - Discretização do resumo geral]]
 - [[RF 03.02 - Visualização por identificação]]
 - [[RF 03.03 - Comparações gerais com Últimos meses]]
 - [[RF 03.04 - Comparações de identificadores em relação mês anterior]]
 - [[RF 03.05 - Comparações de identificadores em relação aos últimos X meses]]
 - [[RF 03.06 - Porcentagem representativa por identificador]]
 - [[RF 03.07 - Discretização dos identificadores pelos registros]]
+- [[RF 03.08 - Tabela com todas os registros do mês]]
+- 
 
 # Especificação de arquitetura
 
