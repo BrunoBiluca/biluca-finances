@@ -22,7 +22,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
       ai.id as ai_id,
       ai.description as ai_description,
       ai.color as ai_color,
-      ai.icon as ai_icon
+      ai.icon as ai_icon,
+      ai.type as ai_type
     from $tableName a
     left join accountability_identifications ai on a.identification_id = ai.id
     order by createdAt desc
@@ -146,13 +147,14 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
     var identificationMap = identification.toMap();
 
     await db.rawInsert("""
-    INSERT INTO accountability_identifications (id, description, color, icon, insertedAt, updatedAt)
+    INSERT INTO accountability_identifications (id, description, color, icon, type, insertedAt, updatedAt)
     VALUES (?, ?, ?, ?, ?, ?);
     """, [
       identificationMap["id"],
       identificationMap["description"],
       identificationMap["color"],
       json.encode(identificationMap["icon"]),
+      identificationMap["type"],
       DateTime.now().toIso8601String(),
       DateTime.now().toIso8601String()
     ]);

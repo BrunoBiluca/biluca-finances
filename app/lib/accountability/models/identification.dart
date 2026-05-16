@@ -9,10 +9,13 @@ class AccountabilityIdentification {
   Color color;
   IconData icon;
 
-  AccountabilityIdentification._(this.id, this.description, this.color, this.icon);
+  AccountabilityIdentificationType type;
+
+  AccountabilityIdentification._(this.id, this.description, this.color, this.icon, this.type);
 
   factory AccountabilityIdentification(String description, Color color) {
-    return AccountabilityIdentification._(const Uuid().v4(), description, color, Icons.help_outline);
+    return AccountabilityIdentification._(
+        const Uuid().v4(), description, color, Icons.help_outline, AccountabilityIdentificationType.expense);
   }
 
   factory AccountabilityIdentification.fromMap(Map<String, dynamic> m) {
@@ -31,6 +34,9 @@ class AccountabilityIdentification {
         fontFamily: map['icon']['fontFamily'],
         fontPackage: map['icon']['fontPackage'],
       ),
+      AccountabilityIdentificationType.values.firstWhere(
+        (element) => element.name == map['type'],
+      ),
     );
   }
 
@@ -40,6 +46,16 @@ class AccountabilityIdentification {
       'description': description,
       'color': color.value,
       'icon': {'code': icon.codePoint, 'fontFamily': icon.fontFamily, 'fontPackage': icon.fontPackage},
+      'type': type.name
     };
   }
+}
+
+enum AccountabilityIdentificationType {
+  expense('Despesa'),
+  income('Receita'),
+  investment('Investimento');
+
+  final String label;
+  const AccountabilityIdentificationType(this.label);
 }

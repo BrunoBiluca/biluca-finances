@@ -5,12 +5,25 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/Models/configuration.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
+class TextBallonEditOption {
+  final IconData icon;
+  final String name;
+  final VoidCallback onTap;
+
+  TextBallonEditOption({
+    required this.icon,
+    required this.name,
+    required this.onTap,
+  });
+}
+
 class TextBallon extends StatefulWidget {
   final IconData icon;
   final String text;
   final Color color;
   final Function({String? text, Color? color, IconData? icon})? onEdit;
   final VoidCallback? onDelete;
+  final List<TextBallonEditOption>? editOptions;
   final EdgeInsets padding;
 
   const TextBallon({
@@ -19,6 +32,7 @@ class TextBallon extends StatefulWidget {
     required this.color,
     this.onEdit,
     this.onDelete,
+    this.editOptions,
     this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
     required this.icon,
   });
@@ -40,98 +54,15 @@ class _TextBallonState extends State<TextBallon> {
         child: Row(
           children: [
             Expanded(
-              child: isEditing
-                  ? Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(widget.icon, color: widget.color.adaptByLuminance()),
-                          onPressed: () => _pickIcon(widget.text),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: TextField(
-                            autofocus: true,
-                            controller: cont,
-                            cursorColor: widget.color.adaptByLuminance(),
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(color: widget.color.adaptByLuminance()),
-                            onEditingComplete: () {
-                              setState(() {
-                                widget.onEdit!.call(text: cont.text);
-                                isEditing = false;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        IconButton(
-                          icon: const Icon(Icons.colorize),
-                          color: widget.color.adaptByLuminance(),
-                          onPressed: () {
-                            Color editColor = widget.color;
-                            showDialog(
-                              context: context,
-                              builder: (context) => BaseDialog(
-                                actions: [
-                                  SizedBox(
-                                    width: 200,
-                                    child: OutlinedButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text("Cancelar"),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 200,
-                                    child: TextButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          widget.onEdit!.call(color: editColor);
-                                          isEditing = false;
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Salvar"),
-                                    ),
-                                  ),
-                                ],
-                                title: 'Editar Texto',
-                                content: SizedBox(
-                                  height: 600,
-                                  child: ColorPicker(
-                                    pickerColor: widget.color,
-                                    onColorChanged: (color) => editColor = color,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    )
-                  : Row(
-                      children: [
-                        Icon(widget.icon, color: widget.color.adaptByLuminance()),
-                        const SizedBox(width: 10),
-                        Text(
-                          widget.text,
-                          style: TextStyle(color: widget.color.adaptByLuminance()),
-                        ),
-                      ],
-                    ),
+              child: isEditing ? renderEditMode(cont, context) : renderBaseMode(),
             ),
             widget.onEdit == null
                 ? Container()
-                : isEditing
-                    ? IconButton(
-                        color: widget.color.adaptByLuminance(),
-                        onPressed: () => setState(() => isEditing = false),
-                        icon: const Icon(Icons.edit_off),
-                      )
-                    : IconButton(
-                        color: widget.color.adaptByLuminance(),
-                        onPressed: () => setState(() => isEditing = true),
-                        icon: const Icon(Icons.edit),
-                      ),
+                : IconButton(
+                    color: widget.color.adaptByLuminance(),
+                    onPressed: () => setState(() => isEditing = !isEditing),
+                    icon: isEditing ? Icon(Icons.edit_off) : Icon(Icons.edit),
+                  ),
             widget.onDelete == null
                 ? Container()
                 : IconButton(
@@ -140,6 +71,94 @@ class _TextBallonState extends State<TextBallon> {
                     icon: const Icon(Icons.delete),
                   ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Row renderBaseMode() {
+    return Row(
+      children: [
+        Icon(widget.icon, color: widget.color.adaptByLuminance()),
+        const SizedBox(width: 10),
+        Text(
+          widget.text,
+          style: TextStyle(color: widget.color.adaptByLuminance()),
+        ),
+      ],
+    );
+  }
+
+  Row renderEditMode(TextEditingController cont, BuildContext context) {
+    return Row(
+      spacing: 20,
+      children: [
+        IconButton(
+          icon: Icon(widget.icon, color: widget.color.adaptByLuminance()),
+          onPressed: () => _pickIcon(widget.text),
+        ),
+        Expanded(
+          child: TextField(
+            autofocus: true,
+            controller: cont,
+            cursorColor: widget.color.adaptByLuminance(),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: widget.color.adaptByLuminance()),
+            onEditingComplete: () {
+              setState(() {
+                widget.onEdit!.call(text: cont.text);
+                isEditing = false;
+              });
+            },
+          ),
+        ),
+        ...(widget.editOptions ?? []).map(
+          (option) => IconButton(
+            icon: Icon(option.icon),
+            color: widget.color.adaptByLuminance(),
+            onPressed: option.onTap,
+          ),
+        ),
+        IconButton(
+            icon: const Icon(Icons.colorize),
+            color: widget.color.adaptByLuminance(),
+            onPressed: () => showColorEditDialog(context, widget.color)),
+      ],
+    );
+  }
+
+  Future<dynamic> showColorEditDialog(BuildContext context, Color editColor) {
+    return showDialog(
+      context: context,
+      builder: (context) => BaseDialog(
+        actions: [
+          SizedBox(
+            width: 200,
+            child: OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancelar"),
+            ),
+          ),
+          SizedBox(
+            width: 200,
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  widget.onEdit!.call(color: editColor);
+                  isEditing = false;
+                });
+                Navigator.pop(context);
+              },
+              child: const Text("Salvar"),
+            ),
+          ),
+        ],
+        title: 'Editar Texto',
+        content: SizedBox(
+          height: 600,
+          child: ColorPicker(
+            pickerColor: widget.color,
+            onColorChanged: (color) => editColor = color,
+          ),
         ),
       ),
     );

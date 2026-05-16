@@ -200,6 +200,7 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
       ai.description as ai_description,
       ai.color as ai_color,
       ai.icon as ai_icon,
+      ai.type as ai_type,
       strftime('%m/%Y', a.createdAt) AS month
     from accountability a
     left join accountability_identifications ai on a.identification_id = ai.id

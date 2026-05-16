@@ -115,45 +115,7 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
                       child: Column(
                         children: [
                           ...currentIdentifications.mapIndexed(
-                            (index, id) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    width: 2,
-                                    color: Theme.of(context).colorScheme.inversePrimary,
-                                    style: index == selectedIdIndex ? BorderStyle.solid : BorderStyle.none,
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      widget.onEdit?.call(id);
-                                      Navigator.pop(context);
-                                    },
-                                    child: TextBallon(
-                                      icon: id.icon,
-                                      text: id.description,
-                                      color: id.color,
-                                      onEdit: ({Color? color, IconData? icon, String? text}) =>
-                                          widget.accountabilityBloc.add(
-                                        UpdateAccountabilityIdentification(
-                                          id
-                                            ..color = color ?? id.color
-                                            ..description = text ?? id.description
-                                            ..icon = icon ?? id.icon,
-                                        ),
-                                      ),
-                                      onDelete: () => widget.accountabilityBloc.add(
-                                        DeleteAccountabilityIdentification(id.id),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                            (index, id) => renderIdentificationItem(context, index, id),
                           ),
                         ],
                       ),
@@ -163,5 +125,103 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
         ),
       ),
     );
+  }
+
+  Padding renderIdentificationItem(BuildContext context, int index, AccountabilityIdentification id) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: Theme.of(context).colorScheme.inversePrimary,
+            style: index == selectedIdIndex ? BorderStyle.solid : BorderStyle.none,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: GestureDetector(
+            onTap: () {
+              widget.onEdit?.call(id);
+              Navigator.pop(context);
+            },
+            child: TextBallon(
+              icon: id.icon,
+              text: id.description,
+              color: id.color,
+              onEdit: ({Color? color, IconData? icon, String? text}) => widget.accountabilityBloc.add(
+                UpdateAccountabilityIdentification(
+                  id
+                    ..color = color ?? id.color
+                    ..description = text ?? id.description
+                    ..icon = icon ?? id.icon,
+                ),
+              ),
+              onDelete: () => widget.accountabilityBloc.add(
+                DeleteAccountabilityIdentification(id.id),
+              ),
+              editOptions: [
+                TextBallonEditOption(
+                    icon: Icons.type_specimen, name: 'Tipo', onTap: () => showTypeEditDiaglog(id, context)),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showTypeEditDiaglog(AccountabilityIdentification id, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          var selectedType = id.type;
+
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+            return BaseDialog(
+              title: 'Editar tipo de identificação',
+              content: SizedBox(
+                height: 600,
+                child: RadioGroup(
+                    groupValue: selectedType,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedType = value!;
+                      });
+                    },
+                    child: Column(
+                        children: AccountabilityIdentificationType.values
+                            .map((type) => RadioListTile<AccountabilityIdentificationType>(
+                                  title: Text(type.label),
+                                  value: type,
+                                  activeColor: Colors.white,
+                                ))
+                            .toList())),
+              ),
+              actions: [
+                SizedBox(
+                  width: 200,
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancelar"),
+                  ),
+                ),
+                SizedBox(
+                  width: 200,
+                  child: TextButton(
+                    onPressed: () {
+                      widget.accountabilityBloc.add(UpdateAccountabilityIdentification(
+                        id..type = selectedType,
+                      ));
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Salvar"),
+                  ),
+                ),
+              ],
+            );
+          });
+        });
   }
 }

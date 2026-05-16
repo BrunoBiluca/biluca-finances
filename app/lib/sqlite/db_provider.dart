@@ -31,16 +31,16 @@ class DBProvider {
     return await databaseFactory.openDatabase(
       await getDBPath(),
       options: OpenDatabaseOptions(
-        version: initialSQL.length + migrationsSQL.length + 1,
+        version: migrationsSQL.length,
         onCreate: (db, version) async {
           log.info("Criando tabelas na versão $version...");
-          await execute(db, initialSQL + migrationsSQL);
+          await execute(db, migrationsSQL);
           log.info("Tabelas criadas");
         },
         onUpgrade: (db, oldVersion, newVersion) async {
           log.info("Atualizando tabelas...");
           log.info("Versão atual: $oldVersion");
-          await execute(db, migrationsSQL.sublist(oldVersion - 1));
+          await execute(db, migrationsSQL.sublist(oldVersion));
           log.info("Tabelas atualizadas para versão $newVersion");
         },
       ),
@@ -79,7 +79,7 @@ class DBProvider {
     log.info("Banco de dados limpo");
   }
 
-  final initialSQL = [
+  final migrationsSQL = [
     '''
     CREATE TABLE accountability (
         id INTEGER PRIMARY KEY,
@@ -104,10 +104,7 @@ class DBProvider {
       insertedAt TEXT,
       updatedAt TEXT
     )
-    '''
-  ];
-
-  final migrationsSQL = [
+    ''',
     '''
     ALTER TABLE accountability_identifications ADD COLUMN icon TEXT
     ''',
@@ -119,5 +116,13 @@ class DBProvider {
     '''
     ALTER TABLE accountability ADD COLUMN description_alt TEXT
     ''',
+    '''
+    ALTER TABLE accountability_identifications ADD COLUMN type TEXT
+    ''',
+    '''
+    UPDATE accountability_identifications
+    SET type = 'expense'
+    where type is null
+    '''
   ];
 }

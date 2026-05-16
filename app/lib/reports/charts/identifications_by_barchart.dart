@@ -1,4 +1,3 @@
-
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
