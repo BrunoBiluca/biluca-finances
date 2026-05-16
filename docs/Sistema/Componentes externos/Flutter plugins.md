@@ -1,8 +1,15 @@
 # Flutter plugins
 
-# Flutter Launcher Icons 
+Pacotes utilizados para funcionar em produção. Apenas esses pacotes serão publicados.
 
-- [pub.dev](https://pub.dev/packages/flutter_launcher_icons#flutter-launcher-icons)
-- [github](https://github.com/fluttercommunity/flutter_launcher_icons/tree/master)
-
-Esse plugin permite facilmente gerar os ícones para qualquer versão da aplicação.
+- [[Flutter Launcher Icons]]
+- [[sqflite_common_ffi]]
+- [[fl_chart]]
+- [[get_it]]
+- [[file_picker]]
+- [[fluttertoast]]
+- [[csv]]
+- [[font_awesome_flutter]]
+- [[flutter_staggered_grid_view]]
+- [[FlutterIconPicker]]
+- [[data_table_2]]
