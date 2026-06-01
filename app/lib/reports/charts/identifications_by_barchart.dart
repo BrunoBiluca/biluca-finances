@@ -1,15 +1,16 @@
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class IdentificationsByBarChart extends StatelessWidget {
-  final List<IdentificationRelation> groups;
+  final List<IdentificationReportInfo> groups;
   final double barWidth = 40;
   factory IdentificationsByBarChart({
-    required List<IdentificationRelation> accountabilityByIdentification,
+    required List<IdentificationReportInfo> accountabilityByIdentification,
     Key? key,
   }) {
     var sorted = accountabilityByIdentification.sorted(

@@ -1,6 +1,5 @@
 import 'package:biluca_financas/accountability/page.dart';
 import 'package:biluca_financas/home.dart';
-import 'package:biluca_financas/reports/monthly_report/current_month_report.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/monthly_report_v2.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +21,6 @@ class _SidebarState extends State<Sidebar> {
       'color': Colors.purpleAccent,
       'fac': () {
         return Home();
-      }
-    },
-    {
-      'title': 'Relatório do mês',
-      'icon': Icons.home,
-      'color': Colors.purpleAccent,
-      'fac': () {
-        return CurrentMonthReport();
       }
     },
     {

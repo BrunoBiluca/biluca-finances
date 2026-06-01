@@ -82,7 +82,14 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
   Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification() async {
     var result = await db.rawQuery(
       """
-      SELECT ai.id, ai.description, ai.color, ai.icon, Sum(value) AS total, strftime('%m/%Y', createdAt) AS month
+      SELECT 
+        ai.id, 
+        ai.description, 
+        ai.color, 
+        ai.icon, 
+        ai.type, 
+        Sum(value) AS total, 
+        strftime('%m/%Y', createdAt) AS month
       FROM accountability a
       INNER JOIN accountability_identifications ai ON a.identification_id = ai.id
       WHERE month == '$monthf'

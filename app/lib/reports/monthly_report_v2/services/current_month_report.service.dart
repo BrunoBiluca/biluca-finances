@@ -1,18 +1,10 @@
 import 'dart:collection';
-
 import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/common/data/grouped_by.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
-
-class IdentificationRelation {
-  final AccountabilityIdentification identification;
-  double current;
-  double related;
-  IdentificationRelation({required this.identification, this.current = 0, this.related = 0});
-}
 
 class CurrentMonthReportService {
   final AccountabilityMonthService current;
@@ -38,19 +30,23 @@ class CurrentMonthReportService {
     return {"expenses": await current.getExpenses(), "related": await related.getExpenses()};
   }
 
-  Future<List<IdentificationRelation>> expensesByIdentification() async {
-    var identifications = (await current.getTotalByIdentification()).where((i) => i.total! < 0).toList();
-    var relatedMonth = (await related.getTotalByIdentification()).where((i) => i.total! < 0).toList();
+  Future<List<IdentificationReportInfo>> expensesByIdentification() async {
+    var identifications = (await current.getTotalByIdentification())
+        .where((i) => i.field.type == AccountabilityIdentificationType.expense)
+        .toList();
+    var relatedMonth = (await related.getTotalByIdentification())
+        .where((i) => i.field.type == AccountabilityIdentificationType.expense)
+        .toList();
 
-    List<IdentificationRelation> result = [];
+    List<IdentificationReportInfo> result = [];
     for (var i in identifications) {
-      result.add(IdentificationRelation(identification: i.field, current: i.total!));
+      result.add(IdentificationReportInfo(identification: i.field, current: i.total!));
     }
 
     for (var i in relatedMonth) {
       var id = result.firstWhereOrNull((r) => r.identification.id == i.field.id);
       if (id == null) {
-        result.add(IdentificationRelation(identification: i.field, related: i.total!));
+        result.add(IdentificationReportInfo(identification: i.field, related: i.total!));
       } else {
         id.related = i.total!;
       }
@@ -58,10 +54,28 @@ class CurrentMonthReportService {
     return result;
   }
 
-  Future<List<GroupedBy<AccountabilityIdentification>>> incomesByIdentification() async {
-    var identifications = await current.getTotalByIdentification();
-    identifications.addAll(await related.getTotalByIdentification());
-    return identifications.where((i) => i.total! > 0).toList();
+  Future<List<IdentificationReportInfo>> incomesByIdentification() async {
+    var identifications = (await current.getTotalByIdentification())
+        .where((i) => i.field.type == AccountabilityIdentificationType.income)
+        .toList();
+    var relatedMonth = (await related.getTotalByIdentification())
+        .where((i) => i.field.type == AccountabilityIdentificationType.income)
+        .toList();
+
+    List<IdentificationReportInfo> result = [];
+    for (var i in identifications) {
+      result.add(IdentificationReportInfo(identification: i.field, current: i.total!));
+    }
+
+    for (var i in relatedMonth) {
+      var id = result.firstWhereOrNull((r) => r.identification.id == i.field.id);
+      if (id == null) {
+        result.add(IdentificationReportInfo(identification: i.field, related: i.total!));
+      } else {
+        id.related = i.total!;
+      }
+    }
+    return result;
   }
 
   Future<Map<dynamic, dynamic>> getMeansByIdentification() async {
