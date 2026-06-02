@@ -30,7 +30,7 @@ class MonthInfoCard extends StatelessWidget {
         children: [
           Text(
             title(),
-            style: Theme.of(context).textTheme.displayLarge,
+            style: Theme.of(context).textTheme.headlineSmall!,
           ),
           const SizedBox(height: 20),
           Expanded(
@@ -72,11 +72,11 @@ class MonthInfoCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Flexible(
+                              Expanded(
                                 child: Text(
                                   Formatter.value(result.$3),
                                   key: const Key("receitas"),
-                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 26),
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -101,11 +101,11 @@ class MonthInfoCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Flexible(
+                              Expanded(
                                 child: Text(
                                   Formatter.value(result.$4),
                                   key: const Key("despesas"),
-                                  style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 26),
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                               ),
                               const SizedBox(width: 10),

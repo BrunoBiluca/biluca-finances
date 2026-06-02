@@ -48,7 +48,10 @@ Future<void> setupDependencies() async {
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
   getIt.registerFactoryParam<AccountabilityMonthService, DateTime, void>(
-    (month, _) => SQLiteAccontabilityMonthService(db: getIt<Database>(), month: month),
+    (month, _) => SQLiteAccontabilityMonthService(
+      db: getIt<Database>(),
+      month: month,
+    ),
   );
   getIt.registerFactory<AccountabilityRepo>(
     () => SQLiteAccountabilityRepo(getIt<Database>()),
@@ -60,7 +63,10 @@ Future<void> setupDependencies() async {
     () => PredictService(Client(), getIt<AccountabilityRepo>()),
   );
   getIt.registerFactory<AccountabilityImportService>(
-    () => SQLiteAccountabilityImportService(repo: getIt<AccountabilityRepo>(), predictService: getIt<PredictService>()),
+    () => SQLiteAccountabilityImportService(
+      repo: getIt<AccountabilityRepo>(),
+      predictService: getIt<PredictService>(),
+    ),
   );
   getIt.registerFactory<FToast>(
     () => FToast()..init(navigatorKey.currentContext!),

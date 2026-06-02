@@ -9,33 +9,42 @@ class SummaryValuesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StaggeredGrid.count(
-      crossAxisCount: 3,
-      crossAxisSpacing: 20,
-      mainAxisSpacing: 20,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        StaggeredGridTile.extent(
-          crossAxisCellCount: 1,
-          mainAxisExtent: 150,
-          child: SummaryBalanceCard(
-            key: const Key("summary_balance"),
+      Text(
+        "Resumo",
+        style: Theme.of(context).textTheme.headlineSmall,
+      ),
+      const SizedBox(height: 20),
+      StaggeredGrid.count(
+        crossAxisCount: 3,
+        crossAxisSpacing: 20,
+        mainAxisSpacing: 20,
+        children: [
+          StaggeredGridTile.extent(
+            crossAxisCellCount: 1,
+            mainAxisExtent: 150,
+            child: SummaryBalanceCard(
+              key: const Key("summary_balance"),
+            ),
           ),
-        ),
-        StaggeredGridTile.extent(
-          crossAxisCellCount: 1,
-          mainAxisExtent: 150,
-          child: SummaryIncomesCard(
-            key: const Key("summary_incomes"),
+          StaggeredGridTile.extent(
+            crossAxisCellCount: 1,
+            mainAxisExtent: 150,
+            child: SummaryIncomesCard(
+              key: const Key("summary_incomes"),
+            ),
           ),
-        ),
-        StaggeredGridTile.extent(
-          crossAxisCellCount: 1,
-          mainAxisExtent: 150,
-          child: SummaryExpensesCard(
-            key: const Key("summary_expenses"),
-          ),
-        )
-      ],
-    );
+          StaggeredGridTile.extent(
+            crossAxisCellCount: 1,
+            mainAxisExtent: 150,
+            child: SummaryExpensesCard(
+              key: const Key("summary_expenses"),
+            ),
+          )
+        ],
+      )
+    ]);
   }
 }

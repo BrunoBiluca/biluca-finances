@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
@@ -8,13 +7,11 @@ import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/components/base_page.dart';
 import 'package:biluca_financas/components/mouse_back_button_listener.dart';
-import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/expenses_per_indentification.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/identifications_view_section.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/incomes_per_identification.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/summary_last_months/summary_last_months_section.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/summary_values_section/summary_values_section.dart';
 import 'package:flutter/material.dart';
@@ -139,11 +136,13 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SummaryValuesSection(),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 60),
+                        SummaryLastMonthsSection(),
+                        const SizedBox(height: 60),
                         IncomesPerIdentification(service: _service),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 60),
                         ExpensesPerIndentification(service: _service),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 60),
                       ],
                     ),
                   ),
