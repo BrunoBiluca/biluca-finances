@@ -10,7 +10,9 @@ import 'package:biluca_financas/components/base_page.dart';
 import 'package:biluca_financas/components/mouse_back_button_listener.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/expenses_per_indentification.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/identifications_view_section.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/incomes_per_identification.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
@@ -138,29 +140,9 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
                       children: [
                         SummaryValuesSection(),
                         const SizedBox(height: 20),
-                        Text(
-                          "Receitas por identificação",
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
+                        IncomesPerIdentification(service: _service),
                         const SizedBox(height: 20),
-                        futureHandler(
-                          _service.incomesByIdentification(),
-                          (data) => IdentificationsViewSection(
-                            data as List<IdentificationReportInfo>,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          "Despesas por identificação",
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const SizedBox(height: 20),
-                        futureHandler(
-                          _service.expensesByIdentification(),
-                          (data) => IdentificationsViewSection(
-                            data as List<IdentificationReportInfo>,
-                          ),
-                        ),
+                        ExpensesPerIndentification(service: _service),
                         const SizedBox(height: 20),
                       ],
                     ),
