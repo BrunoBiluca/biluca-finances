@@ -4,6 +4,8 @@ import 'package:biluca_financas/accountability/models/identification.dart';
 
 abstract class AccountabilityRepo {
   Future<List<AccountabilityEntry>> getEntries({int limit = 10, int offset = 0});
+  Future<List<AccountabilityEntry>> getEntriesByIdentification(AccountabilityIdentification identification);
+
   Future<AccountabilityEntry> getById(int id);
   Future<AccountabilityEntry?> exists(AccountabilityEntryRequest req);
   Future<AccountabilityEntry> add(AccountabilityEntryRequest req);

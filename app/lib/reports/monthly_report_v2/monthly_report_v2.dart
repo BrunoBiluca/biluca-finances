@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/components/table.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/components/base_page.dart';
@@ -29,6 +30,7 @@ class MonthlyReportV2 extends StatefulWidget {
 class _MonthlyReportV2State extends State<MonthlyReportV2> {
   late DateTime _selectedDate;
   late CurrentMonthReportService _service;
+  StreamSubscription? _subscription;
 
   @override
   void initState() {
@@ -41,6 +43,9 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
     setState(() {
       _selectedDate = date;
       _service = GetIt.I<CurrentMonthReportService>(param1: _selectedDate);
+      _subscription = _service.onChange.listen((_) {
+        updateDateSelected(_selectedDate);
+      });
     });
   }
 
@@ -134,6 +139,18 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
                         SummaryValuesSection(),
                         const SizedBox(height: 20),
                         Text(
+                          "Receitas por identificação",
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        const SizedBox(height: 20),
+                        futureHandler(
+                          _service.incomesByIdentification(),
+                          (data) => IdentificationsViewSection(
+                            data as List<IdentificationReportInfo>,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
                           "Despesas por identificação",
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
@@ -141,7 +158,6 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
                         futureHandler(
                           _service.expensesByIdentification(),
                           (data) => IdentificationsViewSection(
-                            AccountabilityIdentificationType.expense,
                             data as List<IdentificationReportInfo>,
                           ),
                         ),

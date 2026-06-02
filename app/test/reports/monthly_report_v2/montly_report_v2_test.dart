@@ -11,12 +11,12 @@ import '../../_helpers/ignore_overflow_erros.dart';
 class MockMonthlyReportService extends Mock implements CurrentMonthReportService {}
 
 void main() {
-  testWidgets("should show summary values", (tester) async {
-    FlutterError.onError = ignoreOverflowErrors;
+  var mockReportService = MockMonthlyReportService();
 
-    final mock = MockMonthlyReportService();
+  setUp(() async {
+    mockReportService = MockMonthlyReportService();
     when(
-      () => mock.summaryBalance(),
+      () => mockReportService.summaryBalance(),
     ).thenAnswer((_) => Future.delayed(
         const Duration(seconds: 1),
         () => {
@@ -24,7 +24,7 @@ void main() {
               "related": 50.0,
             }));
     when(
-      () => mock.summaryExpenses(),
+      () => mockReportService.summaryExpenses(),
     ).thenAnswer((_) => Future.delayed(
         const Duration(seconds: 1),
         () => {
@@ -32,7 +32,7 @@ void main() {
               "related": 100.0,
             }));
     when(
-      () => mock.summaryIncomes(),
+      () => mockReportService.summaryIncomes(),
     ).thenAnswer((_) => Future.delayed(
         const Duration(seconds: 1),
         () => {
@@ -40,9 +40,23 @@ void main() {
               "related": 150.0,
             }));
 
-    GetIt.I.registerFactoryParam<CurrentMonthReportService, DateTime, void>((date, _) => mock);
+    when(
+      () => mockReportService.expensesByIdentification(),
+    ).thenAnswer((_) => Future.value([]));
 
+    when(
+      () => mockReportService.incomesByIdentification(),
+    ).thenAnswer((_) => Future.value([]));
+
+    GetIt.I.registerFactoryParam<CurrentMonthReportService, DateTime, void>(
+      (date, _) => mockReportService,
+    );
     initializeDateFormatting('pt_BR');
+  });
+
+  testWidgets("should show summary values", (tester) async {
+    FlutterError.onError = ignoreOverflowErrors;
+
     await tester.pumpWidget(
       MaterialApp(
         title: 'Flutter Demo',

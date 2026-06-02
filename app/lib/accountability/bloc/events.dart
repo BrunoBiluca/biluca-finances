@@ -8,6 +8,9 @@ abstract class AccountabilityEvent extends Equatable {
 }
 
 class FetchAccountabilityEntries extends AccountabilityEvent {
+  final AccountabilityIdentification? identification;
+  const FetchAccountabilityEntries({this.identification});
+
   @override
   List<Object> get props => [];
 }

@@ -15,7 +15,12 @@ class AccountabilityIdentification {
 
   factory AccountabilityIdentification(String description, Color color) {
     return AccountabilityIdentification._(
-        const Uuid().v4(), description, color, Icons.help_outline, AccountabilityIdentificationType.expense);
+      const Uuid().v4(),
+      description,
+      color,
+      Icons.help_outline,
+      AccountabilityIdentificationType.expense,
+    );
   }
 
   factory AccountabilityIdentification.fromMap(Map<String, dynamic> m) {

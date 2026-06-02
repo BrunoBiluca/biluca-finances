@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
@@ -10,6 +11,18 @@ class CurrentMonthReportService {
   final AccountabilityMonthService current;
   final AccountabilityMonthService related;
   CurrentMonthReportService._(this.current, this.related);
+
+  final _controller = StreamController<void>();
+
+  Stream<void> get onChange => _controller.stream;
+
+  void emitRefresh() {
+    _controller.add(null);
+  }
+
+  void dispose() {
+    _controller.close();
+  }
 
   factory CurrentMonthReportService(DateTime month) {
     return CurrentMonthReportService._(

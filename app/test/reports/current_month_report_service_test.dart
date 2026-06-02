@@ -20,6 +20,7 @@ void main() {
 
     // receitas
     var idSalario = AccountabilityIdentification("salário", Colors.red);
+    idSalario.type = AccountabilityIdentificationType.income;
 
     var current = MockAccountabilityMonthService();
     when(() => current.getTotalByIdentification()).thenAnswer((_) async => Future.value([

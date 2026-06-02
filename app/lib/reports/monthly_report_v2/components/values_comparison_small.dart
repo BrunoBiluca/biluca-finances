@@ -7,7 +7,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ValuesComparisonSmall extends StatelessWidget {
   final ValuesRelation values;
-  const ValuesComparisonSmall(this.values, {super.key});
+  final String? label;
+  const ValuesComparisonSmall(this.values, {super.key, this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,16 @@ class ValuesComparisonSmall extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                 ),
+                label != null ? const SizedBox(width: 8) : Container(),
+                label != null
+                    ? Text(
+                        label!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: theme["txtColor"],
+                              fontWeight: FontWeight.bold,
+                            ),
+                      )
+                    : Container(),
               ],
             ),
           ),

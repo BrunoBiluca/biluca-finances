@@ -148,7 +148,7 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
     await db.rawInsert("""
     INSERT INTO accountability_identifications (id, description, color, icon, type, insertedAt, updatedAt)
-    VALUES (?, ?, ?, ?, ?, ?);
+    VALUES (?, ?, ?, ?, ?, ?, ?);
     """, [
       identificationMap["id"],
       identificationMap["description"],
@@ -196,5 +196,38 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
     }
 
     return entry;
+  }
+
+  @override
+  Future<List<AccountabilityEntry>> getEntriesByIdentification(AccountabilityIdentification identification) async {
+    return await db.rawQuery(
+      """
+    select 
+      a.*, 
+      ai.id as ai_id,
+      ai.description as ai_description,
+      ai.color as ai_color,
+      ai.icon as ai_icon,
+      ai.type as ai_type,
+      strftime('%m/%Y', a.createdAt) AS month
+    from accountability a
+    left join accountability_identifications ai on a.identification_id = ai.id
+    AND a.identification_id = '${identification.id}'
+    order by a.createdAt desc
+    """,
+    ).then((value) => value.map(
+          (e) {
+            var ai = <String, dynamic>{};
+            for (var key in e.keys) {
+              if (key.startsWith('ai_') && e[key] != null) {
+                ai[key.replaceFirst('ai_', '')] = e[key];
+              }
+            }
+            return AccountabilityEntry.fromMap({
+              'identification': ai.isEmpty ? null : ai,
+              ...e,
+            });
+          },
+        ).toList());
   }
 }
