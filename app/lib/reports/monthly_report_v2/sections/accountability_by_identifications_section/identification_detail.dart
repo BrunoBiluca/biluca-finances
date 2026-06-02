@@ -2,13 +2,13 @@ import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/components/table.dart';
+import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/components/values_comparison_small.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +72,8 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                     ValuesRelation(
                       widget.idReportInfo.current,
                       widget.idReportInfo.related,
-                      lessIsPositite: true,
+                      lessIsPositite:
+                          widget.idReportInfo.identification.type == AccountabilityIdentificationType.expense,
                     ),
                   ),
                 ],

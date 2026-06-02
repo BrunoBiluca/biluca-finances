@@ -10,7 +10,7 @@ import 'package:biluca_financas/components/base_page.dart';
 import 'package:biluca_financas/components/mouse_back_button_listener.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/sections/identifications_view_section.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/identifications_view_section.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
