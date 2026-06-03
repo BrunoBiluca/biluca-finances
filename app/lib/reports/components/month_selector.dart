@@ -1,5 +1,8 @@
 import 'package:biluca_financas/common/extensions/string_extensions.dart';
+import 'package:biluca_financas/reports/accountability_month_stats.dart';
+import 'package:biluca_financas/reports/accountability_stats_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 class MonthSelector extends StatefulWidget {
@@ -12,10 +15,10 @@ class MonthSelector extends StatefulWidget {
 }
 
 class _MonthSelectorState extends State<MonthSelector> {
-  final DateFormat dateformat = DateFormat("MMMM yyyy", "pt_BR");
+  final DateFormat dateformat = DateFormat("yyyy/MM", "pt_BR");
 
   late String _selectedMonth;
-  late List<String> availableMonths = [];
+  late List<AccountabilityMonthStats> availableMonths = [];
 
   @override
   void initState() {
@@ -24,16 +27,14 @@ class _MonthSelectorState extends State<MonthSelector> {
     super.initState();
   }
 
-  void fillMonths() {
-    var start = DateTime.now();
-    availableMonths = [];
-    for (var year = 2022; year <= start.year; year++) {
-      for (var month = 1; month <= 12; month++) {
-        if (month > start.month && year == start.year) {
-          break;
-        }
-        availableMonths.add(formatDate(year, month));
-      }
+  void fillMonths() async {
+    var service = GetIt.I<AccountabilityStatsService>();
+    var result = await service.getAllMonthsWithAccountability(fillBlanks: true);
+
+    if (mounted) {
+      setState(() {
+        availableMonths = result;
+      });
     }
   }
 
@@ -46,7 +47,11 @@ class _MonthSelectorState extends State<MonthSelector> {
     Color color = Theme.of(context).textTheme.displayLarge!.color!;
 
     return DecoratedBox(
-      decoration: BoxDecoration(border: Border(bottom: BorderSide(width: 4, color: color))),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(width: 4, color: color),
+        ),
+      ),
       child: Row(
         children: [
           Icon(
@@ -70,7 +75,14 @@ class _MonthSelectorState extends State<MonthSelector> {
                 widget.onDateChanged(parseDate());
               });
             },
-            items: availableMonths.map((m) => DropdownMenuItem<String>(value: m, child: Text(m))).toList(),
+            items: availableMonths
+                .map(
+                  (m) => DropdownMenuItem<String>(
+                    value: m.month,
+                    child: Text(m.month + (m.entriesCount == 0 ? " (empty)" : "")),
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),

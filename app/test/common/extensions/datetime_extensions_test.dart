@@ -24,4 +24,30 @@ void main() {
     expect(result.month, 11);
     expect(result.year, 2023);
   });
+
+  test("deve avançar para o próximo mês", () {
+    var date = DateTime(2024, 9, 1);
+
+    expect(date.addMonth(1).day, 1);
+    expect(date.addMonth(1).month, 10);
+    expect(date.addMonth(1).year, date.year);
+  });
+
+  test("deve avançar para o próximo mês e ano", () {
+    var date = DateTime(2024, 12, 1);
+
+    var result = date.addMonth(1);
+    expect(result.day, 1);
+    expect(result.month, 1);
+    expect(result.year, 2025);
+  });
+
+  test("deve avançar avançar o total de mês idendependente da quantidade", () {
+    var date = DateTime(2024, 12, 1);
+
+    var result = date.addMonth(13);
+    expect(result.day, 1);
+    expect(result.month, 1);
+    expect(result.year, 2026);
+  });
 }
