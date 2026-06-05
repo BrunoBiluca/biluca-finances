@@ -9,7 +9,8 @@ import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/components/values_comparison_small.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/components/values_comparison_full_text.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/identification_report_info.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +28,11 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
   bool isHover = false;
   @override
   Widget build(BuildContext context) {
+    var id = widget.idReportInfo.identification;
+    var current = widget.idReportInfo.current;
+    var lastMonth = widget.idReportInfo.related;
+    var avgRecentMonts = widget.idReportInfo.avgRecentMonts;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: AnimatedContainer(
@@ -45,10 +51,10 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconHighlight(
-                    bgColor: widget.idReportInfo.identification.color,
-                    borderColor: widget.idReportInfo.identification.color,
-                    txtColor: widget.idReportInfo.identification.color.adaptByLuminance(),
-                    icon: widget.idReportInfo.identification.icon,
+                    bgColor: id.color,
+                    borderColor: id.color,
+                    txtColor: id.color.adaptByLuminance(),
+                    icon: id.icon,
                   ),
                   const SizedBox(width: 20),
                   Expanded(
@@ -57,23 +63,29 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          widget.idReportInfo.identification.description,
+                          id.description,
                           style: Theme.of(context).textTheme.displaySmall!,
                         ),
                         Text(
-                          Formatter.value(widget.idReportInfo.current),
+                          Formatter.value(current),
                           style: Theme.of(context).textTheme.displayLarge!,
                         ),
+                        const SizedBox(height: 20),
+                        ValuesComparisonFullText.from(
+                          current,
+                          avgRecentMonts,
+                          id.type == AccountabilityIdentificationType.expense,
+                          suffix: "em relação aos últimos 12 meses",
+                        )
                       ],
                     ),
                   ),
                   const SizedBox(width: 20),
                   ValuesComparisonSmall(
                     ValuesRelation(
-                      widget.idReportInfo.current,
-                      widget.idReportInfo.related,
-                      lessIsPositite:
-                          widget.idReportInfo.identification.type == AccountabilityIdentificationType.expense,
+                      current,
+                      lastMonth,
+                      lessIsPositite: id.type == AccountabilityIdentificationType.expense,
                     ),
                   ),
                 ],

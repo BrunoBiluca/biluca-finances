@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/identification_report_info.dart';
 import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 
@@ -64,6 +64,14 @@ class CurrentMonthReportService {
         id.related = i.total!;
       }
     }
+
+    var accIncomes = await current.getAccumulatedMeansByIdentification();
+    for (var i in accIncomes) {
+      var id = result.firstWhereOrNull((r) => r.identification.id == i.field.id);
+      if (id != null) {
+        id.avgRecentMonts = i.mean!;
+      }
+    }
     return result;
   }
 
@@ -86,6 +94,14 @@ class CurrentMonthReportService {
         result.add(IdentificationReportInfo(identification: i.field, related: i.total!));
       } else {
         id.related = i.total!;
+      }
+    }
+
+    var accIncomes = await current.getAccumulatedMeansByIdentification();
+    for (var i in accIncomes) {
+      var id = result.firstWhereOrNull((r) => r.identification.id == i.field.id);
+      if (id != null) {
+        id.avgRecentMonts = i.mean!;
       }
     }
     return result;

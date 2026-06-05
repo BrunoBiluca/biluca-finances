@@ -127,14 +127,18 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
             ),
             DataCell(
               Text(
-                entry.descriptionAlt ?? entry.description,
+                entry.containsKey('descriptionAlt') ? entry.descriptionAlt ?? entry.description : entry.description,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
-              onTap: () => editText(
-                context,
-                entry.descriptionAlt ?? entry.description,
-                (updatedText) => widget.onUpdate(entry..descriptionAlt = updatedText),
-              ),
+              onTap: () {
+                if (entry.containsKey('descriptionAlt')) {
+                  editText(
+                    context,
+                    entry.descriptionAlt ?? entry.description,
+                    (updatedText) => widget.onUpdate(entry..descriptionAlt = updatedText),
+                  );
+                }
+              },
             ),
             DataCell(
               RealCurrency(number: entry.value),

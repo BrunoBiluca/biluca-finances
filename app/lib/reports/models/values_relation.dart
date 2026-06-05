@@ -7,11 +7,15 @@ class ValuesRelation {
   final double current;
   final double related;
 
-  final bool lessIsPositite;
+  final bool _lessIsPositite;
   late double percentage;
   late ValuesRelationType type;
 
-  ValuesRelation(this.current, this.related, {this.lessIsPositite = false}) {
+  ValuesRelation(
+    this.current,
+    this.related, {
+    bool lessIsPositite = false,
+  }) : _lessIsPositite = lessIsPositite {
     if (current == 0) {
       percentage = -1;
       type = ValuesRelationType.unknown;
@@ -23,7 +27,11 @@ class ValuesRelation {
     type = SwitchAdv(percentage)
         .mapIf((v) => v == 0, ValuesRelationType.neutral)
         .mapIf((v) => !percentage.isFinite, ValuesRelationType.unknown)
-        .mapIf((v) => !((v > 0) ^ !lessIsPositite), ValuesRelationType.positive)
+        .mapIf((v) => !((v > 0) ^ !_lessIsPositite), ValuesRelationType.positive)
         .resolve(unresolve: ValuesRelationType.negative);
   }
+
+  bool itIncreased() => percentage > 0;
+  bool itDecreased() => percentage < 0;
+  bool itMaintained() => percentage == 0;
 }

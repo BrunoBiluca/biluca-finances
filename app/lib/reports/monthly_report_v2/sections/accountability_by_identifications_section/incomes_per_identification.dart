@@ -1,7 +1,7 @@
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/identifications_view_section.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/services/identification_rreport_info.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/services/identification_report_info.dart';
 import 'package:flutter/material.dart';
 
 class IncomesPerIdentification extends StatelessWidget {

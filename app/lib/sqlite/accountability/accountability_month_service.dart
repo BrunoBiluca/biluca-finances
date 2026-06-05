@@ -126,7 +126,13 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
 
     var result = await db.rawQuery(
       """
-      select ai.id, ai.description, ai.color, ai.icon, a.mean
+      select 
+        ai.id, 
+        ai.description, 
+        ai.color, 
+        ai.icon, 
+        ai.type,
+        a.mean
       from (
         select identification_id,  AVG(total) as mean 
         from(
