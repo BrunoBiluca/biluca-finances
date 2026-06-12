@@ -127,17 +127,15 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
             ),
             DataCell(
               Text(
-                entry.containsKey('descriptionAlt') ? entry.descriptionAlt ?? entry.description : entry.description,
+                entry.descriptionAlt ?? entry.description,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
               onTap: () {
-                if (entry.containsKey('descriptionAlt')) {
-                  editText(
-                    context,
-                    entry.descriptionAlt ?? entry.description,
-                    (updatedText) => widget.onUpdate(entry..descriptionAlt = updatedText),
-                  );
-                }
+                editText(
+                  context,
+                  entry.descriptionAlt ?? entry.description,
+                  (updatedText) => widget.onUpdate(entry..descriptionAlt = updatedText),
+                );
               },
             ),
             DataCell(

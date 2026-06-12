@@ -70,7 +70,7 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
       DateTime.now().toIso8601String(),
       DateTime.now().toIso8601String(),
       identificationId,
-      null,
+      req.descriptionAlt,
     ]);
 
     return getById(newId);
