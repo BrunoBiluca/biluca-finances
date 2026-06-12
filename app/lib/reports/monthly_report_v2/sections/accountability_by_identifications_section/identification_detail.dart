@@ -76,7 +76,28 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                           avgRecentMonts,
                           id.type == AccountabilityIdentificationType.expense,
                           suffix: "em relação aos últimos 12 meses",
-                        )
+                        ),
+                        const SizedBox(height: 10),
+                        RichText(
+                          text: TextSpan(
+                            text: "Representa ",
+                            style: Theme.of(context).textTheme.bodySmall!,
+                            children: [
+                              TextSpan(
+                                text: Formatter.relationWithoutSign(widget.idReportInfo.currentPercentage),
+                                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                              TextSpan(
+                                text: id.type == AccountabilityIdentificationType.expense
+                                    ? " de despesas"
+                                    : " de receitas",
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),

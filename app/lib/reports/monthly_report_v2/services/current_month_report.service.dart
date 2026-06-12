@@ -52,8 +52,19 @@ class CurrentMonthReportService {
         .toList();
 
     List<IdentificationReportInfo> result = [];
+    var totalExpenses = 0.0;
     for (var i in identifications) {
-      result.add(IdentificationReportInfo(identification: i.field, current: i.total!));
+      totalExpenses += i.total!;
+    }
+
+    for (var i in identifications) {
+      result.add(
+        IdentificationReportInfo(
+          identification: i.field,
+          current: i.total!,
+          currentPercentage: i.total! / totalExpenses,
+        ),
+      );
     }
 
     for (var i in relatedMonth) {
@@ -72,6 +83,7 @@ class CurrentMonthReportService {
         id.avgRecentMonts = i.mean!;
       }
     }
+
     return result;
   }
 
@@ -84,8 +96,19 @@ class CurrentMonthReportService {
         .toList();
 
     List<IdentificationReportInfo> result = [];
+    var totalIncomes = 0.0;
     for (var i in identifications) {
-      result.add(IdentificationReportInfo(identification: i.field, current: i.total!));
+      totalIncomes += i.total!;
+    }
+
+    for (var i in identifications) {
+      result.add(
+        IdentificationReportInfo(
+          identification: i.field,
+          current: i.total!,
+          currentPercentage: i.total! / totalIncomes,
+        ),
+      );
     }
 
     for (var i in relatedMonth) {

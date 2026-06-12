@@ -35,7 +35,7 @@ class ValuesComparisonFullText extends StatelessWidget {
         : values.itDecreased()
             ? "Diminuiu em"
             : "Mantido";
-            
+
     return RichText(
       text: TextSpan(
         text: "$prefix ",
@@ -55,6 +55,5 @@ class ValuesComparisonFullText extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

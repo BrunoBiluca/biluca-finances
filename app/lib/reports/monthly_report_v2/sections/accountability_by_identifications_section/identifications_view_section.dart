@@ -1,4 +1,5 @@
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/identification_detail.dart';
+import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/identifications_percentage_chart.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/identification_report_info.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class IdentificationsViewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: data.isEmpty
@@ -29,7 +31,11 @@ class IdentificationsViewSection extends StatelessWidget {
           width: 20,
         ),
         Expanded(
-          child: const Text("Gráfico de Waffle"),
+          child: SizedBox(
+            width: 300,
+            height: 300,
+            child: IdentificationsPercentageChart(data: data),
+          ),
         ),
       ],
     );
