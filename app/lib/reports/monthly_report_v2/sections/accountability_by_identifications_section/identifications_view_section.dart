@@ -31,11 +31,7 @@ class IdentificationsViewSection extends StatelessWidget {
           width: 20,
         ),
         Expanded(
-          child: SizedBox(
-            width: 300,
-            height: 300,
-            child: IdentificationsPercentageChart(data: data),
-          ),
+          child: IdentificationsPercentageChart(data: data),
         ),
       ],
     );

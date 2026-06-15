@@ -10,7 +10,7 @@ class IdentificationsPercentageChart extends StatelessWidget {
   final blue1 = Colors.lightBlueAccent;
   final blue2 = Colors.lightBlue;
 
-  final radius = 20.0;
+  final size = 35.0;
   final maxX = 10.0;
   final maxY = 10.0;
 
@@ -19,11 +19,11 @@ class IdentificationsPercentageChart extends StatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: SizedBox(
-        height: 300,
-        width: 300,
+        height: 400,
+        width: 400,
         child: ScatterChart(
           ScatterChartData(
-            scatterSpots: flutterLogoData(),
+            scatterSpots: getScatterStops(),
             minX: 0,
             maxX: maxX,
             minY: 0,
@@ -48,23 +48,36 @@ class IdentificationsPercentageChart extends StatelessWidget {
     );
   }
 
-  List<ScatterSpot> flutterLogoData() {
-    var result = List<ScatterSpot>.empty(growable: true);
-
+  List<ScatterSpot> getScatterStops() {
     var sortedData = data.sorted((a, b) => b.currentPercentage.compareTo(a.currentPercentage));
+    var totalSpots = maxX * maxY;
+    var spotsPerCategory = sortedData.map((d) => (d.currentPercentage * totalSpots).round()).toList();
 
-    for (var i = 0; i < maxX; i++) {
-      for (var j = 0; j < maxY; j++) {
+    var result = List<ScatterSpot>.empty(growable: true);
+    int categoryIndex = 0;
+    int spotsInCurrentCategory = 0;
+    for (var j = maxY - 1; j >= 0; j--) {
+      for (var i = 0; i < maxX; i++) {
+        if (categoryIndex >= sortedData.length) break;
+
         result.add(
           ScatterSpot(
             i.toDouble(),
             j.toDouble(),
             dotPainter: FlDotSquarePainter(
-              color: blue1,
-              size: radius,
+              color: sortedData[categoryIndex].identification.color,
+              strokeColor: sortedData[categoryIndex].identification.color,
+              size: size,
             ),
           ),
         );
+
+        spotsInCurrentCategory++;
+
+        if (spotsInCurrentCategory >= spotsPerCategory[categoryIndex]) {
+          categoryIndex++;
+          spotsInCurrentCategory = 0;
+        }
       }
     }
 
