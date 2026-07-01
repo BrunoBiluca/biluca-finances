@@ -1,4 +1,3 @@
-import 'package:biluca_financas/components/base_page.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -13,8 +12,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
-    return const BasePage(
-      child: Text("Biluca Finanças é um aplicativo para controle de orçamentos pessoais."),
-    );
+    return Text("Biluca Finanças é um aplicativo para controle de orçamentos pessoais.");
   }
 }

@@ -24,73 +24,69 @@ class AccountabilitySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      margin: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              SizedBox(
-                width: 250,
-                child: OutlinedButton(
-                  onPressed: () => import(context),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(FontAwesomeIcons.fileImport),
-                      SizedBox(width: 20),
-                      Text('Importar'),
-                    ],
-                  ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              width: 250,
+              child: OutlinedButton(
+                onPressed: () => import(context),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(FontAwesomeIcons.fileImport),
+                    SizedBox(width: 20),
+                    Text('Importar'),
+                  ],
                 ),
               ),
-              const SizedBox(width: 20),
-              SizedBox(
-                width: 250,
-                child: TextButton(
-                  onPressed: () => newEntry(context),
-                  child: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_circle_outline),
-                      SizedBox(width: 20),
-                      Text('Nova entrada'),
-                    ],
-                  ),
+            ),
+            const SizedBox(width: 20),
+            SizedBox(
+              width: 250,
+              child: TextButton(
+                onPressed: () => newEntry(context),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_circle_outline),
+                    SizedBox(width: 20),
+                    Text('Nova entrada'),
+                  ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-              builder: (context, state) {
-                if (state.entries.isEmpty) {
-                  return const Center(child: Text('Nenhuma entrada registrada'));
-                }
-
-                return AccountabilityTable(
-                  entries: state.entries,
-                  onUpdate: (entry) => context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry)),
-                  onRemove: (entry) => context.read<AccountabilityBloc>()..add(DeleteAccountabilityEntry(entry)),
-                );
-              },
             ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Expanded(
+          child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+            builder: (context, state) {
+              if (state.entries.isEmpty) {
+                return const Center(child: Text('Nenhuma entrada registrada'));
+              }
+    
+              return AccountabilityTable(
+                entries: state.entries,
+                onUpdate: (entry) => context.read<AccountabilityBloc>().add(UpdateAccountabilityEntry(entry)),
+                onRemove: (entry) => context.read<AccountabilityBloc>()..add(DeleteAccountabilityEntry(entry)),
+              );
+            },
           ),
-          const SizedBox(height: 20),
-          OutlinedButton(
-            onPressed: () => context.read<AccountabilityBloc>().add(LoadMoreAccountabilityEntries()),
-            child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
-              builder: (context, state) => Text('(${state.entries.length}) Carregar mais'),
-            ),
+        ),
+        const SizedBox(height: 20),
+        OutlinedButton(
+          onPressed: () => context.read<AccountabilityBloc>().add(LoadMoreAccountabilityEntries()),
+          child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+            builder: (context, state) => Text('(${state.entries.length}) Carregar mais'),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

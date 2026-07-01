@@ -60,8 +60,8 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
       _dataColumn("Criação - $createAtMonth", columnStyle, ColumnSize.S),
       _dataColumn("Descrição", columnStyle, ColumnSize.L),
       _dataColumn("Valor", columnStyle, ColumnSize.S),
-      _dataColumn("Identificação", columnStyle, ColumnSize.L),
-      _dataColumn("", columnStyle, ColumnSize.S),
+      _dataColumn("Identificação", columnStyle, ColumnSize.M),
+      _dataColumn("Ações", columnStyle, ColumnSize.S),
     ];
 
     if (widget.showInsertedAt) {
@@ -100,7 +100,7 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
         size: size,
         label: Text(
           text,
-          style: style.copyWith(fontWeight: FontWeight.bold),
+          style: style.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
         ),
       );
 

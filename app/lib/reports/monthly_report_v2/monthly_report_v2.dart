@@ -5,7 +5,6 @@ import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/components/table.dart';
 import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
-import 'package:biluca_financas/components/base_page.dart';
 import 'package:biluca_financas/components/mouse_back_button_listener.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/expenses_per_indentification.dart';
@@ -100,56 +99,49 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
   @override
   Widget build(BuildContext context) {
     return MouseBackButtonListener(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Relatório mensal'),
-        ),
-        body: MonthlyReportServiceProvider(
-          service: _service,
-          child: BasePage(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  MonthSelector(
-                    current: _selectedDate,
-                    onDateChanged: updateDateSelected,
-                  ),
-                  OutlinedButton(
-                    onPressed: () => displayReportData(),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_circle_outline),
-                        SizedBox(width: 20),
-                        Text('Dados do relatório'),
-                      ],
-                    ),
-                  )
-                ]),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SummaryValuesSection(),
-                        const SizedBox(height: 60),
-                        SummaryLastMonthsSection(),
-                        const SizedBox(height: 60),
-                        IncomesPerIdentification(service: _service),
-                        const SizedBox(height: 60),
-                        ExpensesPerIndentification(service: _service),
-                        const SizedBox(height: 60),
-                      ],
-                    ),
-                  ),
+      child: MonthlyReportServiceProvider(
+        service: _service,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              MonthSelector(
+                current: _selectedDate,
+                onDateChanged: updateDateSelected,
+              ),
+              OutlinedButton(
+                onPressed: () => displayReportData(),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_circle_outline),
+                    SizedBox(width: 20),
+                    Text('Dados do relatório'),
+                  ],
                 ),
-              ],
+              )
+            ]),
+            const SizedBox(height: 20),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SummaryValuesSection(),
+                    const SizedBox(height: 60),
+                    SummaryLastMonthsSection(),
+                    const SizedBox(height: 60),
+                    IncomesPerIdentification(service: _service),
+                    const SizedBox(height: 60),
+                    ExpensesPerIndentification(service: _service),
+                    const SizedBox(height: 60),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

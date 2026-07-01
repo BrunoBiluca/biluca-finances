@@ -1,8 +1,6 @@
-import 'package:biluca_financas/accountability/page.dart';
-import 'package:biluca_financas/home.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/monthly_report_v2.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Sidebar extends StatefulWidget {
   const Sidebar({
@@ -19,25 +17,19 @@ class _SidebarState extends State<Sidebar> {
       'title': 'Home',
       'icon': Icons.home,
       'color': Colors.purpleAccent,
-      'fac': () {
-        return Home();
-      }
+      'route': '/',
     },
     {
-      'title': 'Relatório do mês (Novo)',
+      'title': 'Relatório do mês',
       'icon': Icons.home,
       'color': Colors.purpleAccent,
-      'fac': () {
-        return MonthlyReportV2();
-      }
+      'route': "/monthly-report",
     },
     {
       'title': 'Prestação de contas',
       'icon': Icons.home,
       'color': Colors.lightGreen,
-      'fac': () {
-        return AccountabilityPage();
-      }
+      'route': "/accountability",
     },
   ];
 
@@ -55,12 +47,27 @@ class _SidebarState extends State<Sidebar> {
           ),
         ),
         ..._pages.mapIndexed(
-            (index, page) => item(context, page['icon'], page['color'], page['title'], page['fac'](), index)),
+          (index, page) => item(
+            context,
+            page['icon'],
+            page['color'],
+            page['title'],
+            page['route'],
+            index,
+          ),
+        ),
       ]),
     );
   }
 
-  ListTile item(BuildContext context, IconData icon, Color iconColor, String text, Widget widget, int pageIndex) {
+  ListTile item(
+    BuildContext context,
+    IconData icon,
+    Color iconColor,
+    String text,
+    String route,
+    int pageIndex,
+  ) {
     return ListTile(
       selected: pageIndex == selectedPage,
       selectedColor: Colors.black,
@@ -81,12 +88,8 @@ class _SidebarState extends State<Sidebar> {
       title: Text(text),
       onTap: () {
         if (pageIndex == selectedPage) return;
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => widget),
-        );
         setState(() => selectedPage = pageIndex);
+        context.go(route);
       },
     );
   }
