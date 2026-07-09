@@ -20,13 +20,13 @@ class _SidebarState extends State<Sidebar> {
     },
     {
       'title': 'Relatório do mês',
-      'icon': Icons.home,
+      'icon': Icons.dashboard,
       'color': Colors.purpleAccent,
       'route': "/monthly-report",
     },
     {
       'title': 'Prestação de contas',
-      'icon': Icons.home,
+      'icon': Icons.table_view,
       'color': Colors.lightGreen,
       'route': "/accountability",
     },
@@ -43,41 +43,14 @@ class _SidebarState extends State<Sidebar> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: Text(
-                  isOpen ? "Navegação" : "N",
-                  style: Theme.of(context).textTheme.headlineSmall,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-            ],
-          ),
+          navTitle(),
           Expanded(
             child: ListView.separated(
               shrinkWrap: true,
               itemCount: _pages.length,
               separatorBuilder: (context, index) => SizedBox(height: 8),
               itemBuilder: (context, index) {
-                var page = _pages[index];
-                return isOpen
-                    ? itemFull(
-                        context,
-                        page['icon'],
-                        page['color'],
-                        page['title'],
-                        page['route'],
-                        index,
-                      )
-                    : itemShort(
-                        context,
-                        page['icon'],
-                        page['color'],
-                        page['route'],
-                        index,
-                      );
+                return isOpen ? itemFull(_pages[index], index) : itemShort(_pages[index], index);
               },
             ),
           ),
@@ -93,12 +66,23 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
+  Row navTitle() {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+          child: Text(
+            isOpen ? "Navegação" : "N",
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.left,
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget itemFull(
-    BuildContext context,
-    IconData icon,
-    Color iconColor,
-    String text,
-    String route,
+    dynamic page,
     int pageIndex,
   ) {
     return ListTile(
@@ -106,33 +90,14 @@ class _SidebarState extends State<Sidebar> {
       selectedColor: Colors.black,
       selectedTileColor: Colors.white,
       minTileHeight: 56,
-      leading: DecoratedBox(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(
-            icon,
-            color: iconColor,
-          ),
-        ),
-      ),
-      title: Text(text),
-      onTap: () {
-        if (pageIndex == selectedPage) return;
-        setState(() => selectedPage = pageIndex);
-        context.go(route);
-      },
+      leading: pageIcon(page),
+      title: Text(page['title']),
+      onTap: () => goToPage(pageIndex, page['route']),
     );
   }
 
   Widget itemShort(
-    BuildContext context,
-    IconData icon,
-    Color iconColor,
-    String route,
+    dynamic page,
     int pageIndex,
   ) {
     return ListTile(
@@ -143,24 +108,30 @@ class _SidebarState extends State<Sidebar> {
       horizontalTitleGap: 0,
       minLeadingWidth: 0,
       minTileHeight: 56,
-      title: DecoratedBox(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Icon(
-            icon,
-            color: iconColor,
-          ),
+      title: pageIcon(page),
+      onTap: () => goToPage(pageIndex, page['route']),
+    );
+  }
+
+  Widget pageIcon(dynamic page) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Theme.of(context).colorScheme.outline,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Icon(
+          page['icon'],
+          color: page['color'],
         ),
       ),
-      onTap: () {
-        if (pageIndex == selectedPage) return;
-        setState(() => selectedPage = pageIndex);
-        context.go(route);
-      },
     );
+  }
+
+  void goToPage(int pageIndex, String route) {
+    if (pageIndex == selectedPage) return;
+    setState(() => selectedPage = pageIndex);
+    context.go(route);
   }
 }
