@@ -54,18 +54,16 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
 
   @override
   Widget build(BuildContext context) {
-    var columnStyle = Theme.of(context).textTheme.headlineSmall!;
-
     var columns = [
-      _dataColumn("Criação - $createAtMonth", columnStyle, ColumnSize.S),
-      _dataColumn("Descrição", columnStyle, ColumnSize.L),
-      _dataColumn("Valor", columnStyle, ColumnSize.S),
-      _dataColumn("Identificação", columnStyle, ColumnSize.M),
-      _dataColumn("Ações", columnStyle, ColumnSize.S),
+      DataColumn2(label: Text("Criação - $createAtMonth"), size: ColumnSize.S),
+      DataColumn2(label: Text("Descrição"), size: ColumnSize.L),
+      DataColumn2(label: Text("Valor"), size: ColumnSize.S),
+      DataColumn2(label: Text("Identificação"), size: ColumnSize.M),
+      DataColumn2(label: Text("Ações"), fixedWidth: 80),
     ];
 
     if (widget.showInsertedAt) {
-      columns.insert(0, _dataColumn("Inserido em", columnStyle, ColumnSize.S));
+      columns.insert(0, DataColumn2(label: Text("Inserido em"), size: ColumnSize.S));
     }
 
     return DataTable2(
@@ -74,37 +72,27 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
       showBottomBorder: false,
       dividerThickness: 0,
       bottomMargin: 0,
-      headingRowColor: rowColor(Theme.of(context).colorScheme.secondary),
-      dataRowColor: rowColor(Theme.of(context).colorScheme.tertiary),
+      headingRowDecoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary),
+      headingTextStyle: Theme.of(context).textTheme.headlineSmall!.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.tertiary),
+      dataRowColor: WidgetStateProperty.resolveWith<Color?>(
+        (Set<WidgetState> states) {
+          if (states.contains(WidgetState.hovered)) {
+            return const Color.fromARGB(255, 85, 81, 81);
+          }
+          return null;
+        },
+      ),
       border: TableBorder.all(color: Theme.of(context).scaffoldBackgroundColor, width: 4),
       columns: columns,
       rows: [...widget.entries.map((entry) => _tableRow(context, entry))],
     );
   }
 
-  WidgetStateProperty<Color?> rowColor(Color c) {
-    return WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-      if (states.contains(WidgetState.hovered)) {
-        return c.withValues(alpha: 0.8);
-      }
-      return c;
-    });
-  }
-
-  DataColumn _dataColumn(
-    String text,
-    TextStyle style,
-    ColumnSize size,
-  ) =>
-      DataColumn2(
-        size: size,
-        label: Text(
-          text,
-          style: style.copyWith(fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-      );
-
-  DataRow _tableRow(BuildContext context, dynamic entry) {
+  DataRow2 _tableRow(BuildContext context, dynamic entry) {
     List<DataCell> optionalCells = [];
 
     if (widget.showInsertedAt) {
@@ -116,7 +104,7 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
       ));
     }
 
-    return DataRow(
+    return DataRow2(
       cells: optionalCells +
           [
             DataCell(
