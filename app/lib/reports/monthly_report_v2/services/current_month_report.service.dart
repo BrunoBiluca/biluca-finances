@@ -129,45 +129,4 @@ class CurrentMonthReportService {
     }
     return result;
   }
-
-  Future<Map<dynamic, dynamic>> getMeansByIdentification() async {
-    var incomes = await current.getIncomes();
-    var expenses = await current.getExpenses();
-
-    var accIncomes = await current.getAccumulatedIncomes();
-    var accExpenses = await current.getAccumulatedExpenses();
-
-    var values = {};
-    values["Receitas"] = {"desc": "Receitas", "field": null, "mean": accIncomes, "current": incomes};
-    values["Despesas"] = {"desc": "Despesas", "field": null, "mean": accExpenses, "current": expenses};
-
-    var valuesByIdentifications = SplayTreeMap();
-    var identifications = await current.getAccumulatedMeansByIdentification();
-    for (var i in identifications) {
-      valuesByIdentifications[i.field.description] = {
-        "desc": i.field.description,
-        "field": i.field,
-        "mean": i.mean,
-        "current": null
-      };
-    }
-
-    var currIdentifications = await current.getTotalByIdentification();
-    for (var i in currIdentifications) {
-      if (!valuesByIdentifications.containsKey(i.field.description)) {
-        valuesByIdentifications[i.field.description] = {
-          "desc": i.field.description,
-          "field": i.field,
-          "mean": null,
-          "current": i.total
-        };
-      } else {
-        valuesByIdentifications[i.field.description]["current"] = i.total;
-      }
-    }
-
-    values.addAll(valuesByIdentifications);
-
-    return values;
-  }
 }

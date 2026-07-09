@@ -28,11 +28,21 @@ void main() {
           GroupedBy(idCompras, total: -500.00),
           GroupedBy(idSalario, total: 500.00),
         ]));
+    when(() => current.getAccumulatedMeansByIdentification()).thenAnswer((_) async => Future.value([
+          GroupedBy(idSupermercado, total: 0, mean: 0.00),
+          GroupedBy(idCompras, total: 0, mean: 0.00),
+          GroupedBy(idSalario, total: 0, mean: 0.00),
+        ]));
 
     var related = MockAccountabilityMonthService();
     when(() => related.getTotalByIdentification()).thenAnswer((_) async => Future.value([
-          GroupedBy(idSupermercado, total: -500.00),
+          GroupedBy(idSupermercado, total: -500.00, mean: 0.00),
           GroupedBy(idLazer, total: -100.00),
+        ]));
+    when(() => related.getAccumulatedMeansByIdentification()).thenAnswer((_) async => Future.value([
+          GroupedBy(idSupermercado, total: 0, mean: 0.00),
+          GroupedBy(idCompras, total: 0, mean: 0.00),
+          GroupedBy(idSalario, total: 0, mean: 0.00),
         ]));
 
     GetIt.I.registerFactoryParam<AccountabilityMonthService, DateTime, void>(
