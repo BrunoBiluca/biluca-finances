@@ -1,12 +1,14 @@
 import 'package:biluca_financas/accountability/page.dart';
 import 'package:biluca_financas/app_layout.dart';
 import 'package:biluca_financas/home.dart';
+import 'package:biluca_financas/main.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/monthly_report_v2.dart';
 import 'package:go_router/go_router.dart';
 
 GoRouter routes() {
   return GoRouter(
     initialLocation: '/',
+    navigatorKey: navigatorKey,
     routes: [
       ShellRoute(
         builder: (context, state, child) => AppLayout(child: child),
