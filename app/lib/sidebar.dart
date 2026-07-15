@@ -25,6 +25,12 @@ class _SidebarState extends State<Sidebar> {
       'route': "/monthly-report",
     },
     {
+      'title': "Relatório anual",
+      'icon': Icons.space_dashboard,
+      'color': Colors.blueAccent,
+      'route': "/yearly-report",
+    },
+    {
       'title': 'Prestação de contas',
       'icon': Icons.table_view,
       'color': Colors.lightGreen,
