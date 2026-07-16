@@ -11,11 +11,13 @@ import 'package:biluca_financas/app.dart';
 import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:biluca_financas/reports/accountability_stats_service.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
+import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_month_service.dart';
 import 'package:biluca_financas/sqlite/accountability/import_service.dart';
 import 'package:biluca_financas/sqlite/db_provider.dart';
 import 'package:biluca_financas/sqlite/sqlite_accountability_stats_service.dart';
+import 'package:biluca_financas/sqlite/sqlite_yearly_report_service.dart';
 import 'package:biluca_financas/theme_manager.dart';
 import 'package:biluca_financas/themes/dark.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +91,14 @@ Future<void> setupDependencies() async {
   getIt.registerFactory<AccountabilityStatsService>(
     () => SqliteAccountabilityStatsService(
       db: getIt<Database>(),
+    ),
+  );
+
+  getIt.registerFactoryParam<YearlyReportService, DateTime, DateTime>(
+    (start, end) => SqliteYearlyReportService(
+      db: getIt<Database>(),
+      start: start,
+      end: end,
     ),
   );
 }
