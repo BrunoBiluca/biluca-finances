@@ -1,7 +1,7 @@
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
-import 'package:biluca_financas/reports/components/single_value_card/values_relation_indicator.dart';
-import 'package:biluca_financas/reports/components/single_value_card/values_relation_text.dart';
+import 'package:biluca_financas/reports/components/values_relation_indicator.dart';
+import 'package:biluca_financas/reports/components/values_relation_text.dart';
 import 'package:flutter/material.dart';
 
 class ConsolidatedValueCard extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/monthly_report_service.provider.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/components/consolidated_value_card.dart';
+import 'package:biluca_financas/reports/components/consolidated_value_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

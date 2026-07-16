@@ -1,6 +1,6 @@
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/components/values_comparison.dart';
+import 'package:biluca_financas/reports/components/values_comparison.dart';
 import 'package:flutter/material.dart';
 
 class ValuesComparisonSmall extends StatelessWidget {

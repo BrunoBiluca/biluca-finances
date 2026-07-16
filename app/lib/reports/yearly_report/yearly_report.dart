@@ -1,4 +1,5 @@
 import 'package:biluca_financas/reports/accountability_stats_service.dart';
+import 'package:biluca_financas/reports/components/single_value_card.dart';
 import 'package:biluca_financas/reports/yearly_report/year_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -26,6 +27,7 @@ class _YearlyReportState extends State<YearlyReport> {
         currentYear ??= snapshot.data!.first.year;
 
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             YearSelector(
               currentYear: currentYear!,
@@ -35,7 +37,37 @@ class _YearlyReportState extends State<YearlyReport> {
               },
             ),
             const SizedBox(height: 20),
-            Text(currentYear ?? "Nenhum ano selecionado"),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Resumo", style: Theme.of(context).textTheme.headlineSmall),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      spacing: 20,
+                      children: [
+                        Expanded(child: SingleValueCart(title: "Total de despesas", value: 10000)),
+                        Expanded(child: SingleValueCart(title: "Média mensal de despesas", value: 10000)),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisSize: MainAxisSize.max,
+                      spacing: 20,
+                      children: [
+                        Expanded(child: SingleValueCart(title: "Total de receitas", value: 10000)),
+                        Expanded(child: SingleValueCart(title: "Média mensal de receitas", value: 10000)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
           ],
         );
       },
