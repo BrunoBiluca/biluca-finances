@@ -124,6 +124,12 @@ if ($update_version_type -eq "current") {
 Write-Host "Registrando a nova versão..." -ForegroundColor Green
 
 $token = Get-Content "./secrets/release_token.txt"
+
+if (-Not $token) {
+    Write-Error "[ERRO] Token de acesso ao GitHub não encontrado. Crie um token e salve-o em ./secrets/release_token.txt"
+    Exit 1
+}
+
 $github_username = "BrunoBiluca"
 $github_repo = "biluca-finances"
 
@@ -171,6 +177,11 @@ $r = Invoke-WebRequest `
       "X-GitHub-Api-Version" = "2022-11-28"
   } `
   -Body $body
+
+if (-Not $r) {
+    Write-Error "[ERRO] Falha ao criar a publicação."
+    Exit 1
+}
 
 Write-Host "Release $newVersionLine criado." -ForegroundColor Green
 
