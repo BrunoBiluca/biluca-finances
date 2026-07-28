@@ -54,7 +54,6 @@ Métricas para monitorar:
 - [[RF 03.06 - Porcentagem representativa por identificador]]
 - [[RF 03.07 - Discretização dos identificadores pelos registros]]
 - [[RF 03.08 - Tabela com todas os registros do mês]]
-- 
 
 # Especificação de arquitetura
 
@@ -63,7 +62,7 @@ Métricas para monitorar:
 
 ## Requisitos não funcionais
 
-- 
+- [[RNF 01 - Responsividade do relatório]]
 
 
 ## Descrição de estratégias e soluções técnicas
@@ -76,7 +75,6 @@ Métricas para monitorar:
 
 # Esboços ou protótipos de UX
 
-- Tela: nome da tela
-- Imagem da tela
-- Explicação de cada elemento da tela
-- Explicação dos comportamentos da tela
+### Relatório mensal
+
+![[Relatório mensal alt 2 (Mockup)]]
