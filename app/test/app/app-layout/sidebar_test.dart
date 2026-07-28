@@ -43,9 +43,10 @@ void main() {
 
       expect(find.text('Home'), findsOneWidget);
       expect(find.text('Relatório do mês'), findsOneWidget);
+      expect(find.text('Relatório anual'), findsOneWidget);
       expect(find.text('Prestação de contas'), findsOneWidget);
 
-      expect(find.byIcon(Icons.home), findsAtLeast(3));
+      expect(find.byType(Icon), findsAtLeast(4));
       expect(find.byIcon(Icons.arrow_left), findsOneWidget);
       expect(find.byIcon(Icons.arrow_right), findsNothing);
     });
@@ -61,9 +62,10 @@ void main() {
 
       expect(find.text('Home'), findsNothing);
       expect(find.text('Relatório do mês'), findsNothing);
+      expect(find.text('Relatório anual'), findsNothing);
       expect(find.text('Prestação de contas'), findsNothing);
 
-      expect(find.byIcon(Icons.home), findsAtLeast(3));
+      expect(find.byType(Icon), findsAtLeast(4));
       expect(find.byIcon(Icons.arrow_right), findsOneWidget);
       expect(find.byIcon(Icons.arrow_left), findsNothing);
     });
