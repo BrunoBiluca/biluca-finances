@@ -1,6 +1,5 @@
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/common/math.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/identification_report_info.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -59,7 +58,7 @@ class IdentificationsByBarChart extends StatelessWidget {
           show: true,
           checkToShowHorizontalLine: (value) => value % 5 == 0,
           getDrawingHorizontalLine: (value) => FlLine(
-            color: Colors.grey.withOpacity(.5),
+            color: Colors.grey.withAlpha(128),
             strokeWidth: .5,
           ),
           drawVerticalLine: false,

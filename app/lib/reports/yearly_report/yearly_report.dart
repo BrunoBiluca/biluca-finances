@@ -1,4 +1,3 @@
-import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/accountability_stats_service.dart';
 import 'package:biluca_financas/reports/components/single_value_card.dart';
 import 'package:biluca_financas/reports/yearly_report/year_selector.dart';
