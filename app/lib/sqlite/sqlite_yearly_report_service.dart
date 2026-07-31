@@ -1,3 +1,4 @@
+import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -100,5 +101,48 @@ class SqliteYearlyReportService extends YearlyReportService {
           ),
         )
         .toList());
+  }
+
+  @override
+  Future<List<MonthlyIdentificationsSummary>> getMonthlyIdentificationsSummary() async {
+    var startDate = formatDate(start);
+    var endDate = formatDate(end);
+
+    var res = await db.rawQuery(
+      """
+      SELECT 
+        ai.id, 
+        ai.description, 
+        ai.color, 
+        ai.icon, 
+        ai.type, 
+        Sum(value) AS total, 
+        strftime('%m/%Y', createdAt) AS month
+      FROM accountability a
+      INNER JOIN accountability_identifications ai ON a.identification_id = ai.id
+      where a.createdAt BETWEEN '$startDate' AND '$endDate'
+      GROUP BY ai.id, month
+      """,
+    );
+
+    var ids = <AccountabilityIdentification>[];
+    for (var i in res) {
+      if (!ids.any((e) => e.id == i["id"])) {
+        ids.add(AccountabilityIdentification.fromMap(i));
+      }
+    }
+
+    var summaries = <MonthlyIdentificationsSummary>[];
+    for (var id in ids) {
+      var monthTotal = <String, double>{};
+      for (var r in res.where((e) => e["id"] == id.id)) {
+        monthTotal[r["month"] as String] = r["total"] as double;
+      }
+      summaries.add(MonthlyIdentificationsSummary(
+        identification: id,
+        monthTotal: monthTotal,
+      ));
+    }
+    return summaries;
   }
 }

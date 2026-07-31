@@ -1,6 +1,9 @@
+import 'package:biluca_financas/accountability/models/identification.dart';
+
 abstract class YearlyReportService {
   Future<YearlySummary> summary();
   Future<List<MonthlySummary>> getMonthlySummary();
+  Future<List<MonthlyIdentificationsSummary>> getMonthlyIdentificationsSummary();
 }
 
 class YearlySummary {
@@ -30,5 +33,14 @@ class MonthlySummary {
     required this.sumExpenses,
     required this.sumIncomes,
     required this.month,
+  });
+}
+
+class MonthlyIdentificationsSummary {
+  final AccountabilityIdentification identification;
+  final Map<String, double> monthTotal;
+  MonthlyIdentificationsSummary({
+    required this.identification,
+    required this.monthTotal,
   });
 }

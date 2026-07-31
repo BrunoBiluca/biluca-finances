@@ -23,24 +23,6 @@ class YearlySummaryCharts extends StatelessWidget {
       }
     }
 
-    List<FlSpot> incomes = res
-        .mapIndexed(
-          (int i, MonthlySummary e) => FlSpot(
-            i.toDouble(),
-            e.sumIncomes.abs(),
-          ),
-        )
-        .toList();
-
-    List<FlSpot> expenses = res
-        .mapIndexed(
-          (int i, MonthlySummary e) => FlSpot(
-            i.toDouble(),
-            e.sumExpenses.abs(),
-          ),
-        )
-        .toList();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -61,14 +43,28 @@ class YearlySummaryCharts extends StatelessWidget {
                   barWidth: 4,
                   isStrokeCapRound: true,
                   dotData: const FlDotData(show: true),
-                  spots: incomes,
+                  spots: res
+                      .mapIndexed(
+                        (int i, MonthlySummary e) => FlSpot(
+                          i.toDouble(),
+                          e.sumIncomes.abs(),
+                        ),
+                      )
+                      .toList(),
                 ),
                 LineChartBarData(
                   color: Colors.redAccent.withAlpha(150),
                   barWidth: 4,
                   isStrokeCapRound: true,
                   dotData: const FlDotData(show: true),
-                  spots: expenses,
+                  spots: res
+                      .mapIndexed(
+                        (int i, MonthlySummary e) => FlSpot(
+                          i.toDouble(),
+                          e.sumExpenses.abs(),
+                        ),
+                      )
+                      .toList(),
                 ),
               ],
               titlesData: FlTitlesData(
