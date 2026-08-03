@@ -103,24 +103,24 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
               },
             ),
             const SizedBox(height: 20),
-            currentIdentifications.isEmpty
-                ? const Text(
-                    'Nenhuma identificação encontrada',
-                    key: Key('no-identification-found'),
-                  )
-                : Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      controller: scrollController,
-                      child: Column(
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                controller: scrollController,
+                child: currentIdentifications.isEmpty
+                    ? const Text(
+                        'Nenhuma identificação encontrada',
+                        key: Key('no-identification-found'),
+                      )
+                    : Column(
                         children: [
                           ...currentIdentifications.mapIndexed(
                             (index, id) => renderIdentificationItem(context, index, id),
                           ),
                         ],
                       ),
-                    ),
-                  ),
+              ),
+            ),
           ],
         ),
       ),
