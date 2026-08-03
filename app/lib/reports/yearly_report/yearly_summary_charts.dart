@@ -1,3 +1,4 @@
+import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -23,6 +24,20 @@ class YearlySummaryCharts extends StatelessWidget {
       }
     }
 
+    var maxBalanceValue = res.map((e) => e.balance.abs()).toList().max;
+    var monthEntries = res.sortedBy((e) => e.month);
+
+    var validEntries = monthEntries.where((e) => e.sumIncomes != 0).toList();
+
+    var avgBalance = monthEntries.map((e) => e.balance).toList().average.abs();
+    var sdBalance = monthEntries.map((e) => e.balance).toList().standardDeviation.abs();
+
+    var avgIncomes = validEntries.map((e) => e.sumIncomes).toList().average;
+    var sdIncomes = validEntries.map((e) => e.sumIncomes).toList().standardDeviation;
+
+    var avgExpenses = validEntries.map((e) => e.sumExpenses).toList().average.abs();
+    var sdExpenses = validEntries.map((e) => e.sumExpenses).toList().standardDeviation.abs();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,14 +51,14 @@ class YearlySummaryCharts extends StatelessWidget {
               minY: 0,
               maxY: maxValue + maxValue * 0.2,
               minX: -1,
-              maxX: res.length.toDouble(),
+              maxX: monthEntries.length.toDouble(),
               lineBarsData: [
                 LineChartBarData(
                   color: Colors.green.withAlpha(150),
                   barWidth: 4,
                   isStrokeCapRound: true,
                   dotData: const FlDotData(show: true),
-                  spots: res
+                  spots: monthEntries
                       .mapIndexed(
                         (int i, MonthlySummary e) => FlSpot(
                           i.toDouble(),
@@ -57,7 +72,7 @@ class YearlySummaryCharts extends StatelessWidget {
                   barWidth: 4,
                   isStrokeCapRound: true,
                   dotData: const FlDotData(show: true),
-                  spots: res
+                  spots: monthEntries
                       .mapIndexed(
                         (int i, MonthlySummary e) => FlSpot(
                           i.toDouble(),
@@ -74,12 +89,12 @@ class YearlySummaryCharts extends StatelessWidget {
                     reservedSize: 32,
                     interval: 1,
                     getTitlesWidget: (value, meta) {
-                      if (value < 0 || value == res.length) return const SizedBox.shrink();
+                      if (value < 0 || value == monthEntries.length) return const SizedBox.shrink();
                       return SideTitleWidget(
                         meta: meta,
                         space: 10,
                         child: Text(
-                          res[value.toInt()].month,
+                          monthEntries[value.toInt()].month,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -134,7 +149,7 @@ class YearlySummaryCharts extends StatelessWidget {
                   getTooltipItems: (touchedSpots) => touchedSpots
                       .map(
                         (spot) => LineTooltipItem(
-                          spot.y.toStringAsFixed(2),
+                          spot.y == 0 ? 'EMPTY' : spot.y.toStringAsFixed(2),
                           TextStyle(
                             color: spot.bar.color?.withAlpha(255),
                             fontWeight: FontWeight.bold,
@@ -147,7 +162,7 @@ class YearlySummaryCharts extends StatelessWidget {
               extraLinesData: ExtraLinesData(
                 horizontalLines: [
                   HorizontalLine(
-                    y: res.map((e) => e.sumExpenses).toList().average,
+                    y: avgExpenses,
                     color: Colors.redAccent,
                     strokeWidth: 2,
                     dashArray: [5, 10],
@@ -159,11 +174,12 @@ class YearlySummaryCharts extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
-                      labelResolver: (line) => 'R\$ ${line.y.toStringAsFixed(1)}',
+                      labelResolver: (line) =>
+                          'Média (Desvio)\nR\$ ${line.y.toStringAsFixed(1)} (+-${sdExpenses.toStringAsFixed(1)})',
                     ),
                   ),
                   HorizontalLine(
-                    y: res.map((e) => e.sumIncomes).toList().average,
+                    y: avgIncomes,
                     color: Colors.green,
                     strokeWidth: 2,
                     dashArray: [5, 10],
@@ -175,7 +191,8 @@ class YearlySummaryCharts extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
-                      labelResolver: (line) => 'R\$ ${line.y.toStringAsFixed(1)}',
+                      labelResolver: (line) =>
+                          'Média (Desvio)\nR\$ ${line.y.toStringAsFixed(1)} (+-${sdIncomes.toStringAsFixed(1)})',
                     ),
                   ),
                 ],
@@ -190,7 +207,7 @@ class YearlySummaryCharts extends StatelessWidget {
           height: 400,
           child: BarChart(
             BarChartData(
-              maxY: res.map((e) => e.balance.abs()).toList().max + res.map((e) => e.balance.abs()).toList().max * 0.2,
+              maxY: maxBalanceValue + maxBalanceValue * 0.2,
               alignment: BarChartAlignment.spaceEvenly,
               titlesData: FlTitlesData(
                 show: true,
@@ -203,7 +220,7 @@ class YearlySummaryCharts extends StatelessWidget {
                       meta: meta,
                       space: 10,
                       child: Text(
-                        res[value.toInt()].month,
+                        monthEntries[value.toInt()].month,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
@@ -258,13 +275,14 @@ class YearlySummaryCharts extends StatelessWidget {
                 ),
               ),
               barGroups: [
-                for (var i = 0; i < res.length; i++)
+                for (var i = 0; i < monthEntries.length; i++)
                   BarChartGroupData(
                     x: i,
                     barRods: [
                       BarChartRodData(
-                        toY: res[i].balance.abs(),
-                        color: res[i].balance < 0 ? Colors.redAccent.withAlpha(150) : Colors.green.withAlpha(150),
+                        toY: monthEntries[i].balance.abs(),
+                        color:
+                            monthEntries[i].balance < 0 ? Colors.redAccent.withAlpha(150) : Colors.green.withAlpha(150),
                         width: 16,
                       ),
                     ],
@@ -273,19 +291,20 @@ class YearlySummaryCharts extends StatelessWidget {
               extraLinesData: ExtraLinesData(
                 horizontalLines: [
                   HorizontalLine(
-                    y: res.map((e) => e.balance).toList().average.abs(),
-                    color: res.map((e) => e.balance).toList().average < 0 ? Colors.redAccent : Colors.green,
+                    y: avgBalance,
+                    color: avgBalance < 0 ? Colors.redAccent : Colors.green,
                     strokeWidth: 2,
                     dashArray: [5, 10],
                     label: HorizontalLineLabel(
                       show: true,
                       alignment: Alignment.topLeft,
                       style: TextStyle(
-                        color: res.map((e) => e.balance).toList().average < 0 ? Colors.redAccent : Colors.green,
+                        color: avgBalance < 0 ? Colors.redAccent : Colors.green,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
-                      labelResolver: (line) => 'R\$ ${line.y.toStringAsFixed(1)}',
+                      labelResolver: (line) =>
+                          'Média (Desvio)\nR\$ ${line.y.toStringAsFixed(1)} (+-${sdBalance.toStringAsFixed(1)})',
                     ),
                   ),
                 ],

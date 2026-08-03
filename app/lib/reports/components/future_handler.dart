@@ -8,7 +8,11 @@ Widget futureHandler(Future<dynamic> future, Widget Function(dynamic) child) {
         return const CircularProgressIndicator();
       }
 
-      if (snapshot.data == null) {
+      if (snapshot.hasError) {
+        return Text('Erro: ${snapshot.error}');
+      }
+
+      if (!snapshot.hasData) {
         return const Text("Nenhum item encontrado");
       }
 

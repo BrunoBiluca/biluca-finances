@@ -1,14 +1,10 @@
-import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:biluca_financas/reports/accountability_stats_service.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
-import 'package:biluca_financas/reports/components/single_value_card.dart';
 import 'package:biluca_financas/reports/yearly_report/year_selector.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_identifications_summary_charts.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_summary_cards.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_summary_charts.dart';
-import 'package:collection/collection.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -79,7 +75,8 @@ class _YearlyReportState extends State<YearlyReport> {
                     futureHandler(
                       service!.getMonthlyIdentificationsSummary(),
                       (res) => YearlyIdentificationsSummaryCharts(res: res),
-                    )
+                    ),
+                    const SizedBox(height: 100),
                   ],
                 ),
               ),

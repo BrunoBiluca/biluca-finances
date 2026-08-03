@@ -1,4 +1,5 @@
 import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -69,11 +70,11 @@ class SqliteYearlyReportService extends YearlyReportService {
   }
 
   @override
-  Future<List<MonthlySummary>> getMonthlySummary() {
+  Future<List<MonthlySummary>> getMonthlySummary() async {
     var startDate = formatDate(start);
     var endDate = formatDate(end);
 
-    return db.rawQuery(
+    var res = await db.rawQuery(
       """
       SELECT 
         expenses,
@@ -91,16 +92,33 @@ class SqliteYearlyReportService extends YearlyReportService {
           group by month
       )
       """,
-    ).then((value) => value
-        .map(
-          (e) => MonthlySummary(
-            balance: e["balance"] as double,
-            sumIncomes: e["incomes"] as double,
-            sumExpenses: e["expenses"] as double,
-            month: e["month"] as String,
-          ),
-        )
-        .toList());
+    );
+
+    var monthlyEntries = <MonthlySummary>[];
+    for (var r in res) {
+      monthlyEntries.add(MonthlySummary(
+        balance: double.parse(r["balance"].toString()),
+        sumIncomes: double.parse(r["incomes"].toString()),
+        sumExpenses: double.parse(r["expenses"].toString()),
+        month: r["month"] as String,
+      ));
+    }
+
+    var current = DateTime(start.year, start.month);
+    while (current.isBefore(end)) {
+      var monthStr = DateFormat("yyyy-MM").format(current);
+      if (!monthlyEntries.any((e) => e.month == monthStr)) {
+        monthlyEntries.add(MonthlySummary(
+          balance: 0.0,
+          sumIncomes: 0.0,
+          sumExpenses: 0.0,
+          month: monthStr,
+        ));
+      }
+      current = current.addMonth(1);
+    }
+
+    return monthlyEntries;
   }
 
   @override
@@ -117,7 +135,7 @@ class SqliteYearlyReportService extends YearlyReportService {
         ai.icon, 
         ai.type, 
         Sum(value) AS total, 
-        strftime('%m/%Y', createdAt) AS month
+        strftime('%Y-%m', createdAt) AS month
       FROM accountability a
       INNER JOIN accountability_identifications ai ON a.identification_id = ai.id
       where a.createdAt BETWEEN '$startDate' AND '$endDate'
@@ -138,6 +156,16 @@ class SqliteYearlyReportService extends YearlyReportService {
       for (var r in res.where((e) => e["id"] == id.id)) {
         monthTotal[r["month"] as String] = r["total"] as double;
       }
+
+      var current = DateTime(start.year, start.month);
+      while (current.isBefore(end)) {
+        var monthStr = DateFormat("yyyy-MM").format(current);
+        if (!monthTotal.containsKey(monthStr)) {
+          monthTotal[monthStr] = 0;
+        }
+        current = current.addMonth(1);
+      }
+
       summaries.add(MonthlyIdentificationsSummary(
         identification: id,
         monthTotal: monthTotal,

@@ -3,6 +3,7 @@ import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:biluca_financas/common/extensions/number_extensions.dart';
 
 class YearlyIdentificationsSummaryCharts extends StatelessWidget {
   final List<MonthlyIdentificationsSummary> res;
@@ -41,8 +42,12 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
           .sortedBy((i) => i.identification.description)
           .map(
         (i) {
-          var maxValue = i.monthTotal.entries.map((entry) => entry.value.abs()).max;
-          var avgValue = i.monthTotal.entries.map((entry) => entry.value.abs()).average;
+          var monthEntries = i.monthTotal.entries.sortedBy((entry) => entry.key);
+
+          var validEntries = monthEntries.where((entry) => entry.value != 0);
+          var maxValue = validEntries.map((entry) => entry.value.abs()).max;
+          var avgValue = validEntries.map((entry) => entry.value.abs()).average;
+          var sdValue = validEntries.map((entry) => entry.value.abs()).standardDeviation;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -64,7 +69,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                 child: BarChart(
                   BarChartData(
                     maxY: maxValue + maxValue * 0.2,
-                    barGroups: i.monthTotal.entries
+                    barGroups: monthEntries
                         .mapIndexed(
                           (index, entry) => BarChartGroupData(
                             x: index,
@@ -82,10 +87,19 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                         sideTitles: SideTitles(
                           showTitles: true,
                           getTitlesWidget: (value, meta) {
-                            if (value.toInt() < 0 || value.toInt() >= i.monthTotal.length) {
+                            if (value.toInt() < 0 || value.toInt() >= monthEntries.length) {
                               return const SizedBox.shrink();
                             }
-                            return Text(i.monthTotal.keys.elementAt(value.toInt()));
+                            return Transform.translate(
+                              offset: const Offset(0, 10),
+                              child: Transform.rotate(
+                                angle: 0.5,
+                                child: Text(
+                                  monthEntries.elementAt(value.toInt()).key,
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ),
@@ -139,7 +153,8 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                           label: HorizontalLineLabel(
                             show: true,
                             alignment: Alignment.topLeft,
-                            labelResolver: (line) => "R\$ ${avgValue.toStringAsFixed(2)}",
+                            labelResolver: (line) =>
+                                "Média (Desvio)\nR\$ ${avgValue.toStringAsFixed(2)} (+-${sdValue.toStringAsFixed(2)})",
                             style: TextStyle(
                               color: i.identification.color,
                               fontWeight: FontWeight.bold,
