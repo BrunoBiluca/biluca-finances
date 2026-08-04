@@ -1,4 +1,5 @@
 import 'package:biluca_financas/formatter.dart';
+import 'package:biluca_financas/reports/components/report_tooltip.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
 import 'package:biluca_financas/reports/components/values_relation_indicator.dart';
 import 'package:biluca_financas/reports/components/values_relation_text.dart';
@@ -12,6 +13,7 @@ class ConsolidatedValueCard extends StatefulWidget {
   final bool lessIsPositive;
   final Widget? extraInfo;
   final Widget? side;
+  final String? tooltipSuffix;
 
   const ConsolidatedValueCard({
     super.key,
@@ -22,6 +24,7 @@ class ConsolidatedValueCard extends StatefulWidget {
     this.lessIsPositive = false,
     this.side,
     this.extraInfo,
+    this.tooltipSuffix,
   });
 
   @override
@@ -56,18 +59,22 @@ class _SingleValueCardState extends State<ConsolidatedValueCard> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    Formatter.value(widget.displayValue != null ? widget.displayValue! : widget.currentValue),
-                    key: const Key("valor"),
-                    style: Theme.of(context).textTheme.displayLarge,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        Formatter.value(widget.displayValue != null ? widget.displayValue! : widget.currentValue),
+                        key: const Key("valor"),
+                        style: Theme.of(context).textTheme.displayLarge,
+                      ),
+                      if (widget.extraInfo != null) ...[
+                        SizedBox(height: 10),
+                        widget.extraInfo!,
+                      ],
+                    ],
                   ),
-                  if (widget.extraInfo != null) ...[
-                    SizedBox(height: 10),
-                    widget.extraInfo!,
-                  ],
-                  SizedBox(height: 30),
                   Text(
                     widget.title,
                     key: const Key("título"),
@@ -79,14 +86,19 @@ class _SingleValueCardState extends State<ConsolidatedValueCard> {
             widget.side != null
                 ? widget.side!
                 : values != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ValuesRelationIndicator(values: values!),
-                          SizedBox(height: 10),
-                          ValuesRelationText(values: values!)
-                        ],
+                    ? ReportTooltip(
+                        message: (values!.itIncreased() ? "Aumentou" : "Diminuiu") +
+                            (widget.tooltipSuffix != null ? " em relação ao ${widget.tooltipSuffix}" : ""),
+                        verticalOffset: 60,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ValuesRelationIndicator(values: values!),
+                            SizedBox(height: 10),
+                            ValuesRelationText(values: values!)
+                          ],
+                        ),
                       )
                     : Container(),
           ],

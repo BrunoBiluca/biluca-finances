@@ -108,6 +108,7 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                       lastMonth,
                       lessIsPositite: id.type == AccountabilityIdentificationType.expense,
                     ),
+                    tooltipSuffix: "mês anterior",
                   ),
                 ],
               ),

@@ -22,6 +22,7 @@ class SummaryExpensesCard extends StatelessWidget {
           true,
           suffix: "em relação aos últimos 12 meses",
         ),
+        tooltipSuffix: "mês anterior.",
       ),
     );
   }
