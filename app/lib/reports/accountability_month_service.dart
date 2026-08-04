@@ -8,9 +8,9 @@ abstract class AccountabilityMonthService extends AccountabilityRepo {
   Future<double> getSum();
   Future<double> getBalance();
   Future<double> getExpenses();
-  Future<double> getAccumulatedExpenses();
+  Future<double> getAvgExpensesByMonth();
   Future<double> getIncomes();
-  Future<double> getAccumulatedIncomes();
+  Future<double> getAvgIncomesByMonth();
   Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification();
   Future<List<GroupedBy<AccountabilityIdentification>>> getAccumulatedMeansByIdentification();
 }

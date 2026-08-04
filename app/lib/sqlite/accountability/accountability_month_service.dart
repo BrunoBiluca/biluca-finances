@@ -158,7 +158,7 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
   }
 
   @override
-  Future<double> getAccumulatedExpenses() async {
+  Future<double> getAvgExpensesByMonth() async {
     var datef = DateFormat("yyyy-MM-dd").format(month);
 
     var result = await db.rawQuery(
@@ -167,7 +167,9 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
       from (
         SELECT SUM(value) AS total, strftime('%m/%Y', createdAt) AS month
         FROM accountability
-        WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value < 0
+        JOIN accountability_identifications ai ON accountability.identification_id = ai.id
+        WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef')
+        AND ai.type = 'expense'
         group by month
       ) a
       """,
@@ -181,7 +183,7 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
   }
 
   @override
-  Future<double> getAccumulatedIncomes() async {
+  Future<double> getAvgIncomesByMonth() async {
     var datef = DateFormat("yyyy-MM-dd").format(month);
 
     var result = await db.rawQuery(
@@ -190,7 +192,9 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
       from (
         SELECT SUM(value) AS total, strftime('%m/%Y', createdAt) AS month
         FROM accountability
+        JOIN accountability_identifications ai ON accountability.identification_id = ai.id
         WHERE createdAt >= DATE('$datef', '-12 months') and createdAt < DATE('$datef') AND value > 0
+        AND ai.type = 'income'
         group by month
       ) a
       """,

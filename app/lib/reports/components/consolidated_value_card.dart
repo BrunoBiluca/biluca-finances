@@ -10,6 +10,7 @@ class ConsolidatedValueCard extends StatefulWidget {
   final double? relatedValue;
   final double? displayValue;
   final bool lessIsPositive;
+  final Widget? extraInfo;
   final Widget? side;
 
   const ConsolidatedValueCard({
@@ -20,6 +21,7 @@ class ConsolidatedValueCard extends StatefulWidget {
     this.displayValue,
     this.lessIsPositive = false,
     this.side,
+    this.extraInfo,
   });
 
   @override
@@ -61,6 +63,10 @@ class _SingleValueCardState extends State<ConsolidatedValueCard> {
                     key: const Key("valor"),
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
+                  if (widget.extraInfo != null) ...[
+                    SizedBox(height: 10),
+                    widget.extraInfo!,
+                  ],
                   SizedBox(height: 30),
                   Text(
                     widget.title,

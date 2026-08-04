@@ -31,15 +31,27 @@ class CurrentMonthReportService {
   }
 
   Future<dynamic> summaryBalance() async {
-    return {"balance": await current.getBalance(), "related": await related.getBalance()};
+    return {
+      "balance": await current.getBalance(),
+      "related": await related.getBalance(),
+      "avgRecentMonts": await current.getAvgExpensesByMonth() - await current.getAvgIncomesByMonth()
+    };
   }
 
   Future<dynamic> summaryIncomes() async {
-    return {"incomes": await current.getIncomes(), "related": await related.getIncomes()};
+    return {
+      "incomes": await current.getIncomes(),
+      "related": await related.getIncomes(),
+      "avgRecentMonts": await current.getAvgIncomesByMonth(),
+    };
   }
 
   Future<dynamic> summaryExpenses() async {
-    return {"expenses": await current.getExpenses(), "related": await related.getExpenses()};
+    return {
+      "expenses": await current.getExpenses(),
+      "related": await related.getExpenses(),
+      "avgRecentMonts": await current.getAvgExpensesByMonth(),
+    };
   }
 
   Future<List<IdentificationReportInfo>> expensesByIdentification() async {

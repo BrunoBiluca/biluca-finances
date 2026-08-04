@@ -19,6 +19,14 @@
 			120
 		],
 		"workbench.colorCustomizations": {
+			"activityBar.background": "#027DFD",
+			"activityBar.foreground": "#FFFFFF",
+			"activityBarBadge.background": "#42A5F5",
+			"activityBarBadge.foreground": "#000000",
+			"titleBar.activeBackground": "#027DFD",
+			"titleBar.activeForeground": "#ffffff",
+			"titleBar.inactiveBackground": "#677591",
+			"titleBar.inactiveForeground": "#888888",
 			"editorRuler.foreground": "#505050"
 		},
 		"workbench.iconTheme": "material-icon-theme",
@@ -44,7 +52,9 @@
 				"request": "launch",
 				"program": "api.py",
 				"python": "${workspaceFolder:predict}/venv/Scripts/python",
-				"args": ["-d"],
+				"args": [
+					"-d"
+				],
 				"console": "integratedTerminal"
 			},
 		]
