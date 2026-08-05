@@ -10,24 +10,26 @@ class IdentificationsPercentageChart extends StatelessWidget {
   final blue1 = Colors.lightBlueAccent;
   final blue2 = Colors.lightBlue;
 
-  final size = 35.0;
-  final maxX = 10.0;
-  final maxY = 10.0;
+  final size = 26.0;
+  final maxX = 10;
+  final maxY = 10;
 
   @override
   Widget build(BuildContext context) {
+    var spots = getScatterStops();
+
     return Align(
       alignment: Alignment.center,
       child: SizedBox(
-        height: 400,
-        width: 400,
+        height: 300,
+        width: 300,
         child: ScatterChart(
           ScatterChartData(
-            scatterSpots: getScatterStops(),
+            scatterSpots: spots.entries.map((e) => e.value['spot'] as ScatterSpot).toList(),
             minX: 0,
-            maxX: maxX,
+            maxX: maxX.toDouble(),
             minY: 0,
-            maxY: maxY,
+            maxY: maxY.toDouble(),
             borderData: FlBorderData(
               show: false,
             ),
@@ -38,39 +40,49 @@ class IdentificationsPercentageChart extends StatelessWidget {
               show: false,
             ),
             scatterTouchData: ScatterTouchData(
-              enabled: false,
+              enabled: true,
+              touchTooltipData: ScatterTouchTooltipData(
+                tooltipPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                getTooltipItems: (spot) {
+                  var info = spots["${spot.x.toInt()}_${spot.y.toInt()}"];
+                  var identification = "${info['id'].identification.description}";
+                  var percentage = "${(info['id'].currentPercentage * 100).toStringAsFixed(2)}%";
+                  return ScatterTooltipItem("$identification\n$percentage");
+                },
+              ),
             ),
           ),
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.fastOutSlowIn,
         ),
       ),
     );
   }
 
-  List<ScatterSpot> getScatterStops() {
+  Map<String, dynamic> getScatterStops() {
     var sortedData = data.sorted((a, b) => b.currentPercentage.compareTo(a.currentPercentage));
     var totalSpots = maxX * maxY;
     var spotsPerCategory = sortedData.map((d) => (d.currentPercentage * totalSpots).round()).toList();
 
-    var result = List<ScatterSpot>.empty(growable: true);
+    var result = <String, dynamic>{};
     int categoryIndex = 0;
     int spotsInCurrentCategory = 0;
     for (var j = maxY - 1; j >= 0; j--) {
       for (var i = 0; i < maxX; i++) {
         if (categoryIndex >= sortedData.length) break;
 
-        result.add(
-          ScatterSpot(
+        var id = sortedData[categoryIndex].identification;
+
+        result["${i}_$j"] = {
+          'id': sortedData[categoryIndex],
+          'spot': ScatterSpot(
             i.toDouble(),
             j.toDouble(),
             dotPainter: FlDotSquarePainter(
-              color: sortedData[categoryIndex].identification.color,
-              strokeColor: sortedData[categoryIndex].identification.color,
+              color: id.color,
+              strokeColor: id.color,
               size: size,
             ),
           ),
-        );
+        };
 
         spotsInCurrentCategory++;
 

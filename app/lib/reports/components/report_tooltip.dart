@@ -5,7 +5,12 @@ class ReportTooltip extends StatelessWidget {
   final String message;
   final double verticalOffset;
 
-  const ReportTooltip({super.key, required this.child, required this.message, this.verticalOffset = 0});
+  const ReportTooltip({
+    super.key,
+    required this.child,
+    required this.message,
+    this.verticalOffset = 0,
+  });
 
   @override
   Widget build(BuildContext context) {

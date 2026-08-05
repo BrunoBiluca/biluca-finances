@@ -43,6 +43,7 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
             decoration: BoxDecoration(
               color: isHover ? Color.fromARGB(255, 53, 57, 71) : Theme.of(context).colorScheme.primary,
               border: Border.all(color: Theme.of(context).colorScheme.outline, width: 4),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -102,13 +103,16 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                     ),
                   ),
                   const SizedBox(width: 20),
-                  ValuesComparisonSmall(
-                    ValuesRelation(
-                      current,
-                      lastMonth,
-                      lessIsPositite: id.type == AccountabilityIdentificationType.expense,
+                  SizedBox(
+                    height: 36,
+                    child: ValuesComparisonSmall(
+                      ValuesRelation(
+                        current,
+                        lastMonth,
+                        lessIsPositite: id.type == AccountabilityIdentificationType.expense,
+                      ),
+                      tooltipSuffix: "mês anterior",
                     ),
-                    tooltipSuffix: "mês anterior",
                   ),
                 ],
               ),

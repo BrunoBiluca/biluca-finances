@@ -3,9 +3,10 @@ import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/components/table.dart';
-import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
-import 'package:biluca_financas/components/mouse_back_button_listener.dart';
+import 'package:biluca_financas/reports/accountability_month_stats.dart';
+import 'package:biluca_financas/reports/accountability_stats_service.dart';
+import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/expenses_per_indentification.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/incomes_per_identification.dart';
@@ -26,29 +27,35 @@ class MonthlyReportV2 extends StatefulWidget {
 }
 
 class _MonthlyReportV2State extends State<MonthlyReportV2> {
-  late DateTime _selectedDate;
-  late CurrentMonthReportService _service;
+  List<AccountabilityMonthStats> availableMonths = [];
+  AccountabilityMonthStats? _selectedMonth;
+  CurrentMonthReportService? _service;
   StreamSubscription? _subscription;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = DateTime.now();
-    updateDateSelected(_selectedDate);
+    fillMonths();
   }
 
-  void updateDateSelected(DateTime date) {
+  void fillMonths() async {
+    var result = await GetIt.I<AccountabilityStatsService>().getAllMonthsWithAccountability(fillBlanks: true);
+    setState(() => availableMonths = result);
+    updateDateSelected(result.last);
+  }
+
+  void updateDateSelected(AccountabilityMonthStats month) {
     setState(() {
-      _selectedDate = date;
-      _service = GetIt.I<CurrentMonthReportService>(param1: _selectedDate);
-      _subscription = _service.onChange.listen((_) {
-        updateDateSelected(_selectedDate);
+      _selectedMonth = month;
+      var parsedMonth = DateFormat("yyyy/MM").parse(_selectedMonth!.month);
+      _service = GetIt.I<CurrentMonthReportService>(param1: parsedMonth);
+      _subscription = _service!.onChange.listen((_) {
+        updateDateSelected(_selectedMonth!);
       });
     });
   }
 
   void displayReportData() async {
-    var date = DateFormat("MMMM yyyy", "pt_BR").format(_selectedDate).capitalize();
     var changedAccountability = false;
 
     Size size = MediaQuery.of(context).size;
@@ -60,12 +67,12 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
       await showDialog(
         context: context,
         builder: (context) => BaseDialog(
-          title: "Registros de $date",
+          title: "Registros de ${_selectedMonth!.month}",
           content: SizedBox(
             width: width - 300,
             height: height - 300,
             child: BlocProvider(
-              create: (_) => AccountabilityBloc(repo: _service.current)..add(FetchAccountabilityEntries()),
+              create: (_) => AccountabilityBloc(repo: _service!.current)..add(FetchAccountabilityEntries()),
               child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
                 builder: (context, state) {
                   if (state.entries.isEmpty) {
@@ -91,22 +98,28 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
       );
 
       if (changedAccountability) {
-        updateDateSelected(_selectedDate);
+        updateDateSelected(_selectedMonth!);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MouseBackButtonListener(
-      child: MonthlyReportServiceProvider(
-        service: _service,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    if (availableMonths.isEmpty || _selectedMonth == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return MonthlyReportServiceProvider(
+      service: _service!,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               MonthSelector(
-                current: _selectedDate,
+                availableMonths: availableMonths,
+                current: _selectedMonth!,
                 onDateChanged: updateDateSelected,
               ),
               OutlinedButton(
@@ -121,28 +134,30 @@ class _MonthlyReportV2State extends State<MonthlyReportV2> {
                   ],
                 ),
               )
-            ]),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SummaryValuesSection(),
-                    const SizedBox(height: 60),
-                    SummaryLastMonthsSection(),
-                    const SizedBox(height: 60),
-                    IncomesPerIdentification(service: _service),
-                    const SizedBox(height: 60),
-                    ExpensesPerIndentification(service: _service),
-                    const SizedBox(height: 60),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Expanded(
+            child: _selectedMonth!.entriesCount == 0
+                ? const Center(child: Text("Nenhum registro encontrado"))
+                : SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SummaryValuesSection(),
+                        const SizedBox(height: 60),
+                        SummaryLastMonthsSection(),
+                        const SizedBox(height: 60),
+                        IncomesPerIdentification(service: _service!),
+                        const SizedBox(height: 60),
+                        ExpensesPerIndentification(service: _service!),
+                        const SizedBox(height: 60),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }
