@@ -1,3 +1,4 @@
+import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/reports/accountability_stats_service.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/yearly_report/year_selector.dart';
@@ -35,9 +36,10 @@ class _YearlyReportState extends State<YearlyReport> {
 
         if (currentYear == "Últimos 12 meses") {
           var now = DateTime.now();
+          var end = DateTime(now.year, now.month, 0);
           service = GetIt.I<YearlyReportService>(
-            param1: DateTime(now.year - 1, now.month, now.day),
-            param2: now,
+            param1: DateTime(end.year - 1, end.month, 1),
+            param2: end,
           );
         } else {
           service = GetIt.I<YearlyReportService>(
@@ -66,12 +68,12 @@ class _YearlyReportState extends State<YearlyReport> {
                       service!.summary(),
                       (res) => YearlySummaryCards(res: res),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 60),
                     futureHandler(
                       service!.getMonthlySummary(),
                       (res) => YearlySummaryCharts(res: res),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 60),
                     futureHandler(
                       service!.getMonthlyIdentificationsSummary(),
                       (res) => YearlyIdentificationsSummaryCharts(res: res),

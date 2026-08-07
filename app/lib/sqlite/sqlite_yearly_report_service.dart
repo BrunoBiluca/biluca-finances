@@ -74,6 +74,8 @@ class SqliteYearlyReportService extends YearlyReportService {
     var startDate = formatDate(start);
     var endDate = formatDate(end);
 
+    print("startDate: $startDate, endDate: $endDate");
+
     var res = await db.rawQuery(
       """
       SELECT 

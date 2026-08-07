@@ -17,7 +17,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
         Text("Receitas por identificação", style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 20),
         buildIdentificationsSection(AccountabilityIdentificationType.income),
-        const SizedBox(height: 20),
+        const SizedBox(height: 60),
         Text("Despesas por identificação", style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 20),
         buildIdentificationsSection(AccountabilityIdentificationType.expense),
@@ -29,11 +29,11 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
     return GridView(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.5,
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 700,
+        childAspectRatio: 2,
+        mainAxisSpacing: 60,
+        crossAxisSpacing: 60,
       ),
       children: res
           .where(
@@ -96,7 +96,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                                 angle: 0.5,
                                 child: Text(
                                   monthEntries.elementAt(value.toInt()).key,
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
                                 ),
                               ),
                             );
@@ -114,7 +114,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                                 value.toStringAsFixed(0),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                 ),
                                 textAlign: TextAlign.center,
                               ),

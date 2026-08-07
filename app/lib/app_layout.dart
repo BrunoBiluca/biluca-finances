@@ -16,7 +16,7 @@ class AppLayout extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
-                  maxWidth: 1400,
+                  maxWidth: 1600,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
