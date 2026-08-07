@@ -13,9 +13,16 @@ class AppLayout extends StatelessWidget {
         children: [
           Sidebar(),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: child,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxWidth: 1400,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: child,
+                ),
+              ),
             ),
           ),
         ],

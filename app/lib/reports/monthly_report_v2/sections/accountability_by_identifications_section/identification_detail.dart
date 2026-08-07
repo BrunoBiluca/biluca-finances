@@ -57,7 +57,7 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                     txtColor: id.color.adaptByLuminance(),
                     icon: id.icon,
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,7 +71,7 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                           Formatter.value(current),
                           style: Theme.of(context).textTheme.displayLarge!,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         ValuesComparisonFullText.from(
                           current,
                           avgRecentMonts,
@@ -102,7 +102,7 @@ class _IdentificationDetailState extends State<IdentificationDetail> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   SizedBox(
                     height: 36,
                     child: ValuesComparisonSmall(

@@ -19,9 +19,9 @@ class IdentificationsViewSection extends StatelessWidget {
               GridView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 4,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 600,
+                  mainAxisExtent: 180,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
                 ),
