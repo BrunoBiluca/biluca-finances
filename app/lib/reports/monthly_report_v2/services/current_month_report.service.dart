@@ -31,10 +31,12 @@ class CurrentMonthReportService {
   }
 
   Future<dynamic> summaryBalance() async {
+    var exp = await current.getAvgExpensesByMonth();
+    var inc = await current.getAvgIncomesByMonth();
     return {
       "balance": await current.getBalance(),
       "related": await related.getBalance(),
-      "avgRecentMonts": await current.getAvgExpensesByMonth() - await current.getAvgIncomesByMonth()
+      "avgRecentMonts": exp.abs() - inc
     };
   }
 
