@@ -1,10 +1,10 @@
 import 'package:biluca_financas/formatter.dart';
 import 'package:flutter/material.dart';
 
-class SingleValueCart extends StatelessWidget {
+class SingleValueCard extends StatelessWidget {
   final String title;
   final double value;
-  const SingleValueCart({super.key, required this.title, required this.value});
+  const SingleValueCard({super.key, required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {

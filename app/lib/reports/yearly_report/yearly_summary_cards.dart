@@ -23,13 +23,13 @@ class YearlySummaryCards extends StatelessWidget {
           spacing: 20,
           children: [
             Expanded(
-              child: SingleValueCart(
+              child: SingleValueCard(
                 title: "Balanço",
                 value: res.balance,
               ),
             ),
             Expanded(
-              child: SingleValueCart(
+              child: SingleValueCard(
                 title: "Média mensal de balanços",
                 value: res.avgBalance,
               ),
@@ -43,13 +43,13 @@ class YearlySummaryCards extends StatelessWidget {
           spacing: 20,
           children: [
             Expanded(
-              child: SingleValueCart(
+              child: SingleValueCard(
                 title: "Total de receitas",
                 value: res.totalIncomes,
               ),
             ),
             Expanded(
-              child: SingleValueCart(
+              child: SingleValueCard(
                 title: "Média mensal de receitas",
                 value: res.avgIncomes,
               ),
@@ -63,13 +63,13 @@ class YearlySummaryCards extends StatelessWidget {
           spacing: 20,
           children: [
             Expanded(
-              child: SingleValueCart(
+              child: SingleValueCard(
                 title: "Total de despesas",
                 value: res.totalExpenses,
               ),
             ),
             Expanded(
-              child: SingleValueCart(
+              child: SingleValueCard(
                 title: "Média mensal de despesas",
                 value: res.avgExpenses,
               ),

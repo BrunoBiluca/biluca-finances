@@ -4,10 +4,13 @@ import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
+import 'package:intl/intl.dart';
 
 class YearlyIdentificationsSummaryCharts extends StatelessWidget {
   final List<MonthlyIdentificationsSummary> res;
   const YearlyIdentificationsSummaryCharts({super.key, required this.res});
+
+  String formatReal(double value) => "R\$ ${NumberFormat('#,##0.00', 'de').format(value)}";
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 700,
-        childAspectRatio: 2,
+        childAspectRatio: 1.5,
         mainAxisSpacing: 60,
         crossAxisSpacing: 60,
       ),
@@ -48,6 +51,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
           var maxValue = validEntries.map((entry) => entry.value.abs()).max;
           var avgValue = validEntries.map((entry) => entry.value.abs()).average;
           var sdValue = validEntries.map((entry) => entry.value.abs()).standardDeviation;
+          var sumValue = monthEntries.map((e) => e.value.abs()).sum;
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,8 +62,14 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                     radius: 8,
                   ),
                   const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      i.identification.description,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ),
                   Text(
-                    i.identification.description,
+                    "Total: R\$ ${formatReal(sumValue)}",
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ],
@@ -111,7 +121,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                             return SideTitleWidget(
                               meta: meta,
                               child: Text(
-                                value.toStringAsFixed(0),
+                                formatReal(value),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 10,
@@ -134,7 +144,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                       touchTooltipData: BarTouchTooltipData(
                         getTooltipColor: (spot) => Colors.blueGrey,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
-                          rod.toY.toStringAsFixed(2),
+                          formatReal(rod.toY),
                           TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -154,7 +164,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                             show: true,
                             alignment: Alignment.topLeft,
                             labelResolver: (line) =>
-                                "Média (Desvio)\nR\$ ${avgValue.toStringAsFixed(2)} (+-${sdValue.toStringAsFixed(2)})",
+                                "Média (Desvio)\n${formatReal(avgValue)} (+-${formatReal(sdValue)})",
                             style: TextStyle(
                               color: i.identification.color,
                               fontWeight: FontWeight.bold,
