@@ -29,16 +29,16 @@ def predict():
         entradas = pandas.DataFrame(data["registros"], columns=data["cabeçalhos"])
 
     elif (request.content_type.startswith("multipart/form-data")):
-        
+
         if "extrato" not in request.files:
             raise Exception("Nenhum arquivo de extrato foi enviado")
-        
+
         extrato_file = request.files["extrato"]
         analisador = AvaliadorExtrato().avaliar_extrato(extrato_file.filename)
 
         if analisador is None:
             info("Não foi possivel identificar o extrato")
-            return {"error": "Nao foi possivel identificar o extrato"}, 422
+            return {"error": f"Nao foi possivel identificar o extrato para o arquivo {extrato_file.filename}"}, 422
 
         reader = PdfReader(extrato_file)
         entradas = analisador(reader.pages)

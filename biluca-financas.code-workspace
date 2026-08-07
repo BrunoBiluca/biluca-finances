@@ -32,7 +32,7 @@
 		"workbench.iconTheme": "material-icon-theme",
 		"workbench.sideBar.location": "left",
 		"[python]": {
-			"editor.defaultFormatter": "ms-python.black-formatter",
+			"editor.defaultFormatter": "ms-python.autopep8",
 		},
 		"autopep8.args": [
 			"--max-line-length",
