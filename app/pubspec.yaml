@@ -1,6 +1,6 @@
 name: biluca_financas
 
-version: 2.0.1
+version: 2.0.2
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
