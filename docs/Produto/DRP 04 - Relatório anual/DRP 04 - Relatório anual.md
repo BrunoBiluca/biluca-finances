@@ -1,15 +1,15 @@
-# {{title}}
+# DRP 04 - Relatório anual
 
 > [!important] Resumo
-> Visão geral sobre o requisito e por que está será desenvolvido
+> Relatório dos últimos 12 meses é um agregado de todas as informações buscando apresentar uma visão de longo prazo a fim de entender o comportamento removendo diferenças sezonais.
 
 Objetivos:
 
-- __- Objetivo 1 com a realização do projeto -__
+- Permitir ao usuário verificar informações em relação a um longo período de tempo
 
 Métricas para monitorar:
 
-- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
+- 
 
 # Contexto
 
@@ -38,6 +38,10 @@ Métricas para monitorar:
 ### Referências
 
 - __Referências de concorrentes ou inspirações__
+
+# Usuários
+
+- 
 
 # Requisitos
 

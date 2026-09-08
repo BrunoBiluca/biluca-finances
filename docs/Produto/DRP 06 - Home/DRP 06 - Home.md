@@ -1,15 +1,15 @@
-# DRP 04 - Relatório últimos 12 meses
+# DRP 06 - Home
 
 > [!important] Resumo
-> Relatório dos últimos 12 meses é um agregado de todas as informações buscando apresentar uma visão de longo prazo a fim de entender o comportamento removendo diferenças sezonais.
+> A Home é a página dentro da aplicação que recebe o usuário.
 
 Objetivos:
 
-- Permitir ao usuário verificar informações em relação a um longo período de tempo
+- __- Objetivo 1 com a realização do projeto -__
 
 Métricas para monitorar:
 
-- 
+- __- demais métricas que podem influenciar em outros aspectos do produto, como performance, satisfação do usuários -__
 
 # Contexto
 
@@ -38,10 +38,6 @@ Métricas para monitorar:
 ### Referências
 
 - __Referências de concorrentes ou inspirações__
-
-# Usuários
-
-- 
 
 # Requisitos
 

@@ -1,5 +1,8 @@
 # Backlog desqualificado
 
+#### Seleção do tipo de importação de extratos
+
+Deve ser disponibilizado para o usuário uma forma de selecionar qual o banco para fazer a importação de extratos.
 
 #### Despesas em custo de vida
 

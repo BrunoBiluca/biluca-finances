@@ -77,4 +77,4 @@ Métricas para monitorar:
 
 ### Relatório mensal
 
-![[Relatório mensal alt 2 (Mockup)]]
+![[Produto/DRP 03 - Relatório mensal/Esboços/Relatório mensal alt 2 (Mockup)]]

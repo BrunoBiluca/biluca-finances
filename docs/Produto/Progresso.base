@@ -1,0 +1,41 @@
+views:
+  - type: table
+    name: Concluídos
+    filters:
+      and:
+        - '!note["Concluído em"].isEmpty()'
+        - file.inFolder("Produto")
+    order:
+      - file.folder
+      - file.name
+      - Concluído em
+      - file.mtime
+    sort:
+      - property: file.mtime
+        direction: DESC
+    indentProperties: false
+  - type: table
+    name: Removidos
+    filters:
+      and:
+        - '!note["Removido em"].isEmpty()'
+        - file.inFolder("Produto")
+    order:
+      - file.folder
+      - file.name
+      - Removido em
+      - file.mtime
+  - type: table
+    name: Não feitos
+    filters:
+      and:
+        - note["Concluído em"].isEmpty()
+        - file.inFolder("Produto")
+        - file.name.containsAny("RF", "RNF")
+    order:
+      - file.folder
+      - file.name
+      - file.mtime
+    sort:
+      - property: Concluído em
+        direction: ASC
