@@ -35,6 +35,7 @@ Junto a melhoria visual, também é a oportunidade de refatorar o projeto para m
 - ⬛ Relatório anual
 - ⬛ Relatório mensal
 - ⬛ Tabela de Prestação de contas
+- ⬛ Modal de criação de registro de conta
 - ⬛ Edição da tabela de Prestação de contas
 - ⬛ Modal de conferência de importação de extratos
 - ⬛ Modal de seleção de identificação
