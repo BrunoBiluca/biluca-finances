@@ -26,4 +26,34 @@ Junto a melhoria visual, também é a oportunidade de refatorar o projeto para m
 > 🟦 em andamento
 > ⬛ não feito
 
+- [[Referências visuais]]
+- [[Referências sistêmicas]]
 
+### Re-design de todos os elementos da aplicação
+
+- ⬛ Home page
+- ⬛ Relatório anual
+- ⬛ Relatório mensal
+- ⬛ Tabela de Prestação de contas
+- ⬛ Edição da tabela de Prestação de contas
+- ⬛ Modal de conferência de importação de extratos
+- ⬛ Modal de seleção de identificação
+
+### [[DRP 07 - Controle de Identificações]]
+
+- [[RF 07.01 - Exibição das identificações cadastradas]]
+- [[RF 07.02 - Identificações abertas]]
+- [[RF 07.03 - Identificações descontinuadas]]
+- [[RF 07.04 - Remoção de Identificações]]
+- [[RF 07.05 - Sub-Identificações]]
+- [[RF 07.06 - Cadastro de Identificações]]
+- [[RF 07.07 - Edição de Identificações]]
+
+### Refatoração
+
+- ⬛ Refatoração da aplicação para seguir os formato padrão de projetos de Front-end
+- ⬛ Rever o processo de publicação de novas versões do projeto
+
+### Backup de dados
+
+- ⬛ Criar uma forma de manter um back-up de dados com Google Drive
