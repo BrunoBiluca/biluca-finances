@@ -1,3 +1,6 @@
+```dart
+// ignore_for_file: type=lint, unused_import, unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -485,3 +488,4 @@ class _TransactionRowState extends State<TransactionRow> {
     );
   }
 }
+```

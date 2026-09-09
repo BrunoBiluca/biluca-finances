@@ -1,0 +1,14 @@
+{
+    "search.exclude": {
+        "**/docs": true
+    },
+    "cSpell.ignorePaths": [
+        "**/docs/**"
+    ],
+    "markdownlint.exclude": [
+        "**/docs"
+    ],
+    "dart.analysisExcludedFolders": [
+        "**/docs"
+    ]
+}

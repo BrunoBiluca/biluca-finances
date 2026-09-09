@@ -1,3 +1,6 @@
+```dart
+
+// ignore_for_file: type=lint, unused_import, unused_local_variable
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -941,3 +944,4 @@ class AppTheme {
     );
   }
 }
+```
