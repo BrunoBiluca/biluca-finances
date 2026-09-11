@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/page.dart';
+import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
 import 'package:biluca_financas/app_layout.dart';
 import 'package:biluca_financas/home.dart';
 import 'package:biluca_financas/main.dart';
