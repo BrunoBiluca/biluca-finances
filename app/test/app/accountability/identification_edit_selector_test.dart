@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../mocks/mock_accountability_repo.dart';
+import '../../_mocks/mock_accountability_repo.dart';
 
 void main() {
   testWidgets("deve exibir mensagem quando não houver identificações", (tester) async {

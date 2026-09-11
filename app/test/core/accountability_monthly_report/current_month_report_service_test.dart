@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'mocks/mock_accountability_month_service.dart';
+import '../../_mocks/mock_accountability_month_service.dart';
 
 void main() {
   var currentMonth = DateTime(2024, 7);

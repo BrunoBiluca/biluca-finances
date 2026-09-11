@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'mocks/mock_accountability_month_service.dart';
+import '../../_mocks/mock_accountability_month_service.dart';
 
 void main() {
   testWidgets("should start showing shimmer when loading and show values when loaded", (tester) async {

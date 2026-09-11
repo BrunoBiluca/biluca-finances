@@ -12,7 +12,7 @@ import 'package:http/http.dart';
 import 'package:http/testing.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../accountability/mocks/mock_accountability_repo.dart';
+import '../../_mocks/mock_accountability_repo.dart';
 
 void main() {
   setUpAll(() {

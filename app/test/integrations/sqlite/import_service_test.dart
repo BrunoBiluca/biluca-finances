@@ -6,10 +6,10 @@ import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_import
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../_helpers/mocktail_extensions.dart';
-import '../accountability/mocks/fake_accountability_entry.dart';
-import '../accountability/mocks/fake_accountability_entry_request.dart';
-import '../accountability/mocks/mock_accountability_repo.dart';
+import '../../_helpers/mocktail_extensions.dart';
+import '../../_mocks/fake_accountability_entry.dart';
+import '../../_mocks/fake_accountability_entry_request.dart';
+import '../../_mocks/mock_accountability_repo.dart';
 
 class MockPredictService extends Mock implements EmbeddedPredictService {}
 

@@ -8,9 +8,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'mocks/fake_accountability_entry.dart';
-import 'mocks/fake_accountability_entry_request.dart';
-import 'mocks/mock_accountability_repo.dart';
+import '../../_mocks/fake_accountability_entry.dart';
+import '../../_mocks/fake_accountability_entry_request.dart';
+import '../../_mocks/mock_accountability_repo.dart';
 
 void main() {
   blocTest(
