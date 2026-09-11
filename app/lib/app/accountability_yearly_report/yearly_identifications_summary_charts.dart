@@ -1,12 +1,11 @@
-import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
-import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
-import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_identifications_summary.dart';
-import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
+import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:intl/intl.dart';
+
+import 'package:biluca_financas/common/extensions/number_extensions.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_identifications_summary.dart';
 
 class YearlyIdentificationsSummaryCharts extends StatelessWidget {
   final List<MonthlyIdentificationsSummary> res;

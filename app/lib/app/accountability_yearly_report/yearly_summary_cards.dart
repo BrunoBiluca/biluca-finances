@@ -1,7 +1,7 @@
-import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
-import 'package:biluca_financas/reports/components/single_value_card.dart';
-import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
 import 'package:flutter/material.dart';
+
+import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
+import 'package:biluca_financas/common/ui/reports/single_value_card.dart';
 
 class YearlySummaryCards extends StatelessWidget {
   const YearlySummaryCards({

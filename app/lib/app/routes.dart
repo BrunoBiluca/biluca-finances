@@ -3,7 +3,7 @@ import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/home/home.dart';
 import 'package:biluca_financas/main.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_v2.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_report.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/yearly_report.dart';
 import 'package:go_router/go_router.dart';
 
 GoRouter routes() {

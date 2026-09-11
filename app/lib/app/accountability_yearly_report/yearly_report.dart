@@ -1,11 +1,12 @@
+// ignore: unused_import
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
-import 'package:biluca_financas/reports/components/future_handler.dart';
-import 'package:biluca_financas/reports/yearly_report/year_selector.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_identifications_summary_charts.dart';
+import 'package:biluca_financas/common/ui/reports/future_handler.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/year_selector.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/yearly_identifications_summary_charts.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_summary_cards.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_summary_charts.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/yearly_summary_cards.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/yearly_summary_charts.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 

@@ -1,5 +1,5 @@
 import 'package:biluca_financas/core/accountability_stats/models/accountability_year_stats.dart';
-import 'package:biluca_financas/reports/yearly_report/year_selector.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/year_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

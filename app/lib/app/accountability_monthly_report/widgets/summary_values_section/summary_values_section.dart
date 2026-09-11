@@ -1,6 +1,6 @@
-import 'package:biluca_financas/app/accountability_monthly_report/sections/summary_values_section/summary_balance_card.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/sections/summary_values_section/summary_expenses_card.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/sections/summary_values_section/summary_incomes_card.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_balance_card.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_expenses_card.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_incomes_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 

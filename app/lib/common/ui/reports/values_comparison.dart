@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:biluca_financas/reports/models/values_relation.dart';
+import 'package:biluca_financas/common/lib/values_relation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

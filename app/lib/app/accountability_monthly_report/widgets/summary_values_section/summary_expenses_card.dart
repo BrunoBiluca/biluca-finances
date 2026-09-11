@@ -1,7 +1,7 @@
-import 'package:biluca_financas/reports/components/future_handler.dart';
-import 'package:biluca_financas/reports/components/values_comparison_full_text.dart';
+import 'package:biluca_financas/common/ui/reports/future_handler.dart';
+import 'package:biluca_financas/common/ui/reports/values_comparison_full_text.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_service.provider.dart';
-import 'package:biluca_financas/reports/components/consolidated_value_card.dart';
+import 'package:biluca_financas/common/ui/reports/consolidated_value_card.dart';
 import 'package:flutter/material.dart';
 
 class SummaryExpensesCard extends StatelessWidget {

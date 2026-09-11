@@ -1,4 +1,4 @@
-import 'package:biluca_financas/reports/models/values_relation.dart';
+import 'package:biluca_financas/common/lib/values_relation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

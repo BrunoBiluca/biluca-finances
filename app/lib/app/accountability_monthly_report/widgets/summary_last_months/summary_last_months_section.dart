@@ -1,6 +1,6 @@
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/sections/summary_last_months/month_info_card.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_last_months/month_info_card.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_service.provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

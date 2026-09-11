@@ -1,6 +1,6 @@
-import 'package:biluca_financas/app/accountability_monthly_report/sections/accountability_by_identifications_section/identification_detail.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/sections/accountability_by_identifications_section/identifications_barchart.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/sections/accountability_by_identifications_section/identifications_percentage_chart.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/accountability_by_identifications_section/identification_detail.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/accountability_by_identifications_section/identifications_barchart.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/accountability_by_identifications_section/identifications_percentage_chart.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/models/identification_report_info.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';

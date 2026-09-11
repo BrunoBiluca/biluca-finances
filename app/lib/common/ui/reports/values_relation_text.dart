@@ -1,5 +1,5 @@
 import 'package:biluca_financas/common/formatters/formatter.dart';
-import 'package:biluca_financas/reports/models/values_relation.dart';
+import 'package:biluca_financas/common/lib/values_relation.dart';
 import 'package:flutter/material.dart';
 
 class ValuesRelationText extends StatelessWidget {
