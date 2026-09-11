@@ -1,6 +1,6 @@
-import 'package:biluca_financas/accountability/models/entry.dart';
-import 'package:biluca_financas/accountability/models/entry_request.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 
 abstract class AccountabilityRepo {
   Future<List<AccountabilityEntry>> getEntries({int limit = 10, int offset = 0});

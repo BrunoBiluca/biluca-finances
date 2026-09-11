@@ -1,10 +1,11 @@
-import 'package:biluca_financas/accountability/bloc/bloc.dart';
-import 'package:biluca_financas/accountability/bloc/events.dart';
-import 'package:biluca_financas/accountability/bloc/states.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:biluca_financas/formatter.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';

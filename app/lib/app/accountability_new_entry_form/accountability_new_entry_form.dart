@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/models/entry_request.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/common/real_input_formatter.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/components/forms/data_picker_field.dart';

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
@@ -54,13 +55,4 @@ class AccountabilityIdentification {
       'type': type.name
     };
   }
-}
-
-enum AccountabilityIdentificationType {
-  expense('Despesa'),
-  income('Receita'),
-  investment('Investimento');
-
-  final String label;
-  const AccountabilityIdentificationType(this.label);
 }

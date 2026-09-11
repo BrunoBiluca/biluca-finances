@@ -1,6 +1,6 @@
-import 'package:biluca_financas/accountability/models/entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
 import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';

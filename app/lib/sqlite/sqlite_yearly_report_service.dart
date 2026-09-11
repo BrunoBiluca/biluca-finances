@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
 import 'package:intl/intl.dart';

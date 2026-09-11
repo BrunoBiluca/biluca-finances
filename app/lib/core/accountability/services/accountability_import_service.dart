@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:biluca_financas/accountability/models/entry.dart';
-import 'package:biluca_financas/accountability/models/entry_request.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 
 abstract class AccountabilityImportService {
   List<AccountabilityEntryRequest> entries = [];

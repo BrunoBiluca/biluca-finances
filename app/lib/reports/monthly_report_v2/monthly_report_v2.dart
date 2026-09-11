@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:biluca_financas/accountability/bloc/bloc.dart';
-import 'package:biluca_financas/accountability/bloc/events.dart';
-import 'package:biluca_financas/accountability/bloc/states.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:biluca_financas/reports/accountability_month_stats.dart';

@@ -1,9 +1,9 @@
-import 'package:biluca_financas/accountability/bloc/bloc.dart';
-import 'package:biluca_financas/accountability/bloc/events.dart';
-import 'package:biluca_financas/accountability/bloc/states.dart';
-import 'package:biluca_financas/accountability/models/entry.dart';
-import 'package:biluca_financas/accountability/models/entry_request.dart';
-import 'package:biluca_financas/accountability/services/repo.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
+import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

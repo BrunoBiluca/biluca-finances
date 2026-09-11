@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:biluca_financas/accountability/models/entry_request.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:biluca_financas/predict/predict_local.dart';
 import 'package:biluca_financas/predict/predict_service.dart';

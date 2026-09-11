@@ -1,10 +1,10 @@
-import 'package:biluca_financas/accountability/bloc/bloc.dart';
-import 'package:biluca_financas/accountability/bloc/states.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_selector.dart';
 import 'package:biluca_financas/components/text_ballon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../accountability/models/identification.dart';
+import '../../../core/accountability/models/accountability_identification.dart';
 
 class AccountabilityIdentificationLabel extends StatefulWidget {
   final AccountabilityIdentification? identification;

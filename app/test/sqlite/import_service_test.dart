@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:biluca_financas/accountability/models/entry_request.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:biluca_financas/sqlite/accountability/import_service.dart';
 import 'package:flutter_test/flutter_test.dart';

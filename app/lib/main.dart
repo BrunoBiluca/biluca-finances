@@ -1,12 +1,12 @@
-import 'package:biluca_financas/accountability/bloc/bloc.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/logging/console_listener.dart';
 import 'package:biluca_financas/common/logging/file_listener.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:biluca_financas/predict/predict_local.dart';
 import 'package:biluca_financas/reports/accountability_month_service.dart';
-import 'package:biluca_financas/accountability/services/import_service.dart';
-import 'package:biluca_financas/accountability/services/repo.dart';
+import 'package:biluca_financas/core/accountability/services/accountability_import_service.dart';
+import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:biluca_financas/app.dart';
 import 'package:biluca_financas/predict/predict_service.dart';
 import 'package:biluca_financas/reports/accountability_stats_service.dart';

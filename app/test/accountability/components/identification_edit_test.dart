@@ -1,5 +1,5 @@
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_label.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,5 +1,5 @@
-import 'package:biluca_financas/accountability/models/entry.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AccountabilityState extends Equatable {

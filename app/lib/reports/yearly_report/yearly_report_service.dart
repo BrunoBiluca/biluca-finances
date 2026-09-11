@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/models/identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 
 abstract class YearlyReportService {
   Future<YearlySummary> summary();

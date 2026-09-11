@@ -1,7 +1,7 @@
-import 'package:biluca_financas/accountability/bloc/events.dart';
-import 'package:biluca_financas/accountability/bloc/states.dart';
-import 'package:biluca_financas/accountability/models/identification.dart';
-import 'package:biluca_financas/accountability/services/repo.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
+import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AccountabilityBloc extends Bloc<AccountabilityEvent, AccountabilityState> {

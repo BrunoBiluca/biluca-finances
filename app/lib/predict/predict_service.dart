@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:biluca_financas/accountability/models/entry_request.dart';
-import 'package:biluca_financas/accountability/services/repo.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
+import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:biluca_financas/predict/predict_local.dart';
