@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
-import 'package:biluca_financas/core/accountability/services/accountability_import_service.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
-import 'package:biluca_financas/predict/predict_service.dart';
 
 class SQLiteAccountabilityImportService extends AccountabilityImportService {
   final AccountabilityRepo repo;
-  final PredictService? predictService;
+  final AccountabilityIdentificationPredictionService? predictService;
   SQLiteAccountabilityImportService({required this.repo, this.predictService});
 
   @override

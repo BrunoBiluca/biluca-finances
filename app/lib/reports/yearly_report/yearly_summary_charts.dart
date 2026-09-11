@@ -1,5 +1,6 @@
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_summary.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';

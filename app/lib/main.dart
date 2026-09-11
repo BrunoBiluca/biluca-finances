@@ -3,21 +3,22 @@ import 'package:biluca_financas/core/accountability/models/accountability_identi
 import 'package:biluca_financas/common/logging/console_listener.dart';
 import 'package:biluca_financas/common/logging/file_listener.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
-import 'package:biluca_financas/predict/predict_local.dart';
-import 'package:biluca_financas/reports/accountability_month_service.dart';
-import 'package:biluca_financas/core/accountability/services/accountability_import_service.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
+import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
+import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:biluca_financas/app.dart';
-import 'package:biluca_financas/predict/predict_service.dart';
-import 'package:biluca_financas/reports/accountability_stats_service.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
+import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
-import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
-import 'package:biluca_financas/sqlite/accountability/accountability_month_service.dart';
-import 'package:biluca_financas/sqlite/accountability/import_service.dart';
-import 'package:biluca_financas/sqlite/db_provider.dart';
-import 'package:biluca_financas/sqlite/sqlite_accountability_stats_service.dart';
-import 'package:biluca_financas/sqlite/sqlite_yearly_report_service.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_repo.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_month_service.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_import_service.dart';
+import 'package:biluca_financas/integrations/sqlite/db_provider.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_stats_service.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_yearly_report_service.dart';
 import 'package:biluca_financas/theme_manager.dart';
 import 'package:biluca_financas/themes/dark.dart';
 import 'package:flutter/material.dart';
@@ -63,13 +64,13 @@ Future<void> setupDependencies() async {
   getIt.registerFactory<AccountabilityBloc>(
     () => AccountabilityBloc(repo: getIt<AccountabilityRepo>()),
   );
-  getIt.registerFactory<PredictService>(
-    () => PredictService(Client(), getIt<AccountabilityRepo>()),
+  getIt.registerFactory<AccountabilityIdentificationPredictionService>(
+    () => EmbeddedPredictService(Client(), getIt<AccountabilityRepo>()),
   );
   getIt.registerFactory<AccountabilityImportService>(
     () => SQLiteAccountabilityImportService(
       repo: getIt<AccountabilityRepo>(),
-      predictService: getIt<PredictService>(),
+      predictService: getIt<AccountabilityIdentificationPredictionService>(),
     ),
   );
   getIt.registerFactory<FToast>(
@@ -86,7 +87,7 @@ Future<void> setupDependencies() async {
       ..setLight("dark"),
   );
 
-  getIt.registerSingleton<PredictLocal>(PredictLocal()..init());
+  getIt.registerSingleton<EmbeddedPredictServer>(EmbeddedPredictServer()..init());
 
   getIt.registerFactory<AccountabilityStatsService>(
     () => SqliteAccountabilityStatsService(
@@ -94,7 +95,7 @@ Future<void> setupDependencies() async {
     ),
   );
 
-  getIt.registerFactoryParam<YearlyReportService, DateTime, DateTime>(
+  getIt.registerFactoryParam<AccountabilityYearlyReportService, DateTime, DateTime>(
     (start, end) => SqliteYearlyReportService(
       db: getIt<Database>(),
       start: start,

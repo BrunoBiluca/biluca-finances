@@ -1,10 +1,13 @@
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_identifications_summary.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_summary.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
-class SqliteYearlyReportService extends YearlyReportService {
+class SqliteYearlyReportService extends AccountabilityYearlyReportService {
   final Database db;
   final DateTime start;
   final DateTime end;

@@ -1,9 +1,9 @@
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
-import 'package:biluca_financas/reports/accountability_stats_service.dart';
+import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/yearly_report/year_selector.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_identifications_summary_charts.dart';
-import 'package:biluca_financas/reports/yearly_report/yearly_report_service.dart';
+import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_summary_cards.dart';
 import 'package:biluca_financas/reports/yearly_report/yearly_summary_charts.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class YearlyReport extends StatefulWidget {
 
 class _YearlyReportState extends State<YearlyReport> {
   String? currentYear;
-  YearlyReportService? service;
+  AccountabilityYearlyReportService? service;
   AccountabilityStatsService statsService = GetIt.I<AccountabilityStatsService>();
 
   void updateSelectedYear(String year) => setState(() => currentYear = year);
@@ -37,12 +37,12 @@ class _YearlyReportState extends State<YearlyReport> {
         if (currentYear == "Últimos 12 meses") {
           var now = DateTime.now();
           var end = DateTime(now.year, now.month, 0);
-          service = GetIt.I<YearlyReportService>(
+          service = GetIt.I<AccountabilityYearlyReportService>(
             param1: DateTime(end.year - 1, end.month, 1),
             param2: end,
           );
         } else {
-          service = GetIt.I<YearlyReportService>(
+          service = GetIt.I<AccountabilityYearlyReportService>(
             param1: DateTime(int.parse(currentYear!), 1, 1),
             param2: DateTime(int.parse(currentYear!) + 1, 1, 1),
           );

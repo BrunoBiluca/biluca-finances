@@ -5,17 +5,18 @@ import 'package:biluca_financas/core/accountability/models/accountability_entry_
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
-import 'package:biluca_financas/predict/predict_local.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 
-class PredictService {
+class EmbeddedPredictService implements AccountabilityIdentificationPredictionService {
   final Client http;
   final AccountabilityRepo repo;
   final Logger log = GetIt.I<LoggerManager>().instance("PredictService");
-  PredictService(this.http, this.repo);
+  EmbeddedPredictService(this.http, this.repo);
 
   Future<List<AccountabilityEntryRequest>> predict({
     List<AccountabilityEntryRequest>? entries,
@@ -43,7 +44,7 @@ class PredictService {
   }
 
   Future<dynamic> _postFile(File importedFile) async {
-    var server = GetIt.I<PredictLocal>();
+    var server = GetIt.I<EmbeddedPredictServer>();
     MultipartRequest request = MultipartRequest('POST', Uri.parse('${server.host}/predict'));
     request.files.add(await MultipartFile.fromPath('extrato', importedFile.path));
     var result = await request.send();
@@ -55,7 +56,7 @@ class PredictService {
   }
 
   Future<dynamic> _postPredict(List<AccountabilityEntryRequest> entries) async {
-    var server = GetIt.I<PredictLocal>();
+    var server = GetIt.I<EmbeddedPredictServer>();
     var result = await http.post(
       Uri.parse("${server.host}/predict"),
       headers: {"Content-Type": "application/json"},

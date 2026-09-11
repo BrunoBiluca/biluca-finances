@@ -9,9 +9,9 @@ import 'package:biluca_financas/app/accountability_new_entry_form/accountability
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/app/accountability_import_verification/accountability_import_verification.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
-import 'package:biluca_financas/core/accountability/services/accountability_import_service.dart';
+import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:biluca_financas/components/base_toast.dart';
-import 'package:biluca_financas/predict/predict_service.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -126,7 +126,7 @@ class AccountabilityPage extends StatelessWidget {
     if (newEntry == null) return;
 
     if (newEntry.identification == null) {
-      var entries = await GetIt.I<PredictService>().predict(entries: [newEntry]);
+      var entries = await GetIt.I<EmbeddedPredictService>().predict(entries: [newEntry]);
       newEntry = entries[0];
     }
 

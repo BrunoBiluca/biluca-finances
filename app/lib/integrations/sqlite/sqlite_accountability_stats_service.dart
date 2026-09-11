@@ -1,7 +1,7 @@
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
-import 'package:biluca_financas/reports/accountability_month_stats.dart';
-import 'package:biluca_financas/reports/accountability_stats_service.dart';
-import 'package:biluca_financas/reports/accountability_year_stats.dart';
+import 'package:biluca_financas/core/accountability_stats/models/accountability_month_stats.dart';
+import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
+import 'package:biluca_financas/core/accountability_stats/models/accountability_year_stats.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 

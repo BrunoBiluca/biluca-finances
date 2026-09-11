@@ -3,8 +3,8 @@ import 'package:biluca_financas/core/accountability/models/accountability_identi
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/common/logging/console_listener.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
-import 'package:biluca_financas/sqlite/accountability/accountability_repo.dart';
-import 'package:biluca_financas/sqlite/accountability/accountability_month_service.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_repo.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_month_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';

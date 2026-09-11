@@ -1,4 +1,4 @@
-import 'package:biluca_financas/reports/accountability_year_stats.dart';
+import 'package:biluca_financas/core/accountability_stats/models/accountability_year_stats.dart';
 import 'package:flutter/material.dart';
 
 class YearSelector extends StatelessWidget {

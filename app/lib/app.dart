@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:biluca_financas/predict/predict_local.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
 import 'package:biluca_financas/routes.dart';
 import 'package:biluca_financas/theme_manager.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
-    GetIt.I<PredictLocal>().terminate();
+    GetIt.I<EmbeddedPredictServer>().terminate();
     return super.didRequestAppExit();
   }
 

@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
-import 'package:biluca_financas/predict/predict_local.dart';
-import 'package:biluca_financas/predict/predict_service.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -17,7 +17,7 @@ import '../accountability/mocks/mock_accountability_repo.dart';
 void main() {
   setUpAll(() {
     GetIt.I.registerSingleton<LoggerManager>(LoggerManager());
-    GetIt.I.registerSingleton<PredictLocal>(PredictLocal());
+    GetIt.I.registerSingleton<EmbeddedPredictServer>(EmbeddedPredictServer());
   });
 
   test("deve retornar a mesma lista passada quando o serviço estiver indisponível", () async {
@@ -26,7 +26,7 @@ void main() {
     });
     var repo = MockAccountabilityRepo();
 
-    var service = PredictService(client, repo);
+    var service = EmbeddedPredictService(client, repo);
     var entries = await service.predict(entries: []);
 
     expect(entries, isEmpty);
@@ -62,7 +62,7 @@ void main() {
       (_) async => Future.delayed(const Duration(milliseconds: 10), () => [expectedIdentification]),
     );
 
-    final service = PredictService(client, repo);
+    final service = EmbeddedPredictService(client, repo);
 
     var result = await service.predict(entries: [
       AccountabilityEntryRequest(description: "Descricão fictício", value: 10, createdAt: DateTime.now()),

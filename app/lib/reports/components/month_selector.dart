@@ -1,4 +1,4 @@
-import 'package:biluca_financas/reports/accountability_month_stats.dart';
+import 'package:biluca_financas/core/accountability_stats/models/accountability_month_stats.dart';
 import 'package:flutter/material.dart';
 
 class MonthSelector extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
-import 'package:biluca_financas/predict/predict_service.dart';
-import 'package:biluca_financas/sqlite/accountability/import_service.dart';
+import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_import_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -11,7 +11,7 @@ import '../accountability/mocks/fake_accountability_entry.dart';
 import '../accountability/mocks/fake_accountability_entry_request.dart';
 import '../accountability/mocks/mock_accountability_repo.dart';
 
-class MockPredictService extends Mock implements PredictService {}
+class MockPredictService extends Mock implements EmbeddedPredictService {}
 
 void main() {
   test("deve returnar uma lista vazia se não existir um servidor de predição", () async {

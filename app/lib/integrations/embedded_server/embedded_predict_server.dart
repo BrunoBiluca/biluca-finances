@@ -5,7 +5,7 @@ import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
-class PredictLocal {
+class EmbeddedPredictServer {
   var log = GetIt.I<LoggerManager>().instance("Execução do servidor de predição");
   final String host = "http://localhost:5666/";
 
@@ -17,10 +17,9 @@ class PredictLocal {
       path += "/data/flutter_assets";
     }
     path += "/assets/gen/predict_win/";
-    if(io.Platform.isLinux){
+    if (io.Platform.isLinux) {
       path += "predict_win";
-    }
-    else if(io.Platform.isWindows){
+    } else if (io.Platform.isWindows) {
       path += "predict_win.exe";
     }
     log.info("Predict server path: $path");
@@ -49,10 +48,9 @@ class PredictLocal {
 
   void terminate() async {
     log.info("Encerrando servidor de predição...");
-    if(io.Platform.isWindows){
-    await Process.run('taskkill', ['/F', '/IM', "predict_win.exe"]);
-    }
-    else if(io.Platform.isLinux){
+    if (io.Platform.isWindows) {
+      await Process.run('taskkill', ['/F', '/IM', "predict_win.exe"]);
+    } else if (io.Platform.isLinux) {
       await Process.run('killall', ["predict_win"]);
     }
     log.info("Servidor de predição encerrado com sucesso");

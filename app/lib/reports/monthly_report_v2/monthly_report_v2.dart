@@ -4,8 +4,8 @@ import 'package:biluca_financas/core/accountability/bloc/accountability_events.d
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
-import 'package:biluca_financas/reports/accountability_month_stats.dart';
-import 'package:biluca_financas/reports/accountability_stats_service.dart';
+import 'package:biluca_financas/core/accountability_stats/models/accountability_month_stats.dart';
+import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/components/month_selector.dart';
 import 'package:biluca_financas/reports/monthly_report_v2/sections/accountability_by_identifications_section/expenses_per_indentification.dart';
