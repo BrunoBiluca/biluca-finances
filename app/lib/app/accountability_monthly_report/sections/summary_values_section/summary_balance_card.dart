@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/lib/formatter.dart';
+import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/reports/components/future_handler.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/components/report_tooltip.dart';

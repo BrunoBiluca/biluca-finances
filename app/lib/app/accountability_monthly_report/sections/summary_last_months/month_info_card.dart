@@ -1,6 +1,6 @@
-import 'package:biluca_financas/common/lib/formatter.dart';
+import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/extensions/string_extensions.dart';
-import 'package:biluca_financas/common/components/base_decorated_card.dart';
+import 'package:biluca_financas/common/ui/decorated_card.dart';
 import 'package:biluca_financas/reports/components/values_relation_text.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class MonthInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseDecoratedCard(
+    return DecoratedCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

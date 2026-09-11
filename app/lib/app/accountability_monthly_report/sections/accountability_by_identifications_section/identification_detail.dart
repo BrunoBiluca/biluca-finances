@@ -4,9 +4,9 @@ import 'package:biluca_financas/core/accountability/bloc/accountability_states.d
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
-import 'package:biluca_financas/common/components/base_dialog.dart';
+import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
-import 'package:biluca_financas/common/lib/formatter.dart';
+import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/reports/components/icon_highlight.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
 import 'package:biluca_financas/reports/components/values_comparison_small.dart';

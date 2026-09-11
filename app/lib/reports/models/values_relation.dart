@@ -1,5 +1,5 @@
-import 'package:biluca_financas/common/math.dart';
-import 'package:biluca_financas/common/switch_adv.dart';
+import 'package:biluca_financas/common/extensions/math.dart';
+import 'package:biluca_financas/common/lib/switch.dart';
 
 enum ValuesRelationType { positive, negative, neutral, unknown }
 
@@ -24,7 +24,7 @@ class ValuesRelation {
 
     percentage = Math.relativePercentage(current, related);
 
-    type = SwitchAdv(percentage)
+    type = Switch(percentage)
         .mapIf((v) => v == 0, ValuesRelationType.neutral)
         .mapIf((v) => !percentage.isFinite, ValuesRelationType.unknown)
         .mapIf((v) => !((v > 0) ^ !_lessIsPositite), ValuesRelationType.positive)

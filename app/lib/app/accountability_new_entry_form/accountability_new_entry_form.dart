@@ -1,8 +1,8 @@
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
-import 'package:biluca_financas/common/real_input_formatter.dart';
-import 'package:biluca_financas/common/components/base_dialog.dart';
-import 'package:biluca_financas/common/components/forms/data_picker_field.dart';
-import 'package:biluca_financas/common/components/forms/primary_text_field.dart';
+import 'package:biluca_financas/core/accountability/validators/real_input_formatter.dart';
+import 'package:biluca_financas/common/ui/base_dialog.dart';
+import 'package:biluca_financas/common/ui/forms/data_picker_field.dart';
+import 'package:biluca_financas/common/ui/forms/primary_text_field.dart';
 import 'package:flutter/material.dart';
 
 class AccountabilityEntryForm extends StatefulWidget {

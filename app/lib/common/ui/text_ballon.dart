@@ -1,5 +1,5 @@
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
-import 'package:biluca_financas/common/components/base_dialog.dart';
+import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/Models/configuration.dart';

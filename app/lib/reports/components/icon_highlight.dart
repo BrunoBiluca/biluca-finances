@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/centered_icon.dart';
+import 'package:biluca_financas/common/ui/centered_icon.dart';
 import 'package:flutter/material.dart';
 
 class IconHighlight extends StatelessWidget {

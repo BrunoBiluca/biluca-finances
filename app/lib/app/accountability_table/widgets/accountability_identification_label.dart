@@ -1,7 +1,7 @@
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_selector.dart';
-import 'package:biluca_financas/common/components/text_ballon.dart';
+import 'package:biluca_financas/common/ui/text_ballon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/accountability/models/accountability_identification.dart';

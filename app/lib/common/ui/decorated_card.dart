@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class BaseDecoratedCard extends StatelessWidget {
+class DecoratedCard extends StatelessWidget {
   final Widget child;
-  const BaseDecoratedCard({super.key, required this.child});
+  const DecoratedCard({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

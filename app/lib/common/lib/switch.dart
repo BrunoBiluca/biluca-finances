@@ -1,9 +1,9 @@
-class SwitchAdv<T, K> {
+class Switch<T, K> {
   final T v;
   final List<(bool Function(T), K)> expressions = [];
-  SwitchAdv(this.v);
+  Switch(this.v);
 
-  SwitchAdv<T, K> mapIf(bool Function(T) condition, K resolve) {
+  Switch<T, K> mapIf(bool Function(T) condition, K resolve) {
     expressions.add((condition, resolve));
     return this;
   }

@@ -1,9 +1,9 @@
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
-import 'package:biluca_financas/common/components/base_dialog.dart';
-import 'package:biluca_financas/common/components/forms/primary_text_field.dart';
-import 'package:biluca_financas/common/components/text_ballon.dart';
+import 'package:biluca_financas/common/ui/base_dialog.dart';
+import 'package:biluca_financas/common/ui/forms/primary_text_field.dart';
+import 'package:biluca_financas/common/ui/text_ballon.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';

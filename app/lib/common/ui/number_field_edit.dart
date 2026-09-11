@@ -1,6 +1,6 @@
-import 'package:biluca_financas/common/components/base_dialog.dart';
-import 'package:biluca_financas/common/lib/formatter.dart';
-import 'package:biluca_financas/common/components/number.dart';
+import 'package:biluca_financas/common/formatters/formatter.dart';
+import 'package:biluca_financas/common/ui/base_dialog.dart';
+import 'package:biluca_financas/common/ui/real_currency.dart';
 import 'package:flutter/material.dart';
 
 class NumberFieldEdit extends StatelessWidget {

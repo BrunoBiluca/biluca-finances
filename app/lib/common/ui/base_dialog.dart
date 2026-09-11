@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/components/mouse_back_button_listener.dart';
+import 'package:biluca_financas/common/navigation/mouse_back_button_listener.dart';
 import 'package:flutter/material.dart';
 
 class BaseDialog extends StatelessWidget {

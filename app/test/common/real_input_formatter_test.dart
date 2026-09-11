@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/real_input_formatter.dart';
+import 'package:biluca_financas/core/accountability/validators/real_input_formatter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

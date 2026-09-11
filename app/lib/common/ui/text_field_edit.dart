@@ -1,4 +1,4 @@
-import 'package:biluca_financas/common/components/base_dialog.dart';
+import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldEdit extends StatelessWidget {
