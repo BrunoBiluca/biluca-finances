@@ -2,7 +2,7 @@ import 'package:biluca_financas/app/accountability_page/accountability_page.dart
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/home/home.dart';
 import 'package:biluca_financas/main.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_v2.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/monthly_report.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/yearly_report.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,7 +24,7 @@ GoRouter routes() {
           ),
           GoRoute(
             path: '/monthly-report',
-            builder: (context, state) => const MonthlyReportV2(),
+            builder: (context, state) => const MonthlyReport(),
           ),
           GoRoute(
             path: '/yearly-report',

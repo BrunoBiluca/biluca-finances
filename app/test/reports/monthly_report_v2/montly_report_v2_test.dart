@@ -1,4 +1,4 @@
-import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_v2.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/monthly_report.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/current_month_report.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -62,7 +62,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           title: 'Flutter Demo',
-          home: MonthlyReportV2(),
+          home: MonthlyReport(),
         ),
       );
 

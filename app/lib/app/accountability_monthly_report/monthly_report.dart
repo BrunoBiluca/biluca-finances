@@ -6,7 +6,6 @@ import 'package:biluca_financas/app/accountability_table/accountability_table.da
 import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:biluca_financas/core/accountability_stats/models/accountability_month_stats.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
-import 'package:biluca_financas/common/ui/reports/future_handler.dart';
 import 'package:biluca_financas/common/ui/reports/month_selector.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/accountability_by_identifications_section/expenses_per_indentification.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/accountability_by_identifications_section/incomes_per_identification.dart';
@@ -19,14 +18,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-class MonthlyReportV2 extends StatefulWidget {
-  const MonthlyReportV2({super.key});
+class MonthlyReport extends StatefulWidget {
+  const MonthlyReport({super.key});
 
   @override
-  State<StatefulWidget> createState() => _MonthlyReportV2State();
+  State<StatefulWidget> createState() => _MonthlyReportState();
 }
 
-class _MonthlyReportV2State extends State<MonthlyReportV2> {
+class _MonthlyReportState extends State<MonthlyReport> {
   List<AccountabilityMonthStats> availableMonths = [];
   AccountabilityMonthStats? _selectedMonth;
   CurrentMonthReportService? _service;
