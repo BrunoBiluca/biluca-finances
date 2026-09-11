@@ -1,6 +1,6 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/events.dart';
-import 'package:biluca_financas/accountability/components/identification_edit_selector.dart';
+import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_selector.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';

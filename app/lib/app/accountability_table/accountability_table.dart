@@ -1,6 +1,6 @@
 import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:biluca_financas/formatter.dart';
-import 'package:biluca_financas/accountability/components/identification_edit.dart';
+import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_label.dart';
 import 'package:biluca_financas/components/number.dart';
 import 'package:biluca_financas/components/number_field_edit.dart';
 import 'package:biluca_financas/components/text_field_edit.dart';
@@ -138,7 +138,7 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: AccountabilityIdentificationEdit(
+                  child: AccountabilityIdentificationLabel(
                     identification: entry.identification,
                     onEdit: (id) => widget.onUpdate(entry..identification = id),
                   ),

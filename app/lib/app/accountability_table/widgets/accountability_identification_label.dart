@@ -1,22 +1,22 @@
 import 'package:biluca_financas/accountability/bloc/bloc.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
-import 'package:biluca_financas/accountability/components/identification_edit_selector.dart';
+import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_selector.dart';
 import 'package:biluca_financas/components/text_ballon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/identification.dart';
+import '../../../accountability/models/identification.dart';
 
-class AccountabilityIdentificationEdit extends StatefulWidget {
+class AccountabilityIdentificationLabel extends StatefulWidget {
   final AccountabilityIdentification? identification;
   final Function onEdit;
 
-  const AccountabilityIdentificationEdit({super.key, required this.identification, required this.onEdit});
+  const AccountabilityIdentificationLabel({super.key, required this.identification, required this.onEdit});
 
   @override
-  State<AccountabilityIdentificationEdit> createState() => _AccountabilityIdentificationEditState();
+  State<AccountabilityIdentificationLabel> createState() => _AccountabilityIdentificationLabelState();
 }
 
-class _AccountabilityIdentificationEditState extends State<AccountabilityIdentificationEdit> {
+class _AccountabilityIdentificationLabelState extends State<AccountabilityIdentificationLabel> {
   @override
   Widget build(BuildContext c) {
     return GestureDetector(

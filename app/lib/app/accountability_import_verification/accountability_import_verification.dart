@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/components/table.dart';
+import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:flutter/material.dart';

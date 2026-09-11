@@ -1,4 +1,4 @@
-import 'package:biluca_financas/accountability/components/identification_edit.dart';
+import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_label.dart';
 import 'package:biluca_financas/accountability/models/identification.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +9,7 @@ void main() {
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityIdentificationEdit(identification: null, onEdit: (identification) {}),
+          body: AccountabilityIdentificationLabel(identification: null, onEdit: (identification) {}),
         ),
       ),
     );
@@ -23,7 +23,7 @@ void main() {
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityIdentificationEdit(identification: id, onEdit: (identification) {}),
+          body: AccountabilityIdentificationLabel(identification: id, onEdit: (identification) {}),
         ),
       ),
     );
