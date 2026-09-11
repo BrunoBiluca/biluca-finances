@@ -1,6 +1,6 @@
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
-import 'package:biluca_financas/components/base_dialog.dart';
+import 'package:biluca_financas/common/components/base_dialog.dart';
 import 'package:flutter/material.dart';
 
 class AccountabilityImportVerification extends StatefulWidget {

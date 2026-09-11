@@ -1,9 +1,9 @@
 import 'package:biluca_financas/common/extensions/string_extensions.dart';
-import 'package:biluca_financas/formatter.dart';
+import 'package:biluca_financas/common/lib/formatter.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_label.dart';
-import 'package:biluca_financas/components/number.dart';
-import 'package:biluca_financas/components/number_field_edit.dart';
-import 'package:biluca_financas/components/text_field_edit.dart';
+import 'package:biluca_financas/common/components/number.dart';
+import 'package:biluca_financas/common/components/number_field_edit.dart';
+import 'package:biluca_financas/common/components/text_field_edit.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

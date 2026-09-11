@@ -1,4 +1,4 @@
-import 'package:biluca_financas/formatter.dart';
+import 'package:biluca_financas/common/lib/formatter.dart';
 import 'package:biluca_financas/reports/components/report_tooltip.dart';
 import 'package:biluca_financas/reports/models/values_relation.dart';
 import 'package:biluca_financas/reports/components/values_comparison.dart';

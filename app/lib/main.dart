@@ -8,10 +8,10 @@ import 'package:biluca_financas/integrations/embedded_server/embedded_predict_se
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
-import 'package:biluca_financas/app.dart';
+import 'package:biluca_financas/app/app.dart';
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
-import 'package:biluca_financas/reports/monthly_report_v2/services/current_month_report.service.dart';
+import 'package:biluca_financas/core/accountability_monthly_report/services/current_month_report.service.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_repo.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_month_service.dart';
@@ -19,8 +19,8 @@ import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_import
 import 'package:biluca_financas/integrations/sqlite/db_provider.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_stats_service.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_yearly_report_service.dart';
-import 'package:biluca_financas/theme_manager.dart';
-import 'package:biluca_financas/themes/dark.dart';
+import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/dark.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
