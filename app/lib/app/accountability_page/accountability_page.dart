@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:biluca_financas/accountability/bloc/states.dart';
 import 'package:biluca_financas/accountability/components/entry_form.dart';
 import 'package:biluca_financas/accountability/components/table.dart';
-import 'package:biluca_financas/accountability/import_check_page.dart';
+import 'package:biluca_financas/app/accountability_import_verification/accountability_import_verification.dart';
 import 'package:biluca_financas/accountability/models/entry_request.dart';
 import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/components/base_toast.dart';
@@ -112,7 +112,7 @@ class AccountabilityPage extends StatelessWidget {
       context: context,
       builder: (c) => BlocProvider(
         create: (_) => GetIt.I<AccountabilityBloc>()..add(FetchAccountabilityEntries()),
-        child: AccountabilityImportCheckPage(service: importService),
+        child: AccountabilityImportVerification(service: importService),
       ),
     );
   }

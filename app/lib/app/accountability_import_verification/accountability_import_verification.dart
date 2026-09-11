@@ -3,15 +3,15 @@ import 'package:biluca_financas/accountability/services/import_service.dart';
 import 'package:biluca_financas/components/base_dialog.dart';
 import 'package:flutter/material.dart';
 
-class AccountabilityImportCheckPage extends StatefulWidget {
+class AccountabilityImportVerification extends StatefulWidget {
   final AccountabilityImportService service;
-  const AccountabilityImportCheckPage({super.key, required this.service});
+  const AccountabilityImportVerification({super.key, required this.service});
 
   @override
-  State<StatefulWidget> createState() => _AccountabilityImportCheckPageState();
+  State<StatefulWidget> createState() => _AccountabilityImportVerificationState();
 }
 
-class _AccountabilityImportCheckPageState extends State<AccountabilityImportCheckPage> {
+class _AccountabilityImportVerificationState extends State<AccountabilityImportVerification> {
   @override
   Widget build(BuildContext context) {
     return BaseDialog(
