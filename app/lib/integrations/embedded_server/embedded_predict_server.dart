@@ -46,7 +46,7 @@ class EmbeddedPredictServer {
     }
   }
 
-  void terminate() async {
+  Future<void> terminate() async {
     log.info("Encerrando servidor de predição...");
     if (io.Platform.isWindows) {
       await Process.run('taskkill', ['/F', '/IM', "predict_win.exe"]);

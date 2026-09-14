@@ -1,6 +1,7 @@
 import 'package:biluca_financas/init_database.dart';
 import 'package:biluca_financas/app/app.dart';
 import 'package:biluca_financas/setup.dart';
+import 'package:biluca_financas/tear_down.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -14,5 +15,5 @@ void main() async {
 
   await initDatabase();
 
-  runApp(const App());
+  runApp(const App(tearDown));
 }

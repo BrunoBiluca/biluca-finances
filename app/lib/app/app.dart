@@ -1,19 +1,18 @@
 import 'dart:ui';
-
-import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
-import 'package:biluca_financas/app/routes.dart';
-import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:biluca_financas/app/routes.dart';
+import 'package:biluca_financas/app/themes/theme_manager.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
-  const App({super.key});
+  final Future<void> Function() onAppExit;
+  const App(this.onAppExit, {super.key});
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
-    GetIt.I<EmbeddedPredictServer>().terminate();
+    await onAppExit();
     return super.didRequestAppExit();
   }
 

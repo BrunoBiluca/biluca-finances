@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ObsidianWealthDarkTheme extends AppTheme {
   // Base colors
   static const Color canvasBase = Color(0xFF090D16);
-  static const Color cardSurface = Color(0xFF131B2E);
+  static const Color cardSurface = Color(0xFF181B25);
   static const Color raisedSurface = Color(0xFF1A243B);
   static const Color hairlineBorder = Color(0xFF1E293B);
 
@@ -15,6 +15,8 @@ class ObsidianWealthDarkTheme extends AppTheme {
   static const Color secondaryIndigo = Color(0xFF6366F1);
 
   // Text colors
+  static const Color titleText = Color(0xFFF8FAFC);
+  static const Color bodyText = Color(0xFFBDC8D1);
   static const Color textHigh = Color(0xFFF8FAFC);
   static const Color textMedium = Color(0xFF94A3B8);
   static const Color textLow = Color(0xFF64748B);
@@ -50,7 +52,7 @@ class ObsidianWealthDarkTheme extends AppTheme {
       ),
 
       // Scaffold
-      scaffoldBackgroundColor: canvasBase,
+      scaffoldBackgroundColor: Color(0xFF0F131C),
 
       // Card
       cardTheme: CardThemeData(
@@ -79,6 +81,11 @@ class ObsidianWealthDarkTheme extends AppTheme {
           color: textHigh,
           letterSpacing: -0.015,
         ),
+      ),
+
+      drawerTheme: DrawerThemeData(
+        backgroundColor: Color(0xFF0A0E17),
+        elevation: 0,
       ),
 
       // Text
@@ -118,21 +125,21 @@ class ObsidianWealthDarkTheme extends AppTheme {
           fontFamily: fontInter,
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          color: textHigh,
+          color: bodyText,
           height: 1.5,
         ),
         bodyMedium: TextStyle(
           fontFamily: fontInter,
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: textMedium,
+          color: bodyText,
           height: 1.375,
         ),
         bodySmall: TextStyle(
           fontFamily: fontInter,
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          color: textLow,
+          color: bodyText,
           height: 1.125,
         ),
         labelLarge: TextStyle(
