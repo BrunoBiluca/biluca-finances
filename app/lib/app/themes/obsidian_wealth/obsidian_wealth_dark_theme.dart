@@ -1,6 +1,7 @@
+import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
-class ObsidianWealthDarkTheme {
+class ObsidianWealthDarkTheme extends AppTheme {
   // Base colors
   static const Color canvasBase = Color(0xFF090D16);
   static const Color cardSurface = Color(0xFF131B2E);
@@ -23,7 +24,11 @@ class ObsidianWealthDarkTheme {
   static const String fontInter = 'Inter';
   static const String fontJetBrainsMono = 'JetBrainsMono';
 
-  static ThemeData build() {
+  @override
+  String get name => "Obsidian Wealth Dark";
+
+  @override
+  ThemeData build() {
     return ThemeData(
       brightness: Brightness.dark,
       useMaterial3: true,

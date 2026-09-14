@@ -1,9 +1,9 @@
 import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
-class DarkTheme extends AppTheme {
+class BilucaLegacyDark extends AppTheme {
   @override
-  String get name => "dark";
+  String get name => "Biluca Legacy Dark";
 
   @override
   ThemeData build() {

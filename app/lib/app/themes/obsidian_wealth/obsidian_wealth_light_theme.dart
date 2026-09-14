@@ -1,13 +1,17 @@
+import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
-class ObsidianWealthLightTheme {
+class ObsidianWealthLightTheme extends AppTheme {
   // Typography
   static const String fontGeist = 'Geist';
   static const String fontInter = 'Inter';
   static const String fontJetBrainsMono = 'JetBrainsMono';
 
-  // Light Theme (based on inverse colors from the design system)
-  static ThemeData lightTheme() {
+  @override
+  String get name => "Obsidian Wealth Light";
+
+  @override
+  ThemeData build() {
     return ThemeData(
       brightness: Brightness.light,
       useMaterial3: true,

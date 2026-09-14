@@ -1,3 +1,4 @@
+import 'package:biluca_financas/app/themes/theme_setup.dart';
 import 'package:biluca_financas/main.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,7 +6,6 @@ import 'package:http/http.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:biluca_financas/app/themes/theme_manager.dart';
-import 'package:biluca_financas/app/themes/dark.dart';
 
 import 'package:biluca_financas/common/logging/console_listener.dart';
 import 'package:biluca_financas/common/logging/file_listener.dart';
@@ -68,12 +68,7 @@ Future<void> setup() async {
     (date, _) => CurrentMonthReportService(date),
   );
 
-  getIt.registerSingleton<ThemeManager>(
-    ThemeManager()
-      ..add(DarkTheme())
-      ..setDark("dark")
-      ..setLight("dark"),
-  );
+  getIt.registerCachedFactory<ThemeManager>(setupThemes);
 
   getIt.registerSingleton<EmbeddedPredictServer>(EmbeddedPredictServer()..init());
 
