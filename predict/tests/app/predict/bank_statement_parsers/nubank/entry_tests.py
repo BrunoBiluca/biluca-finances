@@ -1,6 +1,4 @@
-from pypdf import PdfReader
-from src.extratos.nubank.entry import to_date
-from src.extratos.nubank.parser import avaliar_linhas
+from src.app.predict.bank_statement_parsers.nubank.entry import to_date
 
 
 def test_deve_converter_data_encontrada_no_extrato():
@@ -9,4 +7,3 @@ def test_deve_converter_data_encontrada_no_extrato():
     assert date.day == 14
     assert date.month == 1
     assert date.year == 2024
-

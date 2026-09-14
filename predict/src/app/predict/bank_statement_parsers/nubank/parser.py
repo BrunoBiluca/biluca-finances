@@ -1,40 +1,44 @@
 from datetime import datetime
-from extratos.nubank.entry import to_date
 from common.str_extensions import full_strip
-from budget.budget_date import to_str
+from src.app.predict.bank_statement_parsers.budget_date import to_str
+from src.app.predict.bank_statement_parsers.nubank.entry import to_date
+from src.core.bank_statement_parser import BankStatementParser
 
 
-def parse(pages):
-    entradas = []
-    índice_página_transações = 0
-    for p in pages:
-        linhas = p.extract_text().split("\n")
+class NubankParser(BankStatementParser):
 
-        if "TRANSAÇÕES" in linhas[2]:
-            índice_página_transações = pages.index(p)
-            break
+    def is_from_bank(self, filename: str) -> bool:
+        return "nubank" in filename.lower()
 
-    for p in pages[índice_página_transações:]:
-        linhas = p.extract_text().split("\n")
-        linhas_relevantes = linhas[3:len(linhas)-1]
-        
-        linhas_da_entrada = []
-        for i in range(len(linhas_relevantes)):
-            linha = linhas_relevantes[i]
-            linhas_da_entrada.append(linha)
+    def parse(self, pages):
+        entradas = []
+        índice_página_transações = 0
+        for p in pages:
+            linhas = p.extract_text().split("\n")
 
-            if i + 1 < len(linhas_relevantes):
-                próxima_linha = linhas_relevantes[i + 1]
-            
+            if "TRANSAÇÕES" in linhas[2]:
+                índice_página_transações = pages.index(p)
+                break
 
-            if é_data(próxima_linha):
+        for p in pages[índice_página_transações:]:
+            linhas = p.extract_text().split("\n")
+            linhas_relevantes = linhas[3:len(linhas)-1]
+
+            linhas_da_entrada = []
+            for i in range(len(linhas_relevantes)):
+                linha = linhas_relevantes[i]
+                linhas_da_entrada.append(linha)
+
+                if i + 1 < len(linhas_relevantes):
+                    próxima_linha = linhas_relevantes[i + 1]
+
+                if é_data(próxima_linha):
+                    avaliar_linhas(entradas, linhas_da_entrada)
+                    linhas_da_entrada = []
+            else:
                 avaliar_linhas(entradas, linhas_da_entrada)
-                linhas_da_entrada = []
-        else:
-            avaliar_linhas(entradas, linhas_da_entrada)
 
-
-    return entradas
+        return entradas
 
 
 def avaliar_linhas(entradas, l):
@@ -49,7 +53,7 @@ def avaliar_linhas(entradas, l):
                 entrada = avaliar_linhas_formato_padrão(l[0:2])
     except ValueError:
         return
-    
+
     if entrada is None:
         return
 

@@ -2,9 +2,9 @@ import sys
 
 import pandas
 from pypdf import PdfReader
-from extratos.itau import é_itau_extrato, itau_parse
-from extratos.nubank import é_nubank_extrato, nubank_parse
-from classification.classification import categorize_identification
+from src.app.predict.bank_statement_parsers.itau.parser import ItauParser
+from src.app.predict.bank_statement_parsers.nubank.parser import NubankParser
+from src.app.predict.classification.classification import categorize_identification
 
 
 file_path = sys.argv[1]
@@ -12,10 +12,10 @@ print("Avaliando arquivo:", file_path)
 
 reader = PdfReader(file_path)
 
-analisadores = {
-    "itau": [é_itau_extrato, itau_parse],
-    "nubank": [é_nubank_extrato, nubank_parse]
-}
+analisadores = [
+    ItauParser(),
+    NubankParser()
+]
 
 for a in analisadores:
     avaliador = analisadores[a][0]
