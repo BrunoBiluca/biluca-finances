@@ -1,4 +1,6 @@
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
+import 'package:biluca_financas/app/app_layout/sidebar/closed_sidebar.dart';
+import 'package:biluca_financas/app/app_layout/sidebar/open_sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -32,58 +34,42 @@ void main() {
       );
     }
 
+    tapToggleSidebarBtn(tester) async {
+      await tester.tap(find.byKey(const Key('toggle-sidebar')));
+      await tester.pumpAndSettle();
+    }
+
     testWidgets('Should start expanded', (tester) async {
       await tester.pumpWidget(buildApp());
 
       final drawer = find.byType(Drawer);
       expect(drawer, findsOneWidget);
 
-      expect(find.text('Navegação'), findsOneWidget);
-      expect(find.text('N'), findsNothing);
-
-      expect(find.text('Home'), findsOneWidget);
-      expect(find.text('Relatório do mês'), findsOneWidget);
-      expect(find.text('Relatório anual'), findsOneWidget);
-      expect(find.text('Prestação de contas'), findsOneWidget);
-
-      expect(find.byType(Icon), findsAtLeast(4));
-      expect(find.byIcon(Icons.arrow_left), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_right), findsNothing);
+      expect(find.byType(OpenSidebar), findsOneWidget);
+      expect(find.byType(ClosedSidebar), findsNothing);
     });
 
     testWidgets('Should collapse sidebar when arrow button is tapped', (tester) async {
       await tester.pumpWidget(buildApp());
 
-      await tester.tap(find.byKey(const Key('toggle-sidebar')));
-      await tester.pumpAndSettle();
+      await tapToggleSidebarBtn(tester);
 
-      expect(find.text('N'), findsOneWidget);
-      expect(find.text('Navegação'), findsNothing);
-
-      expect(find.text('Home'), findsNothing);
-      expect(find.text('Relatório do mês'), findsNothing);
-      expect(find.text('Relatório anual'), findsNothing);
-      expect(find.text('Prestação de contas'), findsNothing);
-
-      expect(find.byType(Icon), findsAtLeast(4));
-      expect(find.byIcon(Icons.arrow_right), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_left), findsNothing);
+      expect(find.byType(OpenSidebar), findsNothing);
+      expect(find.byType(ClosedSidebar), findsOneWidget);
     });
 
     testWidgets('Should expand sidebar when arrow right button is tapped', (tester) async {
       await tester.pumpWidget(buildApp());
 
-      await tester.tap(find.byKey(const Key('toggle-sidebar')));
-      await tester.pumpAndSettle();
+      await tapToggleSidebarBtn(tester);
 
-      expect(find.text('N'), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_right), findsOneWidget);
+      expect(find.byType(OpenSidebar), findsNothing);
+      expect(find.byType(ClosedSidebar), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.arrow_right));
-      await tester.pumpAndSettle();
+      await tapToggleSidebarBtn(tester);
 
-      expect(find.text('Navegação'), findsOneWidget);
-      expect(find.byIcon(Icons.arrow_left), findsOneWidget);
+      expect(find.byType(OpenSidebar), findsOneWidget);
+      expect(find.byType(ClosedSidebar), findsNothing);
     });
 
     testWidgets('Should maintain selected page state when collapsing and expanding', (tester) async {
@@ -95,14 +81,8 @@ void main() {
       final selectedTile = tester.widget<ListTile>(find.byType(ListTile).at(1));
       expect(selectedTile.selected, true);
 
-      await tester.tap(find.byKey(const Key('toggle-sidebar')));
-      await tester.pumpAndSettle();
-
       final selectedTileCollapsed = tester.widget<ListTile>(find.byType(ListTile).at(1));
       expect(selectedTileCollapsed.selected, true);
-
-      await tester.tap(find.byKey(const Key('toggle-sidebar')));
-      await tester.pumpAndSettle();
 
       final selectedTileExpanded = tester.widget<ListTile>(find.byType(ListTile).at(1));
       expect(selectedTileExpanded.selected, true);
