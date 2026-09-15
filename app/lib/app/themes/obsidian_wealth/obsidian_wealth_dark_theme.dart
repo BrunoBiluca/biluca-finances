@@ -313,7 +313,7 @@ class ObsidianWealthDarkTheme extends AppTheme {
           fontWeight: FontWeight.w500,
           color: textLow,
         ),
-        indicatorColor: accentCyan.withOpacity(0.1),
+        indicatorColor: accentCyan.withValues(alpha: 0.1),
         minWidth: 260,
         groupAlignment: -1,
       ),

@@ -1,4 +1,4 @@
-import 'package:biluca_financas/app/app_layout/sidebar.dart';
+import 'package:biluca_financas/app/app_layout/sidebar/sidebar.dart';
 import 'package:flutter/material.dart';
 
 class AppLayout extends StatelessWidget {
