@@ -2,11 +2,11 @@
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
-import 'package:biluca_financas/app/accountability_yearly_report/year_selector.dart';
-import 'package:biluca_financas/app/accountability_yearly_report/yearly_identifications_summary_charts.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/widgets/year_selector.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_identifications_summary_charts.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
-import 'package:biluca_financas/app/accountability_yearly_report/yearly_summary_cards.dart';
-import 'package:biluca_financas/app/accountability_yearly_report/yearly_summary_charts.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_summary_cards.dart';
+import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_summary_charts.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -51,39 +51,60 @@ class _YearlyReportState extends State<YearlyReport> {
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 60,
           children: [
-            YearSelector(
-              currentYear: currentYear!,
-              years: snapshot.data!,
-              onDateChanged: (year) {
-                setState(() => currentYear = year);
-              },
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    futureHandler(
-                      service!.summary(),
-                      (res) => YearlySummaryCards(res: res),
-                    ),
-                    const SizedBox(height: 60),
-                    futureHandler(
-                      service!.getMonthlySummary(),
-                      (res) => YearlySummaryCharts(res: res),
-                    ),
-                    const SizedBox(height: 60),
-                    futureHandler(
-                      service!.getMonthlyIdentificationsSummary(),
-                      (res) => YearlyIdentificationsSummaryCharts(res: res),
-                    ),
-                    const SizedBox(height: 100),
-                  ],
+            Row(
+              spacing: 20,
+              children: [
+                Expanded(
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(8),
+                          color: Color(0xFF262A34),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.space_dashboard,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "Relatório Anual",
+                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
+                Flexible(
+                  child: YearSelector(
+                    currentYear: currentYear!,
+                    years: snapshot.data!,
+                    onDateChanged: (year) {
+                      setState(() => currentYear = year);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            futureHandler(
+              service!.summary(),
+              (res) => YearlySummaryCards(res: res),
+            ),
+            futureHandler(
+              service!.getMonthlySummary(),
+              (res) => YearlySummaryCharts(res: res),
+            ),
+            futureHandler(
+              service!.getMonthlyIdentificationsSummary(),
+              (res) => YearlyIdentificationsSummaryCharts(res: res),
+            ),
+            const SizedBox(height: 100)
           ],
         );
       },

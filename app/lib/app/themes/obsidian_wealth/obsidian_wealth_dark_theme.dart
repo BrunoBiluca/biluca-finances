@@ -1,3 +1,4 @@
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,7 @@ class ObsidianWealthDarkTheme extends AppTheme {
 
       // Card
       cardTheme: CardThemeData(
-        color: cardSurface,
+        color: Color(0xFF1C1F29),
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -502,4 +503,16 @@ class ObsidianWealthDarkTheme extends AppTheme {
       ),
     );
   }
+
+  @override
+  get colors => AppColors(
+        positiveYield: Color(0xFF4EDEA3),
+        positiveYieldBg: Color(0xFF173E3A),
+        positiveYieldAlt: Color(0xFF8CD2FC),
+        positiveYieldAltBg: Color(0xFF213F53),
+        negativeYield: Color(0xFFFFBCBF),
+        negativeYieldBg: Color(0xFF3E1629),
+        neutralYield: Color(0xFFBDC8D1),
+        neutralYieldBg: Color(0xFF313640),
+      );
 }
