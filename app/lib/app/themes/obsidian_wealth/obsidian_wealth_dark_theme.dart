@@ -61,12 +61,10 @@ class ObsidianWealthDarkTheme extends AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(
-            color: hairlineBorder,
-            width: 1,
-          ),
         ),
         clipBehavior: Clip.antiAlias,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
       ),
 
       // AppBar
