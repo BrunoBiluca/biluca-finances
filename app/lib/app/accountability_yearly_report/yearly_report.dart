@@ -57,6 +57,7 @@ class _YearlyReportState extends State<YearlyReport> {
               spacing: 20,
               children: [
                 Expanded(
+                  flex: 8,
                   child: Row(
                     spacing: 10,
                     children: [
@@ -82,6 +83,7 @@ class _YearlyReportState extends State<YearlyReport> {
                   ),
                 ),
                 Flexible(
+                  flex: 2,
                   child: YearSelector(
                     currentYear: currentYear!,
                     years: snapshot.data!,
