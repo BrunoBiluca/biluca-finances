@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_value_card.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -23,47 +24,49 @@ class YearlySummaryCards extends StatelessWidget {
     var appTheme = GetIt.I<ThemeManager>();
     var currTheme = appTheme.getCurrentTheme(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10,
-      children: [
-        Row(
-          spacing: 10,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Row(
-              spacing: 10,
-              children: [
-                Icon(Icons.analytics_outlined, color: Theme.of(context).colorScheme.secondary),
-                Text("Resumo Operacional", style: Theme.of(context).textTheme.headlineSmall),
-              ],
-            ),
-            Text("12 Competências consolidadas", style: Theme.of(context).textTheme.bodySmall),
-          ],
-        ),
-        StaggeredGrid.count(
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          crossAxisCount: 2,
-          children: [
-            buildBalanceCard(context, currTheme),
-            buildBalanceAvgCard(context, currTheme),
-            buildIncomesCard(context, currTheme),
-            buildIncomeAvgCard(context, currTheme),
-            buildOutcomesCard(context, currTheme),
-            buildOutcomeAvgCard(context, currTheme),
-          ]
-              .map(
-                (e) => StaggeredGridTile.extent(
-                  mainAxisExtent: 180,
-                  crossAxisCellCount: 1,
-                  child: e,
-                ),
-              )
-              .toList(),
-        )
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10,
+        children: [
+          Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                spacing: 10,
+                children: [
+                  Icon(Icons.analytics_outlined, color: Theme.of(context).colorScheme.secondary),
+                  Text("Resumo Operacional", style: Theme.of(context).textTheme.headlineSmall),
+                ],
+              ),
+              Text("12 Competências consolidadas", style: Theme.of(context).textTheme.bodySmall),
+            ],
+          ),
+          StaggeredGrid.count(
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            crossAxisCount: constraints.maxWidth < 850 ? 1 : 2,
+            children: [
+              buildBalanceCard(context, currTheme),
+              buildBalanceAvgCard(context, currTheme),
+              buildIncomesCard(context, currTheme),
+              buildIncomeAvgCard(context, currTheme),
+              buildOutcomesCard(context, currTheme),
+              buildOutcomeAvgCard(context, currTheme),
+            ]
+                .map(
+                  (e) => StaggeredGridTile.extent(
+                    mainAxisExtent: 180,
+                    crossAxisCellCount: 1,
+                    child: e,
+                  ),
+                )
+                .toList(),
+          )
+        ],
+      ),
     );
   }
 
