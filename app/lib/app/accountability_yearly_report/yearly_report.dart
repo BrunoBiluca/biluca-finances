@@ -51,21 +51,22 @@ class _YearlyReportState extends State<YearlyReport> {
         }
 
         return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 60,
           children: [
             buildReportHeader(context, snapshot),
-            futureHandler(
-              service!.summary(),
-              (res) => YearlySummaryCards(res: res),
+            FutureHandler(
+              future: service!.summary(),
+              child: (res) => YearlySummaryCards(res: res),
             ),
-            futureHandler(
-              service!.getMonthlySummary(),
-              (res) => YearlySummaryCharts(res: res),
+            FutureHandler(
+              future: service!.getMonthlySummary(),
+              child: (res) => YearlySummaryCharts(res: res),
+              hideLoading: true,
             ),
-            futureHandler(
-              service!.getMonthlyIdentificationsSummary(),
-              (res) => YearlyIdentificationsSummaryCharts(res: res),
+            FutureHandler(
+              future: service!.getMonthlyIdentificationsSummary(),
+              child: (res) => YearlyIdentificationsSummaryCharts(res: res),
+              hideLoading: true,
             ),
             const SizedBox(height: 100)
           ],
