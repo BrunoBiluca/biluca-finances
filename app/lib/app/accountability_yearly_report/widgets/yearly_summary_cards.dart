@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_value_card.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';

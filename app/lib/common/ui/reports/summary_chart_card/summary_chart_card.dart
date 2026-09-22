@@ -1,19 +1,26 @@
+import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:flutter/material.dart';
 
 class SummaryChartCard extends StatefulWidget {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final Widget chart;
   final Widget? legend;
   final Widget? subInfo;
+  final IconData? icon;
+  final Color? color;
+  final bool smallerTitle;
 
   const SummaryChartCard({
     super.key,
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.chart,
     this.legend,
     this.subInfo,
+    this.icon,
+    this.color,
+    this.smallerTitle = false,
   });
 
   @override
@@ -28,7 +35,7 @@ class _SummaryChartCardState extends State<SummaryChartCard> {
       child: Padding(
         padding: const EdgeInsets.all(36.0),
         child: Column(
-          spacing: 30,
+          spacing: 20,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -38,16 +45,39 @@ class _SummaryChartCardState extends State<SummaryChartCard> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.title,
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
+                    Row(
+                      spacing: 10,
+                      children: [
+                        if (widget.icon != null)
+                          CircleAvatar(
+                            backgroundColor: widget.color,
+                            radius: widget.smallerTitle ? 12 : 16,
+                            child: Icon(
+                              widget.icon,
+                              size: widget.smallerTitle
+                                  ? Theme.of(context).textTheme.bodySmall?.fontSize
+                                  : Theme.of(context).textTheme.headlineMedium?.fontSize,
+                              color: widget.color?.adaptByLuminance() ?? Colors.white,
+                            ),
                           ),
+                        Text(
+                          widget.title,
+                          style: widget.smallerTitle
+                              ? Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  )
+                              : Theme.of(context).textTheme.headlineLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      widget.subtitle,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
+                    widget.subtitle != null
+                        ? Text(
+                            widget.subtitle!,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          )
+                        : Container(),
                   ],
                 ),
                 widget.legend ?? Container(),
@@ -65,11 +95,7 @@ class _SummaryChartCardState extends State<SummaryChartCard> {
                     ),
                   )
                 : Container(),
-            SizedBox(
-              height: 400,
-              width: double.infinity,
-              child: widget.chart,
-            ),
+            Expanded(child: widget.chart),
           ],
         ),
       ),

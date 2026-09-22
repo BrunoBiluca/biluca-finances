@@ -1,4 +1,5 @@
 import 'package:biluca_financas/common/extensions/currency.dart';
+import 'package:biluca_financas/common/ui/reports/charts.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -39,82 +40,15 @@ class BalanceChart extends StatelessWidget {
     var incomesColor = currTheme.colors.positiveYield;
     var expensesColor = currTheme.colors.negativeYield;
 
+    var monthData = monthEntries.map((e) => e.month).toList();
+
     return BarChart(
       BarChartData(
-        maxY: maxValue + maxValue * 0.2,
         alignment: BarChartAlignment.spaceEvenly,
-        titlesData: FlTitlesData(
-          show: true,
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 32,
-              interval: 1,
-              getTitlesWidget: (value, meta) => SideTitleWidget(
-                meta: meta,
-                space: 10,
-                child: Text(
-                  monthEntries[value.toInt()].month,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          leftTitles: AxisTitles(
-            sideTitles: SideTitles(
-              interval: 5 * 1000,
-              getTitlesWidget: (double value, TitleMeta meta) {
-                var thousands = (value.abs() / 1000).truncate();
-                return SideTitleWidget(
-                  meta: meta,
-                  child: Text(
-                    "${thousands}k",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                );
-              },
-              showTitles: true,
-              reservedSize: 40,
-            ),
-          ),
-          topTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-          rightTitles: const AxisTitles(
-            sideTitles: SideTitles(showTitles: false),
-          ),
-        ),
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: false,
-          getDrawingHorizontalLine: (value) => FlLine(
-            dashArray: [5, 10],
-            color: Colors.white.withValues(alpha: 0.1),
-            strokeWidth: 1,
-          ),
-        ),
-        borderData: FlBorderData(
-          show: false,
-        ),
-        barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-            getTooltipColor: (spot) => Colors.blueGrey, // Customize background
-            getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
-              formatReal(rod.toY),
-              TextStyle(
-                color: rod.color?.withAlpha(255),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
+        titlesData: defaultTitlesForCurrency(monthData, maxY: maxValue),
+        gridData: defaultGrid(),
+        borderData: defaultBorder(),
+        barTouchData: defaultBarTouchData(),
         barGroups: [
           for (var i = 0; i < monthEntries.length; i++)
             BarChartGroupData(

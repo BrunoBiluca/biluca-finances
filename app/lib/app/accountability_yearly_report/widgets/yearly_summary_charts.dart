@@ -47,19 +47,25 @@ class YearlySummaryCharts extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 20,
       children: [
-        IncomesExpensesEvolutionChart(
-          monthEntries: monthEntries,
-          maxValue: maxValue,
-          avgIncomes: avgIncomes,
-          sdIncomes: sdIncomes,
-          avgExpenses: avgExpenses,
-          sdExpenses: sdExpenses,
+        SizedBox(
+          height: 600,
+          child: IncomesExpensesEvolutionChart(
+            monthEntries: monthEntries,
+            maxValue: maxValue,
+            avgIncomes: avgIncomes,
+            sdIncomes: sdIncomes,
+            avgExpenses: avgExpenses,
+            sdExpenses: sdExpenses,
+          ),
         ),
-        BalanceChart(
-          monthEntries: monthEntries,
-          maxValue: maxBalanceValue,
-          avgBalance: avgBalance,
-          sdBalance: sdBalance,
+        SizedBox(
+          height: 600,
+          child: BalanceChart(
+            monthEntries: monthEntries,
+            maxValue: maxBalanceValue,
+            avgBalance: avgBalance,
+            sdBalance: sdBalance,
+          ),
         ),
       ],
     );
