@@ -30,7 +30,7 @@ class BalanceChart extends StatelessWidget {
       title: "Balanço mensal",
       subtitle: "Resultado líquido apurado mês a mês com linha de referência média",
       chart: buildChart(context),
-      legend: buildLegend(context),
+      topRightInfo: buildLegend(context),
       subInfo: buildSubInfo(context),
     );
   }

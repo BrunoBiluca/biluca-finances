@@ -85,7 +85,6 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
           var validEntries = monthEntries.where((entry) => entry.value != 0);
           var maxValue = validEntries.map((entry) => entry.value.abs()).max;
           var avgValue = validEntries.map((entry) => entry.value.abs()).average;
-          var sumValue = monthEntries.map((e) => e.value.abs()).sum;
 
           return SummaryChartCard(
             icon: i.identification.icon,
@@ -97,13 +96,16 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
               children: [
                 Text("Média: "),
                 Text(
-                  formatReal(sumValue),
+                  formatReal(avgValue),
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: i.identification.color,
                   ),
                 ),
               ],
+            ),
+            topRightInfo: Text(
+              "Max: ${formatReal(maxValue)}",
             ),
             chart: BarChart(
               BarChartData(

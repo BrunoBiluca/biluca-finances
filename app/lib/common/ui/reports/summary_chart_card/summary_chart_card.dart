@@ -5,7 +5,7 @@ class SummaryChartCard extends StatefulWidget {
   final String title;
   final String? subtitle;
   final Widget chart;
-  final Widget? legend;
+  final Widget? topRightInfo;
   final Widget? subInfo;
   final IconData? icon;
   final Color? color;
@@ -16,7 +16,7 @@ class SummaryChartCard extends StatefulWidget {
     required this.title,
     this.subtitle,
     required this.chart,
-    this.legend,
+    this.topRightInfo,
     this.subInfo,
     this.icon,
     this.color,
@@ -80,7 +80,7 @@ class _SummaryChartCardState extends State<SummaryChartCard> {
                         : Container(),
                   ],
                 ),
-                widget.legend ?? Container(),
+                widget.topRightInfo ?? Container(),
               ],
             ),
             widget.subInfo != null

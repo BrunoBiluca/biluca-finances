@@ -35,7 +35,7 @@ class IncomesExpensesEvolutionChart extends StatelessWidget {
       title: "Evolução das receitas e despesas",
       subtitle: "Série histórica temporal com linha de corte e desvio padrão médio",
       chart: buildIncomesAndExpensesChart(context),
-      legend: buildLegend(context),
+      topRightInfo: buildLegend(context),
       subInfo: buildSubInfo(context),
     );
   }
