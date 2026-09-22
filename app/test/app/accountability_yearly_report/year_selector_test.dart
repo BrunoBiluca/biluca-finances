@@ -11,9 +11,9 @@ void main() {
           body: YearSelector(
             currentYear: "Últimos 12 meses",
             years: [
-              AccountabilityYearStats("Últimos 12 meses", 10),
-              AccountabilityYearStats("2022", 10),
-              AccountabilityYearStats("2021", 10),
+              AccountabilityYearStats(year: "Últimos 12 meses", entriesCount: 10),
+              AccountabilityYearStats(year: "2022", entriesCount: 10),
+              AccountabilityYearStats(year: "2021", entriesCount: 10),
             ],
             onDateChanged: (v) {},
           ),
