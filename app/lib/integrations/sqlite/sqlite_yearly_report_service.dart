@@ -1,9 +1,12 @@
+import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_identifications_summary.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_summary.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -12,7 +15,13 @@ class SqliteYearlyReportService extends AccountabilityYearlyReportService {
   final DateTime start;
   final DateTime end;
 
-  SqliteYearlyReportService({required this.start, required this.end, required this.db});
+  var log = GetIt.I<LoggerManager>().instance("SqliteYearlyReportService");
+
+  SqliteYearlyReportService({
+    required this.start,
+    required this.end,
+    required this.db,
+  });
 
   String formatDate(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
 
@@ -63,21 +72,42 @@ class SqliteYearlyReportService extends AccountabilityYearlyReportService {
       """,
     );
 
+    var peakIncome = await db.rawQuery(
+      """
+        SELECT 
+          month,
+          MAX(incomes) as peakIncome
+        FROM (
+          SELECT 
+            strftime('%Y-%m', a.createdAt) AS month,
+            COALESCE(SUM(CASE WHEN i.type = 'income' THEN value ELSE 0 END), 0) AS incomes 
+          FROM accountability a
+          join accountability_identifications i on i.id = a.identification_id
+          where a.createdAt BETWEEN '$startDate' AND '$endDate'
+          group by month
+          order by incomes DESC
+        )
+        LIMIT 1
+        """,
+    );
+
     return YearlySummary(
-        balance: totals.first["balance"] as double,
-        avgBalance: avgs.first["avgBalances"] as double,
-        totalIncomes: totals.first["totalIncomes"] as double,
-        avgIncomes: avgs.first["avgIncomes"] as double,
-        totalExpenses: totals.first["totalExpenses"] as double,
-        avgExpenses: avgs.first["avgExpenses"] as double);
+      balance: totals.first["balance"] as double,
+      avgBalance: avgs.first["avgBalances"] as double,
+      totalIncomes: totals.first["totalIncomes"] as double,
+      avgIncomes: avgs.first["avgIncomes"] as double,
+      totalExpenses: totals.first["totalExpenses"] as double,
+      avgExpenses: avgs.first["avgExpenses"] as double,
+      range: DateTimeRange(start: start, end: end),
+      peakIncome: peakIncome.first["peakIncome"] as double,
+      peakIncomeMonth: peakIncome.first["month"] as String,
+    );
   }
 
   @override
   Future<List<MonthlySummary>> getMonthlySummary() async {
     var startDate = formatDate(start);
     var endDate = formatDate(end);
-
-    print("startDate: $startDate, endDate: $endDate");
 
     var res = await db.rawQuery(
       """

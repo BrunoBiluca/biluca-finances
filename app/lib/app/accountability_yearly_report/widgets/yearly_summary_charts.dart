@@ -1,13 +1,10 @@
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/balance_chart.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/incomes_expenses_evolution_chart.dart';
-import 'package:biluca_financas/common/ui/reports/summary_chart_card/summary_chart_card.dart';
 import 'package:collection/collection.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_summary.dart';
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
-import 'package:intl/intl.dart';
 
 class YearlySummaryCharts extends StatelessWidget {
   const YearlySummaryCharts({

@@ -38,10 +38,9 @@ class _YearlyReportState extends State<YearlyReport> {
 
         if (currentYear == "Últimos 12 meses") {
           var now = DateTime.now();
-          var end = DateTime(now.year, now.month, 0);
           service = GetIt.I<AccountabilityYearlyReportService>(
-            param1: DateTime(end.year - 1, end.month, 1),
-            param2: end,
+            param1: DateTime(now.year - 1, now.month, 1),
+            param2: now,
           );
         } else {
           service = GetIt.I<AccountabilityYearlyReportService>(
@@ -81,7 +80,7 @@ class _YearlyReportState extends State<YearlyReport> {
         spacing: 20,
         children: [
           Expanded(
-            flex: constraints.maxWidth < 850 ? 1 : 4,
+            flex: constraints.maxWidth < 850 ? 1 : 2,
             child: Row(
               spacing: 10,
               children: [

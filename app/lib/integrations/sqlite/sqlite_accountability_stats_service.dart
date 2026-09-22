@@ -2,6 +2,7 @@ import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/core/accountability_stats/models/accountability_month_stats.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/core/accountability_stats/models/accountability_year_stats.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -52,8 +53,19 @@ class SqliteAccountabilityStatsService implements AccountabilityStatsService {
     var lastYear = await db.rawQuery("""
         SELECT COUNT(*) AS total
         FROM accountability
-        WHERE createdAt  >= DATE('now', '-365 days');
-      """).then((value) => AccountabilityYearStats("Últimos 12 meses", value.first['total'] as int));
+        WHERE createdAt >= DATE('now', '-365 days');
+      """).then(
+      (value) => AccountabilityYearStats(
+        year: "Últimos 12 meses",
+        entriesCount: value.first['total'] as int,
+        range: DateTimeRange(
+          end: DateTime.now(),
+          start: DateTime.now().subtract(
+            const Duration(days: 365),
+          ),
+        ),
+      ),
+    );
 
     var years = await db.rawQuery(
       """
@@ -67,7 +79,10 @@ class SqliteAccountabilityStatsService implements AccountabilityStatsService {
     ).then(
       (value) => value
           .map(
-            (e) => AccountabilityYearStats.fromMap(e),
+            (e) => AccountabilityYearStats(
+              year: e['year'] as String,
+              entriesCount: e['entriesCount'] as int,
+            ),
           )
           .toList(),
     );
@@ -80,7 +95,12 @@ class SqliteAccountabilityStatsService implements AccountabilityStatsService {
       while (current.isBefore(last)) {
         var yearStr = DateFormat("yyyy").format(current);
         if (!years.any((e) => e.year == yearStr)) {
-          years.add(AccountabilityYearStats(yearStr, 0));
+          years.add(
+            AccountabilityYearStats(
+              year: yearStr,
+              entriesCount: 0,
+            ),
+          );
         }
         current = current.add(const Duration(days: 365));
       }

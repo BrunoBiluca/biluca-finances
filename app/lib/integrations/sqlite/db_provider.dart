@@ -6,6 +6,7 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common/sqflite_logger.dart';
 
 class DBProvider {
   DBProvider();
@@ -24,7 +25,32 @@ class DBProvider {
 
   void init() {
     if (io.Platform.isWindows || io.Platform.isLinux) sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
+
+    final baseFactory = databaseFactoryFfi;
+
+    if (kReleaseMode) {
+      databaseFactory = baseFactory;
+      return;
+    }
+
+    databaseFactory = SqfliteDatabaseFactoryLogger(
+      baseFactory,
+      options: SqfliteLoggerOptions(
+        type: SqfliteDatabaseFactoryLoggerType.all,
+        log: (SqfliteLoggerEvent event) {
+          if (event is SqfliteLoggerSqlEvent) {
+            log.info('SQL: ${event.sql}');
+            if (event.arguments != null) {
+              log.info('ARGUMENTS: ${event.arguments}');
+            }
+          } else if (event is SqfliteLoggerBatchEvent) {
+            for (var operation in event.operations) {
+              log.info('BATCH SQL: ${operation.sql}');
+            }
+          }
+        },
+      ),
+    );
   }
 
   Future<Database> open() async {

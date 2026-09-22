@@ -18,46 +18,53 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var incomesIds = res.where((i) => i.identification.type == AccountabilityIdentificationType.income).length;
-    var expensesIds = res.where((i) => i.identification.type == AccountabilityIdentificationType.expense).length;
+    var incomesIds = res
+        .where(
+          (i) => i.identification.type == AccountabilityIdentificationType.income,
+        )
+        .length;
+    var expensesIds = res
+        .where(
+          (i) => i.identification.type == AccountabilityIdentificationType.expense,
+        )
+        .length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 20,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Receitas por identificação",
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            Text(
-              "$incomesIds fontes de receita consolidadas",
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ],
+        buildHeader(
+          context,
+          "Receitas por identificação",
+          "$incomesIds fontes de receita consolidadas",
         ),
         buildIdentificationsSection(AccountabilityIdentificationType.income),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Despesas por identificação",
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            Text(
-              "$expensesIds fontes de despesa consolidadas",
-              style: Theme.of(context).textTheme.bodyLarge,
-            )
-          ],
+        buildHeader(
+          context,
+          "Despesas por identificação",
+          "$expensesIds fontes de despesa consolidadas",
         ),
         buildIdentificationsSection(AccountabilityIdentificationType.expense),
+      ],
+    );
+  }
+
+  Row buildHeader(BuildContext context, String title, String subtitle) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+        Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ],
     );
   }

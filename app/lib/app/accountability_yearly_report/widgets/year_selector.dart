@@ -1,5 +1,6 @@
 import 'package:biluca_financas/core/accountability_stats/models/accountability_year_stats.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class YearSelector extends StatelessWidget {
   final String currentYear;
@@ -40,11 +41,17 @@ class YearSelector extends StatelessWidget {
             .map(
               (y) => DropdownMenuItem<String>(
                 value: y.year,
-                child: Text(y.year + (y.entriesCount == 0 ? " (empty)" : "")),
+                child: Text(
+                  y.year +
+                      (y.entriesCount == 0 ? " (empty)" : "") +
+                      (y.range == null ? "" : "  (${formatDate(y.range!.start)} - ${formatDate(y.range!.end)})"),
+                ),
               ),
             )
             .toList(),
       ),
     );
   }
+
+  String formatDate(DateTime date) => DateFormat('yyyy-MM').format(date);
 }

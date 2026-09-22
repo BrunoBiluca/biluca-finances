@@ -1,5 +1,7 @@
 import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/common/extensions/currency.dart';
+import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_sub_info.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,18 @@ class YearlySummaryCards extends StatelessWidget {
     var appTheme = GetIt.I<ThemeManager>();
     var currTheme = appTheme.getCurrentTheme(context);
 
+    var consolidatedMonths = 0;
+    var openMonths = 0;
+    var currentMonth = DateTime(DateTime.now().year, DateTime.now().month + 1, 0);
+    if (res.range.end.isBefore(currentMonth)) {
+      consolidatedMonths = 12;
+      openMonths = 0;
+    } else {
+      var monthDiff = (res.range.end.difference(DateTime.now()).inDays / 30).ceil();
+      consolidatedMonths = 12 - monthDiff;
+      openMonths = monthDiff;
+    }
+
     return LayoutBuilder(
       builder: (context, constraints) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +54,10 @@ class YearlySummaryCards extends StatelessWidget {
                   Text("Resumo Operacional", style: Theme.of(context).textTheme.headlineSmall),
                 ],
               ),
-              Text("12 Competências consolidadas", style: Theme.of(context).textTheme.bodySmall),
+              Text(
+                "$consolidatedMonths Competências consolidadas${openMonths > 0 ? " e $openMonths em aberto" : ""}",
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ],
           ),
           StaggeredGrid.count(
@@ -73,13 +90,9 @@ class YearlySummaryCards extends StatelessWidget {
     return SummaryValueCard(
       title: "Média mensal de despesas",
       value: res.avgExpenses,
-      label: SummaryCardLabel.neutral(
-        label: "Desvio: ±R\$ 800,00",
-        theme: currTheme,
-      ),
       subInfo: SummaryCardSubInfo(
         label: "Comprometimento da Renda",
-        value: "34.7 % consolidado",
+        value: "${Formatter.relationWithoutSign(res.avgExpenses / res.avgIncomes)} consolidado",
         color: currTheme.colors.negativeYield,
         bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
       ),
@@ -93,7 +106,7 @@ class YearlySummaryCards extends StatelessWidget {
       color: currTheme.colors.negativeYield,
       subInfo: SummaryCardSubInfo(
         label: "Média mensal de despesas",
-        value: "R\$ ${NumberFormat('#,##0.00', 'de').format(res.avgExpenses)} / mês",
+        value: "R\$ ${formatReal(res.avgExpenses)} / mês",
         color: currTheme.colors.negativeYield,
         bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
       ),
@@ -112,13 +125,9 @@ class YearlySummaryCards extends StatelessWidget {
       value: res.avgIncomes,
       subInfo: SummaryCardSubInfo(
         label: "Pico Máximo",
-        value: "R\$ ${NumberFormat('#,##0.00', 'de').format(res.avgIncomes)} (2025-09)",
+        value: "R\$ ${formatReal(res.peakIncome)} (${res.peakIncomeMonth})",
         color: currTheme.colors.positiveYieldAlt,
         bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
-      ),
-      label: SummaryCardLabel.neutral(
-        label: "Desvio: ±R\$ 800,00",
-        theme: currTheme,
       ),
     );
   }
@@ -130,7 +139,7 @@ class YearlySummaryCards extends StatelessWidget {
       color: currTheme.colors.positiveYieldAlt,
       subInfo: SummaryCardSubInfo(
         label: "Média mensal de receitas",
-        value: "R\$ ${NumberFormat('#,##0.00', 'de').format(res.avgIncomes)} / mês",
+        value: "R\$ ${formatReal(res.avgIncomes)} / mês",
         color: currTheme.colors.positiveYieldAlt,
         bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
       ),
@@ -148,13 +157,9 @@ class YearlySummaryCards extends StatelessWidget {
       value: res.avgBalance,
       subInfo: SummaryCardSubInfo(
         label: "Índice de poupança",
-        value: "65.2% da receita",
+        value: "${Formatter.relationWithoutSign(res.avgBalance / res.avgIncomes)} da receita",
         color: res.avgBalance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
         bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
-      ),
-      label: SummaryCardLabel.neutral(
-        label: "Desvio: ±R\$ 800,00",
-        theme: currTheme,
       ),
     );
   }
