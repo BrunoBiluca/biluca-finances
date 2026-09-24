@@ -8,6 +8,7 @@ import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_summary_cards.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_summary_charts.dart';
+import 'package:biluca_financas/di_container.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -20,32 +21,31 @@ class YearlyReport extends StatefulWidget {
 
 class _YearlyReportState extends State<YearlyReport> {
   String? currentYear;
-  AccountabilityYearlyReportService? service;
-  AccountabilityStatsService statsService = GetIt.I<AccountabilityStatsService>();
 
   void updateSelectedYear(String year) => setState(() => currentYear = year);
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: statsService.getAllYearsWithAccountability(fillBlanks: true),
+      future: GetIt.I<AccountabilityStatsService>().getAllYearsWithAccountability(fillBlanks: true),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return const CircularProgressIndicator();
         }
 
+        AccountabilityYearlyReportService? service;
         currentYear ??= snapshot.data!.first.year;
 
         if (currentYear == "Últimos 12 meses") {
           var now = DateTime.now();
-          service = GetIt.I<AccountabilityYearlyReportService>(
-            param1: DateTime(now.year - 1, now.month, 1),
-            param2: now,
+          service = GetIt.I.getAccountabilityYearlyReportService(
+            start: DateTime(now.year - 1, now.month, 1),
+            end: now,
           );
         } else {
-          service = GetIt.I<AccountabilityYearlyReportService>(
-            param1: DateTime(int.parse(currentYear!), 1, 1),
-            param2: DateTime(int.parse(currentYear!) + 1, 1, 1),
+          service = GetIt.I.getAccountabilityYearlyReportService(
+            start: DateTime(int.parse(currentYear!), 1, 1),
+            end: DateTime(int.parse(currentYear!) + 1, 1, 1),
           );
         }
 
@@ -54,16 +54,16 @@ class _YearlyReportState extends State<YearlyReport> {
           children: [
             buildReportHeader(context, snapshot),
             FutureHandler(
-              future: service!.summary(),
+              future: service.summary(),
               child: (res) => YearlySummaryCards(res: res),
             ),
             FutureHandler(
-              future: service!.getMonthlySummary(),
+              future: service.getMonthlySummary(),
               child: (res) => YearlySummaryCharts(res: res),
               hideLoading: true,
             ),
             FutureHandler(
-              future: service!.getMonthlyIdentificationsSummary(),
+              future: service.getMonthlyIdentificationsSummary(),
               child: (res) => YearlyIdentificationsSummaryCharts(res: res),
               hideLoading: true,
             ),

@@ -69,91 +69,94 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
     );
   }
 
-  GridView buildIdentificationsSection(AccountabilityIdentificationType type) {
-    return GridView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 700,
-        childAspectRatio: 1.5,
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
-      ),
-      children: res
-          .where(
-            (i) => i.identification.type == type,
-          )
-          .sortedBy((i) => i.identification.description)
-          .map(
-        (i) {
-          var monthEntries = i.monthTotal.entries.sortedBy((entry) => entry.key);
-          var monthData = monthEntries.map((e) => e.key).toList();
+  Widget buildIdentificationsSection(AccountabilityIdentificationType type) {
+    return LayoutBuilder(builder: (context, constraints) {
+      if (constraints.maxWidth <= 0) return const SizedBox.shrink();
+      return GridView(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 700,
+          childAspectRatio: 1.5,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 20,
+        ),
+        children: res
+            .where(
+              (i) => i.identification.type == type,
+            )
+            .sortedBy((i) => i.identification.description)
+            .map(
+          (i) {
+            var monthEntries = i.monthTotal.entries.sortedBy((entry) => entry.key);
+            var monthData = monthEntries.map((e) => e.key).toList();
 
-          var validEntries = monthEntries.where((entry) => entry.value != 0);
-          var maxValue = validEntries.map((entry) => entry.value.abs()).max;
-          var avgValue = validEntries.map((entry) => entry.value.abs()).average;
+            var validEntries = monthEntries.where((entry) => entry.value != 0);
+            var maxValue = validEntries.map((entry) => entry.value.abs()).max;
+            var avgValue = validEntries.map((entry) => entry.value.abs()).average;
 
-          return SummaryChartCard(
-            icon: i.identification.icon,
-            color: i.identification.color,
-            title: i.identification.description,
-            smallerTitle: true,
-            subInfo: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Média: "),
-                Text(
-                  formatReal(avgValue),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: i.identification.color,
+            return SummaryChartCard(
+              icon: i.identification.icon,
+              color: i.identification.color,
+              title: i.identification.description,
+              smallerTitle: true,
+              subInfo: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Média: "),
+                  Text(
+                    formatReal(avgValue),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: i.identification.color,
+                    ),
+                  ),
+                ],
+              ),
+              topRightInfo: Text(
+                "Max: ${formatReal(maxValue)}",
+              ),
+              chart: BarChart(
+                BarChartData(
+                  barGroups: monthEntries
+                      .mapIndexed(
+                        (index, entry) => BarChartGroupData(
+                          x: index,
+                          barRods: [
+                            BarChartRodData(
+                              toY: entry.value.abs(),
+                              color: i.identification.color.withAlpha(
+                                (entry.value / maxValue * 255).clamp(100, 255).toInt(),
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4),
+                                topRight: Radius.circular(4),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                  titlesData: defaultTitlesForCurrency(monthData, rotation: pi / 6, maxY: maxValue),
+                  gridData: defaultGrid(),
+                  borderData: defaultBorder(),
+                  barTouchData: defaultBarTouchData(),
+                  extraLinesData: ExtraLinesData(
+                    horizontalLines: [
+                      HorizontalLine(
+                        y: avgValue,
+                        color: i.identification.color,
+                        strokeWidth: 2,
+                        dashArray: [10, 5],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-            topRightInfo: Text(
-              "Max: ${formatReal(maxValue)}",
-            ),
-            chart: BarChart(
-              BarChartData(
-                barGroups: monthEntries
-                    .mapIndexed(
-                      (index, entry) => BarChartGroupData(
-                        x: index,
-                        barRods: [
-                          BarChartRodData(
-                            toY: entry.value.abs(),
-                            color: i.identification.color.withAlpha(
-                              (entry.value / maxValue * 255).clamp(100, 255).toInt(),
-                            ),
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4),
-                              topRight: Radius.circular(4),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
-                titlesData: defaultTitlesForCurrency(monthData, rotation: pi / 6, maxY: maxValue),
-                gridData: defaultGrid(),
-                borderData: defaultBorder(),
-                barTouchData: defaultBarTouchData(),
-                extraLinesData: ExtraLinesData(
-                  horizontalLines: [
-                    HorizontalLine(
-                      y: avgValue,
-                      color: i.identification.color,
-                      strokeWidth: 2,
-                      dashArray: [10, 5],
-                    ),
-                  ],
-                ),
               ),
-            ),
-          );
-        },
-      ).toList(),
-    );
+            );
+          },
+        ).toList(),
+      );
+    });
   }
 }

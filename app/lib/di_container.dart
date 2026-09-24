@@ -86,3 +86,12 @@ Future<void> setup() async {
     ),
   );
 }
+
+extension AccountabilityYearlyReportServiceFactory on GetIt {
+  AccountabilityYearlyReportService getAccountabilityYearlyReportService({
+    required DateTime start,
+    required DateTime end,
+  }) {
+    return this.get<AccountabilityYearlyReportService>(param1: start, param2: end);
+  }
+}

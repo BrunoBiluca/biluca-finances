@@ -1,5 +1,6 @@
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
+import 'package:biluca_financas/common/ui/hover_wrapper.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
 import 'package:flutter/material.dart';
 
@@ -28,10 +29,8 @@ class _SummaryValueCardState extends State<SummaryValueCard> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (event) => setState(() => isHover = true),
-      onExit: (event) => setState(() => isHover = false),
+    return HoverWrapper(
+      onHover: (value) => setState(() => isHover = value),
       child: Card(
         color: isHover ? Theme.of(context).cardColor.addBrightness(10) : Theme.of(context).cardColor,
         child: Padding(
