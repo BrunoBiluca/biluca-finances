@@ -1,50 +1,224 @@
-import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_balance_card.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_expenses_card.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_incomes_card.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_service.provider.dart';
+import 'package:biluca_financas/app/themes/app_theme.dart';
+import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/common/formatters/formatter.dart';
+import 'package:biluca_financas/common/ui/reports/future_handler.dart';
+import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
+import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_sub_info.dart';
+import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_value_card.dart';
+import 'package:biluca_financas/common/ui/reports/values_comparison_full_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get_it/get_it.dart';
 
 class SummaryValuesSection extends StatelessWidget {
   const SummaryValuesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-      Text(
-        "Resumo",
-        style: Theme.of(context).textTheme.headlineSmall,
-      ),
-      const SizedBox(height: 20),
-      StaggeredGrid.count(
-        crossAxisCount: 3,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
+    var service = MonthlyReportServiceProvider.of(context);
+    var appTheme = GetIt.I<ThemeManager>();
+    var currTheme = appTheme.getCurrentTheme(context);
+
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10,
         children: [
-          StaggeredGridTile.extent(
-            crossAxisCellCount: 1,
-            mainAxisExtent: 150,
-            child: SummaryBalanceCard(
-              key: const Key("summary_balance"),
-            ),
+          Row(
+            spacing: 10,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                spacing: 10,
+                children: [
+                  Icon(Icons.analytics_outlined, color: Theme.of(context).colorScheme.secondary),
+                  Text("Resumo Operacional", style: Theme.of(context).textTheme.headlineSmall),
+                ],
+              ),
+            ],
           ),
-          StaggeredGridTile.extent(
-            crossAxisCellCount: 1,
-            mainAxisExtent: 150,
-            child: SummaryIncomesCard(
-              key: const Key("summary_incomes"),
-            ),
-          ),
-          StaggeredGridTile.extent(
-            crossAxisCellCount: 1,
-            mainAxisExtent: 150,
-            child: SummaryExpensesCard(
-              key: const Key("summary_expenses"),
+          FutureHandler(
+            key: Key(service.current.currentMonth.toString()),
+            future: Future.wait([
+              service.summaryBalance(),
+              service.summaryIncomes(),
+              service.summaryExpenses(),
+            ]),
+            child: (res) => StaggeredGrid.count(
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              crossAxisCount: constraints.maxWidth < 850 ? 1 : 3,
+              children: [
+                buildBalanceCard(
+                  res[0]["balance"],
+                  res[0]["avgRecentMonts"],
+                  currTheme,
+                  context,
+                ),
+                buildIncomesCard(
+                  res[1]["incomes"],
+                  res[1]["related"],
+                  res[1]["avgRecentMonts"],
+                  currTheme,
+                  context,
+                ),
+                buildExpensesCard(
+                  res[2]["expenses"],
+                  res[2]["related"],
+                  res[2]["avgRecentMonts"],
+                  currTheme,
+                  context,
+                )
+              ]
+                  .map(
+                    (e) => StaggeredGridTile.extent(
+                      mainAxisExtent: 200,
+                      crossAxisCellCount: 1,
+                      child: e,
+                    ),
+                  )
+                  .toList(),
             ),
           )
         ],
-      )
-    ]);
+      ),
+    );
   }
+
+  Widget buildBalanceCard(
+    double balance,
+    double avgBalanceRecentMonths,
+    AppTheme currTheme,
+    BuildContext context,
+  ) =>
+      SummaryValueCard(
+        title: "Balanço",
+        value: balance,
+        color: balance > 0 ? currTheme.colors.positiveYieldAlt : currTheme.colors.negativeYield,
+        subInfo: SummaryCardSubInfo(
+          info: ValuesComparisonFullText.from(
+            balance,
+            avgBalanceRecentMonths,
+            false,
+            suffix: "em relação aos últimos 12 meses",
+          ),
+        ),
+        label: balance > 0
+            ? SummaryCardLabel(
+                label: "Superávit",
+                color: currTheme.colors.positiveYield,
+                icon: Icons.trending_up,
+                bgColor: currTheme.colors.positiveYieldBg,
+              )
+            : SummaryCardLabel(
+                label: "Déficit",
+                color: currTheme.colors.negativeYield,
+                icon: Icons.trending_down,
+                bgColor: currTheme.colors.negativeYieldBg,
+              ),
+      );
+
+  Widget buildIncomesCard(
+    double incomes,
+    double incomesLastMonth,
+    double avgIncomesRecentMonths,
+    AppTheme currTheme,
+    BuildContext context,
+  ) =>
+      SummaryValueCard(
+        title: "Receitas",
+        value: incomes,
+        color: currTheme.colors.positiveYield,
+        subInfo: SummaryCardSubInfo(
+          info: ValuesComparisonFullText.from(
+            incomes,
+            avgIncomesRecentMonths,
+            true,
+            suffix: "em relação aos últimos 12 meses",
+          ),
+        ),
+        label: incomes > incomesLastMonth
+            ? SummaryCardLabel.positive(
+                label: Formatter.relationWithoutSign(incomes / incomesLastMonth),
+                icon: Icons.arrow_upward,
+                theme: currTheme,
+              )
+            : SummaryCardLabel.negative(
+                label: Formatter.relationWithoutSign(incomes / incomesLastMonth),
+                icon: Icons.arrow_downward,
+                theme: currTheme,
+              ),
+      );
+
+  Widget buildExpensesCard(
+    double expenses,
+    double expensesLastMonth,
+    double avgExpensesRecentMonths,
+    AppTheme currTheme,
+    BuildContext context,
+  ) =>
+      SummaryValueCard(
+        title: "Receitas",
+        value: expenses,
+        color: currTheme.colors.negativeYield,
+        subInfo: SummaryCardSubInfo(
+          info: ValuesComparisonFullText.from(
+            expenses,
+            avgExpensesRecentMonths,
+            false,
+            suffix: "em relação aos últimos 12 meses",
+          ),
+        ),
+        label: expenses < expensesLastMonth
+            ? SummaryCardLabel.positive(
+                label: Formatter.relationWithoutSign(expenses / expensesLastMonth),
+                icon: Icons.arrow_downward,
+                theme: currTheme,
+              )
+            : SummaryCardLabel.negative(
+                label: Formatter.relationWithoutSign(expenses / expensesLastMonth),
+                icon: Icons.arrow_upward,
+                theme: currTheme,
+              ),
+      );
 }
+
+// Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//       Text(
+//         "Resumo",
+//         style: Theme.of(context).textTheme.headlineSmall,
+//       ),
+//       const SizedBox(height: 20),
+//       StaggeredGrid.count(
+//         crossAxisCount: 3,
+//         crossAxisSpacing: 20,
+//         mainAxisSpacing: 20,
+//         children: [
+//           StaggeredGridTile.extent(
+//             crossAxisCellCount: 1,
+//             mainAxisExtent: 150,
+//             child: SummaryBalanceCard(
+//               key: const Key("summary_balance"),
+//             ),
+//           ),
+//           StaggeredGridTile.extent(
+//             crossAxisCellCount: 1,
+//             mainAxisExtent: 150,
+//             child: SummaryIncomesCard(
+//               key: const Key("summary_incomes"),
+//             ),
+//           ),
+//           StaggeredGridTile.extent(
+//             crossAxisCellCount: 1,
+//             mainAxisExtent: 150,
+//             child: SummaryExpensesCard(
+//               key: const Key("summary_expenses"),
+//             ),
+//           )
+//         ],
+//       )
+//     ]);

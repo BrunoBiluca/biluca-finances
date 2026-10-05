@@ -49,7 +49,11 @@ class ValuesComparisonFullText extends StatelessWidget {
                 ),
           ),
           TextSpan(
-            text: " $suffix (${Formatter.value(values.related)})",
+            text: " $suffix ",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          TextSpan(
+            text: "(${Formatter.value(values.related)})",
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

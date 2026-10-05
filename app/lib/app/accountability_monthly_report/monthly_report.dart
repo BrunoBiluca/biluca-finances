@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/month_selector.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
@@ -6,10 +7,6 @@ import 'package:biluca_financas/app/accountability_table/accountability_table.da
 import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:biluca_financas/core/accountability_stats/models/accountability_month_stats.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
-import 'package:biluca_financas/common/ui/reports/month_selector.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/widgets/accountability_by_identifications_section/expenses_per_indentification.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/widgets/accountability_by_identifications_section/incomes_per_identification.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_last_months/summary_last_months_section.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/current_month_report.service.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_service.provider.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_values_section.dart';
@@ -30,6 +27,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
   AccountabilityMonthStats? _selectedMonth;
   CurrentMonthReportService? _service;
   StreamSubscription? _subscription;
+  var statsService = GetIt.I<AccountabilityStatsService>();
 
   @override
   void initState() {
@@ -38,7 +36,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
   }
 
   void fillMonths() async {
-    var result = await GetIt.I<AccountabilityStatsService>().getAllMonthsWithAccountability(fillBlanks: true);
+    var result = await statsService.getAllMonthsWithAccountability(fillBlanks: true);
     setState(() => availableMonths = result);
     updateDateSelected(result.last);
   }
@@ -111,50 +109,84 @@ class _MonthlyReportState extends State<MonthlyReport> {
     return MonthlyReportServiceProvider(
       service: _service!,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 20,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              MonthSelector(
-                availableMonths: availableMonths,
-                current: _selectedMonth!,
-                onDateChanged: updateDateSelected,
-              ),
-              OutlinedButton(
-                onPressed: () => displayReportData(),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
+          buildReportHeader(context),
+          _selectedMonth!.entriesCount == 0
+              ? SizedBox(
+                  height: 400,
+                  child: const Center(
+                    child: Text("Nenhum registro encontrado"),
+                  ),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 60,
                   children: [
-                    Icon(Icons.add_circle_outline),
-                    SizedBox(width: 20),
-                    Text('Dados do relatório'),
+                    SummaryValuesSection(),
+                    // SummaryLastMonthsSection(),
+                    // IncomesPerIdentification(service: _service!),
+                    // ExpensesPerIndentification(service: _service!),
                   ],
                 ),
-              )
-            ],
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 100)
+        ],
+      ),
+    );
+  }
+
+  Widget buildReportHeader(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) => Row(
+        spacing: 20,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
           Expanded(
-            child: _selectedMonth!.entriesCount == 0
-                ? const Center(child: Text("Nenhum registro encontrado"))
-                : SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SummaryValuesSection(),
-                        const SizedBox(height: 60),
-                        SummaryLastMonthsSection(),
-                        const SizedBox(height: 60),
-                        IncomesPerIdentification(service: _service!),
-                        const SizedBox(height: 60),
-                        ExpensesPerIndentification(service: _service!),
-                        const SizedBox(height: 60),
-                      ],
+            flex: constraints.maxWidth < 850 ? 1 : 2,
+            child: Row(
+              spacing: 10,
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(8),
+                    color: Color(0xFF262A34),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.dashboard,
+                      color: Colors.purpleAccent,
                     ),
                   ),
+                ),
+                Text(
+                  "Relatório mensal",
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => displayReportData(),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_circle_outline),
+                SizedBox(width: 20),
+                Text('Dados do relatório'),
+              ],
+            ),
+          ),
+          Flexible(
+            child: MonthSelector(
+              availableMonths: availableMonths,
+              current: _selectedMonth!,
+              onDateChanged: updateDateSelected,
+            ),
           ),
         ],
       ),

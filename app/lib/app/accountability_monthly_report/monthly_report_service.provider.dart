@@ -13,7 +13,7 @@ class MonthlyReportServiceProvider extends InheritedWidget {
   // Método estático para acessar o serviço
   static CurrentMonthReportService of(BuildContext context) {
     final provider = context.dependOnInheritedWidgetOfExactType<MonthlyReportServiceProvider>();
-    assert(provider != null, 'ServiceAProvider não encontrado na árvore');
+    assert(provider != null, 'MonthlyReportServiceProvider não encontrado na árvore');
     return provider!.service;
   }
 

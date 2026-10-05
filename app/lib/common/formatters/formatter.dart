@@ -6,7 +6,7 @@ class Formatter {
   static String number(double number) =>
       NumberFormat.decimalPatternDigits(locale: "pt_BR", decimalDigits: 2).format(number);
 
-  static String value(double value) => "R\$ ${number(value)}";
+  static String value(double value) => "R\$\u00A0${number(value)}";
 
   static String percent(double number) => Formatter.number(number * 100);
 

@@ -201,12 +201,12 @@ class ObsidianWealthDarkTheme extends AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: accentCyan,
-          foregroundColor: Colors.white,
+          foregroundColor: Colors.black,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           textStyle: const TextStyle(
             fontFamily: fontInter,
             fontSize: 14,

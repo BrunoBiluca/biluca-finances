@@ -90,11 +90,11 @@ class YearlySummaryCards extends StatelessWidget {
     return SummaryValueCard(
       title: "Média mensal de despesas",
       value: res.avgExpenses,
-      subInfo: SummaryCardSubInfo(
+      subInfo: SummaryCardSubInfo.text(
         label: "Comprometimento da Renda",
         value: "${Formatter.relationWithoutSign(res.avgExpenses / res.avgIncomes)} consolidado",
         color: currTheme.colors.negativeYield,
-        bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
+        context: context,
       ),
     );
   }
@@ -104,11 +104,11 @@ class YearlySummaryCards extends StatelessWidget {
       title: "Total de despesas",
       value: res.totalExpenses,
       color: currTheme.colors.negativeYield,
-      subInfo: SummaryCardSubInfo(
+      subInfo: SummaryCardSubInfo.text(
         label: "Média mensal de despesas",
         value: "R\$ ${formatReal(res.avgExpenses)} / mês",
         color: currTheme.colors.negativeYield,
-        bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
+        context: context,
       ),
       label: SummaryCardLabel(
         label: "Saídas",
@@ -123,11 +123,11 @@ class YearlySummaryCards extends StatelessWidget {
     return SummaryValueCard(
       title: "Média mensal de receitas",
       value: res.avgIncomes,
-      subInfo: SummaryCardSubInfo(
+      subInfo: SummaryCardSubInfo.text(
         label: "Pico Máximo",
         value: "R\$ ${formatReal(res.peakIncome)} (${res.peakIncomeMonth})",
         color: currTheme.colors.positiveYieldAlt,
-        bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
+        context: context,
       ),
     );
   }
@@ -137,11 +137,11 @@ class YearlySummaryCards extends StatelessWidget {
       title: "Total de receitas",
       value: res.totalIncomes,
       color: currTheme.colors.positiveYieldAlt,
-      subInfo: SummaryCardSubInfo(
+      subInfo: SummaryCardSubInfo.text(
         label: "Média mensal de receitas",
         value: "R\$ ${formatReal(res.avgIncomes)} / mês",
         color: currTheme.colors.positiveYieldAlt,
-        bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
+        context: context,
       ),
       label: SummaryCardLabel.positiveAlt(
         label: "Entradas",
@@ -155,11 +155,11 @@ class YearlySummaryCards extends StatelessWidget {
     return SummaryValueCard(
       title: "Média mensal de balanços",
       value: res.avgBalance,
-      subInfo: SummaryCardSubInfo(
+      subInfo: SummaryCardSubInfo.text(
         label: "Índice de poupança",
         value: "${Formatter.relationWithoutSign(res.avgBalance / res.avgIncomes)} da receita",
         color: res.avgBalance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
-        bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
+        context: context,
       ),
     );
   }
@@ -169,11 +169,11 @@ class YearlySummaryCards extends StatelessWidget {
       title: "Balanço",
       value: res.balance,
       color: res.balance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
-      subInfo: SummaryCardSubInfo(
+      subInfo: SummaryCardSubInfo.text(
         label: "Média mensal",
         value: "R\$ ${NumberFormat('#,##0.00', 'de').format(res.avgBalance)} / mês",
         color: Colors.white,
-        bgColor: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
+        context: context,
       ),
       label: res.balance > 0
           ? SummaryCardLabel(
