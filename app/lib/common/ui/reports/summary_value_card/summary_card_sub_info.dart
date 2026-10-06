@@ -16,7 +16,8 @@ class SummaryCardSubInfo extends StatelessWidget {
   }) {
     return SummaryCardSubInfo(
       info: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
             label,

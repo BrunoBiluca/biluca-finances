@@ -57,7 +57,7 @@ class SummaryCardLabel extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
         child: Row(
-          spacing: 4,
+          spacing: 8,
           children: [
             icon != null
                 ? Icon(

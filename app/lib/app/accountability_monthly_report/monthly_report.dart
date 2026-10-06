@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/month_selector.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_last_months_section.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
@@ -9,7 +10,7 @@ import 'package:biluca_financas/core/accountability_stats/models/accountability_
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/current_month_report.service.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_service.provider.dart';
-import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section/summary_values_section.dart';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -126,7 +127,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                   spacing: 60,
                   children: [
                     SummaryValuesSection(),
-                    // SummaryLastMonthsSection(),
+                    SummaryLastMonthsSection(),
                     // IncomesPerIdentification(service: _service!),
                     // ExpensesPerIndentification(service: _service!),
                   ],

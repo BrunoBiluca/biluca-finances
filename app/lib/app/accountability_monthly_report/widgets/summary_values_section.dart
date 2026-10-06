@@ -34,7 +34,10 @@ class SummaryValuesSection extends StatelessWidget {
                 spacing: 10,
                 children: [
                   Icon(Icons.analytics_outlined, color: Theme.of(context).colorScheme.secondary),
-                  Text("Resumo Operacional", style: Theme.of(context).textTheme.headlineSmall),
+                  Text(
+                    "Resumo Operacional",
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ],
               ),
             ],
@@ -53,6 +56,8 @@ class SummaryValuesSection extends StatelessWidget {
               children: [
                 buildBalanceCard(
                   res[0]["balance"],
+                  res[1]["incomes"],
+                  res[2]["expenses"],
                   res[0]["avgRecentMonts"],
                   currTheme,
                   context,
@@ -89,6 +94,8 @@ class SummaryValuesSection extends StatelessWidget {
 
   Widget buildBalanceCard(
     double balance,
+    double incomes,
+    double expenses,
     double avgBalanceRecentMonths,
     AppTheme currTheme,
     BuildContext context,
@@ -107,13 +114,13 @@ class SummaryValuesSection extends StatelessWidget {
         ),
         label: balance > 0
             ? SummaryCardLabel(
-                label: "Superávit",
+                label: "Superávit\n${Formatter.relationWithoutSign(balance / incomes)}",
                 color: currTheme.colors.positiveYield,
                 icon: Icons.trending_up,
                 bgColor: currTheme.colors.positiveYieldBg,
               )
             : SummaryCardLabel(
-                label: "Déficit",
+                label: "Déficit\n${Formatter.relationWithoutSign(balance / incomes)}",
                 color: currTheme.colors.negativeYield,
                 icon: Icons.trending_down,
                 bgColor: currTheme.colors.negativeYieldBg,
@@ -135,7 +142,7 @@ class SummaryValuesSection extends StatelessWidget {
           info: ValuesComparisonFullText.from(
             incomes,
             avgIncomesRecentMonths,
-            true,
+            false,
             suffix: "em relação aos últimos 12 meses",
           ),
         ),
@@ -167,7 +174,7 @@ class SummaryValuesSection extends StatelessWidget {
           info: ValuesComparisonFullText.from(
             expenses,
             avgExpensesRecentMonths,
-            false,
+            true,
             suffix: "em relação aos últimos 12 meses",
           ),
         ),
@@ -184,41 +191,3 @@ class SummaryValuesSection extends StatelessWidget {
               ),
       );
 }
-
-// Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//       Text(
-//         "Resumo",
-//         style: Theme.of(context).textTheme.headlineSmall,
-//       ),
-//       const SizedBox(height: 20),
-//       StaggeredGrid.count(
-//         crossAxisCount: 3,
-//         crossAxisSpacing: 20,
-//         mainAxisSpacing: 20,
-//         children: [
-//           StaggeredGridTile.extent(
-//             crossAxisCellCount: 1,
-//             mainAxisExtent: 150,
-//             child: SummaryBalanceCard(
-//               key: const Key("summary_balance"),
-//             ),
-//           ),
-//           StaggeredGridTile.extent(
-//             crossAxisCellCount: 1,
-//             mainAxisExtent: 150,
-//             child: SummaryIncomesCard(
-//               key: const Key("summary_incomes"),
-//             ),
-//           ),
-//           StaggeredGridTile.extent(
-//             crossAxisCellCount: 1,
-//             mainAxisExtent: 150,
-//             child: SummaryExpensesCard(
-//               key: const Key("summary_expenses"),
-//             ),
-//           )
-//         ],
-//       )
-//     ]);
