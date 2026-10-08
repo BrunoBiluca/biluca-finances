@@ -156,6 +156,20 @@ class IdentificationsViewSection extends StatelessWidget {
   }
 
   SummaryCardLabel buildLabel(IdentificationReportInfo e, AppTheme currTheme) {
+    if (e.related == 0) {
+      return SummaryCardLabel.neutral(
+        label: "N/A",
+        theme: currTheme,
+      );
+    }
+
+    if (e.current == e.related) {
+      return SummaryCardLabel.neutral(
+        label: "Sem variação",
+        theme: currTheme,
+      );
+    }
+
     if (e.identification.type == AccountabilityIdentificationType.income) {
       return e.current > e.related
           ? SummaryCardLabel.positive(

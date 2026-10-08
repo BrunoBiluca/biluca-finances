@@ -59,13 +59,12 @@ class SummaryCardLabel extends StatelessWidget {
         child: Row(
           spacing: 8,
           children: [
-            icon != null
-                ? Icon(
-                    icon,
-                    color: color,
-                    size: Theme.of(context).textTheme.bodySmall!.fontSize,
-                  )
-                : const SizedBox.shrink(),
+            if (icon != null)
+              Icon(
+                icon,
+                color: color,
+                size: Theme.of(context).textTheme.bodySmall!.fontSize,
+              ),
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(color: color),
