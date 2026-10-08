@@ -1,3 +1,4 @@
+import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/ui/reports/charts/rounded_rect_dot_painter.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/models/identification_report_info.dart';
 import 'package:collection/collection.dart';
@@ -8,7 +9,7 @@ class IdentificationsPercentageChart extends StatelessWidget {
   final List<IdentificationReportInfo> data;
   const IdentificationsPercentageChart({super.key, required this.data});
 
-  final size = 24.0;
+  final size = 28.0;
 
   final maxX = 10;
 
@@ -18,43 +19,59 @@ class IdentificationsPercentageChart extends StatelessWidget {
   Widget build(BuildContext context) {
     var spots = getScatterStops();
 
-    return Align(
-      alignment: Alignment.center,
-      child: SizedBox(
-        height: 300,
-        width: 300,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor.withAlpha(150),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: ScatterChart(
-              ScatterChartData(
-                scatterSpots: spots.entries.map((e) => e.value['spot'] as ScatterSpot).toList(),
-                minX: 0,
-                maxX: maxX.toDouble(),
-                minY: 0,
-                maxY: maxY.toDouble(),
-                borderData: FlBorderData(show: false),
-                gridData: const FlGridData(show: false),
-                titlesData: const FlTitlesData(show: false),
-                scatterTouchData: ScatterTouchData(
-                  enabled: true,
-                  touchTooltipData: ScatterTouchTooltipData(
-                    tooltipPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    getTooltipItems: (spot) {
-                      var info = spots["${spot.x.toInt()}_${spot.y.toInt()}"]['id'] as IdentificationReportInfo;
-                      var identification = info.identification.description;
-                      var percentage = "${(info.participationInTotal * 100).toStringAsFixed(2)}%";
-                      return ScatterTooltipItem("$identification\n$percentage");
-                    },
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor.addBrightness(10),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          spacing: 20,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Composição relativa",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 350,
+              width: 350,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: ScatterChart(
+                    ScatterChartData(
+                      scatterSpots: spots.entries.map((e) => e.value['spot'] as ScatterSpot).toList(),
+                      minX: 0,
+                      maxX: maxX.toDouble(),
+                      minY: 0,
+                      maxY: maxY.toDouble(),
+                      borderData: FlBorderData(show: false),
+                      gridData: const FlGridData(show: false),
+                      titlesData: const FlTitlesData(show: false),
+                      scatterTouchData: ScatterTouchData(
+                        enabled: true,
+                        touchTooltipData: ScatterTouchTooltipData(
+                          tooltipPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          getTooltipItems: (spot) {
+                            var info = spots["${spot.x.toInt()}_${spot.y.toInt()}"]['id'] as IdentificationReportInfo;
+                            var identification = info.identification.description;
+                            var percentage = "${(info.participationInTotal * 100).toStringAsFixed(2)}%";
+                            return ScatterTooltipItem("$identification\n$percentage");
+                          },
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

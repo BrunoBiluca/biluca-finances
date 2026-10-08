@@ -96,35 +96,36 @@ class IdentificationsViewSection extends StatelessWidget {
                 .toList(),
           ),
           SizedBox(
-            height: 400,
+            height: 500,
             width: double.maxFinite,
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Row(
+                  spacing: 20,
                   children: [
-                    Flexible(
-                        flex: 2,
-                        child: Column(
-                          spacing: 20,
-                          children: [
-                            Row(
-                              spacing: 10,
-                              children: [
-                                Icon(
-                                  Icons.bar_chart,
-                                  color: Theme.of(context).colorScheme.secondary,
-                                ),
-                                Text(
-                                  "Comportamento das identificações",
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Expanded(child: IdentificationsBarChart(data: sortedData)),
-                          ],
-                        )),
-                    Flexible(flex: 1, child: IdentificationsPercentageChart(data: sortedData))
+                    Expanded(
+                      child: Column(
+                        spacing: 20,
+                        children: [
+                          Row(
+                            spacing: 10,
+                            children: [
+                              Icon(
+                                Icons.bar_chart,
+                                color: Theme.of(context).colorScheme.secondary,
+                              ),
+                              Text(
+                                "Comportamento das identificações",
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          Expanded(child: IdentificationsBarChart(data: sortedData)),
+                        ],
+                      ),
+                    ),
+                    IdentificationsPercentageChart(data: sortedData)
                   ],
                 ),
               ),
