@@ -2,6 +2,7 @@ import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/ui/hover_wrapper.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
+import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_sub_info.dart';
 import 'package:flutter/material.dart';
 
 class SummaryValueCard extends StatefulWidget {
@@ -10,6 +11,8 @@ class SummaryValueCard extends StatefulWidget {
   final Color color;
   final Widget? subInfo;
   final SummaryCardLabel? label;
+  final IconData? icon;
+  final Color? iconColor;
 
   const SummaryValueCard({
     super.key,
@@ -18,6 +21,8 @@ class SummaryValueCard extends StatefulWidget {
     this.color = Colors.white,
     this.subInfo,
     this.label,
+    this.icon,
+    this.iconColor,
   });
 
   @override
@@ -43,27 +48,43 @@ class _SummaryValueCardState extends State<SummaryValueCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.title.toUpperCase(),
-                        key: const Key("título"),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                  if (widget.icon != null)
+                    SizedBox(
+                      width: 40,
+                      height: 40,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: widget.iconColor?.addBrightness(-100),
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(widget.icon, color: widget.iconColor),
                       ),
-                      Text(
-                        Formatter.value(widget.value),
-                        key: const Key("valor"),
-                        style: Theme.of(context).textTheme.displayLarge?.copyWith(color: widget.color),
-                      ),
-                    ],
+                    ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title.toUpperCase(),
+                          key: const Key("título"),
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          Formatter.value(widget.value),
+                          key: const Key("valor"),
+                          style: Theme.of(context).textTheme.displayLarge?.copyWith(color: widget.color),
+                        ),
+                      ],
+                    ),
                   ),
                   if (widget.label != null) widget.label!,
                 ],
               ),
-              Spacer(),
-              if (widget.subInfo != null) widget.subInfo!,
+              if (widget.subInfo != null) Spacer(),
+              if (widget.subInfo != null) SummaryCardSubInfo(info: widget.subInfo!),
             ],
           ),
         ),

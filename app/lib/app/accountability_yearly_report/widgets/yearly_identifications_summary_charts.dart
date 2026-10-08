@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:biluca_financas/common/ui/reports/charts.dart';
+import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:biluca_financas/common/ui/reports/summary_chart_card/summary_chart_card.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';

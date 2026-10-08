@@ -8,33 +8,6 @@ class SummaryCardSubInfo extends StatelessWidget {
     required this.info,
   });
 
-  factory SummaryCardSubInfo.text({
-    required BuildContext context,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return SummaryCardSubInfo(
-      info: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: color,
-                ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(

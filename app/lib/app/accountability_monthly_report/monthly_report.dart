@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:biluca_financas/app/accountability_monthly_report/widgets/identifications_view_section.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/month_selector.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_last_months_section.dart';
+import 'package:biluca_financas/common/ui/reports/future_handler.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
@@ -108,6 +110,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
     }
 
     return MonthlyReportServiceProvider(
+      key: ValueKey(_selectedMonth!.month),
       service: _service!,
       child: Column(
         spacing: 20,
@@ -128,13 +131,65 @@ class _MonthlyReportState extends State<MonthlyReport> {
                   children: [
                     SummaryValuesSection(),
                     SummaryLastMonthsSection(),
-                    // IncomesPerIdentification(service: _service!),
+                    buildSection(
+                      context,
+                      "Receitas por Identificação",
+                      Icons.savings_outlined,
+                      FutureHandler(
+                        future: _service!.incomesByIdentification(),
+                        child: (data) => IdentificationsViewSection(
+                          data: data,
+                          onDataChanged: () {
+                            updateDateSelected(_selectedMonth!);
+                          },
+                        ),
+                      ),
+                    ),
+                    buildSection(
+                      context,
+                      "Despesas por Identificação",
+                      Icons.money_off_outlined,
+                      FutureHandler(
+                        future: _service!.expensesByIdentification(),
+                        child: (data) => IdentificationsViewSection(
+                          data: data,
+                          onDataChanged: () {
+                            updateDateSelected(_selectedMonth!);
+                          },
+                        ),
+                      ),
+                    ),
                     // ExpensesPerIndentification(service: _service!),
                   ],
                 ),
           const SizedBox(height: 100)
         ],
       ),
+    );
+  }
+
+  Widget buildSection(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Widget section,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 20,
+      children: [
+        Row(
+          spacing: 10,
+          children: [
+            Icon(icon, color: Theme.of(context).colorScheme.secondary),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        section,
+      ],
     );
   }
 
@@ -173,11 +228,11 @@ class _MonthlyReportState extends State<MonthlyReport> {
           ElevatedButton(
             onPressed: () => displayReportData(),
             child: const Row(
+              spacing: 10,
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add_circle_outline),
-                SizedBox(width: 20),
+                Icon(Icons.add_circle_outline, size: 20),
                 Text('Dados do relatório'),
               ],
             ),

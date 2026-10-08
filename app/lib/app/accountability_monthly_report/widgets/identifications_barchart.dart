@@ -1,3 +1,4 @@
+import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/models/identification_report_info.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -9,7 +10,6 @@ class IdentificationsBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ids = data.reversed;
     var maxCurrentValue = data.map((i) => i.current.abs()).max;
     var maxRelatedValue = data.map((i) => i.related.abs()).max;
     var maxValue = [maxCurrentValue, maxRelatedValue].max;
@@ -17,7 +17,7 @@ class IdentificationsBarChart extends StatelessWidget {
     return BarChart(
       BarChartData(
         maxY: maxValue + maxValue * 0.2,
-        barGroups: ids
+        barGroups: data
             .mapIndexed(
               (index, entry) => BarChartGroupData(
                 x: index,
@@ -43,11 +43,11 @@ class IdentificationsBarChart extends StatelessWidget {
             sideTitles: SideTitles(
               showTitles: true,
               getTitlesWidget: (value, meta) {
-                if (value.toInt() < 0 || value.toInt() >= ids.length) {
+                if (value.toInt() < 0 || value.toInt() >= data.length) {
                   return const SizedBox.shrink();
                 }
                 return Text(
-                  ids.elementAt(value.toInt()).identification.description,
+                  data.elementAt(value.toInt()).identification.description,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                 );
               },
@@ -55,13 +55,14 @@ class IdentificationsBarChart extends StatelessWidget {
           ),
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
-              interval: (maxValue / 5 / 100).round() * 100 + 100,
-              reservedSize: 60,
               getTitlesWidget: (double value, TitleMeta meta) {
+                var divisor = maxValue > 10 * 1000 ? 1000 : 1;
+                var suffix = divisor == 1000 ? "k" : "";
+                var thousands = (value.abs() / divisor).truncate();
                 return SideTitleWidget(
                   meta: meta,
                   child: Text(
-                    value.toStringAsFixed(0),
+                    "$thousands$suffix",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -71,6 +72,7 @@ class IdentificationsBarChart extends StatelessWidget {
                 );
               },
               showTitles: true,
+              reservedSize: 40,
             ),
           ),
           rightTitles: AxisTitles(
@@ -80,20 +82,9 @@ class IdentificationsBarChart extends StatelessWidget {
             sideTitles: SideTitles(showTitles: false),
           ),
         ),
-        barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-            getTooltipColor: (spot) => Colors.blueGrey,
-            getTooltipItem: (group, groupIndex, rod, rodIndex) => BarTooltipItem(
-              "${rodIndex == 0 ? 'Atual\n' : 'Anterior\n'}${rod.toY.toStringAsFixed(2)}",
-              textAlign: TextAlign.left,
-              TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        gridData: FlGridData(show: false),
+        barTouchData: defaultBarTouchData(),
+        gridData: defaultGrid(),
+        borderData: defaultBorder(),
       ),
     );
   }

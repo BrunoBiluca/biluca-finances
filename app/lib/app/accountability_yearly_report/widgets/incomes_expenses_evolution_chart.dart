@@ -1,6 +1,6 @@
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/common/extensions/currency.dart';
-import 'package:biluca_financas/common/ui/reports/charts.dart';
+import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';

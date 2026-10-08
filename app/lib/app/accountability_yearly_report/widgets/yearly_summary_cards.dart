@@ -3,7 +3,6 @@ import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/common/extensions/currency.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
-import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_sub_info.dart';
 import 'package:flutter/material.dart';
 
 import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
@@ -90,7 +89,7 @@ class YearlySummaryCards extends StatelessWidget {
     return SummaryValueCard(
       title: "Média mensal de despesas",
       value: res.avgExpenses,
-      subInfo: SummaryCardSubInfo.text(
+      subInfo: buildSubInfoText(
         label: "Comprometimento da Renda",
         value: "${Formatter.relationWithoutSign(res.avgExpenses / res.avgIncomes)} consolidado",
         color: currTheme.colors.negativeYield,
@@ -104,7 +103,7 @@ class YearlySummaryCards extends StatelessWidget {
       title: "Total de despesas",
       value: res.totalExpenses,
       color: currTheme.colors.negativeYield,
-      subInfo: SummaryCardSubInfo.text(
+      subInfo: buildSubInfoText(
         label: "Média mensal de despesas",
         value: "R\$ ${formatReal(res.avgExpenses)} / mês",
         color: currTheme.colors.negativeYield,
@@ -123,7 +122,7 @@ class YearlySummaryCards extends StatelessWidget {
     return SummaryValueCard(
       title: "Média mensal de receitas",
       value: res.avgIncomes,
-      subInfo: SummaryCardSubInfo.text(
+      subInfo: buildSubInfoText(
         label: "Pico Máximo",
         value: "R\$ ${formatReal(res.peakIncome)} (${res.peakIncomeMonth})",
         color: currTheme.colors.positiveYieldAlt,
@@ -137,7 +136,7 @@ class YearlySummaryCards extends StatelessWidget {
       title: "Total de receitas",
       value: res.totalIncomes,
       color: currTheme.colors.positiveYieldAlt,
-      subInfo: SummaryCardSubInfo.text(
+      subInfo: buildSubInfoText(
         label: "Média mensal de receitas",
         value: "R\$ ${formatReal(res.avgIncomes)} / mês",
         color: currTheme.colors.positiveYieldAlt,
@@ -155,7 +154,7 @@ class YearlySummaryCards extends StatelessWidget {
     return SummaryValueCard(
       title: "Média mensal de balanços",
       value: res.avgBalance,
-      subInfo: SummaryCardSubInfo.text(
+      subInfo: buildSubInfoText(
         label: "Índice de poupança",
         value: "${Formatter.relationWithoutSign(res.avgBalance / res.avgIncomes)} da receita",
         color: res.avgBalance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
@@ -169,7 +168,7 @@ class YearlySummaryCards extends StatelessWidget {
       title: "Balanço",
       value: res.balance,
       color: res.balance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
-      subInfo: SummaryCardSubInfo.text(
+      subInfo: buildSubInfoText(
         label: "Média mensal",
         value: "R\$ ${NumberFormat('#,##0.00', 'de').format(res.avgBalance)} / mês",
         color: Colors.white,
@@ -188,6 +187,32 @@ class YearlySummaryCards extends StatelessWidget {
               icon: Icons.trending_down,
               bgColor: currTheme.colors.negativeYieldBg,
             ),
+    );
+  }
+
+  Widget buildSubInfoText({
+    required BuildContext context,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      spacing: 10,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+        ),
+      ],
     );
   }
 }

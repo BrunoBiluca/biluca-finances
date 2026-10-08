@@ -76,7 +76,7 @@ class CurrentMonthReportService {
         IdentificationReportInfo(
           identification: i.field,
           current: i.total!,
-          currentPercentage: i.total! / totalExpenses,
+          participationInTotal: i.total! / totalExpenses,
         ),
       );
     }
@@ -120,7 +120,7 @@ class CurrentMonthReportService {
         IdentificationReportInfo(
           identification: i.field,
           current: i.total!,
-          currentPercentage: i.total! / totalIncomes,
+          participationInTotal: i.total! / totalIncomes,
         ),
       );
     }

@@ -1,5 +1,5 @@
 import 'package:biluca_financas/common/extensions/currency.dart';
-import 'package:biluca_financas/common/ui/reports/charts.dart';
+import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fl_chart/fl_chart.dart';

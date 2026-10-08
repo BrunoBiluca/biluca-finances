@@ -170,37 +170,38 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
                 ],
               ),
               Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 6,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Economia do mês", style: Theme.of(context).textTheme.bodySmall),
-                        widget.balance < 0
-                            ? Text("0% retido",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: currTheme.colors.negativeYield,
-                                      fontWeight: FontWeight.bold,
-                                    ))
-                            : Text(
-                                "${Formatter.relationWithoutSign(widget.balance / widget.incomes)} retido",
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: currTheme.colors.positiveYield,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                      ],
-                    ),
-                    LinearProgressIndicator(
-                      borderRadius: BorderRadius.circular(10),
-                      minHeight: 10,
-                      value: widget.balance / widget.incomes,
-                      color: widget.balance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
-                      backgroundColor: currTheme.colors.negativeYield,
-                    ),
-                  ])
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 6,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Economia do mês", style: Theme.of(context).textTheme.bodySmall),
+                      widget.balance < 0
+                          ? Text("0% retido",
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: currTheme.colors.negativeYield,
+                                    fontWeight: FontWeight.bold,
+                                  ))
+                          : Text(
+                              "${Formatter.relationWithoutSign(widget.balance / widget.incomes)} retido",
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: currTheme.colors.positiveYield,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                    ],
+                  ),
+                  LinearProgressIndicator(
+                    borderRadius: BorderRadius.circular(10),
+                    minHeight: 10,
+                    value: widget.balance / widget.incomes,
+                    color: widget.balance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
+                    backgroundColor: currTheme.colors.negativeYield,
+                  ),
+                ],
+              )
             ],
           ),
         ),

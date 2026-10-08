@@ -5,13 +5,13 @@ class IdentificationReportInfo {
   double current;
   double related;
   double avgRecentMonts;
-  double currentPercentage;
+  double participationInTotal;
 
   IdentificationReportInfo({
     required this.identification,
     this.current = 0,
     this.related = 0,
     this.avgRecentMonts = 0,
-    this.currentPercentage = 0,
+    this.participationInTotal = 0,
   });
 }

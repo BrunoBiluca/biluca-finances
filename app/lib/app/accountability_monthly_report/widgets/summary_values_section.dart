@@ -4,7 +4,6 @@ import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
-import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_sub_info.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_value_card.dart';
 import 'package:biluca_financas/common/ui/reports/values_comparison_full_text.dart';
 import 'package:flutter/material.dart';
@@ -104,13 +103,11 @@ class SummaryValuesSection extends StatelessWidget {
         title: "Balanço",
         value: balance,
         color: balance > 0 ? currTheme.colors.positiveYieldAlt : currTheme.colors.negativeYield,
-        subInfo: SummaryCardSubInfo(
-          info: ValuesComparisonFullText.from(
-            balance,
-            avgBalanceRecentMonths,
-            false,
-            suffix: "em relação aos últimos 12 meses",
-          ),
+        subInfo: ValuesComparisonFullText.from(
+          balance,
+          avgBalanceRecentMonths,
+          false,
+          suffix: "em relação aos últimos 12 meses",
         ),
         label: balance > 0
             ? SummaryCardLabel(
@@ -138,22 +135,20 @@ class SummaryValuesSection extends StatelessWidget {
         title: "Receitas",
         value: incomes,
         color: currTheme.colors.positiveYield,
-        subInfo: SummaryCardSubInfo(
-          info: ValuesComparisonFullText.from(
-            incomes,
-            avgIncomesRecentMonths,
-            false,
-            suffix: "em relação aos últimos 12 meses",
-          ),
+        subInfo: ValuesComparisonFullText.from(
+          incomes,
+          avgIncomesRecentMonths,
+          false,
+          suffix: "em relação aos últimos 12 meses",
         ),
         label: incomes > incomesLastMonth
             ? SummaryCardLabel.positive(
-                label: Formatter.relationWithoutSign(incomes / incomesLastMonth),
+                label: Formatter.relationWithoutSign(1 - (incomes / incomesLastMonth)),
                 icon: Icons.arrow_upward,
                 theme: currTheme,
               )
             : SummaryCardLabel.negative(
-                label: Formatter.relationWithoutSign(incomes / incomesLastMonth),
+                label: Formatter.relationWithoutSign(1 - (incomes / incomesLastMonth)),
                 icon: Icons.arrow_downward,
                 theme: currTheme,
               ),
@@ -170,22 +165,20 @@ class SummaryValuesSection extends StatelessWidget {
         title: "Receitas",
         value: expenses,
         color: currTheme.colors.negativeYield,
-        subInfo: SummaryCardSubInfo(
-          info: ValuesComparisonFullText.from(
-            expenses,
-            avgExpensesRecentMonths,
-            true,
-            suffix: "em relação aos últimos 12 meses",
-          ),
+        subInfo: ValuesComparisonFullText.from(
+          expenses,
+          avgExpensesRecentMonths,
+          true,
+          suffix: "em relação aos últimos 12 meses",
         ),
-        label: expenses < expensesLastMonth
+        label: expenses.abs() < expensesLastMonth.abs()
             ? SummaryCardLabel.positive(
-                label: Formatter.relationWithoutSign(expenses / expensesLastMonth),
+                label: Formatter.relationWithoutSign(1 - (expenses / expensesLastMonth)),
                 icon: Icons.arrow_downward,
                 theme: currTheme,
               )
             : SummaryCardLabel.negative(
-                label: Formatter.relationWithoutSign(expenses / expensesLastMonth),
+                label: Formatter.relationWithoutSign(1 - (expenses / expensesLastMonth)),
                 icon: Icons.arrow_upward,
                 theme: currTheme,
               ),
