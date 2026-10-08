@@ -23,17 +23,17 @@ class Formatter {
   }
 
   static String relationWithoutSign(double relativePercentagem) {
-    var v = relativePercentagem * 100;
+    var v = (relativePercentagem * 100).abs();
 
     if (!v.isFinite) {
       return "?";
     }
 
-    if (v.abs() <= 100) {
-      return "${v.round().abs()}%";
+    if (v <= 100) {
+      return "${v.round()}%";
     }
 
-    var vTimes = v / 100;
-    return "${vTimes.abs().toStringAsFixed(2)}x";
+    var vTimes = v / 100 + 1;
+    return "${vTimes.toStringAsFixed(2)}x";
   }
 }
