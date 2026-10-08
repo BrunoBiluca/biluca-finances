@@ -9,7 +9,7 @@ class IdentificationsPercentageChart extends StatelessWidget {
   final List<IdentificationReportInfo> data;
   const IdentificationsPercentageChart({super.key, required this.data});
 
-  final size = 28.0;
+  final size = 26.0;
 
   final maxX = 10;
 
@@ -25,7 +25,7 @@ class IdentificationsPercentageChart extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           spacing: 20,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,8 +35,8 @@ class IdentificationsPercentageChart extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             SizedBox(
-              height: 350,
-              width: 350,
+              height: 300,
+              width: 300,
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
@@ -71,9 +71,71 @@ class IdentificationsPercentageChart extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              width: 300,
+              child: buildLegend(context),
+            )
           ],
         ),
       ),
+    );
+  }
+
+  Row buildLegend(BuildContext context) {
+    return Row(
+      spacing: 14,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 6,
+            children: data.indexed
+                .where((e) => e.$1 % 2 == 0)
+                .map(
+                  (e) => buildLegendRow(e, context),
+                )
+                .toList(),
+          ),
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 6,
+            children: data.indexed
+                .where((e) => e.$1 % 2 == 1)
+                .map(
+                  (e) => buildLegendRow(e, context),
+                )
+                .toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row buildLegendRow((int, IdentificationReportInfo) e, BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 4,
+      children: [
+        DecoratedBox(
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(4),
+            color: e.$2.identification.color,
+          ),
+          child: const SizedBox(width: 12, height: 12),
+        ),
+        Flexible(
+          child: Text(
+            "${e.$2.identification.description} (${(e.$2.participationInTotal * 100).toStringAsFixed(2)}%)",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ),
+      ],
     );
   }
 

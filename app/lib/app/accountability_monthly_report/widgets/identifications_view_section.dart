@@ -96,7 +96,7 @@ class IdentificationsViewSection extends StatelessWidget {
                 .toList(),
           ),
           SizedBox(
-            height: 500,
+            height: 600,
             width: double.maxFinite,
             child: Card(
               child: Padding(
