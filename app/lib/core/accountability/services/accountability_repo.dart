@@ -3,8 +3,16 @@ import 'package:biluca_financas/core/accountability/models/accountability_entry_
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 
 abstract class AccountabilityRepo {
-  Future<List<AccountabilityEntry>> getEntries({int limit = 10, int offset = 0});
-  Future<List<AccountabilityEntry>> getEntriesByIdentification(AccountabilityIdentification identification);
+  Future<List<AccountabilityEntry>> getEntries(
+      {int limit = 10, int offset = 0});
+  Future<List<AccountabilityEntry>> searchEntries({
+    required String searchQuery,
+    String? identificationId,
+    int limit = 10,
+    int offset = 0,
+  });
+  Future<List<AccountabilityEntry>> getEntriesByIdentification(
+      AccountabilityIdentification identification);
 
   Future<AccountabilityEntry> getById(int id);
   Future<AccountabilityEntry?> exists(AccountabilityEntryRequest req);
@@ -13,9 +21,13 @@ abstract class AccountabilityRepo {
   Future<AccountabilityEntry> update(AccountabilityEntry entry);
 
   Future<List<AccountabilityIdentification>> getIdentifications();
-  Future<String?> addOrGetIdentification(AccountabilityIdentification? identification);
-  Future<AccountabilityIdentification?> getIdentification(String identificationId);
-  Future<AccountabilityIdentification> addIdentification(AccountabilityIdentification identification);
-  Future<void> updateIdentification(AccountabilityIdentification updatedIdentification);
+  Future<String?> addOrGetIdentification(
+      AccountabilityIdentification? identification);
+  Future<AccountabilityIdentification?> getIdentification(
+      String identificationId);
+  Future<AccountabilityIdentification> addIdentification(
+      AccountabilityIdentification identification);
+  Future<void> updateIdentification(
+      AccountabilityIdentification updatedIdentification);
   Future<void> deleteIdentification(String id);
 }

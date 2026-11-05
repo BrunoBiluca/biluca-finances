@@ -12,7 +12,10 @@ GoRouter routes() {
     navigatorKey: navigatorKey,
     routes: [
       ShellRoute(
-        builder: (context, state, child) => AppLayout(child: child),
+        builder: (context, state, child) => AppLayout(
+          fillAvailableHeight: state.uri.path == '/accountability',
+          child: child,
+        ),
         routes: [
           GoRoute(
             path: '/',

@@ -12,7 +12,20 @@ class FetchAccountabilityEntries extends AccountabilityEvent {
   const FetchAccountabilityEntries({this.identification});
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [identification?.id];
+}
+
+class SearchAccountabilityEntries extends AccountabilityEvent {
+  final String query;
+  final String? identificationId;
+
+  const SearchAccountabilityEntries({
+    required this.query,
+    required this.identificationId,
+  });
+
+  @override
+  List<Object?> get props => [query, identificationId];
 }
 
 class LoadMoreAccountabilityEntries extends AccountabilityEvent {

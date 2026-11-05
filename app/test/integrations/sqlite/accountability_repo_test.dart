@@ -29,7 +29,10 @@ void main() {
 
   test("should return an accountability entry when stored", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
-    var req = AccountabilityEntryRequest(description: "Descricão fictício", value: 10.00, createdAt: DateTime.now());
+    var req = AccountabilityEntryRequest(
+        description: "Descricão fictício",
+        value: 10.00,
+        createdAt: DateTime.now());
     await repo.add(req);
 
     final entries = await repo.getEntries();
@@ -38,7 +41,8 @@ void main() {
     expect(entries.length, 1);
   });
 
-  test("should return accountability entries limited by 10 when stored", () async {
+  test("should return accountability entries limited by 10 when stored",
+      () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
     for (var i = 0; i < 20; i++) {
@@ -65,10 +69,130 @@ void main() {
     }
   });
 
+  test("should search entries by description and filter by identification",
+      () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    final lunch = AccountabilityIdentification("Lunch", Colors.green);
+    final groceries = AccountabilityIdentification("Groceries", Colors.blue);
+
+    await repo.add(
+      AccountabilityEntryRequest(
+        description: "Restaurant payment",
+        value: 22,
+        createdAt: DateTime.now(),
+        identification: lunch,
+      ),
+    );
+    await repo.add(
+      AccountabilityEntryRequest(
+        description: "Restaurant payment",
+        value: 45,
+        createdAt: DateTime.now().add(const Duration(seconds: 1)),
+        identification: groceries,
+      ),
+    );
+
+    final entries = await repo.searchEntries(
+      searchQuery: "Restaurant",
+      identificationId: lunch.id,
+    );
+
+    expect(entries, hasLength(1));
+    expect(entries.single.identification?.id, lunch.id);
+
+    final categoryMatches = await repo.searchEntries(
+      searchQuery: "Lunch",
+      identificationId: lunch.id,
+    );
+    expect(categoryMatches, hasLength(1));
+  });
+
+  test("should search alternative descriptions before applying the page limit",
+      () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    final targetDate = DateTime(2020);
+    final target = await repo.add(
+      AccountabilityEntryRequest(
+        description: "Original description",
+        value: 10,
+        createdAt: targetDate,
+      ),
+    );
+    target.descriptionAlt = "Unique searchable transaction";
+    await repo.update(target);
+
+    for (var i = 0; i < 105; i++) {
+      await repo.add(
+        AccountabilityEntryRequest(
+          description: "Unrelated transaction $i",
+          value: 10,
+          createdAt: DateTime(2021).add(Duration(seconds: i)),
+        ),
+      );
+    }
+
+    final entries =
+        await repo.searchEntries(searchQuery: "Unique searchable", limit: 10);
+
+    expect(entries, hasLength(1));
+    expect(entries.single.id, target.id);
+  });
+
+  test("should paginate matching entries without duplicates", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+
+    for (var i = 0; i < 25; i++) {
+      await repo.add(
+        AccountabilityEntryRequest(
+          description: "Matching transaction $i",
+          value: 10,
+          createdAt: DateTime(2022).add(Duration(seconds: i)),
+        ),
+      );
+    }
+
+    final firstPage = await repo.searchEntries(
+        searchQuery: "Matching transaction", limit: 10);
+    final secondPage = await repo.searchEntries(
+        searchQuery: "Matching transaction", limit: 10, offset: 10);
+    final thirdPage = await repo.searchEntries(
+        searchQuery: "Matching transaction", limit: 10, offset: 20);
+    final ids = [...firstPage, ...secondPage, ...thirdPage]
+        .map((entry) => entry.id)
+        .toSet();
+
+    expect(firstPage, hasLength(10));
+    expect(secondPage, hasLength(10));
+    expect(thirdPage, hasLength(5));
+    expect(ids, hasLength(25));
+  });
+
+  test("should search entries by Brazilian and simple monetary values",
+      () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    final entry = await repo.add(
+      AccountabilityEntryRequest(
+        description: "Transaction without an amount in its description",
+        value: 1234.56,
+        createdAt: DateTime.now(),
+      ),
+    );
+
+    final brazilianFormat =
+        await repo.searchEntries(searchQuery: "R\$ 1.234,56");
+    final simpleFormat = await repo.searchEntries(searchQuery: "1234.56");
+
+    expect(brazilianFormat.map((result) => result.id), contains(entry.id));
+    expect(simpleFormat.map((result) => result.id), contains(entry.id));
+  });
+
   test("should add an accountability entry", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var req = AccountabilityEntryRequest(description: "Descricão fictício", value: 10.00, createdAt: DateTime.now());
+    var req = AccountabilityEntryRequest(
+        description: "Descricão fictício",
+        value: 10.00,
+        createdAt: DateTime.now());
     var newEntry = await repo.add(req);
 
     expect(newEntry.description, req.description);
@@ -82,17 +206,24 @@ void main() {
   test("should delete an accountability entry", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var req = AccountabilityEntryRequest(description: "Descricão fictício", value: 10.00, createdAt: DateTime.now());
+    var req = AccountabilityEntryRequest(
+        description: "Descricão fictício",
+        value: 10.00,
+        createdAt: DateTime.now());
     var newEntry = await repo.add(req);
     await repo.delete(newEntry);
     final entries = await repo.getEntries();
     expect(entries, isEmpty);
   });
 
-  test("should not update an accountability entry original description", () async {
+  test("should not update an accountability entry original description",
+      () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var req = AccountabilityEntryRequest(description: "Descricão fictício", value: 10.00, createdAt: DateTime.now());
+    var req = AccountabilityEntryRequest(
+        description: "Descricão fictício",
+        value: 10.00,
+        createdAt: DateTime.now());
     var newEntry = await repo.add(req);
     newEntry.description = "Descricão atualizada";
 
@@ -101,13 +232,18 @@ void main() {
     final updatedEntry = (await repo.getEntries()).first;
 
     expect(updatedEntry.description, "Descricão fictício");
-    expect(updatedEntry.updatedAt.microsecondsSinceEpoch, greaterThan(newEntry.updatedAt.microsecondsSinceEpoch));
+    expect(updatedEntry.updatedAt.microsecondsSinceEpoch,
+        greaterThan(newEntry.updatedAt.microsecondsSinceEpoch));
   });
 
-  test("should update an accountability entry alternative description", () async {
+  test("should update an accountability entry alternative description",
+      () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var req = AccountabilityEntryRequest(description: "Descricão fictício", value: 10.00, createdAt: DateTime.now());
+    var req = AccountabilityEntryRequest(
+        description: "Descricão fictício",
+        value: 10.00,
+        createdAt: DateTime.now());
     var newEntry = await repo.add(req);
     newEntry.descriptionAlt = "Descricão atualizada";
 
@@ -117,13 +253,15 @@ void main() {
 
     expect(updatedEntry.description, "Descricão fictício");
     expect(updatedEntry.descriptionAlt, "Descricão atualizada");
-    expect(updatedEntry.updatedAt.microsecondsSinceEpoch, greaterThan(newEntry.updatedAt.microsecondsSinceEpoch));
+    expect(updatedEntry.updatedAt.microsecondsSinceEpoch,
+        greaterThan(newEntry.updatedAt.microsecondsSinceEpoch));
   });
 
   test("should update an accountability entry with identification", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var expectedIdentification = AccountabilityIdentification("Identificação fictício", Colors.blue);
+    var expectedIdentification =
+        AccountabilityIdentification("Identificação fictício", Colors.blue);
 
     var req = AccountabilityEntryRequest(
       description: "Descricão fictício",
@@ -139,8 +277,10 @@ void main() {
 
     expect(updatedEntry, isNotNull);
     expect(updatedEntry.identification, isNotNull);
-    expect(updatedEntry.identification!.description, expectedIdentification.description);
-    expect(updatedEntry.identification!.color.toARGB32(), expectedIdentification.color.toARGB32());
+    expect(updatedEntry.identification!.description,
+        expectedIdentification.description);
+    expect(updatedEntry.identification!.color.toARGB32(),
+        expectedIdentification.color.toARGB32());
 
     final entries = await repo.getEntries();
 
@@ -148,14 +288,17 @@ void main() {
     expect(entries.length, 1);
     expect(entries[0].identification, isNotNull);
     expect(entries[0].identification!.id, expectedIdentification.id);
-    expect(entries[0].identification!.description, expectedIdentification.description);
-    expect(entries[0].identification!.color.toARGB32(), expectedIdentification.color.toARGB32());
+    expect(entries[0].identification!.description,
+        expectedIdentification.description);
+    expect(entries[0].identification!.color.toARGB32(),
+        expectedIdentification.color.toARGB32());
   });
 
   test("should add entry with identification", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var expectedIdentification = AccountabilityIdentification("Identificação fictício", Colors.blue);
+    var expectedIdentification =
+        AccountabilityIdentification("Identificação fictício", Colors.blue);
     var req = AccountabilityEntryRequest(
       description: "Descricão fictício",
       value: 10.00,
@@ -165,14 +308,17 @@ void main() {
     var newEntry = await repo.add(req);
 
     expect(newEntry.identification, isNotNull);
-    expect(newEntry.identification!.description, expectedIdentification.description);
-    expect(newEntry.identification!.color.value, expectedIdentification.color.value);
+    expect(newEntry.identification!.description,
+        expectedIdentification.description);
+    expect(newEntry.identification!.color.value,
+        expectedIdentification.color.value);
   });
 
   test("should update a identification", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var expectedIdentification = AccountabilityIdentification("Identificação fictício", Colors.blue);
+    var expectedIdentification =
+        AccountabilityIdentification("Identificação fictício", Colors.blue);
     repo.addIdentification(expectedIdentification);
 
     sleep(const Duration(milliseconds: 10));
@@ -180,17 +326,21 @@ void main() {
     expectedIdentification.description = "Identificação atualizada";
     expectedIdentification.color = Colors.red;
     await repo.updateIdentification(expectedIdentification);
-    var updatedIdentification = await repo.getIdentification(expectedIdentification.id);
+    var updatedIdentification =
+        await repo.getIdentification(expectedIdentification.id);
 
     expect(updatedIdentification, isNotNull);
-    expect(updatedIdentification!.description, expectedIdentification.description);
-    expect(updatedIdentification.color.value, expectedIdentification.color.value);
+    expect(
+        updatedIdentification!.description, expectedIdentification.description);
+    expect(
+        updatedIdentification.color.value, expectedIdentification.color.value);
   });
 
   test("should delete an identification", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
-    var expectedIdentification = AccountabilityIdentification("Identificação fictício", Colors.blue);
+    var expectedIdentification =
+        AccountabilityIdentification("Identificação fictício", Colors.blue);
     repo.addIdentification(expectedIdentification);
 
     sleep(const Duration(milliseconds: 10));
@@ -201,7 +351,8 @@ void main() {
     expect(identifications, isEmpty);
   });
 
-  test("deve retornar nada se a entrada de contabilidade não existe na base", () async {
+  test("deve retornar nada se a entrada de contabilidade não existe na base",
+      () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
     var result = await repo.exists(
       AccountabilityEntryRequest(

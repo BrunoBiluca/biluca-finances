@@ -6,13 +6,83 @@ import 'package:biluca_financas/core/accountability/models/accountability_entry.
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability_stats/models/grouped_by.dart';
+import 'package:biluca_financas/core/accountability/services/accountability_search_query.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_repo.dart';
 
-class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implements AccountabilityMonthService {
+class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo
+    implements AccountabilityMonthService {
   final DateTime month;
-  SQLiteAccontabilityMonthService({required Database db, required this.month}) : super(db);
+  SQLiteAccontabilityMonthService({required Database db, required this.month})
+      : super(db);
 
   String get monthf => DateFormat("MM/yyyy").format(month);
+
+  @override
+  Future<List<AccountabilityEntry>> searchEntries({
+    required String searchQuery,
+    String? identificationId,
+    int limit = 10,
+    int offset = 0,
+  }) async {
+    final where = <String>["strftime('%m/%Y', a.createdAt) = ?"];
+    final whereArgs = <Object?>[monthf];
+    final normalizedQuery = searchQuery.trim();
+
+    if (normalizedQuery.isNotEmpty) {
+      final pattern = "%$normalizedQuery%";
+      final searchTerms = <String>[
+        "a.description LIKE ?",
+        "a.description_alt LIKE ?",
+        "ai.description LIKE ?",
+      ];
+      whereArgs.addAll([pattern, pattern, pattern]);
+      final amountInCents =
+          AccountabilitySearchQuery.amountInCents(normalizedQuery);
+      if (amountInCents != null) {
+        searchTerms.add("CAST(ROUND(ABS(a.value) * 100) AS INTEGER) = ?");
+        whereArgs.add(amountInCents);
+      }
+      where.add("(${searchTerms.join(" OR ")})");
+    }
+
+    if (identificationId != null) {
+      where.add("a.identification_id = ?");
+      whereArgs.add(identificationId);
+    }
+
+    whereArgs.addAll([limit > 0 ? limit : -1, offset]);
+    return await db.rawQuery(
+      """
+    SELECT
+      a.*,
+      ai.id AS ai_id,
+      ai.description AS ai_description,
+      ai.color AS ai_color,
+      ai.icon AS ai_icon,
+      ai.type AS ai_type,
+      strftime('%m/%Y', a.createdAt) AS month
+    FROM accountability a
+    LEFT JOIN accountability_identifications ai ON a.identification_id = ai.id
+    WHERE ${where.join(" AND ")}
+    ORDER BY a.createdAt DESC
+    LIMIT ? OFFSET ?
+    """,
+      whereArgs,
+    ).then((value) => value.map(
+          (e) {
+            var ai = <String, dynamic>{};
+            for (var key in e.keys) {
+              if (key.startsWith('ai_') && e[key] != null) {
+                ai[key.replaceFirst('ai_', '')] = e[key];
+              }
+            }
+            return AccountabilityEntry.fromMap({
+              'identification': ai.isEmpty ? null : ai,
+              ...e,
+            });
+          },
+        ).toList());
+  }
 
   @override
   Future<double> getSum() async {
@@ -79,7 +149,8 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
   }
 
   @override
-  Future<List<GroupedBy<AccountabilityIdentification>>> getTotalByIdentification() async {
+  Future<List<GroupedBy<AccountabilityIdentification>>>
+      getTotalByIdentification() async {
     var result = await db.rawQuery(
       """
       SELECT 
@@ -121,7 +192,8 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
   }
 
   @override
-  Future<List<GroupedBy<AccountabilityIdentification>>> getAccumulatedMeansByIdentification() async {
+  Future<List<GroupedBy<AccountabilityIdentification>>>
+      getAccumulatedMeansByIdentification() async {
     var datef = DateFormat("yyyy-MM-dd").format(month);
 
     var result = await db.rawQuery(
@@ -208,7 +280,8 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
   }
 
   @override
-  Future<List<AccountabilityEntry>> getEntries({int limit = 10, int offset = 0}) async {
+  Future<List<AccountabilityEntry>> getEntries(
+      {int limit = 10, int offset = 0}) async {
     return await db.rawQuery(
       """
     select 
@@ -241,7 +314,8 @@ class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo implement
   }
 
   @override
-  Future<List<AccountabilityEntry>> getEntriesByIdentification(AccountabilityIdentification identification) async {
+  Future<List<AccountabilityEntry>> getEntriesByIdentification(
+      AccountabilityIdentification identification) async {
     return await db.rawQuery(
       """
     select 

@@ -3,6 +3,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
+import 'package:biluca_financas/core/accountability/services/accountability_search_query.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 
@@ -13,7 +14,47 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   String tableName = "accountability";
 
   @override
-  Future<List<AccountabilityEntry>> getEntries({int limit = 10, int offset = 0}) async {
+  Future<List<AccountabilityEntry>> getEntries(
+      {int limit = 10, int offset = 0}) {
+    return searchEntries(searchQuery: "", limit: limit, offset: offset);
+  }
+
+  @override
+  Future<List<AccountabilityEntry>> searchEntries({
+    required String searchQuery,
+    int limit = 10,
+    int offset = 0,
+    String? identificationId,
+  }) async {
+    final where = <String>[];
+    final whereArgs = <Object?>[];
+    final normalizedQuery = searchQuery.trim();
+
+    if (normalizedQuery.isNotEmpty) {
+      final pattern = "%$normalizedQuery%";
+      final searchTerms = <String>[
+        "a.description LIKE ?",
+        "a.description_alt LIKE ?",
+        "ai.description LIKE ?",
+      ];
+      whereArgs.addAll([pattern, pattern, pattern]);
+      final amountInCents =
+          AccountabilitySearchQuery.amountInCents(normalizedQuery);
+      if (amountInCents != null) {
+        searchTerms.add("CAST(ROUND(ABS(a.value) * 100) AS INTEGER) = ?");
+        whereArgs.add(amountInCents);
+      }
+      where.add("(${searchTerms.join(" OR ")})");
+    }
+
+    if (identificationId != null) {
+      where.add("a.identification_id = ?");
+      whereArgs.add(identificationId);
+    }
+
+    final whereClause = where.isEmpty ? "" : "WHERE ${where.join(" AND ")}";
+
+    whereArgs.addAll([limit > 0 ? limit : -1, offset]);
     return await db.rawQuery(
       """
     select 
@@ -25,10 +66,11 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
       ai.type as ai_type
     from $tableName a
     left join accountability_identifications ai on a.identification_id = ai.id
+    $whereClause
     order by createdAt desc
-    ${limit > 0 ? "limit $limit" : ""}
-    ${offset > 0 ? "offset $offset" : ""}
+    limit ? offset ?
     """,
+      whereArgs,
     ).then((value) => value.map(
           (e) {
             var ai = <String, dynamic>{};
@@ -47,7 +89,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<AccountabilityEntry> getById(int id) async {
-    var entry = (await db.query(tableName, where: "id = ?", whereArgs: [id])).first;
+    var entry =
+        (await db.query(tableName, where: "id = ?", whereArgs: [id])).first;
     var result = AccountabilityEntry.fromMap(entry);
     if (result.identificationId != null) {
       result.identification = await getIdentification(result.identificationId!);
@@ -76,7 +119,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   }
 
   @override
-  Future<String?> addOrGetIdentification(AccountabilityIdentification? identification) async {
+  Future<String?> addOrGetIdentification(
+      AccountabilityIdentification? identification) async {
     String? identificationId;
     if (identification != null) {
       var dbIdentification = await getIdentification(identification.id);
@@ -98,7 +142,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<AccountabilityEntry> update(AccountabilityEntry entry) async {
-    String? identificationId = await addOrGetIdentification(entry.identification);
+    String? identificationId =
+        await addOrGetIdentification(entry.identification);
 
     await db.update(
       tableName,
@@ -116,13 +161,13 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<List<AccountabilityIdentification>> getIdentifications() async {
-    return await db
-        .query("accountability_identifications")
-        .then((value) => value.map((e) => AccountabilityIdentification.fromMap(e)).toList());
+    return await db.query("accountability_identifications").then((value) =>
+        value.map((e) => AccountabilityIdentification.fromMap(e)).toList());
   }
 
   @override
-  Future<AccountabilityIdentification?> getIdentification(String identificationId) async {
+  Future<AccountabilityIdentification?> getIdentification(
+      String identificationId) async {
     var result = await db.query(
       "accountability_identifications",
       where: "id = ?",
@@ -142,7 +187,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   }
 
   @override
-  Future<AccountabilityIdentification> addIdentification(AccountabilityIdentification identification) async {
+  Future<AccountabilityIdentification> addIdentification(
+      AccountabilityIdentification identification) async {
     var identificationMap = identification.toMap();
 
     await db.rawInsert("""
@@ -161,7 +207,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   }
 
   @override
-  Future<void> updateIdentification(AccountabilityIdentification updatedIdentification) async {
+  Future<void> updateIdentification(
+      AccountabilityIdentification updatedIdentification) async {
     var map = updatedIdentification.toMap();
     map["icon"] = json.encode(map["icon"]);
     map["updatedAt"] = DateTime.now().toIso8601String();
@@ -175,7 +222,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<void> deleteIdentification(String id) async {
-    await db.delete("accountability_identifications", where: "id = ?", whereArgs: [id]);
+    await db.delete("accountability_identifications",
+        where: "id = ?", whereArgs: [id]);
   }
 
   @override
@@ -198,7 +246,8 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   }
 
   @override
-  Future<List<AccountabilityEntry>> getEntriesByIdentification(AccountabilityIdentification identification) async {
+  Future<List<AccountabilityEntry>> getEntriesByIdentification(
+      AccountabilityIdentification identification) async {
     return await db.rawQuery(
       """
     select 
