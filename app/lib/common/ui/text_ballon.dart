@@ -25,6 +25,7 @@ class TextBallon extends StatefulWidget {
   final VoidCallback? onDelete;
   final List<TextBallonEditOption>? editOptions;
   final EdgeInsets padding;
+  final bool tintedStyle;
 
   const TextBallon({
     super.key,
@@ -34,6 +35,7 @@ class TextBallon extends StatefulWidget {
     this.onDelete,
     this.editOptions,
     this.padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+    this.tintedStyle = false,
     required this.icon,
   });
 
@@ -47,26 +49,39 @@ class _TextBallonState extends State<TextBallon> {
   @override
   Widget build(BuildContext context) {
     var cont = TextEditingController(text: widget.text);
+    final theme = Theme.of(context);
     return DecoratedBox(
-      decoration: BoxDecoration(color: widget.color, borderRadius: const BorderRadius.all(Radius.circular(10))),
+      decoration: BoxDecoration(
+        color: widget.tintedStyle
+            ? widget.color.withValues(alpha: 0.16)
+            : widget.color,
+        border: widget.tintedStyle
+            ? Border.all(color: widget.color.withValues(alpha: 0.5))
+            : null,
+        borderRadius: BorderRadius.all(
+          Radius.circular(widget.tintedStyle ? 999 : 10),
+        ),
+      ),
       child: Padding(
         padding: widget.padding,
         child: Row(
           children: [
             Expanded(
-              child: isEditing ? renderEditMode(cont, context) : renderBaseMode(),
+              child: isEditing
+                  ? renderEditMode(cont, context)
+                  : renderBaseMode(context),
             ),
             widget.onEdit == null
                 ? Container()
                 : IconButton(
-                    color: widget.color.adaptByLuminance(),
+                    color: _actionColor(theme),
                     onPressed: () => setState(() => isEditing = !isEditing),
                     icon: isEditing ? Icon(Icons.edit_off) : Icon(Icons.edit),
                   ),
             widget.onDelete == null
                 ? Container()
                 : IconButton(
-                    color: widget.color.adaptByLuminance(),
+                    color: _actionColor(theme),
                     onPressed: () => widget.onDelete!.call(),
                     icon: const Icon(Icons.delete),
                   ),
@@ -76,33 +91,52 @@ class _TextBallonState extends State<TextBallon> {
     );
   }
 
-  Row renderBaseMode() {
+  Color _actionColor(ThemeData theme) {
+    return widget.tintedStyle
+        ? theme.colorScheme.onSurfaceVariant
+        : widget.color.adaptByLuminance();
+  }
+
+  Row renderBaseMode(BuildContext context) {
     return Row(
       children: [
-        Icon(widget.icon, color: widget.color.adaptByLuminance()),
+        Icon(
+          widget.icon,
+          color: widget.tintedStyle
+              ? widget.color
+              : widget.color.adaptByLuminance(),
+        ),
         const SizedBox(width: 10),
         Text(
           widget.text,
-          style: TextStyle(color: widget.color.adaptByLuminance()),
+          style: TextStyle(
+            color: widget.tintedStyle
+                ? widget.color
+                : widget.color.adaptByLuminance(),
+          ),
         ),
       ],
     );
   }
 
   Row renderEditMode(TextEditingController cont, BuildContext context) {
+    final theme = Theme.of(context);
+    final foregroundColor = widget.tintedStyle
+        ? theme.colorScheme.onSurface
+        : widget.color.adaptByLuminance();
     return Row(
       spacing: 20,
       children: [
         IconButton(
-          icon: Icon(widget.icon, color: widget.color.adaptByLuminance()),
+          icon: Icon(widget.icon, color: foregroundColor),
           onPressed: () => _pickIcon(widget.text),
         ),
         Expanded(
           child: TextField(
             autofocus: true,
             controller: cont,
-            cursorColor: widget.color.adaptByLuminance(),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: widget.color.adaptByLuminance()),
+            cursorColor: foregroundColor,
+            style: theme.textTheme.bodySmall?.copyWith(color: foregroundColor),
             onEditingComplete: () {
               setState(() {
                 widget.onEdit!.call(text: cont.text);
@@ -114,13 +148,13 @@ class _TextBallonState extends State<TextBallon> {
         ...(widget.editOptions ?? []).map(
           (option) => IconButton(
             icon: Icon(option.icon),
-            color: widget.color.adaptByLuminance(),
+            color: _actionColor(theme),
             onPressed: option.onTap,
           ),
         ),
         IconButton(
             icon: const Icon(Icons.colorize),
-            color: widget.color.adaptByLuminance(),
+            color: _actionColor(theme),
             onPressed: () => showColorEditDialog(context, widget.color)),
       ],
     );
@@ -177,10 +211,17 @@ class _TextBallonState extends State<TextBallon> {
         crossAxisSpacing: 24,
         mainAxisSpacing: 24,
         iconSize: 24,
-        iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        iconPackModes: [IconPack.fontAwesomeIcons, IconPack.material, IconPack.cupertino],
+        iconPickerShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        iconPackModes: [
+          IconPack.fontAwesomeIcons,
+          IconPack.material,
+          IconPack.cupertino
+        ],
         searchComparator: (String search, IconPickerIcon icon) =>
-            search.toLowerCase().contains(icon.name.replaceAll('_', ' ').toLowerCase()) ||
+            search
+                .toLowerCase()
+                .contains(icon.name.replaceAll('_', ' ').toLowerCase()) ||
             icon.name.toLowerCase().contains(search.toLowerCase()),
       ),
     );

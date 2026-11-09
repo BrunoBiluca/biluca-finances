@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets("deve retornar a mensagem de nenhum identificação quando não passado", (tester) async {
+  testWidgets(
+      "deve retornar a mensagem de nenhum identificação quando não passado",
+      (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityIdentificationLabel(identification: null, onEdit: (identification) {}),
+          body: AccountabilityIdentificationLabel(
+              identification: null, onEdit: (identification) {}),
         ),
       ),
     );
@@ -18,16 +21,27 @@ void main() {
   });
 
   testWidgets("deve retornar o identificação quando passado", (tester) async {
-    var id = AccountabilityIdentification("identificação teste", Colors.black);
+    var id = AccountabilityIdentification("identificação teste", Colors.green)
+      ..icon = Icons.restaurant;
     await tester.pumpWidget(
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityIdentificationLabel(identification: id, onEdit: (identification) {}),
+          body: AccountabilityIdentificationLabel(
+              identification: id, onEdit: (identification) {}),
         ),
       ),
     );
 
     expect(find.text(id.description), findsOneWidget);
+    final label = tester.widget<Container>(
+      find.byKey(const Key('accountability-identification-label')),
+    );
+    expect(
+      (label.decoration! as BoxDecoration).color,
+      id.color.withValues(alpha: 0.16),
+    );
+    final icon = tester.widget<Icon>(find.byIcon(id.icon));
+    expect(icon.color, id.color);
   });
 }

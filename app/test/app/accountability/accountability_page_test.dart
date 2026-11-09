@@ -1,6 +1,9 @@
 import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/app/themes/obsidian_wealth/obsidian_wealth_dark_theme.dart';
+import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/theme_setup.dart';
+import 'package:biluca_financas/common/ui/real_currency.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
@@ -33,6 +36,7 @@ void main() {
   setUp(() async {
     await getIt.reset();
     repo = MockAccountabilityRepo();
+    getIt.registerSingleton<ThemeManager>(setupThemes());
     searchResults = [];
     identifications = [
       AccountabilityIdentification('Almoço', Colors.green),
@@ -113,6 +117,254 @@ void main() {
     );
   });
 
+  testWidgets('increases height only for the row being edited', (tester) async {
+    final entries = [_entry(111), _entry(112), _entry(113)];
+    tester.view
+      ..physicalSize = const Size(1200, 700)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ObsidianWealthDarkTheme().build(),
+        home: Scaffold(
+          body: SizedBox(
+            width: 1200,
+            height: 600,
+            child: AccountabilityTable(
+              entries: entries,
+              onUpdate: (_) {},
+              onRemove: (_) {},
+              enableInlineEditing: true,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    DataTable2 table() => tester.widget<DataTable2>(find.byType(DataTable2));
+    List<DataRow2> rows() => table().rows.cast<DataRow2>().toList();
+
+    expect(table().dataRowHeight, 56);
+    expect(rows().map((row) => row.specificRowHeight), everyElement(isNull));
+
+    await tester.tap(find.byKey(const Key('edit-accountability-1')));
+    await tester.pump();
+
+    expect(table().dataRowHeight, 56);
+    expect(
+      rows().map((row) => row.specificRowHeight),
+      [null, 72, null],
+    );
+
+    await tester.enterText(find.byKey(const Key('edit-value-1')), 'invalid');
+    await tester.tap(find.byKey(const Key('save-accountability-edit-1')));
+    await tester.pump();
+
+    expect(
+      rows().map((row) => row.specificRowHeight),
+      [null, 88, null],
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('preserves alternating row backgrounds while editing',
+      (tester) async {
+    final entries = [_entry(121), _entry(122)];
+    tester.view
+      ..physicalSize = const Size(1200, 700)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ObsidianWealthDarkTheme().build(),
+        home: Scaffold(
+          body: SizedBox(
+            width: 1200,
+            height: 600,
+            child: AccountabilityTable(
+              entries: entries,
+              onUpdate: (_) {},
+              onRemove: (_) {},
+              enableInlineEditing: true,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final table = tester.widget<DataTable2>(find.byType(DataTable2));
+    final rowsBeforeEdit = table.rows.cast<DataRow2>().toList();
+    final evenRowColor = rowsBeforeEdit[0].color!.resolve({});
+    final oddRowColor = rowsBeforeEdit[1].color!.resolve({});
+
+    await tester.tap(find.byKey(const Key('edit-accountability-0')));
+    await tester.pump();
+
+    final editedRows = tester
+        .widget<DataTable2>(find.byType(DataTable2))
+        .rows
+        .cast<DataRow2>()
+        .toList();
+    expect(editedRows[0].color!.resolve({}), evenRowColor);
+    expect(editedRows[1].color!.resolve({}), oddRowColor);
+    expect(editedRows[0].color!.resolve({}), Colors.transparent);
+    expect(editedRows[1].color!.resolve({}), const Color(0xFF0A0E17));
+
+    final input = tester.widget<TextField>(
+      find.byKey(const Key('edit-description-0')),
+    );
+    final border = input.decoration!.enabledBorder! as OutlineInputBorder;
+    expect(border.borderSide.width, 0.5);
+    expect(
+      border.borderSide.color,
+      Theme.of(tester.element(find.byKey(const Key('edit-description-0'))))
+          .colorScheme
+          .outlineVariant
+          .withValues(alpha: 0.5),
+    );
+    expect(border.borderRadius, BorderRadius.circular(3));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('colors displayed and edited values by their sign',
+      (tester) async {
+    final entries = [
+      _entry(101)..value = 12.5,
+      _entry(102)..value = -12.5,
+      _entry(103)..value = 0,
+    ];
+    final appTheme = setupThemes().themes['Obsidian Wealth Dark']!;
+    tester.view
+      ..physicalSize = const Size(1200, 700)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ObsidianWealthDarkTheme().build(),
+        home: Scaffold(
+          body: SizedBox(
+            width: 1200,
+            height: 600,
+            child: AccountabilityTable(
+              entries: entries,
+              onUpdate: (_) {},
+              onRemove: (_) {},
+              enableInlineEditing: true,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final currencies = tester
+        .widgetList<RealCurrency>(
+          find.byType(RealCurrency),
+        )
+        .toList()
+      ..sort((first, second) => first.number.compareTo(second.number));
+    expect(currencies, hasLength(3));
+    final valueColors = [
+      appTheme.colors.negativeYield,
+      appTheme.colors.neutralYield,
+      appTheme.colors.positiveYield,
+    ];
+    for (var index = 0; index < currencies.length; index++) {
+      final valueText = tester.widget<Text>(
+        find.descendant(
+          of: find.byWidget(currencies[index]),
+          matching: find.byType(Text),
+        ),
+      );
+      expect(valueText.style?.color, valueColors[index]);
+    }
+
+    await tester.tap(find.byKey(const Key('edit-accountability-1')));
+    await tester.pump();
+    var valueField = tester.widget<TextField>(
+      find.byKey(const Key('edit-value-1')),
+    );
+    expect(valueField.style?.color, appTheme.colors.negativeYield);
+
+    await tester.enterText(find.byKey(const Key('edit-value-1')), '12,25');
+    await tester.pump();
+    valueField = tester.widget<TextField>(
+      find.byKey(const Key('edit-value-1')),
+    );
+    expect(valueField.style?.color, appTheme.colors.positiveYield);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('shows identification details and keeps the none option',
+      (tester) async {
+    identifications[0].icon = Icons.restaurant;
+    identifications[1].icon = Icons.shopping_cart;
+    final entry = _entry(104)
+      ..identification = identifications.first
+      ..identificationId = identifications.first.id;
+    tester.view
+      ..physicalSize = const Size(1200, 700)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ObsidianWealthDarkTheme().build(),
+        home: Scaffold(
+          body: SizedBox(
+            width: 1200,
+            height: 600,
+            child: AccountabilityTable(
+              entries: [entry],
+              onUpdate: (_) {},
+              onRemove: (_) {},
+              enableInlineEditing: true,
+              identifications: identifications,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('edit-accountability-0')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('edit-identification-0')));
+    await tester.pumpAndSettle();
+
+    final option =
+        find.byKey(Key('identification-option-${identifications[0].id}')).last;
+    expect(
+      find.descendant(of: option, matching: find.text('Almoço')),
+      findsOneWidget,
+    );
+    final optionContainer = tester.widget<Container>(option);
+    expect(
+      (optionContainer.decoration! as BoxDecoration).color,
+      identifications[0].color.withValues(alpha: 0.16),
+    );
+    final optionIcon = tester.widget<Icon>(
+      find.descendant(of: option, matching: find.byIcon(Icons.restaurant)),
+    );
+    expect(optionIcon.color, identifications[0].color);
+    expect(find.byKey(const Key('identification-option-none')), findsOneWidget);
+    expect(find.text('Não identificado'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('identification-option-none')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('save-accountability-edit-0')));
+    await tester.pump();
+
+    expect(entry.identification, isNull);
+    expect(entry.identificationId, isNull);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('shows all identification filters without horizontal scrolling',
       (tester) async {
     identifications = List<AccountabilityIdentification>.generate(
@@ -168,6 +420,17 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byKey(const Key('edit-description-0')), findsOneWidget);
+    expect(find.text('Editando'), findsOneWidget);
+    expect(find.text('Descrição do comprovante'), findsNothing);
+    expect(find.text('Valor e fluxo'), findsNothing);
+    final descriptionField = tester.widget<TextField>(
+      find.byKey(const Key('edit-description-0')),
+    );
+    expect(descriptionField.decoration!.filled, isTrue);
+    expect(
+      descriptionField.decoration!.fillColor,
+      const Color(0xFF0A0E17),
+    );
     await tester.enterText(
       find.byKey(const Key('edit-description-0')),
       'Updated from app layout',

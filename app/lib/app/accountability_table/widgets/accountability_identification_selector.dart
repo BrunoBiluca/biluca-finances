@@ -21,10 +21,12 @@ class AccountabilityIdentificationSelector extends StatefulWidget {
   });
 
   @override
-  State<AccountabilityIdentificationSelector> createState() => _AccountabilityIdentificationSelectorState();
+  State<AccountabilityIdentificationSelector> createState() =>
+      _AccountabilityIdentificationSelectorState();
 }
 
-class _AccountabilityIdentificationSelectorState extends State<AccountabilityIdentificationSelector> {
+class _AccountabilityIdentificationSelectorState
+    extends State<AccountabilityIdentificationSelector> {
   String identificationDescription = "";
   int selectedIdIndex = -1;
   ScrollController scrollController = ScrollController();
@@ -50,9 +52,11 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
     final key = event.logicalKey.keyLabel;
 
     if (event is KeyDownEvent && key == "Arrow Down") {
-      setState(() => selectedIdIndex = (selectedIdIndex + 1) % currentIdentifications.length);
+      setState(() => selectedIdIndex =
+          (selectedIdIndex + 1) % currentIdentifications.length);
     } else if (event is KeyDownEvent && key == "Arrow Up") {
-      setState(() => selectedIdIndex = (selectedIdIndex - 1) % currentIdentifications.length);
+      setState(() => selectedIdIndex =
+          (selectedIdIndex - 1) % currentIdentifications.length);
     } else if (event is KeyDownEvent && key == "Enter") {
       if (selectedIdIndex == -1) {
         return false;
@@ -70,13 +74,16 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
     return false;
   }
 
-  List<AccountabilityIdentification> get currentIdentifications => widget.identifications
-      .where(
-        (i) =>
-            identificationDescription.isEmpty ||
-            i.description.toLowerCase().contains(identificationDescription.toLowerCase()),
-      )
-      .sorted((i1, i2) => i1.description.compareTo(i2.description));
+  List<AccountabilityIdentification> get currentIdentifications =>
+      widget.identifications
+          .where(
+            (i) =>
+                identificationDescription.isEmpty ||
+                i.description
+                    .toLowerCase()
+                    .contains(identificationDescription.toLowerCase()),
+          )
+          .sorted((i1, i2) => i1.description.compareTo(i2.description));
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +95,9 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
         child: Column(
           children: [
             PrimaryTextField(
-              labelText: currentIdentifications.isEmpty ? 'Criar identificação' : 'Buscar identificação',
+              labelText: currentIdentifications.isEmpty
+                  ? 'Criar identificação'
+                  : 'Buscar identificação',
               autofocus: true,
               onChanged: (value) {
                 setState(() => updateSearch(searchValue: value));
@@ -99,7 +108,8 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
                 if (identificationDescription.isEmpty) {
                   return;
                 }
-                widget.onEdit?.call(AccountabilityIdentification(identificationDescription, Colors.black));
+                widget.onEdit?.call(AccountabilityIdentification(
+                    identificationDescription, Colors.black));
                 Navigator.pop(context);
               },
             ),
@@ -116,7 +126,8 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
                     : Column(
                         children: [
                           ...currentIdentifications.mapIndexed(
-                            (index, id) => renderIdentificationItem(context, index, id),
+                            (index, id) =>
+                                renderIdentificationItem(context, index, id),
                           ),
                         ],
                       ),
@@ -128,7 +139,8 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
     );
   }
 
-  Padding renderIdentificationItem(BuildContext context, int index, AccountabilityIdentification id) {
+  Padding renderIdentificationItem(
+      BuildContext context, int index, AccountabilityIdentification id) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: DecoratedBox(
@@ -136,7 +148,8 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
           border: Border.all(
             width: 2,
             color: Theme.of(context).colorScheme.inversePrimary,
-            style: index == selectedIdIndex ? BorderStyle.solid : BorderStyle.none,
+            style:
+                index == selectedIdIndex ? BorderStyle.solid : BorderStyle.none,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -148,10 +161,13 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
               Navigator.pop(context);
             },
             child: TextBallon(
+              key: Key('identification-item-${id.id}'),
               icon: id.icon,
               text: id.description,
               color: id.color,
-              onEdit: ({Color? color, IconData? icon, String? text}) => widget.accountabilityBloc.add(
+              tintedStyle: true,
+              onEdit: ({Color? color, IconData? icon, String? text}) =>
+                  widget.accountabilityBloc.add(
                 UpdateAccountabilityIdentification(
                   id
                     ..color = color ?? id.color
@@ -164,7 +180,9 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
               ),
               editOptions: [
                 TextBallonEditOption(
-                    icon: Icons.type_specimen, name: 'Tipo', onTap: () => showTypeEditDiaglog(id, context)),
+                    icon: Icons.type_specimen,
+                    name: 'Tipo',
+                    onTap: () => showTypeEditDiaglog(id, context)),
               ],
             ),
           ),
@@ -173,13 +191,15 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
     );
   }
 
-  void showTypeEditDiaglog(AccountabilityIdentification id, BuildContext context) {
+  void showTypeEditDiaglog(
+      AccountabilityIdentification id, BuildContext context) {
     showDialog(
         context: context,
         builder: (context) {
           var selectedType = id.type;
 
-          return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
             return BaseDialog(
               title: 'Editar tipo de identificação',
               content: SizedBox(
@@ -193,7 +213,8 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
                     },
                     child: Column(
                         children: AccountabilityIdentificationType.values
-                            .map((type) => RadioListTile<AccountabilityIdentificationType>(
+                            .map((type) =>
+                                RadioListTile<AccountabilityIdentificationType>(
                                   title: Text(type.label),
                                   value: type,
                                   activeColor: Colors.white,
@@ -212,7 +233,8 @@ class _AccountabilityIdentificationSelectorState extends State<AccountabilityIde
                   width: 200,
                   child: TextButton(
                     onPressed: () {
-                      widget.accountabilityBloc.add(UpdateAccountabilityIdentification(
+                      widget.accountabilityBloc
+                          .add(UpdateAccountabilityIdentification(
                         id..type = selectedType,
                       ));
                       Navigator.pop(context);
