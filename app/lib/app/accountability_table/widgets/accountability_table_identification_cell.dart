@@ -1,5 +1,4 @@
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_label.dart';
-import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_row.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +40,9 @@ class AccountabilityTableIdentificationCell {
 
   Widget _identificationDropdown(BuildContext context) {
     final identificationIds = identifications.map((item) => item.id).toSet();
-    final value = identificationIds.contains(draftIdentificationId) ? draftIdentificationId : null;
+    final value = identificationIds.contains(draftIdentificationId)
+        ? draftIdentificationId
+        : null;
 
     return DropdownButton<String?>(
       key: Key('edit-identification-$rowIndex'),
@@ -89,7 +90,9 @@ class AccountabilityTableIdentificationCell {
       key: key,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: isUnidentified ? theme.colorScheme.surfaceContainerHigh : getInputFieldBackgroundColor(rowIndex),
+        color: isUnidentified
+            ? theme.colorScheme.surfaceContainerHigh
+            : color.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(3),
         border: Border.all(
           width: .5,
@@ -105,7 +108,8 @@ class AccountabilityTableIdentificationCell {
               description,
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: isUnidentified ? theme.colorScheme.onSurfaceVariant : color,
+                color:
+                    isUnidentified ? theme.colorScheme.onSurfaceVariant : color,
                 fontWeight: FontWeight.w500,
               ),
             ),

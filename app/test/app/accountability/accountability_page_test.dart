@@ -3,18 +3,20 @@ import 'package:biluca_financas/app/accountability_table/accountability_table.da
 import 'package:biluca_financas/app/themes/obsidian_wealth/obsidian_wealth_dark_theme.dart';
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/app/themes/theme_setup.dart';
+import 'package:biluca_financas/common/ui/base_toast.dart';
 import 'package:biluca_financas/common/ui/real_currency.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:get_it/get_it.dart';
-import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../_mocks/fake_predict_server.dart';
@@ -77,6 +79,62 @@ void main() {
     expect(find.text('Almoço'), findsOneWidget);
     expect(find.text('Supermercado'), findsOneWidget);
     expect(find.byKey(const Key('accountability-empty-state')), findsOneWidget);
+  });
+
+  testWidgets('uses semantic colors for each toast category', (tester) async {
+    for (final type in BaseToastType.values) {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BaseToast(
+              text: 'Toast message',
+              type: type,
+            ),
+          ),
+        ),
+      );
+
+      final context = tester.element(find.byType(BaseToast));
+      final theme = Theme.of(context);
+      final appTheme = getIt<ThemeManager>().getCurrentTheme(context);
+      final color = switch (type) {
+        BaseToastType.success => appTheme.colors.positiveYield,
+        BaseToastType.information => appTheme.colors.positiveYieldAlt,
+        BaseToastType.error => theme.colorScheme.error,
+      };
+      final expectedIcon = switch (type) {
+        BaseToastType.success => Icons.check,
+        BaseToastType.information => Icons.info_outline,
+        BaseToastType.error => Icons.error_outline,
+      };
+      final toast = tester.widget<BaseToast>(find.byType(BaseToast));
+      final icon = tester.widget<Icon>(
+        find.descendant(
+          of: find.byType(BaseToast),
+          matching: find.byType(Icon),
+        ),
+      );
+      final text = tester.widget<Text>(find.text('Toast message'));
+      final container = tester.widget<Container>(
+        find.descendant(
+          of: find.byType(BaseToast),
+          matching: find.byType(Container),
+        ),
+      );
+      final decoration = container.decoration! as BoxDecoration;
+      final border = decoration.border! as Border;
+
+      expect(toast.type, type);
+      expect(icon.icon, expectedIcon);
+      expect(icon.color, color);
+      expect(
+        text.style,
+        theme.textTheme.bodyMedium?.copyWith(color: color),
+      );
+      expect(decoration.color, theme.scaffoldBackgroundColor);
+      expect(border.top.width, 1);
+      expect(border.top.color, color);
+    }
   });
 
   testWidgets('adapts the page controls to a narrow viewport', (tester) async {
@@ -680,7 +738,8 @@ void main() {
     registerFallbackValue(FakeAccountabilityEntryRequest());
     registerFallbackValue(<AccountabilityEntryRequest>[]);
     final predictor = MockPredictService();
-    getIt.registerSingleton<EmbeddedPredictService>(predictor);
+    getIt.registerSingleton<AccountabilityIdentificationPredictionService>(
+        predictor);
     when(() => predictor.predict(entries: any(named: 'entries'))).thenAnswer(
       (invocation) async => invocation.namedArguments[#entries]
           as List<AccountabilityEntryRequest>,
@@ -711,6 +770,87 @@ void main() {
     expect(addedRequest.value, 12.34);
     verify(() => repo.add(any(that: isA<AccountabilityEntryRequest>())))
         .called(1);
+    final toastFinder = find.byType(BaseToast);
+    expect(find.text('Registro criado com sucesso'), findsOneWidget);
+    final position = tester.widget<Positioned>(
+      find
+          .ancestor(
+            of: toastFinder,
+            matching: find.byType(Positioned),
+          )
+          .first,
+    );
+    expect(position.bottom, 50);
+    expect(position.right, 24);
+    expect(position.top, isNull);
+    expect(position.left, isNull);
+
+    final toastContext = tester.element(toastFinder);
+    final theme = Theme.of(toastContext);
+    final successColor = getIt<ThemeManager>()
+        .getCurrentTheme(toastContext)
+        .colors
+        .positiveYield;
+    final toastContainer = tester.widget<Container>(
+      find.descendant(
+        of: toastFinder,
+        matching: find.byType(Container),
+      ),
+    );
+    final decoration = toastContainer.decoration! as BoxDecoration;
+    expect(decoration.color, theme.scaffoldBackgroundColor);
+    expect(decoration.border, isA<Border>());
+    final border = decoration.border! as Border;
+    expect(border.top.width, lessThanOrEqualTo(1));
+    expect(border.top.color, successColor);
+    final toastText = tester.widget<Text>(
+      find.descendant(
+        of: toastFinder,
+        matching: find.text('Registro criado com sucesso'),
+      ),
+    );
+    expect(
+      toastText.style,
+      theme.textTheme.bodyMedium?.copyWith(color: successColor),
+    );
+    await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('creates an entry when prediction returns no entries',
+      (tester) async {
+    registerFallbackValue(FakeAccountabilityEntryRequest());
+    registerFallbackValue(<AccountabilityEntryRequest>[]);
+    final predictor = MockPredictService();
+    getIt.registerSingleton<AccountabilityIdentificationPredictionService>(
+        predictor);
+    when(() => predictor.predict(entries: any(named: 'entries')))
+        .thenAnswer((_) async => []);
+    late AccountabilityEntryRequest addedRequest;
+    when(
+      () => repo.add(any(that: isA<AccountabilityEntryRequest>())),
+    ).thenAnswer((invocation) async {
+      addedRequest =
+          invocation.positionalArguments.single as AccountabilityEntryRequest;
+      return _entry(1001);
+    });
+    await _pumpPage(tester);
+
+    await tester.tap(find.byKey(const Key('new-accountability-entry')));
+    await tester.pumpAndSettle();
+    final formFields = find.descendant(
+      of: find.byType(AlertDialog),
+      matching: find.byType(TextField),
+    );
+    await tester.enterText(formFields.at(0), 'Uncategorized entry');
+    await tester.enterText(formFields.at(1), '5,00');
+    await tester.tap(find.text('Salvar').last);
+    await _flushAsync(tester);
+
+    expect(addedRequest.description, 'Uncategorized entry');
+    expect(addedRequest.value, 5);
+    verify(() => repo.add(any(that: isA<AccountabilityEntryRequest>())))
+        .called(1);
+    await tester.pump(const Duration(seconds: 3));
   });
 
   testWidgets('deletes an entry through the existing row action',
@@ -756,6 +896,11 @@ Future<void> _pumpPage(
   double width = 1200,
   double height = 800,
 }) async {
+  if (!GetIt.I.isRegistered<FToast>()) {
+    GetIt.I.registerFactory<FToast>(
+      () => FToast()..init(tester.element(find.byType(AccountabilityPage))),
+    );
+  }
   tester.view
     ..physicalSize = Size(width, height)
     ..devicePixelRatio = 1;

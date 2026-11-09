@@ -13,6 +13,7 @@ class AccountabilityBloc
   String currentSearchQuery = '';
   String? currentIdentificationId;
   int _queryVersion = 0;
+  int _entryCreationVersion = 0;
   bool _isSearchMode = false;
 
   int get limit => loadedPages * pageSize;
@@ -49,6 +50,17 @@ class AccountabilityBloc
 
     on<AddAccountabilityEntry>((event, emit) async {
       await repo.add(event.request);
+      _entryCreationVersion++;
+      final currentState = state;
+      emit(AccountabilityChanged(
+        entries: currentState.entries,
+        identifications: currentState.identifications,
+        searchQuery: currentState.searchQuery,
+        identificationId: currentState.identificationId,
+        hasMore: currentState.hasMore,
+        isLoading: currentState.isLoading,
+        entryCreationVersion: _entryCreationVersion,
+      ));
       await _refreshEntries(emit);
     });
 
@@ -85,6 +97,7 @@ class AccountabilityBloc
         entries: entries,
         identifications: await repo.getIdentifications(),
         identificationId: currentIdentification!.id,
+        entryCreationVersion: _entryCreationVersion,
       ));
       return;
     }
@@ -94,6 +107,7 @@ class AccountabilityBloc
       entries: entries,
       identifications: await repo.getIdentifications(),
       hasMore: entries.length >= limit,
+      entryCreationVersion: _entryCreationVersion,
     ));
   }
 
@@ -108,6 +122,7 @@ class AccountabilityBloc
       searchQuery: currentSearchQuery,
       identificationId: identificationId,
       isLoading: true,
+      entryCreationVersion: _entryCreationVersion,
     ));
 
     final entries = await repo.searchEntries(
@@ -128,6 +143,7 @@ class AccountabilityBloc
       searchQuery: currentSearchQuery,
       identificationId: currentIdentificationId,
       hasMore: entries.length > pageSize,
+      entryCreationVersion: _entryCreationVersion,
     ));
   }
 
@@ -146,6 +162,7 @@ class AccountabilityBloc
       identificationId: identificationId,
       hasMore: currentState.hasMore,
       isLoading: true,
+      entryCreationVersion: _entryCreationVersion,
     ));
 
     final entries = await repo.searchEntries(
@@ -169,6 +186,7 @@ class AccountabilityBloc
       searchQuery: currentSearchQuery,
       identificationId: currentIdentificationId,
       hasMore: entries.length > pageSize,
+      entryCreationVersion: _entryCreationVersion,
     ));
   }
 }

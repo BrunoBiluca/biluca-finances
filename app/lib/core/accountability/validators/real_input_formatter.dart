@@ -17,13 +17,25 @@ class RealInputFormatter extends TextInputFormatter {
     }
 
     final formatter = NumberFormat.simpleCurrency(locale: "pt_Br");
-    String newText = formatter.format(parse(currText)).replaceAll('\u00A0', " ");
-    return newValue.copyWith(text: newText, selection: TextSelection.collapsed(offset: newText.length));
+    try {
+      String newText =
+          formatter.format(parse(currText)).replaceAll('\u00A0', " ");
+      return newValue.copyWith(
+          text: newText,
+          selection: TextSelection.collapsed(offset: newText.length));
+    } on FormatException {
+      return newValue;
+    }
   }
 
   double parse(String value) =>
       double.parse(
-        value.replaceAll('.', '').replaceAll(",", "").replaceAll("R\$", "").replaceAll(" ", "").trim(),
+        value
+            .replaceAll('.', '')
+            .replaceAll(",", "")
+            .replaceAll("R\$", "")
+            .replaceAll(" ", "")
+            .trim(),
       ) /
       100;
 }

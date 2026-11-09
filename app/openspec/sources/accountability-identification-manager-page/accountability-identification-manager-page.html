@@ -1,0 +1,847 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Identificações &amp; Categorias — Biluca Finanças</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed": "#ffdadb",
+            "inverse-surface": "#dfe2ef",
+            "on-tertiary-fixed": "#40000d",
+            "on-surface-variant": "#bdc8d1",
+            "secondary-fixed": "#6ffbbe",
+            "surface": "#0f131c",
+            "on-tertiary": "#67001b",
+            "surface-tint": "#7bd0ff",
+            "surface-container-low": "#181b25",
+            "on-secondary-fixed-variant": "#005236",
+            "on-secondary-container": "#00311f",
+            "surface-variant": "#31353f",
+            "surface-dim": "#0f131c",
+            "on-error-container": "#ffdad6",
+            "surface-container-high": "#262a34",
+            "secondary": "#4edea3",
+            "on-tertiary-fixed-variant": "#92002a",
+            "inverse-primary": "#00668a",
+            "tertiary": "#ffbcbf",
+            "primary": "#8ed5ff",
+            "on-secondary-fixed": "#002113",
+            "primary-container": "#38bdf8",
+            "error-container": "#93000a",
+            "tertiary-fixed-dim": "#ffb2b7",
+            "surface-bright": "#353943",
+            "surface-container-lowest": "#0a0e17",
+            "secondary-fixed-dim": "#4edea3",
+            "primary-fixed-dim": "#7bd0ff",
+            "tertiary-container": "#ff929a",
+            "outline": "#87929a",
+            "surface-container-highest": "#31353f",
+            "on-primary": "#00354a",
+            "background": "#0f131c",
+            "on-surface": "#dfe2ef",
+            "outline-variant": "#3e484f",
+            "on-primary-fixed": "#001e2c",
+            "error": "#ffb4ab",
+            "inverse-on-surface": "#2c303a",
+            "on-tertiary-container": "#8c0028",
+            "on-background": "#dfe2ef",
+            "on-error": "#690005",
+            "surface-container": "#1c1f29",
+            "secondary-container": "#00a572",
+            "on-primary-fixed-variant": "#004c69",
+            "on-primary-container": "#004965",
+            "on-secondary": "#003824",
+            "primary-fixed": "#c4e7ff"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            "display": ["Geist", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "numeric-metric": ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #181b25;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #31353f;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #87929a;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen selection:bg-primary-container selection:text-surface">
+<!-- TOP APP BAR -->
+<header class="sticky top-0 z-40 w-full border-b border-outline-variant/40 bg-surface/90 backdrop-blur-md px-6 py-3">
+<div class="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container/20 border border-primary-container/40 flex items-center justify-center text-primary-container shadow-inner">
+<svg class="w-5 h-5" fill="none" viewBox="0 0 48 48">
+<path d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z" fill="currentColor"></path>
+</svg>
+</div>
+<div>
+<h1 class="text-on-surface text-base font-display font-bold tracking-tight">Biluca Finanças</h1>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">Gestão Patrimonial</p>
+</div>
+</div>
+<nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Visão Geral</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Lançamentos</a>
+<a class="text-primary font-semibold flex items-center gap-1.5 border-b-2 border-primary pb-0.5" href="#">
+            Identificações &amp; Categorias
+          </a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Relatórios</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors" href="#">Orçamentos</a>
+</nav>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative hidden sm:block w-56">
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-outline text-[18px]">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant/60 rounded-lg pl-8 pr-3 py-1.5 text-xs text-on-surface placeholder:text-outline focus:outline-none focus:border-primary" placeholder="Buscar identificação..." type="text">
+</div>
+<button class="flex items-center gap-1.5 bg-primary-container text-on-primary font-semibold text-xs px-3 py-2 rounded-lg hover:brightness-110 transition shadow-sm" id="btn-quick-new" onclick="startNewIdentification()">
+<span class="material-symbols-outlined text-[16px]">add</span>
+<span class="">Nova Identificação</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center text-xs font-bold text-primary">
+          BF
+        </div>
+</div>
+</div>
+</header>
+<!-- MAIN WRAPPER -->
+<main class="max-w-[1400px] mx-auto px-4 sm:px-6 py-6">
+<!-- PAGE TITLE & SUMMARY METRICS -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+<div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant mb-1">
+<span class="">Configurações</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary">Estrutura Contábil</span>
+</div>
+<h2 class="text-2xl sm:text-3xl font-bold font-display text-on-surface tracking-tight">Identificações &amp; Categorias</h2>
+<p class="text-sm text-on-surface-variant max-w-2xl">
+          Hierarquia simplificada de 1 nível (Pai → Subcategoria) com ancoragem de edição lateral contínua e proteção de dados descontinuados para relatórios.
+        </p>
+</div>
+<!-- KPI METRIC CARDS -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-3">
+<span class="text-[11px] text-on-surface-variant font-medium block">Total Registrado</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-xl font-bold font-numeric-metric text-on-surface">19</span>
+<span class="text-[10px] text-secondary font-medium">+2 no mês</span>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-3">
+<span class="text-[11px] text-on-surface-variant font-medium block">Categorias Pai</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-xl font-bold font-numeric-metric text-primary">8</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Nível raiz</span>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-3">
+<span class="text-[11px] text-on-surface-variant font-medium block">Subcategorias</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-xl font-bold font-numeric-metric text-secondary">8</span>
+<span class="text-[10px] text-on-surface-variant font-medium">1º nível</span>
+</div>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-3">
+<span class="text-[11px] text-on-surface-variant font-medium block">Descontinuadas</span>
+<div class="flex items-baseline gap-1.5 mt-0.5">
+<span class="text-xl font-bold font-numeric-metric text-tertiary-container">3</span>
+<span class="text-[10px] text-outline font-medium">Histórico</span>
+</div>
+</div>
+</div>
+</div>
+<!-- MAIN 2-COLUMN LAYOUT: (Left: Sticky Form, Right: Scrollable Hierarchical List) -->
+<div class="grid grid-cols-1 gap-6 items-start">
+<!-- LEFT COLUMN: STICKY CONFIGURATION PANEL (Solves UX issue #1) -->
+
+<!-- RIGHT COLUMN: HIERARCHICAL IDENTIFICATION LIST (Interactive) -->
+<section class="space-y-4 w-full">
+  <!-- FILTER TABS & CONTROL BAR -->
+  <div class="bg-surface-container-low border border-outline-variant/40 rounded-2xl p-4">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+      <!-- Tabs: Ativas, Descontinuadas, Todas -->
+      <div class="flex items-center gap-1 bg-surface-container p-1 rounded-xl">
+        <button class="text-xs font-semibold px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition" id="tab-all" onclick="filterStatusTab('all')">
+          Todas <span class="font-numeric-metric ml-0.5 text-[11px] opacity-80">(19)</span>
+        </button>
+        <button class="text-xs font-bold px-3 py-1.5 rounded-lg bg-surface-container-high text-primary shadow-sm transition" id="tab-active" onclick="filterStatusTab('active')">
+          Ativas <span class="font-numeric-metric ml-0.5 text-[11px] opacity-80">(16)</span>
+        </button>
+        <button class="text-xs font-semibold px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition" id="tab-discontinued" onclick="filterStatusTab('discontinued')">
+          Descontinuadas <span class="font-numeric-metric ml-0.5 text-[11px] opacity-80">(3)</span>
+        </button>
+      </div>
+      <!-- Nature / Flow Filter Badges -->
+      <div class="flex items-center gap-1.5">
+        <span class="text-[11px] text-outline">Natureza:</span>
+        <button class="text-[11px] px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-medium border border-outline-variant/40" onclick="filterFlow('all')">Todas</button>
+        <button class="text-[11px] px-2.5 py-1 rounded-md text-on-surface-variant hover:bg-surface-container font-medium transition" onclick="filterFlow('despesa')">Despesas</button>
+        <button class="text-[11px] px-2.5 py-1 rounded-md text-on-surface-variant hover:bg-surface-container font-medium transition" onclick="filterFlow('receita')">Receitas &amp; Aportes</button>
+      </div>
+    </div>
+    <!-- Helper indicator & Activity note -->
+    <div class="flex items-center justify-between pt-3 text-[11px] text-on-surface-variant">
+      <span class="flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[16px] text-primary">account_tree</span>
+        <span class="">Hierarquia Contábil de 1 Nível: Categorias Pai com subcategorias vinculadas e consolidação semestral.</span>
+      </span>
+      <span class="font-mono text-[10px] text-outline flex items-center gap-1">
+        <span class="material-symbols-outlined text-[13px] text-secondary">bar_chart</span>
+        Jan–Jun/2024 acumulado
+      </span>
+    </div>
+  </div>
+
+  <!-- HIERARCHICAL ITEMS CONTAINER (Tree Groups) -->
+  <div class="space-y-4" id="categories-tree">
+    <!-- GROUP 1: Supermercado & Alimentação (Despesa Variável) -->
+    <div class="category-card-group bg-surface-container-low border border-outline-variant/40 rounded-2xl p-4 transition-all hover:border-outline-variant/80" data-category-id="1" data-flow="despesa" data-status="active">
+      <!-- Parent Item Row -->
+      <div class="flex items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary-container/40 flex items-center justify-center text-primary-container shrink-0">
+            <span class="material-symbols-outlined text-[22px]">shopping_cart</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-0.5">
+              <h4 class="text-sm font-bold text-on-surface truncate">Supermercado &amp; Alimentação</h4>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                <span class="material-symbols-outlined text-[12px]">folder_open</span>
+                <span class="">Categoria Pai</span>
+              </span>
+              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+            </div>
+            <p class="text-xs text-on-surface-variant truncate">Despesa Variável • Compras de mantimentos, feiras e proteínas</p>
+          </div>
+        </div>
+        <!-- Metrics & Actions -->
+        <div class="flex items-center gap-4 shrink-0">
+          <div class="hidden sm:flex flex-col items-end text-right">
+            <span class="text-[10px] uppercase font-mono text-outline">Últimos 6 meses</span>
+            <span class="font-numeric-metric font-bold text-xs text-on-surface">58 lançamentos • <span class="text-primary">R$ 17.840,00</span></span>
+            <span class="text-[10px] text-on-surface-variant font-mono">Méd. R$ 2.973/mês</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary transition" onclick="editItem({id: 1, name: 'Supermercado &amp; Alimentação', parentId: '', flow: 'despesa', costType: 'variavel', discontinued: false, icon: 'shopping_cart', color: '#38bdf8', notes: 'Alimentação familiar essencial'})">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition" onclick="addSubcategoryTo(1, 'Supermercado &amp; Alimentação')" title="Adicionar Subcategoria">
+              <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subcategories Branch Connector List -->
+      <div class="pt-3 pl-4 sm:pl-6 space-y-2.5">
+        <!-- Sub 1: Hortifruti & Feira -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container/60 border border-outline-variant/30 hover:border-outline-variant/70 transition" data-category-id="11" data-flow="despesa" data-status="active">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-secondary shrink-0">
+              <span class="material-symbols-outlined text-[18px]">eco</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-on-surface truncate">Hortifruti &amp; Feira</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant truncate">Frutas, verduras frescas e feiras de bairro</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-on-surface">26 lançamentos • <span class="text-secondary">R$ 4.310,00</span></span>
+              <span class="text-[10px] text-outline font-mono">~R$ 718/mês</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 11, name: 'Hortifruti &amp; Feira', parentId: '1', flow: 'despesa', costType: 'variavel', discontinued: false, icon: 'eco', color: '#4edea3', notes: 'Compras em sacolão'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub 2: Açougue & Carnes -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container/60 border border-outline-variant/30 hover:border-outline-variant/70 transition" data-category-id="12" data-flow="despesa" data-status="active">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-tertiary-container shrink-0">
+              <span class="material-symbols-outlined text-[18px]">restaurant</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-on-surface truncate">Açougue &amp; Carnes</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant truncate">Proteínas, peixes frescos e cortes bovinos</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-on-surface">32 lançamentos • <span class="text-primary">R$ 13.530,00</span></span>
+              <span class="text-[10px] text-outline font-mono">~R$ 2.255/mês</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 12, name: 'Açougue &amp; Carnes', parentId: '1', flow: 'despesa', costType: 'variavel', discontinued: false, icon: 'restaurant', color: '#ff929a', notes: 'Carnes e frios'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP 2: Moradia, Luz & Água (Despesa Fixa) -->
+    <div class="category-card-group bg-surface-container-low border border-outline-variant/40 rounded-2xl p-4 transition-all hover:border-outline-variant/80" data-category-id="2" data-flow="despesa" data-status="active">
+      <!-- Parent Item Row -->
+      <div class="flex items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary shrink-0">
+            <span class="material-symbols-outlined text-[22px]">home</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-0.5">
+              <h4 class="text-sm font-bold text-on-surface truncate">Moradia, Luz &amp; Água</h4>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                <span class="material-symbols-outlined text-[12px]">folder_open</span>
+                <span class="">Categoria Pai</span>
+              </span>
+              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+            </div>
+            <p class="text-xs text-on-surface-variant truncate">Despesa Fixa • Habitação e contas essenciais de infraestrutura</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <div class="hidden sm:flex flex-col items-end text-right">
+            <span class="text-[10px] uppercase font-mono text-outline">Últimos 6 meses</span>
+            <span class="font-numeric-metric font-bold text-xs text-on-surface">14 lançamentos • <span class="text-secondary">R$ 16.320,00</span></span>
+            <span class="text-[10px] text-on-surface-variant font-mono">Méd. R$ 2.720/mês</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary transition" onclick="editItem({id: 2, name: 'Moradia, Luz &amp; Água', parentId: '', flow: 'despesa', costType: 'fixo', discontinued: false, icon: 'home', color: '#4edea3', notes: 'Custos base de residência'})">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition" onclick="addSubcategoryTo(2, 'Moradia, Luz &amp; Água')" title="Adicionar Subcategoria">
+              <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subcategories Branch -->
+      <div class="pt-3 pl-4 sm:pl-6 space-y-2.5">
+        <!-- Sub 1: Condomínio -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container/60 border border-outline-variant/30 hover:border-outline-variant/70 transition" data-category-id="21" data-flow="despesa" data-status="active">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[18px]">apartment</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-on-surface truncate">Condomínio</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant truncate">Taxa condominial ordinária e fundo de reserva</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-on-surface">6 lançamentos • <span class="text-on-surface">R$ 11.400,00</span></span>
+              <span class="text-[10px] text-outline font-mono">R$ 1.900/mês</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 21, name: 'Condomínio', parentId: '2', flow: 'despesa', costType: 'fixo', discontinued: false, icon: 'apartment', color: '#8ed5ff', notes: 'Boleto no dia 10'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub 2: Energia Elétrica -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container/60 border border-outline-variant/30 hover:border-outline-variant/70 transition" data-category-id="22" data-flow="despesa" data-status="active">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-secondary shrink-0">
+              <span class="material-symbols-outlined text-[18px]">bolt</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-on-surface truncate">Energia Elétrica</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant truncate">Conta mensal concessionária de energia elétrica residencial</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-on-surface">8 lançamentos • <span class="text-secondary">R$ 4.920,00</span></span>
+              <span class="text-[10px] text-outline font-mono">~R$ 615/mês</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 22, name: 'Energia Elétrica', parentId: '2', flow: 'despesa', costType: 'variavel', discontinued: false, icon: 'bolt', color: '#4edea3', notes: 'Enel / CPFL'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP 3: Investimentos & Dividendos (Receita / Aporte) -->
+    <div class="category-card-group bg-surface-container-low border border-outline-variant/40 rounded-2xl p-4 transition-all hover:border-outline-variant/80" data-category-id="7" data-flow="receita" data-status="active">
+      <!-- Parent Item Row -->
+      <div class="flex items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary shrink-0">
+            <span class="material-symbols-outlined text-[22px]">trending_up</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-0.5">
+              <h4 class="text-sm font-bold text-on-surface truncate">Investimentos &amp; Dividendos</h4>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                <span class="material-symbols-outlined text-[12px]">folder_open</span>
+                <span class="">Categoria Pai</span>
+              </span>
+              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+            </div>
+            <p class="text-xs text-on-surface-variant truncate">Receita Passiva • Rendimentos de capital e aplicações financeiras</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <div class="hidden sm:flex flex-col items-end text-right">
+            <span class="text-[10px] uppercase font-mono text-outline">Últimos 6 meses</span>
+            <span class="font-numeric-metric font-bold text-xs text-secondary">42 lançamentos • +R$ 28.450,00</span>
+            <span class="text-[10px] text-on-surface-variant font-mono">Méd. +R$ 4.741/mês</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary transition" onclick="editItem({id: 7, name: 'Investimentos &amp; Dividendos', parentId: '', flow: 'receita', costType: 'passivo', discontinued: false, icon: 'trending_up', color: '#4edea3', notes: 'Rendimentos mensais'})">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition" onclick="addSubcategoryTo(7, 'Investimentos &amp; Dividendos')" title="Adicionar Subcategoria">
+              <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subcategories Branch -->
+      <div class="pt-3 pl-4 sm:pl-6 space-y-2.5">
+        <!-- Sub 1: Renda Fixa & Tesouro -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container/60 border border-outline-variant/30 hover:border-outline-variant/70 transition" data-category-id="71" data-flow="receita" data-status="active">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-secondary shrink-0">
+              <span class="material-symbols-outlined text-[18px]">account_balance</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-on-surface truncate">Renda Fixa &amp; Tesouro</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant truncate">CDBs, LCIs e cupons semestrais do Tesouro IPCA</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-secondary">18 lançamentos • +R$ 16.200,00</span>
+              <span class="text-[10px] text-outline font-mono">~R$ 2.700/mês</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 71, name: 'Renda Fixa &amp; Tesouro', parentId: '7', flow: 'receita', costType: 'passivo', discontinued: false, icon: 'account_balance', color: '#4edea3', notes: 'Rendimentos automáticos'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub 2: Ações & FIIs -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container/60 border border-outline-variant/30 hover:border-outline-variant/70 transition" data-category-id="72" data-flow="receita" data-status="active">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[18px]">query_stats</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-on-surface truncate">Ações &amp; Fundos Imobiliários (FIIs)</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant truncate">Proventos isentos e dividendos trimestrais da B3</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-secondary">24 lançamentos • +R$ 12.250,00</span>
+              <span class="text-[10px] text-outline font-mono">~R$ 2.041/mês</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 72, name: 'Ações &amp; Fundos Imobiliários (FIIs)', parentId: '7', flow: 'receita', costType: 'passivo', discontinued: false, icon: 'query_stats', color: '#8ed5ff', notes: 'Proventos da B3'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP 4: Transporte & Mobilidade (Despesa Variável) -->
+    <div class="category-card-group bg-surface-container-low border border-outline-variant/40 rounded-2xl p-4 transition-all hover:border-outline-variant/80" data-category-id="3" data-flow="despesa" data-status="active">
+      <!-- Parent Item Row -->
+      <div class="flex items-center justify-between gap-3 pb-3 border-b border-outline-variant/30">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shrink-0">
+            <span class="material-symbols-outlined text-[22px]">directions_car</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-0.5">
+              <h4 class="text-sm font-bold text-on-surface truncate">Transporte &amp; Mobilidade</h4>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                <span class="material-symbols-outlined text-[12px]">folder_open</span>
+                <span class="">Categoria Pai</span>
+              </span>
+              <span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+            </div>
+            <p class="text-xs text-on-surface-variant truncate">Despesa Variável • Despesas com locomoção urbana, combustível e estacionamentos</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <div class="hidden sm:flex flex-col items-end text-right">
+            <span class="text-[10px] uppercase font-mono text-outline">Últimos 6 meses</span>
+            <span class="font-numeric-metric font-bold text-xs text-on-surface">38 lançamentos • <span class="text-primary">R$ 8.940,00</span></span>
+            <span class="text-[10px] text-on-surface-variant font-mono">Méd. R$ 1.490/mês</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary transition" onclick="editItem({id: 3, name: 'Transporte &amp; Mobilidade', parentId: '', flow: 'despesa', costType: 'variavel', discontinued: false, icon: 'directions_car', color: '#8ed5ff', notes: 'Transporte geral'})">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+            </button>
+            <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition" onclick="addSubcategoryTo(3, 'Transporte &amp; Mobilidade')" title="Adicionar Subcategoria">
+              <span class="material-symbols-outlined text-[18px]">add_circle</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subcategories Branch -->
+      <div class="pt-3 pl-4 sm:pl-6 space-y-2.5">
+        <!-- Sub 1: Combustível & Abastecimento (Ativa) -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container/60 border border-outline-variant/30 hover:border-outline-variant/70 transition" data-category-id="31" data-flow="despesa" data-status="active">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[18px]">local_gas_station</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-on-surface truncate">Combustível &amp; Abastecimento</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-secondary/10 text-secondary border border-secondary/20">Ativa</span>
+              </div>
+              <p class="text-[11px] text-on-surface-variant truncate">Gasolina, etanol e recarga elétrica veicular</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-on-surface">38 lançamentos • <span class="text-primary">R$ 8.940,00</span></span>
+              <span class="text-[10px] text-outline font-mono">~R$ 1.490/mês</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 31, name: 'Combustível &amp; Abastecimento', parentId: '3', flow: 'despesa', costType: 'variavel', discontinued: false, icon: 'local_gas_station', color: '#8ed5ff', notes: 'Postos de gasolina'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub 2: Sem Parar - Carro Antigo (Descontinuada) -->
+        <div class="relative flex items-center justify-between gap-3 p-2.5 rounded-xl bg-surface-container-low/60 border border-outline-variant/30 opacity-80 hover:opacity-100 transition" data-category-id="32" data-flow="despesa" data-status="discontinued">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="font-mono text-outline select-none text-sm">└─</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-outline shrink-0">
+              <span class="material-symbols-outlined text-[18px]">toll</span>
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2">
+                <h5 class="text-xs font-semibold text-outline line-through truncate">Sem Parar - Carro Antigo</h5>
+                <span class="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">Subcategoria</span>
+                <span class="inline-flex items-center gap-1 text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-surface-container text-tertiary border border-tertiary/20">
+                  <span class="material-symbols-outlined text-[10px]">archive</span>
+                  <span class="">Descontinuada</span>
+                </span>
+              </div>
+              <p class="text-[11px] text-outline truncate">Substituído pela tag conectada do banco atual</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="hidden md:flex flex-col items-end text-right">
+              <span class="font-numeric-metric text-xs font-medium text-outline">0 reg. nos últimos 6m • R$ 0,00</span>
+              <span class="text-[10px] text-outline font-mono">Histórico preservado</span>
+            </div>
+            <button class="p-1.5 rounded-lg text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 32, name: 'Sem Parar - Carro Antigo', parentId: '3', flow: 'despesa', costType: 'variavel', discontinued: true, icon: 'toll', color: '#87929a', notes: 'Tag cancelada na troca do veículo'})">
+              <span class="material-symbols-outlined text-[16px]">edit</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GROUP 5: TV por Assinatura Cabo (Antiga) (Pai Descontinuada) -->
+    <div class="category-card-group bg-surface-container-low/60 border border-outline-variant/30 rounded-2xl p-4 opacity-90 transition-all hover:border-outline-variant" data-category-id="9" data-flow="despesa" data-status="discontinued">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl bg-surface-container-high border border-outline-variant/50 flex items-center justify-center text-outline shrink-0">
+            <span class="material-symbols-outlined text-[22px]">tv_gen</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-0.5">
+              <h4 class="text-sm font-bold text-on-surface/80 line-through decoration-outline/60">TV por Assinatura Cabo (Antiga)</h4>
+              <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-surface-container text-outline border border-outline-variant/50">
+                <span class="material-symbols-outlined text-[12px]">folder</span>
+                <span class="">Categoria Pai</span>
+              </span>
+              <span class="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-surface-container-high text-tertiary border border-tertiary/20">
+                <span class="material-symbols-outlined text-[12px]">archive</span>
+                <span class="">Descontinuada • Preservada em relatórios</span>
+              </span>
+            </div>
+            <p class="text-xs text-outline truncate">Cancelada em Out/2023. Não aceita novos lançamentos, mas histórico permanece em relatórios de auditoria.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 shrink-0">
+          <div class="hidden sm:flex flex-col items-end text-right">
+            <span class="text-[10px] uppercase font-mono text-outline">Últimos 6 meses</span>
+            <span class="font-numeric-metric font-medium text-xs text-outline">0 lançamentos • R$ 0,00</span>
+            <span class="text-[10px] text-tertiary font-mono">Inativa para novos registros</span>
+          </div>
+          <button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition" onclick="editItem({id: 9, name: 'TV por Assinatura Cabo (Antiga)', parentId: '', flow: 'despesa', costType: 'fixo', discontinued: true, icon: 'tv_gen', color: '#87929a', notes: 'Contrato antigo cancelado'})">
+            <span class="material-symbols-outlined text-[18px]">edit</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER AUDIT TIP -->
+  <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center justify-between text-xs text-on-surface-variant">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+      <span class="">Estrutura sincronizada com lançamentos do livro caixa, projeções de fluxo mensal e trilha de auditoria contábil.</span>
+    </div>
+    <span class="font-mono text-[10px] text-outline">v2.4 — Biluca UI</span>
+  </div>
+</section>
+</div>
+</main>
+<!-- MICRO-INTERACTION SCRIPT FOR STICKY UX & EDITING STATE -->
+<script>
+    let currentEditingState = {
+      isNew: false,
+      discontinued: false,
+      flow: 'despesa'
+    };
+
+    function setStatus(isDiscontinued) {
+      currentEditingState.discontinued = isDiscontinued;
+      const btnActive = document.getElementById('btn-status-active');
+      const btnDiscontinued = document.getElementById('btn-status-discontinued');
+      const previewBadge = document.getElementById('badge-status-preview');
+
+      if (isDiscontinued) {
+        btnDiscontinued.className = 'p-2 text-left rounded-lg border border-tertiary/40 bg-tertiary/10 flex flex-col gap-0.5 transition';
+        btnDiscontinued.querySelector('.text-on-surface-variant').className = 'flex items-center gap-1.5 text-xs font-bold text-tertiary';
+        
+        btnActive.className = 'p-2 text-left rounded-lg border border-outline-variant/30 hover:border-outline-variant bg-surface-container-low flex flex-col gap-0.5 transition';
+        btnActive.querySelector('.text-secondary').className = 'flex items-center gap-1.5 text-xs font-medium text-on-surface-variant';
+        
+        previewBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-tertiary/15 text-tertiary border border-tertiary/30';
+        previewBadge.innerText = 'Descontinuada (Histórico mantido)';
+      } else {
+        btnActive.className = 'p-2 text-left rounded-lg border border-secondary/40 bg-secondary/10 flex flex-col gap-0.5 transition';
+        btnActive.querySelector('.text-on-surface-variant').className = 'flex items-center gap-1.5 text-xs font-bold text-secondary';
+        
+        btnDiscontinued.className = 'p-2 text-left rounded-lg border border-outline-variant/30 hover:border-outline-variant bg-surface-container-low flex flex-col gap-0.5 transition';
+        btnDiscontinued.querySelector('.text-tertiary')?.classList.replace('text-tertiary', 'text-on-surface-variant');
+        
+        previewBadge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-secondary/15 text-secondary border border-secondary/30';
+        previewBadge.innerText = 'Ativa';
+      }
+    }
+
+    function setFlowType(flow) {
+      currentEditingState.flow = flow;
+      const btnDespesa = document.getElementById('btn-flow-despesa');
+      const btnReceita = document.getElementById('btn-flow-receita');
+      if (flow === 'despesa') {
+        btnDespesa.className = 'py-1 px-2 text-xs font-semibold rounded bg-surface-container-high text-on-surface shadow-sm transition';
+        btnReceita.className = 'py-1 px-2 text-xs font-semibold rounded text-on-surface-variant hover:text-on-surface transition';
+      } else {
+        btnReceita.className = 'py-1 px-2 text-xs font-semibold rounded bg-surface-container-high text-secondary shadow-sm transition';
+        btnDespesa.className = 'py-1 px-2 text-xs font-semibold rounded text-on-surface-variant hover:text-on-surface transition';
+      }
+    }
+
+    function editItem(item) {
+      currentEditingState.isNew = false;
+      document.getElementById('panel-mode-label').innerText = `Editando ID #${item.id}`;
+      document.getElementById('panel-mode-label').className = 'text-[10px] uppercase font-bold tracking-wider text-primary px-2 py-0.5 rounded bg-primary/10 inline-block mb-0.5';
+      document.getElementById('panel-title').innerText = item.name;
+      document.getElementById('btn-submit-label').innerText = 'Salvar Alterações';
+      
+      document.getElementById('field-name').value = item.name;
+      document.getElementById('field-parent-id').value = item.parentId || '';
+      document.getElementById('field-cost-type').value = item.costType || 'variavel';
+      document.getElementById('field-icon-name').value = item.icon || 'category';
+      document.getElementById('preview-icon').innerHTML = `<span class="material-symbols-outlined text-[18px]">${item.icon || 'category'}</span>`;
+      document.getElementById('field-color').value = item.color || '#38bdf8';
+      document.getElementById('color-label').innerText = (item.color || '#38bdf8').toUpperCase();
+      document.getElementById('field-notes').value = item.notes || '';
+
+      setFlowType(item.flow || 'despesa');
+      setStatus(!!item.discontinued);
+
+      // Flash highlight visual on the sticky panel to confirm click
+      const panel = document.getElementById('panel-container');
+      panel.classList.add('ring-2', 'ring-primary/80');
+      setTimeout(() => panel.classList.remove('ring-2', 'ring-primary/80'), 600);
+
+      // Ergonomics: on mobile viewports, scroll smoothly to the form
+      if (window.innerWidth < 1024) {
+        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function startNewIdentification() {
+      currentEditingState.isNew = true;
+      document.getElementById('panel-mode-label').innerText = 'Nova Identificação';
+      document.getElementById('panel-mode-label').className = 'text-[10px] uppercase font-bold tracking-wider text-secondary px-2 py-0.5 rounded bg-secondary/10 inline-block mb-0.5';
+      document.getElementById('panel-title').innerText = 'Novo Registro';
+      document.getElementById('btn-submit-label').innerText = 'Criar Identificação';
+
+      document.getElementById('field-name').value = '';
+      document.getElementById('field-parent-id').value = '';
+      document.getElementById('field-cost-type').value = 'variavel';
+      document.getElementById('field-icon-name').value = 'sell';
+      document.getElementById('preview-icon').innerHTML = `<span class="material-symbols-outlined text-[18px]">sell</span>`;
+      document.getElementById('field-color').value = '#38bdf8';
+      document.getElementById('color-label').innerText = '#38BDF8';
+      document.getElementById('field-notes').value = '';
+
+      setFlowType('despesa');
+      setStatus(false);
+      document.getElementById('field-name').focus();
+
+      if (window.innerWidth < 1024) {
+        document.getElementById('panel-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function addSubcategoryTo(parentId, parentName) {
+      startNewIdentification();
+      document.getElementById('panel-title').innerText = `Sub de ${parentName}`;
+      document.getElementById('field-parent-id').value = parentId.toString();
+      document.getElementById('field-name').focus();
+    }
+
+    function resetForm() {
+      startNewIdentification();
+    }
+
+    function handleSave() {
+      const name = document.getElementById('field-name').value.trim();
+      if (!name) {
+        alert('Por favor, informe o nome da identificação.');
+        return;
+      }
+      const submitBtn = document.getElementById('btn-submit-label');
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = 'Salvando no banco...';
+      setTimeout(() => {
+        submitBtn.innerText = 'Salvo com sucesso!';
+        setTimeout(() => {
+          submitBtn.innerText = originalText;
+        }, 1200);
+      }, 400);
+    }
+
+    // Interactive filter for Status (Ativas / Descontinuadas / Todas)
+    function filterStatusTab(type) {
+      const tabs = ['all', 'active', 'discontinued'];
+      tabs.forEach(tab => {
+        const el = document.getElementById(`tab-${tab}`);
+        if (tab === type) {
+          el.className = 'text-xs font-bold px-3 py-1.5 rounded-lg bg-surface-container-high text-primary shadow-sm transition';
+        } else {
+          el.className = 'text-xs font-semibold px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface transition';
+        }
+      });
+
+      const cards = document.querySelectorAll('.category-card-group');
+      cards.forEach(card => {
+        const cardStatus = card.getAttribute('data-status');
+        if (type === 'all') {
+          card.style.display = 'block';
+        } else if (type === 'active') {
+          card.style.display = (cardStatus === 'active') ? 'block' : 'none';
+        } else if (type === 'discontinued') {
+          card.style.display = (cardStatus === 'discontinued') ? 'block' : 'none';
+        }
+      });
+    }
+
+    function filterFlow(flow) {
+      const cards = document.querySelectorAll('.category-card-group');
+      cards.forEach(card => {
+        const cardFlow = card.getAttribute('data-flow');
+        if (flow === 'all' || cardFlow === flow) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Dynamic icon listener
+    document.getElementById('field-icon-name').addEventListener('input', (e) => {
+      const iconVal = e.target.value.trim() || 'sell';
+      document.getElementById('preview-icon').innerHTML = `<span class="material-symbols-outlined text-[18px]">${iconVal}</span>`;
+    });
+
+    // Dynamic color hex label
+    document.getElementById('field-color').addEventListener('input', (e) => {
+      document.getElementById('color-label').innerText = e.target.value.toUpperCase();
+    });
+  </script>
+
+
+</body></html>

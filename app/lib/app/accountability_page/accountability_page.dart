@@ -8,8 +8,8 @@ import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dar
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
-import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,27 +50,41 @@ class _AccountabilityPageContentState
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AccountabilityBloc, AccountabilityState>(
-      builder: (context, state) {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            final entries = _buildEntries(context, state);
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 24),
-                _buildSearchAndFilters(context, state),
-                const SizedBox(height: 20),
-                if (constraints.hasBoundedHeight)
-                  Expanded(child: entries)
-                else
-                  SizedBox(height: 560, child: entries),
-              ],
-            );
-          },
+    return BlocListener<AccountabilityBloc, AccountabilityState>(
+      listenWhen: (previous, current) =>
+          previous.entryCreationVersion != current.entryCreationVersion,
+      listener: (context, state) {
+        GetIt.I<FToast>().showToast(
+          child: const BaseToast(
+            text: 'Registro criado com sucesso',
+            type: BaseToastType.success,
+          ),
+          gravity: ToastGravity.BOTTOM_RIGHT,
+          toastDuration: const Duration(seconds: 2),
         );
       },
+      child: BlocBuilder<AccountabilityBloc, AccountabilityState>(
+        builder: (context, state) {
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final entries = _buildEntries(context, state);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildHeader(context),
+                  const SizedBox(height: 24),
+                  _buildSearchAndFilters(context, state),
+                  const SizedBox(height: 20),
+                  if (constraints.hasBoundedHeight)
+                    Expanded(child: entries)
+                  else
+                    SizedBox(height: 560, child: entries),
+                ],
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
@@ -305,7 +319,10 @@ class _AccountabilityPageContentState
     final importService = GetIt.I<AccountabilityImportService>();
     await importService.import(file);
     GetIt.I<FToast>().showToast(
-      child: const BaseToast(text: 'Arquivo importado'),
+      child: const BaseToast(
+        text: 'Arquivo importado',
+        type: BaseToastType.information,
+      ),
       gravity: ToastGravity.TOP,
       toastDuration: const Duration(seconds: 2),
     );
@@ -331,9 +348,12 @@ class _AccountabilityPageContentState
     if (entryRequest == null) return;
 
     if (entryRequest.identification == null) {
-      final entries = await GetIt.I<EmbeddedPredictService>()
-          .predict(entries: [entryRequest]);
-      entryRequest = entries[0];
+      final entries =
+          await GetIt.I<AccountabilityIdentificationPredictionService>()
+              .predict(entries: [entryRequest]);
+      if (entries.isNotEmpty) {
+        entryRequest = entries.first;
+      }
     }
 
     if (!context.mounted) return;

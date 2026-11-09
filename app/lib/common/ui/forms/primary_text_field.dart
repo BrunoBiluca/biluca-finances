@@ -9,6 +9,7 @@ class PrimaryTextField extends StatefulWidget {
   final Function()? onEditingComplete;
   final TextInputType? keyboardType;
   final bool validateEmpty;
+  final String? externalErrorText;
   final bool validateEmptyOnTapOutside;
   final List<TextInputFormatter> formatters;
   const PrimaryTextField({
@@ -20,6 +21,7 @@ class PrimaryTextField extends StatefulWidget {
     this.onChanged,
     this.onEditingComplete,
     this.validateEmpty = false,
+    this.externalErrorText,
     this.formatters = const [],
     bool? validateOnTapOutside,
   }) : validateEmptyOnTapOutside = validateOnTapOutside ?? validateEmpty;
@@ -50,6 +52,7 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
     );
 
     var errorColor = Theme.of(context).colorScheme.error;
+    final visibleErrorText = widget.externalErrorText ?? errorText;
     var errorInputBorder = UnderlineInputBorder(
       borderSide: BorderSide(
         color: errorColor,
@@ -60,14 +63,16 @@ class _PrimaryTextFieldState extends State<PrimaryTextField> {
       cursorColor: style?.color,
       decoration: InputDecoration(
         labelText: widget.labelText,
-        labelStyle: errorText == null ? style : style?.copyWith(color: errorColor),
+        labelStyle: visibleErrorText == null
+            ? style
+            : style?.copyWith(color: errorColor),
         border: inputBorder,
         focusedBorder: inputBorder,
         enabledBorder: inputBorder,
         focusedErrorBorder: errorInputBorder,
         errorBorder: errorInputBorder,
         errorStyle: theme.textTheme.bodySmall?.copyWith(color: errorColor),
-        errorText: errorText,
+        errorText: visibleErrorText,
       ),
       autofocus: widget.autofocus,
       controller: controller,

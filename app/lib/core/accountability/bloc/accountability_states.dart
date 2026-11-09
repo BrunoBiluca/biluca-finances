@@ -9,6 +9,7 @@ abstract class AccountabilityState extends Equatable {
   final String? identificationId;
   final bool hasMore;
   final bool isLoading;
+  final int entryCreationVersion;
 
   const AccountabilityState({
     required this.entries,
@@ -17,6 +18,7 @@ abstract class AccountabilityState extends Equatable {
     this.identificationId,
     this.hasMore = false,
     this.isLoading = false,
+    this.entryCreationVersion = 0,
   });
 
   @override
@@ -26,7 +28,8 @@ abstract class AccountabilityState extends Equatable {
         searchQuery,
         identificationId,
         hasMore,
-        isLoading
+        isLoading,
+        entryCreationVersion,
       ];
 }
 
@@ -43,5 +46,6 @@ class AccountabilityChanged extends AccountabilityState {
     super.identificationId,
     super.hasMore,
     super.isLoading,
+    super.entryCreationVersion,
   });
 }

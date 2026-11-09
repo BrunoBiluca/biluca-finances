@@ -282,7 +282,17 @@ void main() {
       ).called(4);
     },
     expect: () => [
-      for (var i = 0; i < 7; i++)
+      for (var i = 0; i < 2; i++)
+        isA<AccountabilityChanged>()
+            .having((state) => state.searchQuery, "searchQuery", "matching")
+            .having(
+                (state) => state.identificationId, "identificationId", "food"),
+      isA<AccountabilityChanged>()
+          .having((state) => state.searchQuery, "searchQuery", "matching")
+          .having((state) => state.identificationId, "identificationId", "food")
+          .having(
+              (state) => state.entryCreationVersion, "entryCreationVersion", 1),
+      for (var i = 0; i < 5; i++)
         isA<AccountabilityChanged>()
             .having((state) => state.searchQuery, "searchQuery", "matching")
             .having(
@@ -351,6 +361,32 @@ void main() {
           limit: any(named: "limit"), offset: any(named: "offset"))).called(1),
     },
     expect: () => [isA<AccountabilityChanged>()],
+  );
+
+  blocTest(
+    "does not report successful creation when persistence fails",
+    build: () {
+      registerFallbackValue(FakeAccountabilityEntryRequest());
+      final repo = MockAccountabilityRepo();
+      when(() => repo.add(any(that: isA<AccountabilityEntryRequest>())))
+          .thenThrow(Exception("Save failed"));
+      return AccountabilityBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(
+      AddAccountabilityEntry(
+        AccountabilityEntryRequest(
+          description: "Entry",
+          value: 10,
+          createdAt: DateTime.now(),
+        ),
+      ),
+    ),
+    expect: () => <AccountabilityState>[],
+    errors: () => [isA<Exception>()],
+    verify: (bloc) {
+      expect(bloc.state.entryCreationVersion, 0);
+      verify(() => bloc.repo.add(any())).called(1);
+    },
   );
 
   blocTest(
