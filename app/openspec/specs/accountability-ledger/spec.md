@@ -92,7 +92,7 @@ A tabela SHALL apresentar os valores monetários com a cor semântica de valor p
 
 ### Requirement: Apresentar identificações com seus atributos
 
-A tabela SHALL apresentar a identificação como um selo compacto com ícone, descrição e cor da identificação, e o seletor SHALL exibir esses mesmos atributos em cada opção.
+A tabela SHALL apresentar a identificação como um selo compacto com ícone, descrição e cor. O seletor SHALL exibir esses atributos em cada opção, oferecer apenas categorias ativas — mantendo a categoria descontinuada já vinculada — e servir somente para selecionar, sem criar, editar ou excluir categorias.
 
 #### Scenario: Apresentar identificação na linha
 - **WHEN** um lançamento possui identificação
@@ -105,6 +105,22 @@ A tabela SHALL apresentar a identificação como um selo compacto com ícone, de
 #### Scenario: Manter lançamento sem identificação
 - **WHEN** a pessoa escolhe a opção sem identificação
 - **THEN** a seleção continua disponível e o lançamento mantém o estado “Não identificado”
+
+#### Scenario: Não oferecer categoria descontinuada
+- **WHEN** a pessoa abre o seletor de identificações para escolher uma nova identificação
+- **THEN** as categorias descontinuadas não são oferecidas como opção
+
+#### Scenario: Manter categoria descontinuada já vinculada
+- **WHEN** o lançamento já utiliza uma categoria descontinuada
+- **THEN** o seletor apresenta essa categoria como a seleção atual e permite mantê-la ao salvar a edição
+
+#### Scenario: Selecionar uma identificação
+- **WHEN** a pessoa seleciona uma identificação no seletor
+- **THEN** a identificação é aplicada ao lançamento e o seletor fecha
+
+#### Scenario: Não oferecer gerenciamento de categorias
+- **WHEN** a pessoa abre o seletor de identificações
+- **THEN** o seletor não oferece ações de criar, editar ou excluir categorias, apenas a busca e a seleção de identificações existentes
 
 ### Requirement: Preservar operações existentes da página
 

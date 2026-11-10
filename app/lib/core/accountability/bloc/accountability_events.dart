@@ -56,19 +56,3 @@ class UpdateAccountabilityEntry extends AccountabilityEvent {
   @override
   List<Object?> get props => [updatedEntry];
 }
-
-class DeleteAccountabilityIdentification extends AccountabilityEvent {
-  final String identificationId;
-  const DeleteAccountabilityIdentification(this.identificationId);
-
-  @override
-  List<Object?> get props => [identificationId];
-}
-
-class UpdateAccountabilityIdentification extends AccountabilityEvent {
-  final AccountabilityIdentification updatedIdentification;
-  const UpdateAccountabilityIdentification(this.updatedIdentification);
-
-  @override
-  List<Object?> get props => [updatedIdentification];
-}

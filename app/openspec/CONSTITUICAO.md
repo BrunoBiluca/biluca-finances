@@ -12,6 +12,16 @@ Estes princípios são regras não negociáveis para a evolução do projeto. Em
 - Toda regra de negócio deve ter cobertura por teste unitário.
 - Ao criar ou alterar uma regra de negócio, criar ou atualizar os testes correspondentes na mesma mudança.
 
+### Testes existentes
+
+- Quando um teste já existente falha, o processo de mudança não deve alterar o teste nem a implementação sem que isso seja exigido explicitamente.
+- Sem essa exigência, os testes falhos devem ser apresentados à pessoa desenvolvedora ao final do processo, com a indicação dos testes afetados, para que ela decida como prosseguir.
+
+### Foco dos testes
+
+- Os testes criados devem se atentar o mínimo possível a elementos visuais, priorizando o comportamento observável do sistema.
+- Evitar acoplar os testes a cores, bordas, raios, espaçamentos ou estrutura interna de widgets, exceto quando o próprio requisito visual for o comportamento que precisa ser validado.
+
 ## 3. Dependências
 
 - Não adicionar dependências sem justificativa.

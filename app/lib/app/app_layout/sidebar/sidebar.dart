@@ -17,9 +17,14 @@ class Sidebar extends StatefulWidget {
 class _SidebarState extends State<Sidebar> {
   final List<SidebarPage> _pages = [
     SidebarPage("Home", "/", Icons.home, Colors.purpleAccent),
-    SidebarPage("Relatório do mês", "/monthly-report", Icons.dashboard, Colors.purpleAccent),
-    SidebarPage("Relatório anual", "/yearly-report", Icons.space_dashboard, Colors.blueAccent),
-    SidebarPage("Prestação de contas", "/accountability", Icons.table_view, Colors.lightGreen),
+    SidebarPage("Relatório do mês", "/monthly-report", Icons.dashboard,
+        Colors.purpleAccent),
+    SidebarPage("Relatório anual", "/yearly-report", Icons.space_dashboard,
+        Colors.blueAccent),
+    SidebarPage("Prestação de contas", "/accountability", Icons.table_view,
+        Colors.lightGreen),
+    SidebarPage("Identificações", "/identifications", Icons.category,
+        Colors.orangeAccent),
   ];
 
   int selectedPage = 0;
@@ -65,7 +70,8 @@ class _SidebarState extends State<Sidebar> {
                     ),
             ),
             Row(
-              mainAxisAlignment: isOpen ? MainAxisAlignment.end : MainAxisAlignment.center,
+              mainAxisAlignment:
+                  isOpen ? MainAxisAlignment.end : MainAxisAlignment.center,
               children: [
                 IconButton(
                   key: const Key('toggle-sidebar'),

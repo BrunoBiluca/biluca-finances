@@ -21,11 +21,18 @@ void main() {
                 ),
                 GoRoute(
                   path: '/accountability',
-                  builder: (context, state) => const Text('Página: Prestação de contas'),
+                  builder: (context, state) =>
+                      const Text('Página: Prestação de contas'),
                 ),
                 GoRoute(
                   path: '/monthly-report',
-                  builder: (context, state) => const Text('Página: Relatório do Mês'),
+                  builder: (context, state) =>
+                      const Text('Página: Relatório do Mês'),
+                ),
+                GoRoute(
+                  path: '/identifications',
+                  builder: (context, state) =>
+                      const Text('Página: Identificações'),
                 )
               ],
             ),
@@ -49,7 +56,8 @@ void main() {
       expect(find.byType(ClosedSidebar), findsNothing);
     });
 
-    testWidgets('Should collapse sidebar when arrow button is tapped', (tester) async {
+    testWidgets('Should collapse sidebar when arrow button is tapped',
+        (tester) async {
       await tester.pumpWidget(buildApp());
 
       await tapToggleSidebarBtn(tester);
@@ -58,7 +66,8 @@ void main() {
       expect(find.byType(ClosedSidebar), findsOneWidget);
     });
 
-    testWidgets('Should expand sidebar when arrow right button is tapped', (tester) async {
+    testWidgets('Should expand sidebar when arrow right button is tapped',
+        (tester) async {
       await tester.pumpWidget(buildApp());
 
       await tapToggleSidebarBtn(tester);
@@ -72,7 +81,9 @@ void main() {
       expect(find.byType(ClosedSidebar), findsNothing);
     });
 
-    testWidgets('Should maintain selected page state when collapsing and expanding', (tester) async {
+    testWidgets(
+        'Should maintain selected page state when collapsing and expanding',
+        (tester) async {
       await tester.pumpWidget(buildApp());
 
       await tester.tap(find.text('Relatório do mês'));
@@ -81,14 +92,17 @@ void main() {
       final selectedTile = tester.widget<ListTile>(find.byType(ListTile).at(1));
       expect(selectedTile.selected, true);
 
-      final selectedTileCollapsed = tester.widget<ListTile>(find.byType(ListTile).at(1));
+      final selectedTileCollapsed =
+          tester.widget<ListTile>(find.byType(ListTile).at(1));
       expect(selectedTileCollapsed.selected, true);
 
-      final selectedTileExpanded = tester.widget<ListTile>(find.byType(ListTile).at(1));
+      final selectedTileExpanded =
+          tester.widget<ListTile>(find.byType(ListTile).at(1));
       expect(selectedTileExpanded.selected, true);
     });
 
-    testWidgets('Should navigate to correct route when tapping menu items', (tester) async {
+    testWidgets('Should navigate to correct route when tapping menu items',
+        (tester) async {
       await tester.pumpWidget(buildApp());
 
       expect(find.text('Página: Home'), findsOneWidget);
@@ -99,7 +113,17 @@ void main() {
       expect(find.text('Página: Relatório do Mês'), findsOneWidget);
     });
 
-    testWidgets('Should not navigate when tapping the same selected page', (tester) async {
+    testWidgets('Should navigate to the identifications page', (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      await tester.tap(find.text('Identificações'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Página: Identificações'), findsOneWidget);
+    });
+
+    testWidgets('Should not navigate when tapping the same selected page',
+        (tester) async {
       await tester.pumpWidget(buildApp());
 
       expect(find.text('Página: Home'), findsOneWidget);

@@ -1,23 +1,22 @@
-import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
-import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/validators/identification_availability_rules.dart';
 import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:biluca_financas/common/ui/forms/primary_text_field.dart';
 import 'package:biluca_financas/common/ui/text_ballon.dart';
-import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AccountabilityIdentificationSelector extends StatefulWidget {
-  final AccountabilityBloc accountabilityBloc;
   final List<AccountabilityIdentification> identifications;
-  final Function? onEdit;
+  final String? currentIdentificationId;
+  final ValueChanged<AccountabilityIdentification> onSelected;
+
   const AccountabilityIdentificationSelector({
     super.key,
-    required this.accountabilityBloc,
     required this.identifications,
-    this.onEdit,
+    required this.onSelected,
+    this.currentIdentificationId,
   });
 
   @override
@@ -41,77 +40,84 @@ class _AccountabilityIdentificationSelectorState
   @override
   void dispose() {
     ServicesBinding.instance.keyboard.removeHandler(_onKey);
+    scrollController.dispose();
     super.dispose();
   }
 
   void updateSearch({String searchValue = ""}) {
     identificationDescription = searchValue;
+    selectedIdIndex = -1;
   }
 
   bool _onKey(KeyEvent event) {
+    final identifications = currentIdentifications;
+    if (identifications.isEmpty) return false;
+
     final key = event.logicalKey.keyLabel;
 
     if (event is KeyDownEvent && key == "Arrow Down") {
-      setState(() => selectedIdIndex =
-          (selectedIdIndex + 1) % currentIdentifications.length);
+      setState(() =>
+          selectedIdIndex = (selectedIdIndex + 1) % identifications.length);
     } else if (event is KeyDownEvent && key == "Arrow Up") {
-      setState(() => selectedIdIndex =
-          (selectedIdIndex - 1) % currentIdentifications.length);
+      setState(() =>
+          selectedIdIndex = (selectedIdIndex - 1) % identifications.length);
     } else if (event is KeyDownEvent && key == "Enter") {
-      if (selectedIdIndex == -1) {
+      if (selectedIdIndex < 0 || selectedIdIndex >= identifications.length) {
         return false;
       }
-      widget.onEdit?.call(currentIdentifications.elementAt(selectedIdIndex));
-      Navigator.pop(context);
+      _select(identifications.elementAt(selectedIdIndex));
+      return false;
     }
 
-    scrollController.animateTo(
-      60.0 * selectedIdIndex,
-      duration: const Duration(milliseconds: 100),
-      curve: Curves.easeInOut,
-    );
+    if (scrollController.hasClients && selectedIdIndex >= 0) {
+      scrollController.animateTo(
+        60.0 * selectedIdIndex,
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+      );
+    }
 
     return false;
   }
 
   List<AccountabilityIdentification> get currentIdentifications =>
-      widget.identifications
+      IdentificationAvailabilityRules.optionsForSelection(
+        identifications: widget.identifications,
+        currentIdentificationId: widget.currentIdentificationId,
+      )
           .where(
-            (i) =>
+            (identification) =>
                 identificationDescription.isEmpty ||
-                i.description
+                identification.description
                     .toLowerCase()
                     .contains(identificationDescription.toLowerCase()),
           )
-          .sorted((i1, i2) => i1.description.compareTo(i2.description));
+          .sorted(
+            (first, second) => first.description.compareTo(second.description),
+          );
+
+  void _select(AccountabilityIdentification identification) {
+    widget.onSelected(identification);
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return BaseDialog(
-      title: 'Editar identificação',
+      title: 'Selecionar identificação',
       content: SizedBox(
         height: 600,
         width: 600,
         child: Column(
           children: [
             PrimaryTextField(
-              labelText: currentIdentifications.isEmpty
-                  ? 'Criar identificação'
-                  : 'Buscar identificação',
+              labelText: 'Buscar identificação',
               autofocus: true,
               onChanged: (value) {
                 setState(() => updateSearch(searchValue: value));
               },
-              validateEmpty: true,
+              validateEmpty: false,
               validateOnTapOutside: false,
-              onEditingComplete: () {
-                if (identificationDescription.isEmpty) {
-                  return;
-                }
-                widget.onEdit?.call(AccountabilityIdentification(
-                    identificationDescription, Colors.black));
-                Navigator.pop(context);
-              },
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -126,8 +132,11 @@ class _AccountabilityIdentificationSelectorState
                     : Column(
                         children: [
                           ...currentIdentifications.mapIndexed(
-                            (index, id) =>
-                                renderIdentificationItem(context, index, id),
+                            (index, identification) => renderIdentificationItem(
+                              context,
+                              index,
+                              identification,
+                            ),
                           ),
                         ],
                       ),
@@ -140,7 +149,10 @@ class _AccountabilityIdentificationSelectorState
   }
 
   Padding renderIdentificationItem(
-      BuildContext context, int index, AccountabilityIdentification id) {
+    BuildContext context,
+    int index,
+    AccountabilityIdentification identification,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: DecoratedBox(
@@ -156,95 +168,17 @@ class _AccountabilityIdentificationSelectorState
         child: Padding(
           padding: const EdgeInsets.all(2.0),
           child: GestureDetector(
-            onTap: () {
-              widget.onEdit?.call(id);
-              Navigator.pop(context);
-            },
+            onTap: () => _select(identification),
             child: TextBallon(
-              key: Key('identification-item-${id.id}'),
-              icon: id.icon,
-              text: id.description,
-              color: id.color,
+              key: Key('identification-item-${identification.id}'),
+              icon: identification.icon,
+              text: identification.description,
+              color: identification.color,
               tintedStyle: true,
-              onEdit: ({Color? color, IconData? icon, String? text}) =>
-                  widget.accountabilityBloc.add(
-                UpdateAccountabilityIdentification(
-                  id
-                    ..color = color ?? id.color
-                    ..description = text ?? id.description
-                    ..icon = icon ?? id.icon,
-                ),
-              ),
-              onDelete: () => widget.accountabilityBloc.add(
-                DeleteAccountabilityIdentification(id.id),
-              ),
-              editOptions: [
-                TextBallonEditOption(
-                    icon: Icons.type_specimen,
-                    name: 'Tipo',
-                    onTap: () => showTypeEditDiaglog(id, context)),
-              ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void showTypeEditDiaglog(
-      AccountabilityIdentification id, BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          var selectedType = id.type;
-
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return BaseDialog(
-              title: 'Editar tipo de identificação',
-              content: SizedBox(
-                height: 600,
-                child: RadioGroup(
-                    groupValue: selectedType,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedType = value!;
-                      });
-                    },
-                    child: Column(
-                        children: AccountabilityIdentificationType.values
-                            .map((type) =>
-                                RadioListTile<AccountabilityIdentificationType>(
-                                  title: Text(type.label),
-                                  value: type,
-                                  activeColor: Colors.white,
-                                ))
-                            .toList())),
-              ),
-              actions: [
-                SizedBox(
-                  width: 200,
-                  child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancelar"),
-                  ),
-                ),
-                SizedBox(
-                  width: 200,
-                  child: TextButton(
-                    onPressed: () {
-                      widget.accountabilityBloc
-                          .add(UpdateAccountabilityIdentification(
-                        id..type = selectedType,
-                      ));
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Salvar"),
-                  ),
-                ),
-              ],
-            );
-          });
-        });
   }
 }

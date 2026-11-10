@@ -1,3 +1,4 @@
+import 'package:biluca_financas/app/accountability_identifications/accountability_identifications_page.dart';
 import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/home/home.dart';
@@ -24,6 +25,11 @@ GoRouter routes() {
           GoRoute(
             path: '/accountability',
             builder: (context, state) => const AccountabilityPage(),
+          ),
+          GoRoute(
+            path: '/identifications',
+            builder: (context, state) =>
+                const AccountabilityIdentificationsPage(),
           ),
           GoRoute(
             path: '/monthly-report',

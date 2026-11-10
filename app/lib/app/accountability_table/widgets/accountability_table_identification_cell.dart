@@ -1,6 +1,7 @@
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_label.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_row.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/validators/identification_availability_rules.dart';
 import 'package:flutter/material.dart';
 
 class AccountabilityTableIdentificationCell {
@@ -41,7 +42,13 @@ class AccountabilityTableIdentificationCell {
 
   Widget _identificationDropdown(BuildContext context) {
     final theme = Theme.of(context);
-    final identificationIds = identifications.map((item) => item.id).toSet();
+    final availableIdentifications =
+        IdentificationAvailabilityRules.optionsForSelection(
+      identifications: identifications,
+      currentIdentificationId: draftIdentificationId,
+    );
+    final identificationIds =
+        availableIdentifications.map((item) => item.id).toSet();
     final value = identificationIds.contains(draftIdentificationId)
         ? draftIdentificationId
         : null;
@@ -75,7 +82,7 @@ class AccountabilityTableIdentificationCell {
               isUnidentified: true,
             ),
           ),
-          ...identifications.map(
+          ...availableIdentifications.map(
             (item) => DropdownMenuItem<String?>(
               value: item.id,
               child: _identificationOption(

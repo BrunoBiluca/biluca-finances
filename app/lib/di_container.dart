@@ -12,6 +12,7 @@ import 'package:biluca_financas/common/logging/file_listener.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
 
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
+import 'package:biluca_financas/core/accountability/bloc/identification_categories_bloc.dart';
 import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
@@ -52,6 +53,9 @@ Future<void> setup() async {
   getIt.registerFactory<AccountabilityBloc>(
     () => AccountabilityBloc(repo: getIt<AccountabilityRepo>()),
   );
+  getIt.registerFactory<IdentificationCategoriesBloc>(
+    () => IdentificationCategoriesBloc(repo: getIt<AccountabilityRepo>()),
+  );
   getIt.registerFactory<AccountabilityIdentificationPredictionService>(
     () => EmbeddedPredictService(Client(), getIt<AccountabilityRepo>()),
   );
@@ -70,7 +74,8 @@ Future<void> setup() async {
 
   getIt.registerCachedFactory<ThemeManager>(setupThemes);
 
-  getIt.registerSingleton<EmbeddedPredictServer>(EmbeddedPredictServer()..init());
+  getIt.registerSingleton<EmbeddedPredictServer>(
+      EmbeddedPredictServer()..init());
 
   getIt.registerFactory<AccountabilityStatsService>(
     () => SqliteAccountabilityStatsService(
@@ -78,7 +83,8 @@ Future<void> setup() async {
     ),
   );
 
-  getIt.registerFactoryParam<AccountabilityYearlyReportService, DateTime, DateTime>(
+  getIt.registerFactoryParam<AccountabilityYearlyReportService, DateTime,
+      DateTime>(
     (start, end) => SqliteYearlyReportService(
       db: getIt<Database>(),
       start: start,
@@ -92,6 +98,7 @@ extension AccountabilityYearlyReportServiceFactory on GetIt {
     required DateTime start,
     required DateTime end,
   }) {
-    return this.get<AccountabilityYearlyReportService>(param1: start, param2: end);
+    return this
+        .get<AccountabilityYearlyReportService>(param1: start, param2: end);
   }
 }

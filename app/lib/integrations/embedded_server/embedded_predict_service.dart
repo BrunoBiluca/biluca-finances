@@ -5,6 +5,8 @@ import 'package:biluca_financas/core/accountability/models/accountability_entry_
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
+import 'package:collection/collection.dart';
+import 'package:biluca_financas/core/accountability/validators/identification_availability_rules.dart';
 import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
 import 'package:get_it/get_it.dart';
@@ -12,12 +14,14 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 
-class EmbeddedPredictService implements AccountabilityIdentificationPredictionService {
+class EmbeddedPredictService
+    implements AccountabilityIdentificationPredictionService {
   final Client http;
   final AccountabilityRepo repo;
   final Logger log = GetIt.I<LoggerManager>().instance("PredictService");
   EmbeddedPredictService(this.http, this.repo);
 
+  @override
   Future<List<AccountabilityEntryRequest>> predict({
     List<AccountabilityEntryRequest>? entries,
     File? importedFile,
@@ -45,8 +49,10 @@ class EmbeddedPredictService implements AccountabilityIdentificationPredictionSe
 
   Future<dynamic> _postFile(File importedFile) async {
     var server = GetIt.I<EmbeddedPredictServer>();
-    MultipartRequest request = MultipartRequest('POST', Uri.parse('${server.host}/predict'));
-    request.files.add(await MultipartFile.fromPath('extrato', importedFile.path));
+    MultipartRequest request =
+        MultipartRequest('POST', Uri.parse('${server.host}/predict'));
+    request.files
+        .add(await MultipartFile.fromPath('extrato', importedFile.path));
     var result = await request.send();
 
     if (result.statusCode != 200) {
@@ -63,7 +69,10 @@ class EmbeddedPredictService implements AccountabilityIdentificationPredictionSe
       body: jsonEncode(
         {
           "cabeçalhos": ["Descrição", "Valor", "Criado em"],
-          "registros": entries.map((e) => [e.description, e.value, e.createdAt.toIso8601String()]).toList(),
+          "registros": entries
+              .map((e) =>
+                  [e.description, e.value, e.createdAt.toIso8601String()])
+              .toList(),
         },
       ),
     );
@@ -83,7 +92,10 @@ class EmbeddedPredictService implements AccountabilityIdentificationPredictionSe
     var createdAtIndex = headers.indexOf("Criado em");
     var identificationIndex = headers.indexOf("Identificação");
 
-    var identifications = await repo.getIdentifications();
+    final identifications =
+        IdentificationAvailabilityRules.availableForPrediction(
+      await repo.getIdentifications(),
+    );
 
     return categorizedEntries
         .map(
@@ -91,9 +103,13 @@ class EmbeddedPredictService implements AccountabilityIdentificationPredictionSe
             createdAt: _parseDate(e[createdAtIndex]),
             description: e[descriptionIndex],
             value: cast(e[valueIndex]),
-            identification: identifications.firstWhere(
-              (i) => i.description.toLowerCase() == e[identificationIndex].toLowerCase(),
-            ),
+            identification: identifications
+                .where(
+                  (i) =>
+                      i.description.toLowerCase() ==
+                      e[identificationIndex].toString().toLowerCase(),
+                )
+                .firstOrNull,
           ),
         )
         .toList();

@@ -27,8 +27,7 @@ import '../../_mocks/fake_file_picker.dart';
 import '../../_mocks/fake_predict_server.dart';
 import '../../_mocks/mock_accountability_repo.dart';
 
-class FakeAccountabilityEntryRequest extends Fake
-    implements AccountabilityEntryRequest {}
+class FakeAccountabilityEntryRequest extends Fake implements AccountabilityEntryRequest {}
 
 void main() {
   final getIt = GetIt.instance;
@@ -57,8 +56,7 @@ void main() {
         offset: any(named: 'offset'),
       ),
     ).thenAnswer((_) async => searchResults);
-    when(() => repo.getIdentifications())
-        .thenAnswer((_) async => identifications);
+    when(() => repo.getIdentifications()).thenAnswer((_) async => identifications);
     getIt.registerSingleton<AccountabilityBloc>(AccountabilityBloc(repo: repo));
   });
 
@@ -66,8 +64,7 @@ void main() {
     await getIt.reset();
   });
 
-  testWidgets('renders the page title, actions, search and category filters',
-      (tester) async {
+  testWidgets('renders the page title, actions, search and category filters', (tester) async {
     final bloc = getIt<AccountabilityBloc>();
     await _pumpPage(tester);
 
@@ -79,8 +76,7 @@ void main() {
     expect(find.byKey(const Key('accountability-search')), findsOneWidget);
     expect(find.text('Todos'), findsOneWidget);
     final filters = find.byKey(const Key('accountability-category-filters'));
-    expect(find.descendant(of: filters, matching: find.byType(Scrollable)),
-        findsNothing);
+    expect(find.descendant(of: filters, matching: find.byType(Scrollable)), findsNothing);
     expect(find.text('Almoço'), findsOneWidget);
     expect(find.text('Supermercado'), findsOneWidget);
     expect(find.byKey(const Key('accountability-empty-state')), findsOneWidget);
@@ -155,8 +151,7 @@ void main() {
       ),
     );
     expect(
-      tableScrollables
-          .any((scrollable) => scrollable.axisDirection == AxisDirection.right),
+      tableScrollables.any((scrollable) => scrollable.axisDirection == AxisDirection.right),
       isTrue,
     );
     expect(find.byKey(const Key('accountability-search')), findsOneWidget);
@@ -232,8 +227,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('preserves alternating row backgrounds while editing',
-      (tester) async {
+  testWidgets('preserves alternating row backgrounds while editing', (tester) async {
     final entries = [_entry(121), _entry(122)];
     tester.view
       ..physicalSize = const Size(1200, 700)
@@ -267,11 +261,7 @@ void main() {
     await tester.tap(find.byKey(const Key('edit-accountability-0')));
     await tester.pump();
 
-    final editedRows = tester
-        .widget<DataTable2>(find.byType(DataTable2))
-        .rows
-        .cast<DataRow2>()
-        .toList();
+    final editedRows = tester.widget<DataTable2>(find.byType(DataTable2)).rows.cast<DataRow2>().toList();
     expect(editedRows[0].color!.resolve({}), evenRowColor);
     expect(editedRows[1].color!.resolve({}), oddRowColor);
     expect(editedRows[0].color!.resolve({}), Colors.transparent);
@@ -293,8 +283,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('colors displayed and edited values by their sign',
-      (tester) async {
+  testWidgets('colors displayed and edited values by their sign', (tester) async {
     final entries = [
       _entry(101)..value = 12.5,
       _entry(102)..value = -12.5,
@@ -363,9 +352,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets(
-      'uses the row input background for the identification field while editing',
-      (tester) async {
+  testWidgets('uses the row input background for the identification field while editing', (tester) async {
     final entries = [_entry(131), _entry(132)];
     tester.view
       ..physicalSize = const Size(1200, 700)
@@ -405,8 +392,7 @@ void main() {
     expect(getInputFieldBackgroundColor(1), const Color(0xFF1C1F29));
   });
 
-  testWidgets('shows identification details and keeps the none option',
-      (tester) async {
+  testWidgets('shows identification details and keeps the none option', (tester) async {
     identifications[0].icon = Icons.restaurant;
     identifications[1].icon = Icons.shopping_cart;
     final entry = _entry(104)
@@ -442,16 +428,10 @@ void main() {
     await tester.tap(find.byKey(const Key('edit-identification-0')));
     await tester.pumpAndSettle();
 
-    final option =
-        find.byKey(Key('identification-option-${identifications[0].id}')).last;
+    final option = find.byKey(Key('identification-option-${identifications[0].id}')).last;
     expect(
       find.descendant(of: option, matching: find.text('Almoço')),
       findsOneWidget,
-    );
-    final optionContainer = tester.widget<Container>(option);
-    expect(
-      (optionContainer.decoration! as BoxDecoration).color,
-      identifications[0].color.withValues(alpha: 0.16),
     );
     final optionIcon = tester.widget<Icon>(
       find.descendant(of: option, matching: find.byIcon(Icons.restaurant)),
@@ -470,8 +450,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('shows all identification filters without horizontal scrolling',
-      (tester) async {
+  testWidgets('shows all identification filters without horizontal scrolling', (tester) async {
     identifications = List<AccountabilityIdentification>.generate(
       12,
       (index) => AccountabilityIdentification('Categoria $index', Colors.blue),
@@ -479,15 +458,13 @@ void main() {
     await _pumpPage(tester);
 
     final filters = find.byKey(const Key('accountability-category-filters'));
-    expect(find.descendant(of: filters, matching: find.byType(Scrollable)),
-        findsNothing);
+    expect(find.descendant(of: filters, matching: find.byType(Scrollable)), findsNothing);
     for (var index = 0; index < identifications.length; index++) {
       expect(find.text('Categoria $index'), findsOneWidget);
     }
   });
 
-  testWidgets('renders inside the app layout vertical scroll view',
-      (tester) async {
+  testWidgets('renders inside the app layout vertical scroll view', (tester) async {
     final entry = _entry(77)
       ..identification = identifications.first
       ..identificationId = identifications.first.id;
@@ -544,8 +521,7 @@ void main() {
     await _selectIdentification(tester, 0);
     expect(tester.takeException(), isNull);
 
-    await tester
-        .ensureVisible(find.byKey(const Key('save-accountability-edit-0')));
+    await tester.ensureVisible(find.byKey(const Key('save-accountability-edit-0')));
     await tester.tap(find.byKey(const Key('save-accountability-edit-0')));
     await _flushAsync(tester);
 
@@ -555,14 +531,12 @@ void main() {
     expect(entry.identificationId, identifications[1].id);
   });
 
-  testWidgets('combines text search with a category and can clear the category',
-      (tester) async {
+  testWidgets('combines text search with a category and can clear the category', (tester) async {
     final bloc = getIt<AccountabilityBloc>();
     await _pumpPage(tester);
     final lunch = bloc.state.identifications.first;
 
-    await tester.enterText(
-        find.byKey(const Key('accountability-search')), 'mercado');
+    await tester.enterText(find.byKey(const Key('accountability-search')), 'mercado');
     await _flushAsync(tester);
     expect(bloc.state.searchQuery, 'mercado');
 
@@ -585,22 +559,18 @@ void main() {
     ).called(1);
   });
 
-  testWidgets('shows an empty state when filters have no matching entries',
-      (tester) async {
+  testWidgets('shows an empty state when filters have no matching entries', (tester) async {
     final bloc = getIt<AccountabilityBloc>();
     await _pumpPage(tester);
 
-    await tester.enterText(
-        find.byKey(const Key('accountability-search')), 'inexistente');
+    await tester.enterText(find.byKey(const Key('accountability-search')), 'inexistente');
     await _flushAsync(tester);
 
     expect(bloc.state.entries, isEmpty);
-    expect(
-        find.text('Nenhum lançamento corresponde aos filtros'), findsOneWidget);
+    expect(find.text('Nenhum lançamento corresponde aos filtros'), findsOneWidget);
   });
 
-  testWidgets('loads the next filtered page without replacing current entries',
-      (tester) async {
+  testWidgets('loads the next filtered page without replacing current entries', (tester) async {
     searchResults = List<AccountabilityEntry>.generate(
       AccountabilityBloc.pageSize + 1,
       (index) => _entry(index),
@@ -618,8 +588,7 @@ void main() {
       findsOneWidget,
     );
     final tableRect = tester.getRect(find.byType(AccountabilityTable));
-    final paginationRect =
-        tester.getRect(find.byKey(const Key('load-more-accountability')));
+    final paginationRect = tester.getRect(find.byKey(const Key('load-more-accountability')));
     expect(paginationRect.center.dy, greaterThan(tableRect.center.dy));
     expect(paginationRect.bottom, lessThanOrEqualTo(tableRect.bottom));
 
@@ -666,8 +635,7 @@ void main() {
     verifyNever(() => repo.update(entry));
   });
 
-  testWidgets('opens inline edit after hovering the edit action',
-      (tester) async {
+  testWidgets('opens inline edit after hovering the edit action', (tester) async {
     final entry = _entry(46);
     searchResults = [entry];
     await _pumpPage(tester);
@@ -686,8 +654,7 @@ void main() {
     expect(find.byKey(const Key('edit-description-0')), findsOneWidget);
   });
 
-  testWidgets('keeps the editor open with an error for an invalid amount',
-      (tester) async {
+  testWidgets('keeps the editor open with an error for an invalid amount', (tester) async {
     final entry = _entry(45);
     searchResults = [entry];
     await _pumpPage(tester);
@@ -704,8 +671,7 @@ void main() {
     verifyNever(() => repo.update(entry));
   });
 
-  testWidgets('saves inline edits to description, value and identification',
-      (tester) async {
+  testWidgets('saves inline edits to description, value and identification', (tester) async {
     final entry = _entry(43)
       ..identification = identifications.first
       ..identificationId = identifications.first.id;
@@ -731,8 +697,7 @@ void main() {
     verify(() => repo.update(entry)).called(1);
   });
 
-  testWidgets('edits a pending import entry without a database id',
-      (tester) async {
+  testWidgets('edits a pending import entry without a database id', (tester) async {
     final entry = AccountabilityEntryRequest(
       description: 'Pending import',
       value: 18.5,
@@ -785,18 +750,15 @@ void main() {
     registerFallbackValue(FakeAccountabilityEntryRequest());
     registerFallbackValue(<AccountabilityEntryRequest>[]);
     final predictor = MockPredictService();
-    getIt.registerSingleton<AccountabilityIdentificationPredictionService>(
-        predictor);
+    getIt.registerSingleton<AccountabilityIdentificationPredictionService>(predictor);
     when(() => predictor.predict(entries: any(named: 'entries'))).thenAnswer(
-      (invocation) async => invocation.namedArguments[#entries]
-          as List<AccountabilityEntryRequest>,
+      (invocation) async => invocation.namedArguments[#entries] as List<AccountabilityEntryRequest>,
     );
     late AccountabilityEntryRequest addedRequest;
     when(
       () => repo.add(any(that: isA<AccountabilityEntryRequest>())),
     ).thenAnswer((invocation) async {
-      addedRequest =
-          invocation.positionalArguments.single as AccountabilityEntryRequest;
+      addedRequest = invocation.positionalArguments.single as AccountabilityEntryRequest;
       return _entry(1000);
     });
     await _pumpPage(tester);
@@ -815,8 +777,7 @@ void main() {
     verify(() => predictor.predict(entries: any(named: 'entries'))).called(1);
     expect(addedRequest.description, 'New entry');
     expect(addedRequest.value, 12.34);
-    verify(() => repo.add(any(that: isA<AccountabilityEntryRequest>())))
-        .called(1);
+    verify(() => repo.add(any(that: isA<AccountabilityEntryRequest>()))).called(1);
     final toastFinder = find.byType(BaseToast);
     expect(find.text('Registro criado com sucesso'), findsOneWidget);
     final position = tester.widget<Positioned>(
@@ -834,10 +795,7 @@ void main() {
 
     final toastContext = tester.element(toastFinder);
     final theme = Theme.of(toastContext);
-    final successColor = getIt<ThemeManager>()
-        .getCurrentTheme(toastContext)
-        .colors
-        .positiveYield;
+    final successColor = getIt<ThemeManager>().getCurrentTheme(toastContext).colors.positiveYield;
     final toastContainer = tester.widget<Container>(
       find.descendant(
         of: toastFinder,
@@ -863,21 +821,17 @@ void main() {
     await tester.pump(const Duration(seconds: 3));
   });
 
-  testWidgets('creates an entry when prediction returns no entries',
-      (tester) async {
+  testWidgets('creates an entry when prediction returns no entries', (tester) async {
     registerFallbackValue(FakeAccountabilityEntryRequest());
     registerFallbackValue(<AccountabilityEntryRequest>[]);
     final predictor = MockPredictService();
-    getIt.registerSingleton<AccountabilityIdentificationPredictionService>(
-        predictor);
-    when(() => predictor.predict(entries: any(named: 'entries')))
-        .thenAnswer((_) async => []);
+    getIt.registerSingleton<AccountabilityIdentificationPredictionService>(predictor);
+    when(() => predictor.predict(entries: any(named: 'entries'))).thenAnswer((_) async => []);
     late AccountabilityEntryRequest addedRequest;
     when(
       () => repo.add(any(that: isA<AccountabilityEntryRequest>())),
     ).thenAnswer((invocation) async {
-      addedRequest =
-          invocation.positionalArguments.single as AccountabilityEntryRequest;
+      addedRequest = invocation.positionalArguments.single as AccountabilityEntryRequest;
       return _entry(1001);
     });
     await _pumpPage(tester);
@@ -895,13 +849,11 @@ void main() {
 
     expect(addedRequest.description, 'Uncategorized entry');
     expect(addedRequest.value, 5);
-    verify(() => repo.add(any(that: isA<AccountabilityEntryRequest>())))
-        .called(1);
+    verify(() => repo.add(any(that: isA<AccountabilityEntryRequest>()))).called(1);
     await tester.pump(const Duration(seconds: 3));
   });
 
-  testWidgets('deletes an entry through the existing row action',
-      (tester) async {
+  testWidgets('deletes an entry through the existing row action', (tester) async {
     final entry = _entry(44);
     searchResults = [entry];
     when(() => repo.delete(entry)).thenAnswer((_) async {});
@@ -913,9 +865,7 @@ void main() {
     verify(() => repo.delete(entry)).called(1);
   });
 
-  testWidgets(
-      'opens the redesigned import verification with the selected file name',
-      (tester) async {
+  testWidgets('opens the redesigned import verification with the selected file name', (tester) async {
     final importService = FakeAccountabilityImportService()
       ..entries.add(AccountabilityEntryRequest(
         description: 'Nova importada',
@@ -924,8 +874,7 @@ void main() {
         identification: identifications.first,
       ));
     getIt.registerSingleton<AccountabilityImportService>(importService);
-    when(() => repo.getEntries(limit: any(named: 'limit')))
-        .thenAnswer((_) async => <AccountabilityEntry>[]);
+    when(() => repo.getEntries(limit: any(named: 'limit'))).thenAnswer((_) async => <AccountabilityEntry>[]);
     FilePicker.platform = FakeFilePicker(
       result: FilePickerResult([
         PlatformFile(
@@ -954,8 +903,7 @@ void main() {
     await tester.pump(const Duration(seconds: 3));
   });
 
-  testWidgets('uses the requested table header and alternating row colors',
-      (tester) async {
+  testWidgets('uses the requested table header and alternating row colors', (tester) async {
     searchResults = [_entry(47), _entry(48)];
     await _pumpPage(tester);
 
@@ -974,8 +922,46 @@ void main() {
     searchResults = [_entry(49)];
     await _pumpPage(tester, height: 900);
 
-    expect(tester.getSize(find.byType(AccountabilityTable)).height,
-        greaterThan(650));
+    expect(tester.getSize(find.byType(AccountabilityTable)).height, greaterThan(650));
+  });
+
+  testWidgets('keeps discontinued identifications available as filters', (tester) async {
+    identifications = [
+      AccountabilityIdentification('Ativa', Colors.green),
+      AccountabilityIdentification('Descontinuada', Colors.orange, discontinued: true),
+    ];
+    await _pumpPage(tester);
+
+    expect(find.widgetWithText(FilterChip, 'Ativa'), findsOneWidget);
+    expect(find.widgetWithText(FilterChip, 'Descontinuada'), findsOneWidget);
+  });
+
+  testWidgets('shows entries without identification as unidentified', (tester) async {
+    searchResults = [_entry(50)];
+    await _pumpPage(tester);
+
+    expect(find.byKey(const Key('no-identification')), findsOneWidget);
+  });
+
+  testWidgets('does not offer discontinued categories in inline editing', (tester) async {
+    final active = AccountabilityIdentification('Ativa', Colors.green);
+    final current = AccountabilityIdentification('Atual', Colors.blue, discontinued: true);
+    final other = AccountabilityIdentification('Outra', Colors.orange, discontinued: true);
+    identifications = [active, current, other];
+    final entry = _entry(51)
+      ..identification = current
+      ..identificationId = current.id;
+    searchResults = [entry];
+    await _pumpPage(tester);
+
+    await tester.tap(find.byKey(const Key('edit-accountability-0')));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('edit-identification-0')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(Key('identification-option-${active.id}')).last, findsOneWidget);
+    expect(find.byKey(Key('identification-option-${current.id}')).last, findsOneWidget);
+    expect(find.byKey(Key('identification-option-${other.id}')), findsNothing);
   });
 }
 

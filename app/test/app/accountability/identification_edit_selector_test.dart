@@ -1,69 +1,49 @@
-import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
-import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_selector.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/common/ui/text_ballon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-
-import '../../_mocks/mock_accountability_repo.dart';
 
 void main() {
-  testWidgets("deve exibir mensagem quando não houver identificações",
-      (tester) async {
-    var repo = MockAccountabilityRepo();
-    var bloc = AccountabilityBloc(repo: repo);
-
+  Future<void> pumpSelector(
+    WidgetTester tester, {
+    required List<AccountabilityIdentification> identifications,
+    String? currentIdentificationId,
+    ValueChanged<AccountabilityIdentification>? onSelected,
+  }) async {
     await tester.pumpWidget(
       MaterialApp(
-        title: 'Flutter Demo',
         home: Scaffold(
           body: AccountabilityIdentificationSelector(
-            accountabilityBloc: bloc,
-            identifications: bloc.state.identifications,
+            identifications: identifications,
+            currentIdentificationId: currentIdentificationId,
+            onSelected: onSelected ?? (_) {},
           ),
         ),
       ),
     );
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets("shows an empty message when there are no identifications",
+      (tester) async {
+    await pumpSelector(tester, identifications: []);
 
     expect(find.byKey(const Key("no-identification-found")), findsOneWidget);
   });
 
-  testWidgets("deve exibir identificações quando essas existem",
+  testWidgets("shows identifications with their visual attributes",
       (tester) async {
-    var repo = MockAccountabilityRepo();
     final identifications = [
       AccountabilityIdentification("identificação 1", Colors.green)
         ..icon = Icons.restaurant,
       AccountabilityIdentification("identificação 2", Colors.blue),
-      AccountabilityIdentification("identificação 3", Colors.orange),
     ];
-    when(() => repo.getEntries(limit: any(named: "limit")))
-        .thenAnswer((_) async => []);
-    when(() => repo.getIdentifications())
-        .thenAnswer((_) async => identifications);
 
-    var accountabilityBloc = AccountabilityBloc(repo: repo)
-      ..add(FetchAccountabilityEntries());
-
-    await tester.pump(const Duration(microseconds: 100));
-
-    await tester.pumpWidget(
-      MaterialApp(
-        title: 'Flutter Demo',
-        home: Scaffold(
-          body: AccountabilityIdentificationSelector(
-            accountabilityBloc: accountabilityBloc,
-            identifications: accountabilityBloc.state.identifications,
-          ),
-        ),
-      ),
-    );
+    await pumpSelector(tester, identifications: identifications);
 
     expect(find.text("identificação 1"), findsOneWidget);
     expect(find.text("identificação 2"), findsOneWidget);
-    expect(find.text("identificação 3"), findsOneWidget);
 
     final firstItem =
         find.byKey(Key('identification-item-${identifications[0].id}'));
@@ -80,5 +60,82 @@ void main() {
       find.descendant(of: firstItem, matching: find.byIcon(Icons.restaurant)),
     );
     expect(icon.color, identifications[0].color);
+  });
+
+  testWidgets("does not offer creation, edition or deletion actions",
+      (tester) async {
+    final active = AccountabilityIdentification("Ativa", Colors.green);
+    final discontinuedCurrent = AccountabilityIdentification(
+      "Descontinuada atual",
+      Colors.grey,
+      discontinued: true,
+    );
+    final discontinuedOther = AccountabilityIdentification(
+      "Descontinuada outra",
+      Colors.grey,
+      discontinued: true,
+    );
+
+    await pumpSelector(
+      tester,
+      identifications: [active, discontinuedCurrent, discontinuedOther],
+      currentIdentificationId: discontinuedCurrent.id,
+    );
+
+    expect(find.text("Ativa"), findsOneWidget);
+    expect(find.text("Descontinuada atual"), findsOneWidget);
+    expect(find.text("Descontinuada outra"), findsNothing);
+    expect(find.text("Criar identificação"), findsNothing);
+    expect(find.byType(IconButton), findsNothing);
+    expect(find.byIcon(Icons.edit), findsNothing);
+    expect(find.byIcon(Icons.delete), findsNothing);
+  });
+
+  testWidgets("filters identifications by the search text", (tester) async {
+    final identifications = [
+      AccountabilityIdentification("Alimentação", Colors.green),
+      AccountabilityIdentification("Transporte", Colors.blue),
+    ];
+
+    await pumpSelector(tester, identifications: identifications);
+    await tester.enterText(find.byType(TextField), "trans");
+    await tester.pumpAndSettle();
+
+    expect(find.text("Transporte"), findsOneWidget);
+    expect(find.text("Alimentação"), findsNothing);
+  });
+
+  testWidgets("selects an identification and closes the dialog",
+      (tester) async {
+    AccountabilityIdentification? selected;
+    final identification =
+        AccountabilityIdentification("Alimentação", Colors.green);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (context) => AccountabilityIdentificationSelector(
+                  identifications: [identification],
+                  onSelected: (value) => selected = value,
+                ),
+              ),
+              child: const Text("Abrir seletor"),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text("Abrir seletor"));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Alimentação"));
+    await tester.pumpAndSettle();
+
+    expect(selected?.id, identification.id);
+    expect(find.byType(AlertDialog), findsNothing);
   });
 }

@@ -192,14 +192,16 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
     var identificationMap = identification.toMap();
 
     await db.rawInsert("""
-    INSERT INTO accountability_identifications (id, description, color, icon, type, insertedAt, updatedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?);
+    INSERT INTO accountability_identifications (id, description, color, icon, type, parent_id, discontinued, insertedAt, updatedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
     """, [
       identificationMap["id"],
       identificationMap["description"],
       identificationMap["color"],
       json.encode(identificationMap["icon"]),
       identificationMap["type"],
+      identificationMap["parent_id"],
+      identificationMap["discontinued"],
       DateTime.now().toIso8601String(),
       DateTime.now().toIso8601String()
     ]);
@@ -222,8 +224,35 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<void> deleteIdentification(String id) async {
-    await db.delete("accountability_identifications",
-        where: "id = ?", whereArgs: [id]);
+    await db.transaction((txn) async {
+      final updatedAt = DateTime.now().toIso8601String();
+
+      await txn.update(
+        tableName,
+        {
+          "identification_id": null,
+          "updatedAt": updatedAt,
+        },
+        where: "identification_id = ?",
+        whereArgs: [id],
+      );
+
+      await txn.update(
+        "accountability_identifications",
+        {
+          "parent_id": null,
+          "updatedAt": updatedAt,
+        },
+        where: "parent_id = ?",
+        whereArgs: [id],
+      );
+
+      await txn.delete(
+        "accountability_identifications",
+        where: "id = ?",
+        whereArgs: [id],
+      );
+    });
   }
 
   @override

@@ -73,16 +73,6 @@ class AccountabilityBloc
       await repo.update(event.updatedEntry);
       await _refreshEntries(emit);
     });
-
-    on<UpdateAccountabilityIdentification>((event, emit) async {
-      await repo.updateIdentification(event.updatedIdentification);
-      await _refreshEntries(emit);
-    });
-
-    on<DeleteAccountabilityIdentification>((event, emit) async {
-      await repo.deleteIdentification(event.identificationId);
-      await _refreshEntries(emit);
-    });
   }
 
   Future<void> _refreshEntries(Emitter<AccountabilityState> emit) {

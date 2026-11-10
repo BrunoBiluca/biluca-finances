@@ -149,6 +149,12 @@ class DBProvider {
     UPDATE accountability_identifications
     SET type = 'expense'
     where type is null
+    ''',
+    '''
+    ALTER TABLE accountability_identifications ADD COLUMN parent_id TEXT
+    ''',
+    '''
+    ALTER TABLE accountability_identifications ADD COLUMN discontinued INTEGER NOT NULL DEFAULT 0
     '''
   ];
 }

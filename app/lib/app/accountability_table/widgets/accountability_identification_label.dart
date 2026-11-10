@@ -34,9 +34,9 @@ class _AccountabilityIdentificationLabelState
             bloc: bloc,
             builder: (context, state) {
               return AccountabilityIdentificationSelector(
-                accountabilityBloc: bloc,
                 identifications: state.identifications,
-                onEdit: widget.onEdit,
+                currentIdentificationId: identification?.id,
+                onSelected: (selected) => widget.onEdit(selected),
               );
             },
           ),

@@ -362,6 +362,49 @@ void main() {
     expect(find.text('Duplicado editado'), findsOneWidget);
   });
 
+  testWidgets(
+      'não oferece gerenciamento e ignora categorias descontinuadas no seletor',
+      (tester) async {
+    final active = AccountabilityIdentification('Ativa', Colors.green);
+    final current =
+        AccountabilityIdentification('Atual', Colors.blue, discontinued: true);
+    final other = AccountabilityIdentification('Outra', Colors.orange,
+        discontinued: true);
+    identifications = [active, current, other];
+    final service = FakeAccountabilityImportService()
+      ..entries.add(_request('Mercado', 10, identification: current));
+    await _pumpModal(tester, service: service);
+
+    await tester
+        .tap(find.byKey(const Key('accountability-identification-label')));
+    await tester.pumpAndSettle();
+
+    final dialog = find.byType(AlertDialog).last;
+    expect(
+      find.descendant(
+        of: dialog,
+        matching: find.text('Selecionar identificação'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Ativa')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Atual')),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.text('Outra')),
+      findsNothing,
+    );
+    expect(
+      find.descendant(of: dialog, matching: find.byType(IconButton)),
+      findsNothing,
+    );
+  });
+
   testWidgets('não gera overflow em viewport estreita', (tester) async {
     final service = FakeAccountabilityImportService()
       ..entries.add(_request('Entrada', 10))

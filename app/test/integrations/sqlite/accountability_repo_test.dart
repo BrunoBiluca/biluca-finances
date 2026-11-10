@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_repo.dart';
 import 'package:flutter/material.dart';
@@ -310,8 +312,8 @@ void main() {
     expect(newEntry.identification, isNotNull);
     expect(newEntry.identification!.description,
         expectedIdentification.description);
-    expect(newEntry.identification!.color.value,
-        expectedIdentification.color.value);
+    expect(newEntry.identification!.color.toARGB32(),
+        expectedIdentification.color.toARGB32());
   });
 
   test("should update a identification", () async {
@@ -332,8 +334,8 @@ void main() {
     expect(updatedIdentification, isNotNull);
     expect(
         updatedIdentification!.description, expectedIdentification.description);
-    expect(
-        updatedIdentification.color.value, expectedIdentification.color.value);
+    expect(updatedIdentification.color.toARGB32(),
+        expectedIdentification.color.toARGB32());
   });
 
   test("should delete an identification", () async {
@@ -380,5 +382,97 @@ void main() {
     expect(result!.description, req.description);
     expect(result.value, req.value);
     expect(result.createdAt, req.createdAt);
+  });
+
+  test("should persist the identification hierarchy and status", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    final parent = AccountabilityIdentification("Parent", Colors.blue);
+    final child = AccountabilityIdentification(
+      "Child",
+      Colors.green,
+      parentId: parent.id,
+      discontinued: true,
+      type: AccountabilityIdentificationType.income,
+    )..icon = Icons.restaurant;
+
+    await repo.addIdentification(parent);
+    await repo.addIdentification(child);
+
+    final loaded = await repo.getIdentification(child.id);
+
+    expect(loaded, isNotNull);
+    expect(loaded!.parentId, parent.id);
+    expect(loaded.discontinued, isTrue);
+    expect(loaded.type, AccountabilityIdentificationType.income);
+    expect(loaded.icon, Icons.restaurant);
+    expect(loaded.color.toARGB32(), Colors.green.toARGB32());
+  });
+
+  test("should read legacy identifications as active roots", () async {
+    final db = await MemoryDBProvider.i.database;
+    final repo = SQLiteAccountabilityRepo(db);
+    final icon = {
+      'code': Icons.help_outline.codePoint,
+      'fontFamily': Icons.help_outline.fontFamily,
+      'fontPackage': Icons.help_outline.fontPackage,
+    };
+
+    await db.rawInsert(
+      "INSERT INTO accountability_identifications (id, description, color, icon, type, insertedAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [
+        "legacy-identification",
+        "Legacy",
+        Colors.blue.toARGB32(),
+        jsonEncode(icon),
+        "expense",
+        DateTime.now().toIso8601String(),
+        DateTime.now().toIso8601String(),
+      ],
+    );
+
+    final loaded = await repo.getIdentification("legacy-identification");
+
+    expect(loaded, isNotNull);
+    expect(loaded!.parentId, isNull);
+    expect(loaded.discontinued, isFalse);
+  });
+
+  test(
+      "should unidentify entries and promote children when deleting an identification",
+      () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    final parent = AccountabilityIdentification("Parent", Colors.blue);
+    final child = AccountabilityIdentification(
+      "Child",
+      Colors.green,
+      parentId: parent.id,
+    );
+    await repo.addIdentification(parent);
+    await repo.addIdentification(child);
+
+    final entry = await repo.add(
+      AccountabilityEntryRequest(
+        description: "Entry identified by the parent",
+        value: 42,
+        createdAt: DateTime(2026),
+        identification: parent,
+      ),
+    );
+
+    await repo.deleteIdentification(parent.id);
+
+    final entries = await repo.getEntries();
+    final updatedEntry = entries.single;
+    expect(updatedEntry.id, entry.id);
+    expect(updatedEntry.description, entry.description);
+    expect(updatedEntry.value, entry.value);
+    expect(updatedEntry.createdAt, entry.createdAt);
+    expect(updatedEntry.identificationId, isNull);
+    expect(updatedEntry.identification, isNull);
+
+    final updatedChild = await repo.getIdentification(child.id);
+    expect(updatedChild, isNotNull);
+    expect(updatedChild!.parentId, isNull);
+    expect(await repo.getIdentification(parent.id), isNull);
   });
 }
