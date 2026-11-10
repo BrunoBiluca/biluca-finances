@@ -1,5 +1,6 @@
 import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
+import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_row.dart';
 import 'package:biluca_financas/app/themes/obsidian_wealth/obsidian_wealth_dark_theme.dart';
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/app/themes/theme_setup.dart';
@@ -10,6 +11,8 @@ import 'package:biluca_financas/core/accountability/models/accountability_entry.
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:data_table_2/data_table_2.dart';
@@ -19,6 +22,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mocktail/mocktail.dart';
 
+import '../../_mocks/fake_accountability_import_service.dart';
+import '../../_mocks/fake_file_picker.dart';
 import '../../_mocks/fake_predict_server.dart';
 import '../../_mocks/mock_accountability_repo.dart';
 
@@ -356,6 +361,48 @@ void main() {
     );
     expect(valueField.style?.color, appTheme.colors.positiveYield);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+      'uses the row input background for the identification field while editing',
+      (tester) async {
+    final entries = [_entry(131), _entry(132)];
+    tester.view
+      ..physicalSize = const Size(1200, 700)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ObsidianWealthDarkTheme().build(),
+        home: Scaffold(
+          body: SizedBox(
+            width: 1200,
+            height: 600,
+            child: AccountabilityTable(
+              entries: entries,
+              onUpdate: (_) {},
+              onRemove: (_) {},
+              enableInlineEditing: true,
+              identifications: identifications,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byKey(const Key('edit-accountability-1')));
+    await tester.pump();
+
+    final background = tester.widget<Container>(
+      find.byKey(const Key('edit-identification-background-1')),
+    );
+    expect(
+      (background.decoration! as BoxDecoration).color,
+      getInputFieldBackgroundColor(1),
+    );
+    expect(getInputFieldBackgroundColor(1), const Color(0xFF1C1F29));
   });
 
   testWidgets('shows identification details and keeps the none option',
@@ -864,6 +911,47 @@ void main() {
     await _flushAsync(tester);
 
     verify(() => repo.delete(entry)).called(1);
+  });
+
+  testWidgets(
+      'opens the redesigned import verification with the selected file name',
+      (tester) async {
+    final importService = FakeAccountabilityImportService()
+      ..entries.add(AccountabilityEntryRequest(
+        description: 'Nova importada',
+        value: 10,
+        createdAt: DateTime(2026, 1, 1),
+        identification: identifications.first,
+      ));
+    getIt.registerSingleton<AccountabilityImportService>(importService);
+    when(() => repo.getEntries(limit: any(named: 'limit')))
+        .thenAnswer((_) async => <AccountabilityEntry>[]);
+    FilePicker.platform = FakeFilePicker(
+      result: FilePickerResult([
+        PlatformFile(
+          name: 'extrato-agosto.pdf',
+          size: 1,
+          path: 'extrato-agosto.pdf',
+        ),
+      ]),
+    );
+
+    await _pumpPage(tester);
+    await tester.tap(find.byKey(const Key('import-accountability')));
+    await _flushAsync(tester);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Conferência de Importação de Extratos'), findsOneWidget);
+    expect(find.text('extrato-agosto.pdf'), findsOneWidget);
+    expect(find.text('Nova importada'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const Key('import-new-entries-table')),
+        matching: find.text('Almoço'),
+      ),
+      findsOneWidget,
+    );
+    await tester.pump(const Duration(seconds: 3));
   });
 
   testWidgets('uses the requested table header and alternating row colors',

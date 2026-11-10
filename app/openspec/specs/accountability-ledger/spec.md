@@ -108,11 +108,11 @@ A tabela SHALL apresentar a identificação como um selo compacto com ícone, de
 
 ### Requirement: Preservar operações existentes da página
 
-A página SHALL manter a criação, a exclusão, o carregamento de lançamentos e a importação e conferência de extratos em PDF disponíveis, sem alterar o fluxo de importação.
+A página SHALL manter a criação, a exclusão, o carregamento de lançamentos e a importação e conferência de extratos em PDF disponíveis, sem alterar as regras de importação. A conferência das entradas importadas SHALL seguir a apresentação redesenhada definida para a conferência de importação.
 
 #### Scenario: Importar extrato PDF
 - **WHEN** a pessoa seleciona um extrato PDF para importação
-- **THEN** o fluxo atual de importação e conferência continua disponível e funciona sem mudança de comportamento
+- **THEN** o fluxo de importação continua disponível e abre a conferência redesenhada, mantendo o salvamento das novas entradas e o descarte das duplicadas
 
 #### Scenario: Criar ou excluir lançamento
 - **WHEN** a pessoa cria um lançamento com dados válidos ou exclui um lançamento

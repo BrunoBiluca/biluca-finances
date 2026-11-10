@@ -1,0 +1,857 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Biluca Finanças - Conferência de Importação</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: {
+              950: '#07090e',
+              900: '#0c0f17',
+              850: '#111622',
+              800: '#171e2e',
+              750: '#1e273a',
+              700: '#263249',
+              600: '#384869'
+            },
+            brand: {
+              cyan: '#38bdf8',
+              cyanDark: '#0284c7',
+              emerald: '#10b981',
+              rose: '#f43f5e',
+              amber: '#f59e0b'
+            }
+          },
+          fontFamily: {
+            sans: ['Geist', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Fira Code', 'monospace']
+          },
+          boxShadow: {
+            glow: '0 0 25px -5px rgba(56, 189, 248, 0.25)',
+            glowEmerald: '0 0 20px -3px rgba(16, 185, 129, 0.25)'
+          }
+        }
+      }
+    }
+  </script>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<style data-purpose="custom-scrollbars">
+    /* Custom Obsidian Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(12, 15, 23, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #263249;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38bdf8;
+    }
+  </style>
+<style data-purpose="glass-effects">
+    .glass-modal {
+      background: rgba(15, 19, 28, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(23, 30, 46, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .badge-amber-glow {
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-obsidian-950 text-slate-100 font-sans antialiased h-screen overflow-hidden selection:bg-brand-cyan/20 selection:text-brand-cyan">
+<!-- BEGIN: ApplicationBackgroundMockup -->
+<!-- Blurs and sets financial dashboard context behind the active modal -->
+<div class="fixed inset-0 flex flex-col pointer-events-none filter blur-md opacity-40 scale-95 transition-all duration-700" data-purpose="dashboard-context-underlay">
+<!-- Top System Bar -->
+<div class="h-10 bg-obsidian-900 border-b border-slate-800/80 px-4 flex items-center justify-between text-xs text-slate-400 font-mono">
+<div class="flex items-center gap-3">
+<span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+<span class="font-medium text-slate-300">biluca_financas // Prestação de Contas [2026]</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px]">DEBUG MODE</span>
+<span>Ago. 2026</span>
+</div>
+</div>
+<!-- Inner Mock Canvas -->
+<div class="flex-1 flex">
+<div class="w-64 bg-obsidian-900/80 border-r border-slate-800 p-4 space-y-4">
+<div class="h-6 w-32 bg-slate-800 rounded"></div>
+<div class="space-y-2 pt-4">
+<div class="h-8 bg-brand-cyan/20 border-l-2 border-brand-cyan rounded-r"></div>
+<div class="h-8 bg-slate-800/50 rounded"></div>
+<div class="h-8 bg-slate-800/50 rounded"></div>
+<div class="h-8 bg-slate-800/50 rounded"></div>
+</div>
+</div>
+<div class="flex-1 p-8 space-y-6 bg-obsidian-950">
+<div class="grid grid-cols-4 gap-4">
+<div class="h-28 bg-slate-900/60 rounded-xl border border-slate-800"></div>
+<div class="h-28 bg-slate-900/60 rounded-xl border border-slate-800"></div>
+<div class="h-28 bg-slate-900/60 rounded-xl border border-slate-800"></div>
+<div class="h-28 bg-slate-900/60 rounded-xl border border-slate-800"></div>
+</div>
+<div class="h-96 bg-slate-900/40 rounded-xl border border-slate-800"></div>
+</div>
+</div>
+</div>
+<!-- END: ApplicationBackgroundMockup -->
+<!-- BEGIN: ModalBackdrop -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-sm" data-purpose="reconciliation-modal-wrapper">
+<!-- BEGIN: ReconciliationModal -->
+<div class="glass-modal w-full max-w-[1400px] h-[92vh] max-h-[960px] rounded-2xl shadow-2xl flex flex-col overflow-hidden relative border border-slate-700/60">
+<!-- Top Decorative Glow -->
+<div class="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-brand-cyan to-transparent opacity-70"></div>
+<!-- BEGIN: ModalHeader -->
+<header class="px-6 py-4 border-b border-slate-800/90 bg-obsidian-900/70 flex flex-wrap items-center justify-between gap-4" data-purpose="modal-header">
+<div class="flex items-center gap-4">
+<div class="h-10 w-10 rounded-xl bg-brand-cyan/10 border border-brand-cyan/30 flex items-center justify-center text-brand-cyan shadow-glow">
+<!-- Bank/Import Icon -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-3">
+<h1 class="text-lg font-semibold text-white tracking-tight">Conferência de Importação de Extratos</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-mono font-medium bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-cyan animate-pulse"></span>
+                Extrato OFX
+              </span>
+</div>
+<p class="text-xs text-slate-400 mt-0.5">Valide as correspondências, identifique regras de conciliação e descarte duplicidades bancárias.</p>
+</div>
+</div>
+<!-- Meta Summary Badges -->
+<div class="flex items-center gap-2.5 text-xs">
+<!-- File info tag -->
+<div class="px-3 py-1.5 rounded-lg bg-obsidian-800/90 border border-slate-700/70 text-slate-300 flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.5L18 8.5V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="font-mono text-slate-200">Santander_Extrato_Ago2026.ofx</span>
+</div>
+<!-- Net Balance Chip -->
+<div class="px-3 py-1.5 rounded-lg bg-obsidian-800/90 border border-emerald-500/30 text-slate-300 flex items-center gap-2 font-mono">
+<span class="text-slate-400 text-[11px] uppercase tracking-wider font-sans">Saldo Líquido</span>
+<span class="font-bold text-emerald-400">+R$ 1.450,20</span>
+</div>
+<!-- Close Modal Icon Button -->
+<button aria-label="Fechar janela" class="ml-2 p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800/70 transition-colors border border-transparent hover:border-slate-700" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</header>
+<!-- END: ModalHeader -->
+<!-- BEGIN: NavigationTabsAndBatchActions -->
+<div class="px-6 bg-obsidian-900/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-4" data-purpose="tab-navigation-bar">
+<!-- Interactive Tabs Triggering Respective Sections -->
+<nav aria-label="Abas de Importação" class="flex space-x-1">
+<!-- Active Tab: Novas Entradas -->
+<button class="relative flex items-center gap-2.5 px-4 py-3.5 text-sm font-medium text-brand-cyan border-b-2 border-brand-cyan transition-colors group" id="tab-btn-novas" onclick="switchTab('novas')">
+<svg class="w-4 h-4 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Novas Entradas</span>
+<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 group-hover:bg-brand-cyan group-hover:text-obsidian-950 transition-colors">22</span>
+</button>
+<!-- Inactive Tab: Entradas Duplicadas -->
+<button class="relative flex items-center gap-2.5 px-4 py-3.5 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent hover:border-slate-700 transition-colors group" id="tab-btn-duplicadas" onclick="switchTab('duplicadas')">
+<svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Registros Duplicados</span>
+<span class="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">163</span>
+</button>
+<!-- Inactive Tab: Auditoria / Regras Auto -->
+<button class="relative flex items-center gap-2.5 px-4 py-3.5 text-sm font-medium text-slate-400 hover:text-slate-200 border-b-2 border-transparent hover:border-slate-700 transition-colors" id="tab-btn-regras" onclick="switchTab('regras')">
+<svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Regras Aplicadas</span>
+<span class="text-xs text-slate-500 font-mono">(3 ativas)</span>
+</button>
+</nav>
+<!-- Right bulk action bar -->
+<div class="flex items-center gap-2.5 py-2">
+<div class="relative">
+<input class="w-56 bg-obsidian-850 text-xs text-slate-200 placeholder-slate-500 rounded-lg pl-8 pr-3 py-1.5 border border-slate-700 focus:outline-none focus:border-brand-cyan focus:ring-1 focus:ring-brand-cyan transition-all" placeholder="Filtrar lançamentos..." type="text">
+<svg class="w-3.5 h-3.5 absolute left-2.5 top-2.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<button class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 bg-obsidian-800 hover:bg-obsidian-750 border border-slate-700 flex items-center gap-1.5 transition">
+<svg class="w-3.5 h-3.5 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Categorizar Seleção</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 bg-obsidian-800 hover:bg-obsidian-750 border border-slate-700 flex items-center gap-1.5 transition">
+<svg class="w-3.5 h-3.5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Ignorar Selecionados</span>
+</button>
+</div>
+</div>
+<!-- END: NavigationTabsAndBatchActions -->
+<!-- BEGIN: TabContentPanels -->
+<main class="flex-1 overflow-y-auto p-6 bg-obsidian-950/60" data-purpose="tab-body-container">
+<!-- =================== VIEW 1: NOVAS ENTRADAS =================== -->
+<section class="space-y-4" id="view-novas">
+<!-- Summary Banner for Novas Entradas -->
+<div class="glass-card rounded-xl p-3.5 px-4 flex items-center justify-between border-brand-cyan/20">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="text-xs">
+<span class="font-semibold text-slate-200">22 novas transações prontas para lançamento.</span>
+<p class="text-slate-400">Nenhum conflito de hash de banco foi detectado para estas movimentações.</p>
+</div>
+</div>
+<!-- Quick quick-toggles -->
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-400">Selecionadas: <strong class="text-brand-cyan font-mono" id="selected-count">22</strong> de 22</span>
+<button class="text-xs text-slate-400 hover:text-white underline ml-2" onclick="toggleAllCheckboxes(false)">Desmarcar todas</button>
+</div>
+</div>
+<!-- Main Table: Novas Entradas -->
+<div class="overflow-hidden rounded-xl border border-slate-800 bg-obsidian-900/60 shadow-lg">
+<table class="w-full text-left border-collapse text-xs">
+<thead>
+<tr class="bg-obsidian-850 text-slate-400 uppercase tracking-wider font-mono text-[11px] border-b border-slate-800">
+<th class="py-3.5 px-4 w-12 text-center">
+<input checked="" class="rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-brand-cyan/40 focus:ring-offset-0" id="master-checkbox" onclick="toggleAllCheckboxes(this.checked)" type="checkbox">
+</th>
+<th class="py-3.5 px-4 font-semibold w-36">Criação / Competência</th>
+<th class="py-3.5 px-4 font-semibold">Descrição Original (Extrato)</th>
+<th class="py-3.5 px-4 font-semibold text-right w-36">Valor</th>
+<th class="py-3.5 px-4 font-semibold w-64">Identificação / Categoria</th>
+<th class="py-3.5 px-4 font-semibold text-center w-28">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-800/60 font-mono">
+<!-- Row 1: Rendimento (+) -->
+<tr class="hover:bg-slate-800/40 transition-colors group">
+<td class="py-3 px-4 text-center">
+<input checked="" class="item-checkbox rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-0" type="checkbox">
+</td>
+<td class="py-3 px-4 text-slate-300">
+<div class="flex items-center gap-1.5">
+<span class="text-slate-400">06/08/2026</span>
+</div>
+</td>
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-slate-200">REND PAGO APLIC AUT APR</span>
+<span class="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 font-mono">CRÉDITO</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right font-semibold text-emerald-400">
+                    +R$ 0,14
+                  </td>
+<td class="py-3 px-4 font-sans">
+<!-- Rendimento Tag Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 to-amber-600/30 text-amber-300 border border-amber-500/40 shadow-sm">
+<svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Rendimento</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-brand-cyan rounded-md hover:bg-slate-800 transition" title="Editar categoria">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-400 rounded-md hover:bg-slate-800 transition" title="Excluir desta importação">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Supermercado (-) -->
+<tr class="hover:bg-slate-800/40 transition-colors group">
+<td class="py-3 px-4 text-center">
+<input checked="" class="item-checkbox rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-0" type="checkbox">
+</td>
+<td class="py-3 px-4 text-slate-300">
+<span>09/07/2026</span>
+</td>
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-slate-200 font-medium">RSHOP SUPERMERCADO0907</span>
+<span class="text-[10px] px-1.5 py-0.2 rounded bg-blue-900/40 text-blue-300 border border-blue-700/40 font-mono">DÉBITO</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right font-semibold text-rose-400">
+                    -R$ 190,36
+                  </td>
+<td class="py-3 px-4 font-sans">
+<!-- Supermercado Tag Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-blue-600/30 to-blue-500/20 text-blue-300 border border-blue-500/40 shadow-sm">
+<svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Supermercado</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-brand-cyan rounded-md hover:bg-slate-800 transition" title="Editar categoria">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-400 rounded-md hover:bg-slate-800 transition" title="Excluir desta importação">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Lanche (-) -->
+<tr class="hover:bg-slate-800/40 transition-colors group">
+<td class="py-3 px-4 text-center">
+<input checked="" class="item-checkbox rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-0" type="checkbox">
+</td>
+<td class="py-3 px-4 text-slate-300">
+<span>09/07/2026</span>
+</td>
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-slate-200">PIX QRS O REAL ROCA09/07</span>
+<span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-900/30 text-emerald-300 border border-emerald-700/30 font-mono">PIX</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right font-semibold text-rose-400">
+                    -R$ 14,75
+                  </td>
+<td class="py-3 px-4 font-sans">
+<!-- Lanche Tag Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-emerald-500/25 to-teal-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm">
+<svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Lanche &amp; Refeição</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-brand-cyan rounded-md hover:bg-slate-800 transition" title="Editar categoria">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-400 rounded-md hover:bg-slate-800 transition" title="Excluir desta importação">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Rendimento (+) -->
+<tr class="hover:bg-slate-800/40 transition-colors group">
+<td class="py-3 px-4 text-center">
+<input checked="" class="item-checkbox rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-0" type="checkbox">
+</td>
+<td class="py-3 px-4 text-slate-300">
+<span>09/07/2026</span>
+</td>
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-slate-200">REND PAGO APLIC AUT MAIS</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right font-semibold text-emerald-400">
+                    +R$ 0,04
+                  </td>
+<td class="py-3 px-4 font-sans">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 to-amber-600/30 text-amber-300 border border-amber-500/40 shadow-sm">
+<svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Rendimento</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-brand-cyan rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-400 rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Supermercado PIX (-) -->
+<tr class="hover:bg-slate-800/40 transition-colors group">
+<td class="py-3 px-4 text-center">
+<input checked="" class="item-checkbox rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-0" type="checkbox">
+</td>
+<td class="py-3 px-4 text-slate-300">
+<span>08/07/2026</span>
+</td>
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-slate-200 font-medium">PIX QRS GUILHERME A08/07</span>
+<span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-900/30 text-emerald-300 border border-emerald-700/30 font-mono">PIX</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right font-semibold text-rose-400">
+                    -R$ 15,00
+                  </td>
+<td class="py-3 px-4 font-sans">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-blue-600/30 to-blue-500/20 text-blue-300 border border-blue-500/40 shadow-sm">
+<svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Supermercado</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-brand-cyan rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-400 rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Supermercado PIX 2 (-) -->
+<tr class="hover:bg-slate-800/40 transition-colors group">
+<td class="py-3 px-4 text-center">
+<input checked="" class="item-checkbox rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-0" type="checkbox">
+</td>
+<td class="py-3 px-4 text-slate-300">
+<span>08/07/2026</span>
+</td>
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-slate-200 font-medium">PIX QRS ITAMAR GOME08/07</span>
+<span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-900/30 text-emerald-300 border border-emerald-700/30 font-mono">PIX</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right font-semibold text-rose-400">
+                    -R$ 38,00
+                  </td>
+<td class="py-3 px-4 font-sans">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-blue-600/30 to-blue-500/20 text-blue-300 border border-blue-500/40 shadow-sm">
+<svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Supermercado</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-brand-cyan rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-400 rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 7: Rendimento (+) -->
+<tr class="hover:bg-slate-800/40 transition-colors group">
+<td class="py-3 px-4 text-center">
+<input checked="" class="item-checkbox rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-0" type="checkbox">
+</td>
+<td class="py-3 px-4 text-slate-300">
+<span>08/07/2026</span>
+</td>
+<td class="py-3 px-4 font-sans">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs text-slate-200">REND PAGO APLIC AUT MAIS</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right font-semibold text-emerald-400">
+                    +R$ 0,01
+                  </td>
+<td class="py-3 px-4 font-sans">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg text-xs font-semibold bg-gradient-to-r from-amber-500/20 to-amber-600/30 text-amber-300 border border-amber-500/40 shadow-sm">
+<svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Rendimento</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1.5 text-slate-400 hover:text-brand-cyan rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-slate-400 hover:text-rose-400 rounded-md hover:bg-slate-800 transition">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Footer row pagination notice -->
+<div class="p-3 bg-obsidian-900 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+<span>Mostrando 7 de 22 novas entradas</span>
+<div class="flex items-center gap-1 font-mono">
+<button class="px-2 py-1 bg-obsidian-800 rounded hover:text-white border border-slate-700">Anterior</button>
+<span class="px-2 py-1 text-brand-cyan">1 / 4</span>
+<button class="px-2 py-1 bg-obsidian-800 rounded hover:text-white border border-slate-700">Próxima</button>
+</div>
+</div>
+</div>
+</section>
+<!-- =================== VIEW 2: REGISTROS DUPLICADOS =================== -->
+<section class="space-y-4 hidden" id="view-duplicadas">
+<!-- Duplicate Warning Banner -->
+<div class="glass-card rounded-xl p-4 border border-amber-500/30 bg-amber-950/15 flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-start gap-3">
+<div class="w-9 h-9 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 flex-shrink-0 mt-0.5">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="text-xs space-y-1">
+<h4 class="font-semibold text-amber-300 text-sm">163 transações já existentes no banco de dados local</h4>
+<p class="text-slate-300 max-w-3xl">
+                  Identificadas com base em hash de arquivo, mesma data de lançamento e valor idêntico nos últimos 90 dias. Por padrão, estas entradas foram desmarcadas para proteger seu fluxo de caixa contra duplicidades.
+                </p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-1.5 rounded-lg bg-obsidian-800 hover:bg-obsidian-750 text-xs font-medium text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Ignorar Todos os 163</span>
+</button>
+</div>
+</div>
+<!-- Comparative Duplicate Cards/Rows -->
+<div class="space-y-3">
+<!-- Comparison Item 1 -->
+<div class="glass-card rounded-xl border border-slate-800 p-4 hover:border-slate-700 transition">
+<div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                    CONFLITO #1092
+                  </span>
+<span class="text-xs font-mono text-slate-400">Data de Competência: <strong class="text-slate-200">06/08/2026</strong></span>
+<span class="text-xs font-mono text-slate-400">Valor: <strong class="text-rose-400">-R$ 186,25</strong></span>
+</div>
+<!-- Resolution Actions -->
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-obsidian-800 hover:bg-obsidian-700 text-xs font-medium text-slate-200 border border-slate-700 flex items-center gap-1.5 transition" title="Forçar reimportação e sobrescrever existente">
+<svg class="w-3.5 h-3.5 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Importar Mesmo Assim</span>
+</button>
+<button class="px-2.5 py-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-xs font-medium text-rose-300 border border-rose-500/30 transition">
+                    Descartar
+                  </button>
+</div>
+</div>
+<!-- Side-by-side Audit comparison -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+<!-- Database state -->
+<div class="p-3 rounded-lg bg-obsidian-900/80 border border-slate-800 space-y-1.5">
+<div class="text-[11px] font-sans font-medium text-slate-400 flex items-center justify-between">
+<span class="text-amber-400 flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                      Existente no Sistema
+                    </span>
+<span class="text-[10px] text-slate-500">Inserido em: 09/09/2026</span>
+</div>
+<div class="text-slate-200 font-sans font-medium">RSCSS SUPERMECADO 0608</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-rose-400 font-semibold">-R$ 186,25</span>
+<span class="px-2 py-0.5 rounded bg-blue-600/20 text-blue-300 border border-blue-500/30 font-sans">Supermercado</span>
+</div>
+</div>
+<!-- Incoming statement state -->
+<div class="p-3 rounded-lg bg-obsidian-900/80 border border-brand-cyan/20 space-y-1.5">
+<div class="text-[11px] font-sans font-medium text-slate-400 flex items-center justify-between">
+<span class="text-brand-cyan flex items-center gap-1">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                      No Arquivo Atual (.OFX)
+                    </span>
+<span class="text-[10px] text-slate-500">Hash Match: 99.4%</span>
+</div>
+<div class="text-slate-200 font-sans font-medium">RSCSS SUPERMECADO 0608</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-rose-400 font-semibold">-R$ 186,25</span>
+<span class="px-2 py-0.5 rounded bg-blue-600/20 text-blue-300 border border-blue-500/30 font-sans">Supermercado</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Comparison Item 2 -->
+<div class="glass-card rounded-xl border border-slate-800 p-4 hover:border-slate-700 transition">
+<div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                    CONFLITO #1093
+                  </span>
+<span class="text-xs font-mono text-slate-400">Data de Competência: <strong class="text-slate-200">06/08/2026</strong></span>
+<span class="text-xs font-mono text-slate-400">Valor: <strong class="text-rose-400">-R$ 275,24</strong></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-obsidian-800 hover:bg-obsidian-700 text-xs font-medium text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+<svg class="w-3.5 h-3.5 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Importar Mesmo Assim</span>
+</button>
+<button class="px-2.5 py-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-xs font-medium text-rose-300 border border-rose-500/30 transition">
+                    Descartar
+                  </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+<div class="p-3 rounded-lg bg-obsidian-900/80 border border-slate-800 space-y-1.5">
+<div class="text-[11px] font-sans font-medium text-slate-400 flex items-center justify-between">
+<span class="text-amber-400">Existente no Sistema</span>
+<span class="text-[10px] text-slate-500">Inserido em: 09/09/2026</span>
+</div>
+<div class="text-slate-200 font-sans font-medium">RSCCS SUPERMERCADO0608</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-rose-400 font-semibold">-R$ 275,24</span>
+<span class="px-2 py-0.5 rounded bg-blue-600/20 text-blue-300 border border-blue-500/30 font-sans">Supermercado</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-obsidian-900/80 border border-brand-cyan/20 space-y-1.5">
+<div class="text-[11px] font-sans font-medium text-slate-400 flex items-center justify-between">
+<span class="text-brand-cyan">No Arquivo Atual (.OFX)</span>
+<span class="text-[10px] text-slate-500">Hash Match: 100%</span>
+</div>
+<div class="text-slate-200 font-sans font-medium">RSCCS SUPERMERCADO0608</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-rose-400 font-semibold">-R$ 275,24</span>
+<span class="px-2 py-0.5 rounded bg-blue-600/20 text-blue-300 border border-blue-500/30 font-sans">Supermercado</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Comparison Item 3 -->
+<div class="glass-card rounded-xl border border-slate-800 p-4 hover:border-slate-700 transition">
+<div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80">
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                    CONFLITO #1094
+                  </span>
+<span class="text-xs font-mono text-slate-400">Data de Competência: <strong class="text-slate-200">05/08/2026</strong></span>
+<span class="text-xs font-mono text-slate-400">Valor: <strong class="text-rose-400">-R$ 11,55</strong></span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 rounded bg-obsidian-800 hover:bg-obsidian-700 text-xs font-medium text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+<svg class="w-3.5 h-3.5 text-brand-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Importar Mesmo Assim</span>
+</button>
+<button class="px-2.5 py-1 rounded bg-rose-500/10 hover:bg-rose-500/20 text-xs font-medium text-rose-300 border border-rose-500/30 transition">
+                    Descartar
+                  </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+<div class="p-3 rounded-lg bg-obsidian-900/80 border border-slate-800 space-y-1.5">
+<div class="text-[11px] font-sans font-medium text-slate-400 flex items-center justify-between">
+<span class="text-amber-400">Existente no Sistema</span>
+<span class="text-[10px] text-slate-500">Inserido em: 09/09/2026</span>
+</div>
+<div class="text-slate-200 font-sans font-medium">PIX QRS O REAL ROCA05/08</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-rose-400 font-semibold">-R$ 11,55</span>
+<span class="px-2 py-0.5 rounded bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 font-sans">Lanche</span>
+</div>
+</div>
+<div class="p-3 rounded-lg bg-obsidian-900/80 border border-brand-cyan/20 space-y-1.5">
+<div class="text-[11px] font-sans font-medium text-slate-400 flex items-center justify-between">
+<span class="text-brand-cyan">No Arquivo Atual (.OFX)</span>
+<span class="text-[10px] text-slate-500">Hash Match: 100%</span>
+</div>
+<div class="text-slate-200 font-sans font-medium">PIX QRS O REAL ROCA05/08</div>
+<div class="flex items-center justify-between text-[11px]">
+<span class="text-rose-400 font-semibold">-R$ 11,55</span>
+<span class="px-2 py-0.5 rounded bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 font-sans">Lanche</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =================== VIEW 3: REGRAS APLICADAS =================== -->
+<section class="space-y-4 hidden" id="view-regras">
+<div class="glass-card rounded-xl p-5 border border-purple-500/30 space-y-4">
+<h3 class="text-sm font-semibold text-purple-300 flex items-center gap-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+              Regras Inteligentes de Identificação
+            </h3>
+<p class="text-xs text-slate-300 leading-relaxed">
+              O Biluca Finanças correlacionou termos recorrentes para classificar automaticamente estas transações:
+            </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+<div class="p-3 bg-obsidian-900 rounded-lg border border-slate-800 space-y-2">
+<span class="text-xs font-mono text-slate-400">Palavra-chave: <strong class="text-brand-cyan">"REND PAGO"</strong></span>
+<p class="text-[11px] text-slate-400">Classificado como: <span class="text-amber-300 font-medium">Rendimento (+ Receita)</span></p>
+<div class="text-[10px] text-emerald-400 font-mono">4 correspondências</div>
+</div>
+<div class="p-3 bg-obsidian-900 rounded-lg border border-slate-800 space-y-2">
+<span class="text-xs font-mono text-slate-400">Palavra-chave: <strong class="text-brand-cyan">"SUPERMERCADO"</strong></span>
+<p class="text-[11px] text-slate-400">Classificado como: <span class="text-blue-300 font-medium">Supermercado</span></p>
+<div class="text-[10px] text-emerald-400 font-mono">14 correspondências</div>
+</div>
+<div class="p-3 bg-obsidian-900 rounded-lg border border-slate-800 space-y-2">
+<span class="text-xs font-mono text-slate-400">Palavra-chave: <strong class="text-brand-cyan">"ROCA"</strong></span>
+<p class="text-[11px] text-slate-400">Classificado como: <span class="text-emerald-300 font-medium">Lanche</span></p>
+<div class="text-[10px] text-emerald-400 font-mono">4 correspondências</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- END: TabContentPanels -->
+<!-- BEGIN: ModalFooter -->
+<footer class="px-6 py-4 bg-obsidian-900/95 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4" data-purpose="modal-footer">
+<!-- Left summary & learning toggle -->
+<div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 text-xs text-slate-400">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-brand-cyan"></span>
+<span class="font-sans text-slate-300">
+<strong class="text-white font-mono">22</strong> entradas selecionadas para gravação
+            </span>
+</div>
+<!-- Auto categorization learning toggle -->
+<label class="flex items-center gap-2.5 cursor-pointer group">
+<input checked="" class="rounded border-slate-700 bg-obsidian-950 text-brand-cyan focus:ring-brand-cyan/30 w-4 h-4" type="checkbox">
+<span class="text-xs text-slate-300 group-hover:text-white transition">Aprender padrões para futuros extratos</span>
+</label>
+</div>
+<!-- Right actions -->
+<div class="flex items-center gap-3">
+<button class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-obsidian-800 hover:bg-obsidian-750 border border-slate-700/80 transition shadow-sm active:scale-95" type="button">
+            Cancelar
+          </button>
+<button class="px-5 py-2.5 rounded-xl text-xs font-bold text-obsidian-950 bg-gradient-to-r from-brand-cyan to-sky-400 hover:brightness-110 shadow-glow transition-all duration-200 active:scale-95 flex items-center gap-2" type="button">
+<svg class="w-4 h-4 text-obsidian-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span>Confirmar e Salvar 22 Entradas</span>
+</button>
+</div>
+</footer>
+<!-- END: ModalFooter -->
+</div>
+<!-- END: ReconciliationModal -->
+</div>
+<!-- END: ModalBackdrop -->
+<!-- BEGIN: InteractiveTabLogic -->
+<script data-purpose="tab-switcher">
+    function switchTab(target) {
+      // Views
+      const views = {
+        novas: document.getElementById('view-novas'),
+        duplicadas: document.getElementById('view-duplicadas'),
+        regras: document.getElementById('view-regras')
+      };
+
+      // Buttons
+      const buttons = {
+        novas: document.getElementById('tab-btn-novas'),
+        duplicadas: document.getElementById('tab-btn-duplicadas'),
+        regras: document.getElementById('tab-btn-regras')
+      };
+
+      // Hide all views
+      Object.keys(views).forEach(key => {
+        if (views[key]) views[key].classList.add('hidden');
+      });
+
+      // Reset button styles
+      Object.keys(buttons).forEach(key => {
+        if (buttons[key]) {
+          buttons[key].classList.remove('text-brand-cyan', 'border-brand-cyan');
+          buttons[key].classList.add('text-slate-400', 'border-transparent');
+        }
+      });
+
+      // Activate clicked tab
+      if (views[target] && buttons[target]) {
+        views[target].classList.remove('hidden');
+        buttons[target].classList.remove('text-slate-400', 'border-transparent');
+        buttons[target].classList.add('text-brand-cyan', 'border-brand-cyan');
+      }
+    }
+
+    function toggleAllCheckboxes(checkedState) {
+      const checkboxes = document.querySelectorAll('.item-checkbox');
+      checkboxes.forEach(cb => {
+        cb.checked = checkedState;
+      });
+      const counter = document.getElementById('selected-count');
+      if (counter) {
+        counter.textContent = checkedState ? '22' : '0';
+      }
+      const master = document.getElementById('master-checkbox');
+      if (master) master.checked = checkedState;
+    }
+  </script>
+<!-- END: InteractiveTabLogic -->
+</body></html>

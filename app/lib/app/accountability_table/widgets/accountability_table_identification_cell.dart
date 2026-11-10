@@ -1,4 +1,5 @@
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_identification_label.dart';
+import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_row.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:flutter/material.dart';
 
@@ -39,41 +40,56 @@ class AccountabilityTableIdentificationCell {
   }
 
   Widget _identificationDropdown(BuildContext context) {
+    final theme = Theme.of(context);
     final identificationIds = identifications.map((item) => item.id).toSet();
     final value = identificationIds.contains(draftIdentificationId)
         ? draftIdentificationId
         : null;
 
-    return DropdownButton<String?>(
-      key: Key('edit-identification-$rowIndex'),
-      value: value,
-      isExpanded: true,
-      items: [
-        DropdownMenuItem<String?>(
-          value: null,
-          child: _identificationOption(
-            context,
-            key: const Key('identification-option-none'),
-            icon: Icons.help_outline,
-            description: 'Não identificado',
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            isUnidentified: true,
-          ),
+    return Container(
+      key: Key('edit-identification-background-$rowIndex'),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      height: 27,
+      decoration: BoxDecoration(
+        color: getInputFieldBackgroundColor(rowIndex),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
+          width: 0.5,
         ),
-        ...identifications.map(
-          (item) => DropdownMenuItem<String?>(
-            value: item.id,
+      ),
+      child: DropdownButton<String?>(
+        key: Key('edit-identification-$rowIndex'),
+        value: value,
+        isExpanded: true,
+        underline: const SizedBox.shrink(),
+        items: [
+          DropdownMenuItem<String?>(
+            value: null,
             child: _identificationOption(
               context,
-              key: Key('identification-option-${item.id}'),
-              icon: item.icon,
-              description: item.description,
-              color: item.color,
+              key: const Key('identification-option-none'),
+              icon: Icons.help_outline,
+              description: 'Não identificado',
+              color: theme.colorScheme.onSurfaceVariant,
+              isUnidentified: true,
             ),
           ),
-        ),
-      ],
-      onChanged: onChanged,
+          ...identifications.map(
+            (item) => DropdownMenuItem<String?>(
+              value: item.id,
+              child: _identificationOption(
+                context,
+                key: Key('identification-option-${item.id}'),
+                icon: item.icon,
+                description: item.description,
+                color: item.color,
+              ),
+            ),
+          ),
+        ],
+        onChanged: onChanged,
+      ),
     );
   }
 
@@ -86,36 +102,23 @@ class AccountabilityTableIdentificationCell {
     bool isUnidentified = false,
   }) {
     final theme = Theme.of(context);
-    return Container(
+    return Row(
       key: key,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-      decoration: BoxDecoration(
-        color: isUnidentified
-            ? theme.colorScheme.surfaceContainerHigh
-            : color.withValues(alpha: 0.16),
-        borderRadius: BorderRadius.circular(3),
-        border: Border.all(
-          width: .5,
-          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 16, color: color),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              description,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color:
-                    isUnidentified ? theme.colorScheme.onSurfaceVariant : color,
-                fontWeight: FontWeight.w500,
-              ),
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            description,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color:
+                  isUnidentified ? theme.colorScheme.onSurfaceVariant : color,
+              fontWeight: FontWeight.w500,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

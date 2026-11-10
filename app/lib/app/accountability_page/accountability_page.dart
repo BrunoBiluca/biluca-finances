@@ -334,7 +334,10 @@ class _AccountabilityPageContentState
       builder: (context) => BlocProvider(
         create: (_) =>
             GetIt.I<AccountabilityBloc>()..add(FetchAccountabilityEntries()),
-        child: AccountabilityImportVerification(service: importService),
+        child: AccountabilityImportVerification(
+          service: importService,
+          sourceFileName: result.files.single.name,
+        ),
       ),
     );
   }
