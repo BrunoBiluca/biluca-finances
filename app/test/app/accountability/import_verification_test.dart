@@ -379,7 +379,7 @@ void main() {
         .tap(find.byKey(const Key('accountability-identification-label')));
     await tester.pumpAndSettle();
 
-    final dialog = find.byType(AlertDialog).last;
+    final dialog = find.byType(Dialog).last;
     expect(
       find.descendant(
         of: dialog,

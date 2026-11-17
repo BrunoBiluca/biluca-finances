@@ -12,7 +12,11 @@ void main() {
         title: 'Flutter Demo',
         home: Scaffold(
           body: AccountabilityIdentificationLabel(
-              identification: null, onEdit: (identification) {}),
+            identification: null,
+            recordDescription: "Lançamento",
+            recordValue: 10,
+            onEdit: (identification) {},
+          ),
         ),
       ),
     );
@@ -25,14 +29,17 @@ void main() {
       "identificação teste",
       Colors.green,
       descriptionDetail: "Descrição que não deve aparecer na tag",
-    )
-      ..icon = Icons.restaurant;
+    )..icon = Icons.restaurant;
     await tester.pumpWidget(
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
           body: AccountabilityIdentificationLabel(
-              identification: id, onEdit: (identification) {}),
+            identification: id,
+            recordDescription: "Lançamento",
+            recordValue: 10,
+            onEdit: (identification) {},
+          ),
         ),
       ),
     );

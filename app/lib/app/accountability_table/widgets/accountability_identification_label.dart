@@ -7,10 +7,17 @@ import 'package:biluca_financas/core/accountability/models/accountability_identi
 
 class AccountabilityIdentificationLabel extends StatefulWidget {
   final AccountabilityIdentification? identification;
+  final String recordDescription;
+  final double recordValue;
   final Function onEdit;
 
-  const AccountabilityIdentificationLabel(
-      {super.key, required this.identification, required this.onEdit});
+  const AccountabilityIdentificationLabel({
+    super.key,
+    required this.identification,
+    required this.recordDescription,
+    required this.recordValue,
+    required this.onEdit,
+  });
 
   @override
   State<AccountabilityIdentificationLabel> createState() =>
@@ -36,6 +43,8 @@ class _AccountabilityIdentificationLabelState
               return AccountabilityIdentificationSelector(
                 identifications: state.identifications,
                 currentIdentificationId: identification?.id,
+                recordDescription: widget.recordDescription,
+                recordValue: widget.recordValue,
                 onSelected: (selected) => widget.onEdit(selected),
               );
             },

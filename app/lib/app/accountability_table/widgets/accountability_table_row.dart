@@ -93,6 +93,8 @@ class AccountabilityTableRow {
       ).build(context),
       AccountabilityTableIdentificationCell(
         identification: entry.identification,
+        recordDescription: entry.descriptionAlt ?? entry.description,
+        recordValue: entry.value,
         isEditing: isEditing,
         rowIndex: rowIndex,
         draftIdentificationId: draftIdentificationId,

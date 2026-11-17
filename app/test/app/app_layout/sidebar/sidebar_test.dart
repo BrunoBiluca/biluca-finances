@@ -21,8 +21,10 @@ void main() {
                 ),
                 GoRoute(
                   path: '/accountability',
-                  builder: (context, state) =>
-                      const Text('Página: Prestação de contas'),
+                  builder: (context, state) => TextButton(
+                    onPressed: () => context.push('/identifications'),
+                    child: const Text('Abrir identificações pelo modal'),
+                  ),
                 ),
                 GoRoute(
                   path: '/monthly-report',
@@ -31,8 +33,10 @@ void main() {
                 ),
                 GoRoute(
                   path: '/identifications',
-                  builder: (context, state) =>
-                      const Text('Página: Identificações'),
+                  builder: (context, state) => TextButton(
+                    onPressed: () => context.pop(),
+                    child: const Text('Página: Identificações'),
+                  ),
                 )
               ],
             ),
@@ -120,6 +124,27 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Página: Identificações'), findsOneWidget);
+    });
+
+    testWidgets('Should update selected menu item after external navigation',
+        (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      await tester.tap(find.text('Prestação de contas'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Abrir identificações pelo modal'));
+      await tester.pumpAndSettle();
+
+      final identificationTile =
+          tester.widget<ListTile>(find.byType(ListTile).at(4));
+      expect(identificationTile.selected, true);
+
+      await tester.tap(find.text('Página: Identificações'));
+      await tester.pumpAndSettle();
+
+      final accountabilityTile =
+          tester.widget<ListTile>(find.byType(ListTile).at(3));
+      expect(accountabilityTile.selected, true);
     });
 
     testWidgets('Should not navigate when tapping the same selected page',

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 class AccountabilityTableIdentificationCell {
   final AccountabilityIdentification? identification;
+  final String recordDescription;
+  final double recordValue;
   final bool isEditing;
   final int rowIndex;
   final String? draftIdentificationId;
@@ -15,6 +17,8 @@ class AccountabilityTableIdentificationCell {
 
   const AccountabilityTableIdentificationCell({
     required this.identification,
+    required this.recordDescription,
+    required this.recordValue,
     required this.isEditing,
     required this.rowIndex,
     required this.draftIdentificationId,
@@ -33,6 +37,8 @@ class AccountabilityTableIdentificationCell {
               ? _identificationDropdown(context)
               : AccountabilityIdentificationLabel(
                   identification: identification,
+                  recordDescription: recordDescription,
+                  recordValue: recordValue,
                   onEdit: onEdit,
                 ),
         ),

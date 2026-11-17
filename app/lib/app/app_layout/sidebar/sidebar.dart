@@ -27,7 +27,6 @@ class _SidebarState extends State<Sidebar> {
         Colors.orangeAccent),
   ];
 
-  int selectedPage = 0;
   bool isOpen = true;
   late String appVersion = "";
 
@@ -46,6 +45,8 @@ class _SidebarState extends State<Sidebar> {
 
   @override
   Widget build(BuildContext context) {
+    final selectedPage = _selectedPageForCurrentRoute;
+
     return Drawer(
       width: isOpen ? 300 : 68,
       shape: const ContinuousRectangleBorder(),
@@ -88,9 +89,13 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
+  int get _selectedPageForCurrentRoute {
+    final location = GoRouterState.of(context).uri.path;
+    return _pages.indexWhere((page) => page.route == location);
+  }
+
   void goToPage(int pageIndex) {
-    if (pageIndex == selectedPage) return;
-    setState(() => selectedPage = pageIndex);
+    if (pageIndex == _selectedPageForCurrentRoute) return;
     context.go(_pages[pageIndex].route);
   }
 }
