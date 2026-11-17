@@ -320,12 +320,17 @@ void main() {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
     var expectedIdentification =
-        AccountabilityIdentification("Identificação fictício", Colors.blue);
-    repo.addIdentification(expectedIdentification);
+        AccountabilityIdentification(
+          "Identificação fictício",
+          Colors.blue,
+          descriptionDetail: "Descrição inicial",
+        );
+    await repo.addIdentification(expectedIdentification);
 
     sleep(const Duration(milliseconds: 10));
 
     expectedIdentification.description = "Identificação atualizada";
+    expectedIdentification.descriptionDetail = "Descrição atualizada";
     expectedIdentification.color = Colors.red;
     await repo.updateIdentification(expectedIdentification);
     var updatedIdentification =
@@ -334,6 +339,8 @@ void main() {
     expect(updatedIdentification, isNotNull);
     expect(
         updatedIdentification!.description, expectedIdentification.description);
+    expect(updatedIdentification.descriptionDetail,
+        expectedIdentification.descriptionDetail);
     expect(updatedIdentification.color.toARGB32(),
         expectedIdentification.color.toARGB32());
   });
@@ -435,6 +442,7 @@ void main() {
     expect(loaded, isNotNull);
     expect(loaded!.parentId, isNull);
     expect(loaded.discontinued, isFalse);
+    expect(loaded.descriptionDetail, isEmpty);
   });
 
   test(

@@ -8,6 +8,7 @@ void main() {
     return {
       'id': 'identification-1',
       'description': 'Alimentação',
+      'description_detail': 'Gastos com alimentação',
       'color': Colors.green.toARGB32(),
       'icon': {
         'code': Icons.restaurant.codePoint,
@@ -34,6 +35,7 @@ void main() {
 
     expect(identification.parentId, 'parent-1');
     expect(identification.discontinued, isTrue);
+    expect(identification.descriptionDetail, 'Gastos com alimentação');
   });
 
   test('writes parent and discontinued status to a map', () {
@@ -56,12 +58,14 @@ void main() {
     final identification = AccountabilityIdentification('Viagem', Colors.blue);
     final updated = identification.copyWith(
       description: 'Viagem atualizada',
+      descriptionDetail: 'Despesas relacionadas a viagens',
       parentId: 'parent-1',
       discontinued: true,
     );
 
     expect(updated.id, identification.id);
     expect(updated.description, 'Viagem atualizada');
+    expect(updated.descriptionDetail, 'Despesas relacionadas a viagens');
     expect(updated.parentId, 'parent-1');
     expect(updated.discontinued, isTrue);
     expect(updated.copyWith(clearParent: true).parentId, isNull);

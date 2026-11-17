@@ -173,6 +173,7 @@ class _AccountabilityIdentificationSelectorState
               key: Key('identification-item-${identification.id}'),
               icon: identification.icon,
               text: identification.description,
+              detailText: identification.descriptionDetail,
               color: identification.color,
               tintedStyle: true,
             ),

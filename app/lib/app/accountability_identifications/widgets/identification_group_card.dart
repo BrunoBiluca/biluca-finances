@@ -1,4 +1,3 @@
-import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:flutter/material.dart';
 
@@ -118,6 +117,18 @@ class IdentificationGroupCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (category.descriptionDetail.trim().isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  category.descriptionDetail,
+                  key: Key('identification-description-detail-${category.id}'),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
               if (parentName != null) ...[
                 const SizedBox(height: 4),
                 Text(
@@ -223,6 +234,18 @@ class IdentificationGroupCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  if (child.descriptionDetail.trim().isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      child.descriptionDetail,
+                      key: Key('identification-description-detail-${child.id}'),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

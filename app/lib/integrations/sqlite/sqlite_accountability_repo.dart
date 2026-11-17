@@ -192,11 +192,12 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
     var identificationMap = identification.toMap();
 
     await db.rawInsert("""
-    INSERT INTO accountability_identifications (id, description, color, icon, type, parent_id, discontinued, insertedAt, updatedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+    INSERT INTO accountability_identifications (id, description, description_detail, color, icon, type, parent_id, discontinued, insertedAt, updatedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     """, [
       identificationMap["id"],
       identificationMap["description"],
+      identificationMap["description_detail"],
       identificationMap["color"],
       json.encode(identificationMap["icon"]),
       identificationMap["type"],

@@ -35,7 +35,11 @@ void main() {
   testWidgets("shows identifications with their visual attributes",
       (tester) async {
     final identifications = [
-      AccountabilityIdentification("identificação 1", Colors.green)
+      AccountabilityIdentification(
+        "identificação 1",
+        Colors.green,
+        descriptionDetail: "Descrição auxiliar da primeira",
+      )
         ..icon = Icons.restaurant,
       AccountabilityIdentification("identificação 2", Colors.blue),
     ];
@@ -43,12 +47,14 @@ void main() {
     await pumpSelector(tester, identifications: identifications);
 
     expect(find.text("identificação 1"), findsOneWidget);
+    expect(find.text("Descrição auxiliar da primeira"), findsOneWidget);
     expect(find.text("identificação 2"), findsOneWidget);
 
     final firstItem =
         find.byKey(Key('identification-item-${identifications[0].id}'));
     final ballon = tester.widget<TextBallon>(firstItem);
     expect(ballon.tintedStyle, isTrue);
+    expect(ballon.detailText, "Descrição auxiliar da primeira");
     final decoration = tester.widget<DecoratedBox>(
       find.descendant(of: firstItem, matching: find.byType(DecoratedBox)),
     );
@@ -93,7 +99,11 @@ void main() {
 
   testWidgets("filters identifications by the search text", (tester) async {
     final identifications = [
-      AccountabilityIdentification("Alimentação", Colors.green),
+      AccountabilityIdentification(
+        "Alimentação",
+        Colors.green,
+        descriptionDetail: "Despesas de mercado",
+      ),
       AccountabilityIdentification("Transporte", Colors.blue),
     ];
 
@@ -102,6 +112,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text("Transporte"), findsOneWidget);
+    expect(find.text("Alimentação"), findsNothing);
+
+    await tester.enterText(find.byType(TextField), "mercado");
+    await tester.pumpAndSettle();
     expect(find.text("Alimentação"), findsNothing);
   });
 

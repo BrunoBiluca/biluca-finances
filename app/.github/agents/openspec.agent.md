@@ -1,6 +1,7 @@
 ---
 name: OpenSpec
 description: "Manages OpenSpec changes, specs, and workflows using the OpenSpec CLI. Use this agent for proposing changes, exploring ideas, validating artifacts, checking status, and archiving completed work."
+model: DeepSeek V4 Pro
 tools:
   - "execute"
   - "read"

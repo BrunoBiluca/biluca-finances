@@ -7,6 +7,7 @@ import 'package:uuid/uuid.dart';
 class AccountabilityIdentification {
   final String id;
   String description;
+  String descriptionDetail;
   Color color;
   IconData icon;
 
@@ -18,6 +19,7 @@ class AccountabilityIdentification {
   AccountabilityIdentification._(
     this.id,
     this.description,
+    this.descriptionDetail,
     this.color,
     this.icon,
     this.type, {
@@ -28,6 +30,7 @@ class AccountabilityIdentification {
   factory AccountabilityIdentification(
     String description,
     Color color, {
+    String descriptionDetail = '',
     String? parentId,
     bool discontinued = false,
     AccountabilityIdentificationType type =
@@ -36,6 +39,7 @@ class AccountabilityIdentification {
     return AccountabilityIdentification._(
       const Uuid().v4(),
       description,
+      descriptionDetail,
       color,
       Icons.help_outline,
       type,
@@ -56,6 +60,7 @@ class AccountabilityIdentification {
     return AccountabilityIdentification._(
       map['id'],
       map['description'],
+      (map['description_detail'] as String?) ?? '',
       Color(map['color']),
       IconData(
         map['icon']['code'],
@@ -76,6 +81,7 @@ class AccountabilityIdentification {
 
   AccountabilityIdentification copyWith({
     String? description,
+    String? descriptionDetail,
     Color? color,
     IconData? icon,
     AccountabilityIdentificationType? type,
@@ -86,6 +92,7 @@ class AccountabilityIdentification {
     return AccountabilityIdentification._(
       id,
       description ?? this.description,
+      descriptionDetail ?? this.descriptionDetail,
       color ?? this.color,
       icon ?? this.icon,
       type ?? this.type,
@@ -98,6 +105,7 @@ class AccountabilityIdentification {
     return {
       'id': id,
       'description': description,
+      'description_detail': descriptionDetail,
       'color': color.toARGB32(),
       'icon': {
         'code': icon.codePoint,

@@ -155,6 +155,9 @@ class DBProvider {
     ''',
     '''
     ALTER TABLE accountability_identifications ADD COLUMN discontinued INTEGER NOT NULL DEFAULT 0
+    ''',
+    '''
+    ALTER TABLE accountability_identifications ADD COLUMN description_detail TEXT NOT NULL DEFAULT ''
     '''
   ];
 }

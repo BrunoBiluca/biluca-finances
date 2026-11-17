@@ -34,6 +34,7 @@ class IdentificationEditModal extends StatefulWidget {
 
 class _IdentificationEditModalState extends State<IdentificationEditModal> {
   late final TextEditingController _descriptionController;
+  late final TextEditingController _descriptionDetailController;
   late String? _parentId;
   late bool _discontinued;
   late AccountabilityIdentificationType _type;
@@ -58,6 +59,9 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
   void initState() {
     super.initState();
     _descriptionController = TextEditingController(text: widget.identification?.description ?? '');
+    _descriptionDetailController = TextEditingController(
+      text: widget.identification?.descriptionDetail ?? '',
+    );
     _parentId = widget.identification?.parentId ?? widget.initialParentId;
     _discontinued = widget.identification?.discontinued ?? false;
     _type = IdentificationTypeRules.inheritedType(
@@ -84,6 +88,7 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
   @override
   void dispose() {
     _descriptionController.dispose();
+    _descriptionDetailController.dispose();
     super.dispose();
   }
 
@@ -122,6 +127,7 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
 
   void _save() {
     final description = _descriptionController.text.trim();
+    final descriptionDetail = _descriptionDetailController.text.trim();
     final nameError = description.isEmpty ? 'Informe o nome da categoria' : null;
     final parentError = IdentificationHierarchyRules.validateParent(
       parentId: _parentId,
@@ -159,6 +165,7 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
       saved = AccountabilityIdentification(
         description,
         _color,
+        descriptionDetail: descriptionDetail,
         parentId: _parentId,
         discontinued: _discontinued,
         type: _type,
@@ -166,6 +173,7 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
     } else {
       saved = widget.identification!.copyWith(
         description: description,
+        descriptionDetail: descriptionDetail,
         color: _color,
         icon: _icon,
         type: _type,
@@ -281,6 +289,8 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
                   children: [
                     _buildNameField(context),
                     const SizedBox(height: 16),
+                    _buildDescriptionDetailField(context),
+                    const SizedBox(height: 16),
                     _buildParentField(context),
                     const SizedBox(height: 16),
                     _buildStatusField(context),
@@ -389,6 +399,34 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: theme.colorScheme.error),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDescriptionDetailField(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextField(
+      key: const Key('identification-description-detail-field'),
+      controller: _descriptionDetailController,
+      minLines: 2,
+      maxLines: 4,
+      decoration: InputDecoration(
+        labelText: 'Descrição',
+        hintText: 'Informações adicionais sobre esta identificação',
+        filled: true,
+        fillColor: theme.colorScheme.surfaceContainer,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: _modalFieldBorderColor),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: _modalFieldBorderColor),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: _modalFocusedFieldBorderColor),
         ),
       ),
     );

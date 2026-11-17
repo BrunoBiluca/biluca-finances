@@ -20,6 +20,7 @@ class TextBallonEditOption {
 class TextBallon extends StatefulWidget {
   final IconData icon;
   final String text;
+  final String? detailText;
   final Color color;
   final Function({String? text, Color? color, IconData? icon})? onEdit;
   final VoidCallback? onDelete;
@@ -30,6 +31,7 @@ class TextBallon extends StatefulWidget {
   const TextBallon({
     super.key,
     required this.text,
+    this.detailText,
     required this.color,
     this.onEdit,
     this.onDelete,
@@ -98,6 +100,7 @@ class _TextBallonState extends State<TextBallon> {
   }
 
   Row renderBaseMode(BuildContext context) {
+    final detailText = widget.detailText?.trim();
     return Row(
       children: [
         Icon(
@@ -107,12 +110,39 @@ class _TextBallonState extends State<TextBallon> {
               : widget.color.adaptByLuminance(),
         ),
         const SizedBox(width: 10),
-        Text(
-          widget.text,
-          style: TextStyle(
-            color: widget.tintedStyle
-                ? widget.color
-                : widget.color.adaptByLuminance(),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.text,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: widget.tintedStyle
+                      ? widget.color
+                      : widget.color.adaptByLuminance(),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              if (detailText != null && detailText.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(
+                    detailText,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: widget.tintedStyle
+                              ? Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant
+                              : widget.color.adaptByLuminance(),
+                        ),
+                  ),
+                ),
+            ],
           ),
         ),
       ],

@@ -21,7 +21,11 @@ void main() {
   });
 
   testWidgets("deve retornar o identificação quando passado", (tester) async {
-    var id = AccountabilityIdentification("identificação teste", Colors.green)
+    var id = AccountabilityIdentification(
+      "identificação teste",
+      Colors.green,
+      descriptionDetail: "Descrição que não deve aparecer na tag",
+    )
       ..icon = Icons.restaurant;
     await tester.pumpWidget(
       MaterialApp(
@@ -34,6 +38,7 @@ void main() {
     );
 
     expect(find.text(id.description), findsOneWidget);
+    expect(find.text(id.descriptionDetail), findsNothing);
     final label = tester.widget<Container>(
       find.byKey(const Key('accountability-identification-label')),
     );

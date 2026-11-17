@@ -217,6 +217,10 @@ void main() {
 
     expect(find.text('Nova identificação'), findsWidgets);
     expect(find.byKey(const Key('identification-name-field')), findsOneWidget);
+    expect(
+      find.byKey(const Key('identification-description-detail-field')),
+      findsOneWidget,
+    );
     expect(find.byKey(const Key('identification-parent-field')), findsOneWidget);
     expect(find.byKey(const Key('identification-type-field')), findsOneWidget);
     expect(find.byKey(const Key('identification-icon-button')), findsOneWidget);
@@ -228,6 +232,10 @@ void main() {
       find.byKey(const Key('identification-name-field')),
       'Nova categoria',
     );
+    await tester.enterText(
+      find.byKey(const Key('identification-description-detail-field')),
+      'Categoria usada em despesas de rotina',
+    );
     await tester.tap(find.byKey(const Key('identification-save')));
     await tester.pumpAndSettle();
     await flush(tester);
@@ -235,6 +243,11 @@ void main() {
     expect(categories, hasLength(1));
     final created = categories.single;
     expect(created.description, 'Nova categoria');
+    expect(created.descriptionDetail, 'Categoria usada em despesas de rotina');
+    expect(
+      find.text('Categoria usada em despesas de rotina'),
+      findsOneWidget,
+    );
     expect(created.parentId, isNull);
     expect(created.discontinued, isFalse);
     expect(created.type, AccountabilityIdentificationType.expense);
@@ -276,12 +289,18 @@ void main() {
       find.byKey(const Key('identification-name-field')),
       'Subcategoria',
     );
+    await tester.enterText(
+      find.byKey(const Key('identification-description-detail-field')),
+      'Detalhe da subcategoria',
+    );
     await tester.tap(find.byKey(const Key('identification-save')));
     await tester.pumpAndSettle();
     await flush(tester);
 
     final created = categories.firstWhere((item) => item.description == 'Subcategoria');
     expect(created.parentId, parent.id);
+    expect(created.descriptionDetail, 'Detalhe da subcategoria');
+    expect(find.text('Detalhe da subcategoria'), findsOneWidget);
     expect(
       find.descendant(
         of: find.byKey(Key('identification-group-${parent.id}')),
@@ -305,10 +324,20 @@ void main() {
       tester.widget<TextField>(find.byKey(const Key('identification-name-field'))).controller!.text,
       'Original',
     );
+    expect(
+      tester.widget<TextField>(
+        find.byKey(const Key('identification-description-detail-field')),
+      ).controller!.text,
+      '',
+    );
 
     await tester.enterText(
       find.byKey(const Key('identification-name-field')),
       'Atualizada',
+    );
+    await tester.enterText(
+      find.byKey(const Key('identification-description-detail-field')),
+      'Nova descrição auxiliar',
     );
     await tester.tap(find.byKey(const Key('identification-type-field')));
     await tester.pumpAndSettle();
@@ -320,6 +349,7 @@ void main() {
     await flush(tester);
 
     expect(categories.single.description, 'Atualizada');
+    expect(categories.single.descriptionDetail, 'Nova descrição auxiliar');
     expect(categories.single.type, AccountabilityIdentificationType.income);
     expect(categories.single.discontinued, isTrue);
     expect(find.text('Atualizada'), findsOneWidget);
@@ -882,6 +912,10 @@ void main() {
 
     await pumpPage(tester, height: 700);
     await tester.tap(find.byKey(Key('edit-identification-${categories.single.id}')));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(
+      find.byKey(const Key('identification-color-button')),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const Key('identification-color-button')));
     await tester.pumpAndSettle();
