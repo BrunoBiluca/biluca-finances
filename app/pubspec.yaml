@@ -35,6 +35,10 @@ dependencies:
   go_router: ^17.3.0
   package_info_plus: ^9.0.1
   sqflite_common: ^2.5.8
+  googleapis: ^19.0.0
+  googleapis_auth: ^2.3.7
+  url_launcher: ^6.3.3
+  crypto: ^3.0.8
 
 dev_dependencies:
   flutter_test:

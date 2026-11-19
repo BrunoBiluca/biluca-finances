@@ -25,6 +25,7 @@ class _SidebarState extends State<Sidebar> {
         Colors.lightGreen),
     SidebarPage("Identificações", "/identifications", Icons.category,
         Colors.orangeAccent),
+    SidebarPage("Configurações", "/settings", Icons.settings, Colors.blueGrey),
   ];
 
   bool isOpen = true;

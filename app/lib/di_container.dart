@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:biluca_financas/app/themes/theme_setup.dart';
 import 'package:biluca_financas/main.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 
@@ -20,14 +24,25 @@ import 'package:biluca_financas/core/accountability/services/accountability_repo
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/current_month_report.service.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
+import 'package:biluca_financas/core/backup/bloc/backup_bloc.dart';
+import 'package:biluca_financas/core/backup/services/backup_connector.dart';
+import 'package:biluca_financas/core/backup/services/backup_record_store.dart';
+import 'package:biluca_financas/core/backup/services/backup_service.dart';
+import 'package:biluca_financas/core/backup/services/database_file_controller.dart';
 
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
+import 'package:biluca_financas/integrations/google_drive/backup_profile.dart';
+import 'package:biluca_financas/integrations/google_drive/file_backup_record_store.dart';
+import 'package:biluca_financas/integrations/google_drive/google_drive_backup_service.dart';
+import 'package:biluca_financas/integrations/google_drive/google_drive_connector.dart';
+import 'package:biluca_financas/integrations/google_drive/google_oauth_credentials.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_repo.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_month_service.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_import_service.dart';
 import 'package:biluca_financas/integrations/sqlite/db_provider.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_stats_service.dart';
+import 'package:biluca_financas/integrations/sqlite/sqlite_database_file_controller.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_yearly_report_service.dart';
 
 Future<void> setup() async {
@@ -90,6 +105,48 @@ Future<void> setup() async {
       start: start,
       end: end,
     ),
+  );
+
+  await _registerBackup(getIt);
+}
+
+Future<void> _registerBackup(GetIt getIt) async {
+  final databasePath = await DBProvider.i.getDBPath();
+  final profile = resolveBackupProfile();
+  final loggerManager = getIt<LoggerManager>();
+
+  getIt.registerSingleton<DatabaseFileController>(
+    SqliteDatabaseFileController(),
+  );
+  getIt.registerSingleton<BackupRecordStore>(
+    FileBackupRecordStore(
+      File(p.join(p.dirname(databasePath), 'backup_record.json')),
+    ),
+  );
+  getIt.registerSingleton<BackupConnector>(
+    GoogleDriveConnector(
+      credentialsProvider: FileGoogleOAuthCredentialsProvider(
+        resolveGoogleOAuthCredentialsFile(),
+      ),
+      backupFileName: p.basename(databasePath),
+      profile: profile,
+      prompt: (url) {
+        launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      },
+      logger: loggerManager.instance('GoogleDriveConnector'),
+    ),
+  );
+  getIt.registerSingleton<BackupService>(
+    GoogleDriveBackupService(
+      database: getIt<DatabaseFileController>(),
+      store: getIt<BackupRecordStore>(),
+      connector: getIt<BackupConnector>(),
+      profile: profile,
+      logger: loggerManager.instance('GoogleDriveBackupService'),
+    ),
+  );
+  getIt.registerSingleton<BackupBloc>(
+    BackupBloc(service: getIt<BackupService>()),
   );
 }
 

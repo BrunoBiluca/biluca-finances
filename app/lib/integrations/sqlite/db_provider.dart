@@ -73,6 +73,14 @@ class DBProvider {
     );
   }
 
+  int get schemaVersion => migrationsSQL.length;
+
+  Future<void> close() async {
+    final db = _database;
+    _database = null;
+    await db?.close();
+  }
+
   Future<String> getDBPath() async {
     var dirPath = io.Directory.current.path;
     if (kReleaseMode) {

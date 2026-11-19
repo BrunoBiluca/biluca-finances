@@ -97,6 +97,18 @@ Write-Host "O pacote windows foi criado." -ForegroundColor Green
 Write-Host ""
 
 # ####
+# Verificação das credenciais embarcadas no instalador
+# ####
+
+if (-Not (Test-Path "./secrets/google_oauth.json")) {
+    Write-Error "[ERRO] Credenciais OAuth não encontradas. Crie ./secrets/google_oauth.json com clientId e clientSecret antes de empacotar."
+    Exit 1
+}
+
+Write-Host "Credenciais OAuth encontradas." -ForegroundColor Green
+Write-Host ""
+
+# ####
 # Compilação do Inno Setup
 # ####
 

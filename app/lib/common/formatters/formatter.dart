@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 class Formatter {
   static String date(DateTime date) => DateFormat('dd/MM/yyyy').format(date);
 
+  static String dateTime(DateTime date) =>
+      DateFormat('dd/MM/yyyy HH:mm').format(date.toLocal());
+
   static String number(double number) =>
       NumberFormat.decimalPatternDigits(locale: "pt_BR", decimalDigits: 2).format(number);
 

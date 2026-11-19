@@ -7,13 +7,13 @@ import 'package:biluca_financas/app/routes.dart';
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
-  final Future<void> Function() onAppExit;
+  final Future<bool> Function() onAppExit;
   const App(this.onAppExit, {super.key});
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
-    await onAppExit();
-    return super.didRequestAppExit();
+    final shouldExit = await onAppExit();
+    return shouldExit ? AppExitResponse.exit : AppExitResponse.cancel;
   }
 
   @override
