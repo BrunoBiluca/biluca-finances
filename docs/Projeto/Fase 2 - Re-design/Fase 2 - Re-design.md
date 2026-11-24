@@ -28,6 +28,7 @@ Junto a melhoria visual, também é a oportunidade de refatorar o projeto para m
 
 - [[Referências visuais]]
 - [[Referências sistêmicas]]
+- [[Melhorias priorizadas]]
 
 ### Re-design de todos os elementos da aplicação
 
