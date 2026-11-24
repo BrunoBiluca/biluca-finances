@@ -1,31 +1,42 @@
 import 'package:biluca_financas/app/accountability_identifications/accountability_identifications_page.dart';
 import 'package:biluca_financas/app/themes/obsidian_wealth/obsidian_wealth_dark_theme.dart';
 import 'package:biluca_financas/app/themes/obsidian_wealth/obsidian_wealth_light_theme.dart';
+import 'package:biluca_financas/common/ui/base_toast.dart';
 import 'package:biluca_financas/core/accountability/bloc/identification_categories_bloc.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../_mocks/mock_accountability_repo.dart';
 
+class MockFToast extends Mock implements FToast {}
+
 void main() {
   final getIt = GetIt.instance;
   late MockAccountabilityRepo repo;
   late List<AccountabilityIdentification> categories;
+  late MockFToast fToast;
+  late List<BaseToast> shownToasts;
 
   setUpAll(() {
     registerFallbackValue(
       AccountabilityIdentification('fallback', Colors.black),
     );
+    registerFallbackValue(const SizedBox.shrink());
+    registerFallbackValue(ToastGravity.BOTTOM);
+    registerFallbackValue(Duration.zero);
   });
 
   setUp(() async {
     await getIt.reset();
     repo = MockAccountabilityRepo();
     categories = [];
+    fToast = MockFToast();
+    shownToasts = [];
 
     when(() => repo.getIdentifications()).thenAnswer((_) async => List.of(categories));
     when(() => repo.addIdentification(any())).thenAnswer((invocation) async {
@@ -49,6 +60,16 @@ void main() {
     getIt.registerFactory<IdentificationCategoriesBloc>(
       () => IdentificationCategoriesBloc(repo: repo),
     );
+    when(
+      () => fToast.showToast(
+        child: any(named: 'child'),
+        gravity: any(named: 'gravity'),
+        toastDuration: any(named: 'toastDuration'),
+      ),
+    ).thenAnswer((invocation) {
+      shownToasts.add(invocation.namedArguments[#child] as BaseToast);
+    });
+    getIt.registerSingleton<FToast>(fToast);
   });
 
   tearDown(() async {
@@ -1028,5 +1049,114 @@ void main() {
     expect(find.byKey(const Key('identification-page-title')), findsOneWidget);
     expect(find.byKey(const Key('new-identification-category')), findsOneWidget);
     expect(find.byKey(const Key('identification-tab-all')), findsOneWidget);
+  });
+
+  testWidgets('shows a success toast after creating a category', (tester) async {
+    categories = [];
+    await pumpPage(tester);
+
+    await tester.tap(find.byKey(const Key('new-identification-category')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('identification-name-field')),
+      'Nova categoria',
+    );
+    await tester.tap(find.byKey(const Key('identification-save')));
+    await tester.pumpAndSettle();
+    await flush(tester);
+    await tester.pump();
+
+    expect(shownToasts, hasLength(1));
+    expect(shownToasts.single.text, 'Identificação criada com sucesso');
+    expect(shownToasts.single.type, BaseToastType.success);
+    verify(
+      () => fToast.showToast(
+        child: any(named: 'child'),
+        gravity: ToastGravity.BOTTOM_RIGHT,
+        toastDuration: const Duration(seconds: 2),
+      ),
+    ).called(1);
+  });
+
+  testWidgets('shows a success toast after editing a category', (tester) async {
+    final category = AccountabilityIdentification('Original', Colors.green);
+    categories = [category];
+    await pumpPage(tester);
+
+    await tester.tap(find.byKey(Key('edit-identification-${category.id}')));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('identification-name-field')),
+      'Atualizada',
+    );
+    await tester.tap(find.byKey(const Key('identification-save')));
+    await tester.pumpAndSettle();
+    await flush(tester);
+    await tester.pump();
+
+    expect(shownToasts, hasLength(1));
+    expect(shownToasts.single.text, 'Identificação atualizada com sucesso');
+    expect(shownToasts.single.type, BaseToastType.success);
+  });
+
+  testWidgets('shows a success toast after deleting a category', (tester) async {
+    final category = AccountabilityIdentification('Categoria', Colors.green);
+    categories = [category];
+    await pumpPage(tester);
+
+    await tester.tap(find.byKey(Key('edit-identification-${category.id}')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('identification-delete')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('identification-delete-confirm')));
+    await tester.pumpAndSettle();
+    await flush(tester);
+    await tester.pump();
+
+    expect(shownToasts, hasLength(1));
+    expect(shownToasts.single.text, 'Identificação excluída com sucesso');
+    expect(shownToasts.single.type, BaseToastType.success);
+  });
+
+  testWidgets('does not show a toast when creation is cancelled', (tester) async {
+    await pumpPage(tester);
+
+    await tester.tap(find.byKey(const Key('new-identification-category')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('identification-cancel')));
+    await tester.pumpAndSettle();
+    await flush(tester);
+
+    expect(shownToasts, isEmpty);
+  });
+
+  testWidgets('does not show a toast when editing is cancelled', (tester) async {
+    final category = AccountabilityIdentification('Categoria', Colors.green);
+    categories = [category];
+    await pumpPage(tester);
+
+    await tester.tap(find.byKey(Key('edit-identification-${category.id}')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('identification-cancel')));
+    await tester.pumpAndSettle();
+    await flush(tester);
+
+    expect(shownToasts, isEmpty);
+  });
+
+  testWidgets('does not show a toast when deletion is cancelled', (tester) async {
+    final category = AccountabilityIdentification('Categoria', Colors.green);
+    categories = [category];
+    await pumpPage(tester);
+
+    await tester.tap(find.byKey(Key('edit-identification-${category.id}')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('identification-delete')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('identification-delete-cancel')));
+    await tester.pumpAndSettle();
+    await flush(tester);
+
+    expect(shownToasts, isEmpty);
   });
 }

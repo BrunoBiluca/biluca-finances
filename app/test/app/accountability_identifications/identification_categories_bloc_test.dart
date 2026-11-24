@@ -208,6 +208,84 @@ void main() {
   );
 
   blocTest<IdentificationCategoriesBloc, IdentificationCategoriesState>(
+    'increments the creation version after creating',
+    build: () {
+      when(() => repo.addIdentification(identification))
+          .thenAnswer((_) async => identification);
+      when(() => repo.getIdentifications())
+          .thenAnswer((_) async => [identification]);
+      return IdentificationCategoriesBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(CreateIdentificationCategory(identification)),
+    expect: () => [
+      isA<IdentificationCategoriesChanged>()
+          .having((state) => state.creationVersion, 'creationVersion', 1)
+          .having((state) => state.updateVersion, 'updateVersion', 0)
+          .having((state) => state.deletionVersion, 'deletionVersion', 0),
+    ],
+  );
+
+  blocTest<IdentificationCategoriesBloc, IdentificationCategoriesState>(
+    'increments the update version after editing',
+    build: () {
+      when(() => repo.updateIdentification(any())).thenAnswer((_) async {});
+      when(() => repo.getIdentifications())
+          .thenAnswer((_) async => [identification]);
+      return IdentificationCategoriesBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(UpdateIdentificationCategory(identification)),
+    expect: () => [
+      isA<IdentificationCategoriesChanged>()
+          .having((state) => state.creationVersion, 'creationVersion', 0)
+          .having((state) => state.updateVersion, 'updateVersion', 1)
+          .having((state) => state.deletionVersion, 'deletionVersion', 0),
+    ],
+  );
+
+  blocTest<IdentificationCategoriesBloc, IdentificationCategoriesState>(
+    'increments the deletion version after deleting',
+    build: () {
+      when(() => repo.deleteIdentification(identification.id))
+          .thenAnswer((_) async {});
+      when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      return IdentificationCategoriesBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(DeleteIdentificationCategory(identification.id)),
+    expect: () => [
+      isA<IdentificationCategoriesChanged>()
+          .having((state) => state.creationVersion, 'creationVersion', 0)
+          .having((state) => state.updateVersion, 'updateVersion', 0)
+          .having((state) => state.deletionVersion, 'deletionVersion', 1),
+    ],
+  );
+
+  blocTest<IdentificationCategoriesBloc, IdentificationCategoriesState>(
+    'keeps the versions when loading',
+    build: () {
+      when(() => repo.getIdentifications())
+          .thenAnswer((_) async => [identification]);
+      return IdentificationCategoriesBloc(repo: repo);
+    },
+    seed: () => IdentificationCategoriesChanged(
+      identifications: [identification],
+      creationVersion: 2,
+      updateVersion: 3,
+      deletionVersion: 4,
+    ),
+    act: (bloc) => bloc.add(const LoadIdentificationCategories()),
+    expect: () => [
+      isA<IdentificationCategoriesChanged>()
+          .having((state) => state.isLoading, 'isLoading', true)
+          .having((state) => state.creationVersion, 'creationVersion', 2),
+      isA<IdentificationCategoriesChanged>()
+          .having((state) => state.isLoading, 'isLoading', false)
+          .having((state) => state.creationVersion, 'creationVersion', 2)
+          .having((state) => state.updateVersion, 'updateVersion', 3)
+          .having((state) => state.deletionVersion, 'deletionVersion', 4),
+    ],
+  );
+
+  blocTest<IdentificationCategoriesBloc, IdentificationCategoriesState>(
     'deletes a category and reloads',
     build: () {
       when(() => repo.deleteIdentification(identification.id))

@@ -26,8 +26,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
-  Win32Window::Size size(2560, 1280);
-  if (!window.Create(L"biluca_financas", origin, size)) {
+  Win32Window::Size size(1920, 1080);
+  if (!window.Create(L"Biluca Finan\u00E7as", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

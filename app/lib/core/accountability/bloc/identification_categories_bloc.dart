@@ -12,10 +12,7 @@ class IdentificationCategoriesBloc
   IdentificationCategoriesBloc({required this.repo})
       : super(const IdentificationCategoriesInitial()) {
     on<LoadIdentificationCategories>((event, emit) async {
-      emit(IdentificationCategoriesChanged(
-        identifications: state.identifications,
-        isLoading: true,
-      ));
+      emit(_state(isLoading: true));
       await _reload(emit);
     });
 
@@ -29,7 +26,7 @@ class IdentificationCategoriesBloc
         identification = identification.copyWith(type: parent.type);
       }
       await repo.addIdentification(identification);
-      await _reload(emit);
+      await _reload(emit, creationDelta: 1);
     });
 
     on<UpdateIdentificationCategory>((event, emit) async {
@@ -67,17 +64,43 @@ class IdentificationCategoriesBloc
         }
       }
 
-      await _reload(emit);
+      await _reload(emit, updateDelta: 1);
     });
 
     on<DeleteIdentificationCategory>((event, emit) async {
       await repo.deleteIdentification(event.identificationId);
-      await _reload(emit);
+      await _reload(emit, deletionDelta: 1);
     });
   }
 
-  Future<void> _reload(Emitter<IdentificationCategoriesState> emit) async {
+  IdentificationCategoriesChanged _state({
+    List<AccountabilityIdentification>? identifications,
+    bool isLoading = false,
+    int creationDelta = 0,
+    int updateDelta = 0,
+    int deletionDelta = 0,
+  }) {
+    return IdentificationCategoriesChanged(
+      identifications: identifications ?? state.identifications,
+      isLoading: isLoading,
+      creationVersion: state.creationVersion + creationDelta,
+      updateVersion: state.updateVersion + updateDelta,
+      deletionVersion: state.deletionVersion + deletionDelta,
+    );
+  }
+
+  Future<void> _reload(
+    Emitter<IdentificationCategoriesState> emit, {
+    int creationDelta = 0,
+    int updateDelta = 0,
+    int deletionDelta = 0,
+  }) async {
     final identifications = await repo.getIdentifications();
-    emit(IdentificationCategoriesChanged(identifications: identifications));
+    emit(_state(
+      identifications: identifications,
+      creationDelta: creationDelta,
+      updateDelta: updateDelta,
+      deletionDelta: deletionDelta,
+    ));
   }
 }

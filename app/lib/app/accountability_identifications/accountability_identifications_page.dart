@@ -2,6 +2,7 @@ import 'package:biluca_financas/app/accountability_identifications/widgets/ident
 import 'package:biluca_financas/app/accountability_identifications/widgets/identification_edit_modal.dart';
 import 'package:biluca_financas/app/accountability_identifications/widgets/identification_group_card.dart';
 import 'package:biluca_financas/app/accountability_identifications/widgets/identification_status_tabs.dart';
+import 'package:biluca_financas/common/ui/base_toast.dart';
 import 'package:biluca_financas/core/accountability/bloc/identification_categories_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/identification_categories_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/identification_categories_states.dart';
@@ -10,6 +11,7 @@ import 'package:biluca_financas/core/accountability/models/accountability_identi
 import 'package:biluca_financas/core/accountability/models/identification_consolidation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
 class AccountabilityIdentificationsPage extends StatelessWidget {
@@ -37,43 +39,71 @@ class _AccountabilityIdentificationsContentState extends State<_AccountabilityId
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IdentificationCategoriesBloc, IdentificationCategoriesState>(
-      builder: (context, state) {
-        final consolidation = IdentificationConsolidation.fromIdentifications(state.identifications);
-        final typeFiltered = state.identifications
-            .where(
-              (item) => _typeFilter == null || item.type == _typeFilter,
-            )
-            .toList();
-        final activeCount = typeFiltered.where((item) => !item.discontinued).length;
-        final discontinuedCount = typeFiltered.where((item) => item.discontinued).length;
+    return _successListener(
+      message: 'Identificação criada com sucesso',
+      versionOf: (state) => state.creationVersion,
+      child: _successListener(
+        message: 'Identificação atualizada com sucesso',
+        versionOf: (state) => state.updateVersion,
+        child: _successListener(
+          message: 'Identificação excluída com sucesso',
+          versionOf: (state) => state.deletionVersion,
+          child: BlocBuilder<IdentificationCategoriesBloc, IdentificationCategoriesState>(
+            builder: (context, state) {
+              final consolidation = IdentificationConsolidation.fromIdentifications(state.identifications);
+              final typeFiltered = state.identifications
+                  .where(
+                    (item) => _typeFilter == null || item.type == _typeFilter,
+                  )
+                  .toList();
+              final activeCount = typeFiltered.where((item) => !item.discontinued).length;
+              final discontinuedCount = typeFiltered.where((item) => item.discontinued).length;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(context),
-            const SizedBox(height: 24),
-            IdentificationConsolidationCards(consolidation: consolidation),
-            const SizedBox(height: 20),
-            IdentificationStatusTabs(
-              selected: _filter,
-              total: typeFiltered.length,
-              active: activeCount,
-              discontinued: discontinuedCount,
-              typeFilter: _typeFilter,
-              onChanged: (filter) => setState(() => _filter = filter),
-              onTypeChanged: (type) => setState(() => _typeFilter = type),
-            ),
-            if (state.isLoading)
-              const Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: LinearProgressIndicator(minHeight: 2),
-              ),
-            const SizedBox(height: 16),
-            _buildList(context, state),
-          ],
-        );
-      },
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildHeader(context),
+                  const SizedBox(height: 24),
+                  IdentificationConsolidationCards(consolidation: consolidation),
+                  const SizedBox(height: 20),
+                  IdentificationStatusTabs(
+                    selected: _filter,
+                    total: typeFiltered.length,
+                    active: activeCount,
+                    discontinued: discontinuedCount,
+                    typeFilter: _typeFilter,
+                    onChanged: (filter) => setState(() => _filter = filter),
+                    onTypeChanged: (type) => setState(() => _typeFilter = type),
+                  ),
+                  if (state.isLoading)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 12),
+                      child: LinearProgressIndicator(minHeight: 2),
+                    ),
+                  const SizedBox(height: 16),
+                  _buildList(context, state),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _successListener({
+    required String message,
+    required int Function(IdentificationCategoriesState state) versionOf,
+    required Widget child,
+  }) {
+    return BlocListener<IdentificationCategoriesBloc, IdentificationCategoriesState>(
+      listenWhen: (previous, current) => versionOf(previous) != versionOf(current),
+      listener: (context, state) => GetIt.I<FToast>().showToast(
+        child: BaseToast(text: message, type: BaseToastType.success),
+        gravity: ToastGravity.BOTTOM_RIGHT,
+        toastDuration: const Duration(seconds: 2),
+      ),
+      child: child,
     );
   }
 
