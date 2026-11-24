@@ -22,4 +22,33 @@ void main() {
       'desenvolvimento',
     );
   });
+
+  test('finds the configured profile regardless of the name casing', () {
+    expect(
+      resolveBackupProfile(const {'biluca_backup_profile': 'desenvolvimento'}),
+      'desenvolvimento',
+    );
+    expect(
+      backupProfileFromEnvironment(
+        const {'Biluca_Backup_Profile': ' desenvolvimento '},
+      ),
+      'desenvolvimento',
+    );
+  });
+
+  test('reports when the profile comes from the environment', () {
+    expect(backupProfileFromEnvironment(const {}), isNull);
+    expect(
+      backupProfileFromEnvironment(
+        const {backupProfileEnvironmentVariable: '   '},
+      ),
+      isNull,
+    );
+    expect(
+      backupProfileFromEnvironment(
+        const {backupProfileEnvironmentVariable: 'desenvolvimento'},
+      ),
+      'desenvolvimento',
+    );
+  });
 }

@@ -16,13 +16,19 @@
             "name": "app (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "env": {
+                "BILUCA_BACKUP_PROFILE": "desenvolvimento"
+            }
         },
         {
             "name": "app (release mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "env": {
+                "BILUCA_BACKUP_PROFILE": "desenvolvimento"
+            }
         }
     ]
 }

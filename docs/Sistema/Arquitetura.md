@@ -68,7 +68,8 @@ A aplicação oferece backup opcional do banco SQLite no Google Drive, disponív
 - Apresentação: página de configurações em `lib/app/settings/`, estado da sincronização na página inicial em `lib/app/home/` e modal de fechamento em `lib/app/app_exit/`.
 - Sincronização: na abertura da aplicação e no fechamento, com escolha entre manter o arquivo local ou atualizar com o do Google Drive quando ambos foram alterados.
 - Pasta utilizada no Google Drive: `biluca.com/Biluca Finanças/<perfil>`, com uma subpasta por perfil de sincronização.
-- Perfil de sincronização: nome fixo definido em configuração, com valor padrão `principal`, usado para separar o backup de desenvolvimento do backup da aplicação real. A variável de ambiente `BILUCA_BACKUP_PROFILE` sobrescreve o nome; o perfil ativo aparece na página de configurações.
+- Perfil de sincronização: nome fixo definido em configuração, com valor padrão `principal`, usado para separar o backup de desenvolvimento do backup da aplicação real. A variável de ambiente `BILUCA_BACKUP_PROFILE` sobrescreve o nome (o nome é comparado sem diferenciar maiúsculas de minúsculas); o perfil ativo aparece na página de configurações e é registrado no `logs.txt` na abertura da aplicação.
+- Perfil de desenvolvimento: para que qualquer execução a partir do VS Code use o mesmo perfil, `dart.env` no arquivo `biluca-financas.code-workspace` define `BILUCA_BACKUP_PROFILE=desenvolvimento`; as configurações de execução em `app/.vscode/launch.json` repetem a variável. Execuções fora do VS Code (`flutter run`, instalador) usam o perfil `principal` a menos que a variável esteja definida no processo.
 - Autorização: feita pelo navegador com retorno para `http://localhost`; a tentativa é cancelável e expira em 2 minutos, e a sincronização expira em 60 segundos, exibindo o motivo retornado pelo Google.
 
 ## Credenciais OAuth

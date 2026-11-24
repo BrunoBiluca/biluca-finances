@@ -42,7 +42,8 @@ import 'package:biluca_financas/integrations/app_update/inno_setup_installer_lau
 import 'package:biluca_financas/integrations/app_update/installer_downloader.dart';
 import 'package:biluca_financas/integrations/app_update/windows_app_update_service.dart';
 import 'package:biluca_financas/integrations/github_releases/github_releases_client.dart';
-import 'package:biluca_financas/integrations/google_drive/backup_profile.dart';import 'package:biluca_financas/integrations/google_drive/file_backup_record_store.dart';
+import 'package:biluca_financas/integrations/google_drive/backup_profile.dart';
+import 'package:biluca_financas/integrations/google_drive/file_backup_record_store.dart';
 import 'package:biluca_financas/integrations/google_drive/google_drive_backup_service.dart';
 import 'package:biluca_financas/integrations/google_drive/google_drive_connector.dart';
 import 'package:biluca_financas/integrations/google_drive/google_oauth_credentials.dart';
@@ -157,8 +158,17 @@ Future<void> _registerAppUpdate(GetIt getIt) async {
 
 Future<void> _registerBackup(GetIt getIt) async {
   final databasePath = await DBProvider.i.getDBPath();
-  final profile = resolveBackupProfile();
+  final configuredProfile = backupProfileFromEnvironment();
+  final profile = configuredProfile ?? defaultBackupProfile;
   final loggerManager = getIt<LoggerManager>();
+
+  loggerManager.instance('Backup').info(
+        configuredProfile == null
+            ? 'Perfil de sincronização: $profile (padrão, '
+                '$backupProfileEnvironmentVariable não definida)'
+            : 'Perfil de sincronização: $profile '
+                '($backupProfileEnvironmentVariable)',
+      );
 
   getIt.registerSingleton<DatabaseFileController>(
     SqliteDatabaseFileController(),

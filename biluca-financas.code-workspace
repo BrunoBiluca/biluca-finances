@@ -12,6 +12,9 @@
 	],
 	"settings": {
 		"dart.flutterSdkPath": "C:\\bprojs\\flutter\\flutter\\bin",
+		"dart.env": {
+			"BILUCA_BACKUP_PROFILE": "desenvolvimento"
+		},
 		"editor.wordWrapColumn": 120,
 		"dart.lineLength": 120,
 		"workbench.activityBar.location": "top",
