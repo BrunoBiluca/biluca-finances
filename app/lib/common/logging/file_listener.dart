@@ -14,8 +14,8 @@ class FileLoggingListener extends LoggingListener {
   Future<void> onData(LogRecord record) {
     final content = "${_format(record)}\n";
 
-    // Escritas encadeadas: abrir o arquivo em FileMode.append simultaneamente
-    // faz os registros concorrentes sobrescreverem uns aos outros.
+    // Chained writes: opening the file in FileMode.append simultaneously
+    // makes concurrent records overwrite each other.
     final write = _queue.then((_) => _append(content));
     _queue = write.then<void>((_) {}, onError: (error, stackTrace) {});
     return write;

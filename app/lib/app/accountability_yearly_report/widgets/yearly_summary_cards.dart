@@ -2,6 +2,7 @@ import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/common/extensions/currency.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
+import 'package:biluca_financas/common/lib/safe_ratio.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
 import 'package:flutter/material.dart';
 
@@ -86,12 +87,16 @@ class YearlySummaryCards extends StatelessWidget {
   }
 
   SummaryValueCard buildOutcomeAvgCard(BuildContext context, AppTheme currTheme) {
+    final ratio = safeRatio(res.avgExpenses, res.avgIncomes);
+    final commitment =
+        ratio == null ? "N/A" : Formatter.relationWithoutSign(ratio);
+
     return SummaryValueCard(
       title: "Média mensal de despesas",
       value: res.avgExpenses,
       subInfo: buildSubInfoText(
         label: "Comprometimento da Renda",
-        value: "${Formatter.relationWithoutSign(res.avgExpenses / res.avgIncomes)} consolidado",
+        value: "$commitment consolidado",
         color: currTheme.colors.negativeYield,
         context: context,
       ),
@@ -151,12 +156,16 @@ class YearlySummaryCards extends StatelessWidget {
   }
 
   SummaryValueCard buildBalanceAvgCard(BuildContext context, AppTheme currTheme) {
+    final ratio = safeRatio(res.avgBalance, res.avgIncomes);
+    final savingsIndex =
+        ratio == null ? "N/A" : Formatter.relationWithoutSign(ratio);
+
     return SummaryValueCard(
       title: "Média mensal de balanços",
       value: res.avgBalance,
       subInfo: buildSubInfoText(
         label: "Índice de poupança",
-        value: "${Formatter.relationWithoutSign(res.avgBalance / res.avgIncomes)} da receita",
+        value: "$savingsIndex da receita",
         color: res.avgBalance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
         context: context,
       ),

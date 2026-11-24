@@ -1,4 +1,4 @@
-import 'package:collection/collection.dart';
+﻿import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -9,10 +9,10 @@ import 'package:biluca_financas/core/accountability_stats/models/grouped_by.dart
 import 'package:biluca_financas/core/accountability/services/accountability_search_query.dart';
 import 'package:biluca_financas/integrations/sqlite/sqlite_accountability_repo.dart';
 
-class SQLiteAccontabilityMonthService extends SQLiteAccountabilityRepo
+class SQLiteAccountabilityMonthService extends SQLiteAccountabilityRepo
     implements AccountabilityMonthService {
   final DateTime month;
-  SQLiteAccontabilityMonthService({required Database db, required this.month})
+  SQLiteAccountabilityMonthService({required Database db, required this.month})
       : super(db);
 
   String get monthf => DateFormat("MM/yyyy").format(month);

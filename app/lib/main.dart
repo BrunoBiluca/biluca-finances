@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:biluca_financas/app/app.dart';
 import 'package:biluca_financas/app/app_exit/application_exit_handler.dart';
 import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
@@ -11,16 +13,19 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
-  initializeDateFormatting('pt_BR');
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt_BR');
 
-  await setup();
-
-  await initDatabase();
-
-  await runStartupBackupSync(GetIt.I<BackupService>());
-
-  scheduleStartupAppUpdateCheck(GetIt.I<AppUpdateBloc>());
+  try {
+    await setup();
+    await initDatabase();
+    await runStartupBackupSync(GetIt.I<BackupService>());
+    scheduleStartupAppUpdateCheck(GetIt.I<AppUpdateBloc>());
+  } catch (error, stackTrace) {
+    stderr.writeln("Failed to initialize the application: $error");
+    stderr.writeln(stackTrace);
+    exit(1);
+  }
 
   runApp(App(runApplicationExitHandler));
 }

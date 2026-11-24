@@ -145,7 +145,7 @@ class GoogleDriveBackupService implements BackupService {
 
       return _remember(status);
     } catch (error, stackTrace) {
-      _log.warning('Falha ao sincronizar com o Google Drive.', error, stackTrace);
+      _log.warning('Failed to sync with Google Drive.', error, stackTrace);
       return _remember(record.status.copyWith(
         state: BackupSyncState.failed,
         errorMessage: _describeError(error),

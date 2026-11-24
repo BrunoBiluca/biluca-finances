@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:biluca_financas/app/accountability_import_verification/accountability_import_verification.dart';
 import 'package:biluca_financas/app/accountability_new_entry_form/accountability_new_entry_form.dart';
@@ -8,7 +8,7 @@ import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dar
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
-import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_prediction_service.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';

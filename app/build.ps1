@@ -43,6 +43,20 @@ if (-Not $summary.success) {
 Write-Host "Os testes passaram." -ForegroundColor Green
 
 # ####
+# Análise estática
+# ####
+
+Write-Host "Inicializando a análise estática..." -ForegroundColor Gray
+
+$analysis = flutter analyze
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "[ERRO] A análise estática encontrou problemas."
+    Exit 1
+}
+
+Write-Host "A análise estática não encontrou problemas." -ForegroundColor Green
+
+# ####
 # Controle de versão da aplicação
 # ####
 

@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
+import 'package:biluca_financas/common/lib/safe_ratio.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/models/identification_report_info.dart';
@@ -76,7 +77,7 @@ class CurrentMonthReportService {
         IdentificationReportInfo(
           identification: i.field,
           current: i.total!,
-          participationInTotal: i.total! / totalExpenses,
+          participationInTotal: safeRatio(i.total!, totalExpenses) ?? 0,
         ),
       );
     }
@@ -120,7 +121,7 @@ class CurrentMonthReportService {
         IdentificationReportInfo(
           identification: i.field,
           current: i.total!,
-          participationInTotal: i.total! / totalIncomes,
+          participationInTotal: safeRatio(i.total!, totalIncomes) ?? 0,
         ),
       );
     }

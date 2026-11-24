@@ -3,11 +3,11 @@ import 'dart:io';
 const String defaultBackupProfile = 'principal';
 const String backupProfileEnvironmentVariable = 'BILUCA_BACKUP_PROFILE';
 
-/// Perfil definido pelo ambiente, ou `null` quando não há valor utilizável.
+/// Profile defined by the environment, or `null` when there is no usable value.
 ///
-/// Os nomes de variáveis de ambiente no Windows não diferenciam maiúsculas de
-/// minúsculas, mas `Platform.environment` diferencia, então a busca ignora a
-/// caixa do nome.
+/// Windows environment variable names are case-insensitive, but
+/// `Platform.environment` is case-sensitive, so the lookup ignores the name's
+/// case.
 String? backupProfileFromEnvironment([Map<String, String>? environment]) {
   final env = environment ?? Platform.environment;
   for (final entry in env.entries) {

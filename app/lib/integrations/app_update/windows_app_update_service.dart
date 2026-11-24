@@ -106,7 +106,7 @@ class WindowsAppUpdateService implements AppUpdateService {
     try {
       await installerLauncher.launch(installer);
     } catch (error, stackTrace) {
-      log.severe('Não foi possível abrir o instalador da atualização.', error, stackTrace);
+      log.severe('Failed to open the update installer.', error, stackTrace);
       return AppUpdateRestartResult(
         AppUpdateRestartOutcome.failed,
         errorMessage: 'Não foi possível abrir o instalador: $error',

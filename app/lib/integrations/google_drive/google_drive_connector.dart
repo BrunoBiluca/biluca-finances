@@ -70,8 +70,8 @@ class GoogleDriveConnector implements BackupConnector {
     );
 
     final credentials = await flow.run();
-    _log.info('Escopos solicitados: ${scopes.join(', ')}');
-    _log.info('Escopos concedidos: ${credentials.scopes.join(', ')}');
+    _log.info('Requested scopes: ${scopes.join(', ')}');
+    _log.info('Granted scopes: ${credentials.scopes.join(', ')}');
     ensureDriveScopeGranted(credentials.scopes);
 
     final authClient = autoRefreshingClient(

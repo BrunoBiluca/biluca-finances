@@ -1,6 +1,7 @@
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
+import 'package:biluca_financas/common/lib/safe_ratio.dart';
 import 'package:biluca_financas/common/ui/hover_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -34,6 +35,7 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
   Widget build(BuildContext context) {
     var appTheme = GetIt.I<ThemeManager>();
     var currTheme = appTheme.getCurrentTheme(context);
+    final retentionRatio = safeRatio(widget.balance, widget.incomes);
 
     return HoverWrapper(
       onHover: (value) => setState(() => isHover = value),
@@ -184,19 +186,25 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
                                     color: currTheme.colors.negativeYield,
                                     fontWeight: FontWeight.bold,
                                   ))
-                          : Text(
-                              "${Formatter.relationWithoutSign(widget.balance / widget.incomes)} retido",
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: currTheme.colors.positiveYield,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
+                          : retentionRatio == null
+                              ? Text("N/A",
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: currTheme.colors.positiveYield,
+                                        fontWeight: FontWeight.bold,
+                                      ))
+                              : Text(
+                                  "${Formatter.relationWithoutSign(retentionRatio)} retido",
+                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: currTheme.colors.positiveYield,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
                     ],
                   ),
                   LinearProgressIndicator(
                     borderRadius: BorderRadius.circular(10),
                     minHeight: 10,
-                    value: widget.balance / widget.incomes,
+                    value: retentionRatio ?? 0,
                     color: widget.balance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
                     backgroundColor: currTheme.colors.negativeYield,
                   ),

@@ -23,24 +23,24 @@ class RoundedRectDotPainter extends FlDotPainter {
 
   @override
   void draw(Canvas canvas, FlSpot spot, Offset offsetInCanvas) {
-    // Define o retângulo ao redor do centro do ponto
+    // Defines the rectangle around the point's center
     final rect = Rect.fromCenter(
       center: offsetInCanvas,
       width: width,
       height: height,
     );
 
-    // Cria o RRect com cantos arredondados
+    // Creates the RRect with rounded corners
     final rrect =
         borderRadius != null ? borderRadius!.toRRect(rect) : RRect.fromRectAndRadius(rect, Radius.circular(radius));
 
-    // Preenchimento
+    // Fill
     final fillPaint = Paint()
       ..color = color
       ..style = PaintingStyle.fill;
     canvas.drawRRect(rrect, fillPaint);
 
-    // Borda (opcional)
+    // Border (optional)
     if (borderColor != null && borderWidth > 0) {
       final borderPaint = Paint()
         ..color = borderColor!
@@ -52,7 +52,7 @@ class RoundedRectDotPainter extends FlDotPainter {
 
   @override
   Size getSize(FlSpot spot) {
-    // Inclui a largura da borda no tamanho total
+    // Includes the border width in the total size
     return Size(
       width + borderWidth,
       height + borderWidth,

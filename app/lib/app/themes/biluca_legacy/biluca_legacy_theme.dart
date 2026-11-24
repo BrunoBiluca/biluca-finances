@@ -1,4 +1,4 @@
-import 'package:biluca_financas/app/themes/app_colors.dart';
+﻿import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +59,7 @@ class BilucaLegacyDark extends AppTheme {
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
-              return color.withOpacity(0.8);
+              return color.withValues(alpha: 0.8);
             }
 
             if (states.contains(WidgetState.disabled)) {
@@ -75,7 +75,7 @@ class BilucaLegacyDark extends AppTheme {
             var disabledColor = const Color.fromARGB(255, 58, 62, 65);
 
             if (states.contains(WidgetState.hovered)) {
-              return color.withOpacity(0.8);
+              return color.withValues(alpha: 0.8);
             }
 
             if (states.contains(WidgetState.disabled)) {
@@ -96,7 +96,7 @@ class BilucaLegacyDark extends AppTheme {
           foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
-              return color.withOpacity(0.8);
+              return color.withValues(alpha: 0.8);
             }
 
             if (states.contains(WidgetState.disabled)) {
@@ -112,12 +112,12 @@ class BilucaLegacyDark extends AppTheme {
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        // botões secundários
+        // secondary buttons
         style: ButtonStyle(
           iconColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
-              return color.withOpacity(0.8);
+              return color.withValues(alpha: 0.8);
             }
             return color;
           }),
@@ -126,7 +126,7 @@ class BilucaLegacyDark extends AppTheme {
           backgroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = const Color(0xFF202B2E);
             if (states.contains(WidgetState.hovered)) {
-              return color.withOpacity(0.8);
+              return color.withValues(alpha: 0.8);
             }
             return color;
           }),
@@ -142,7 +142,7 @@ class BilucaLegacyDark extends AppTheme {
           foregroundColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
             var color = const Color(0xFFFFFFFF);
             if (states.contains(WidgetState.hovered)) {
-              return color.withOpacity(0.8);
+              return color.withValues(alpha: 0.8);
             }
             return color;
           }),

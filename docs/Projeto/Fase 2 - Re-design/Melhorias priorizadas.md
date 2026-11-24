@@ -1,4 +1,4 @@
-# Melhorias priorizadas
+﻿# Melhorias priorizadas
 
 > [!important] Resumo
 > Catálogo das melhorias identificadas na avaliação do aplicativo em **24/11/2026**: **29 itens** catalogados, sendo **24 selecionados** (8 de experiência de uso e 16 de código) e **5 descartados** nesta rodada. Este documento é a fonte única para decidir, acompanhar e registrar a evolução de cada melhoria.
@@ -80,21 +80,21 @@ Os IDs usam prefixo de escopo (`U` para experiência de uso, `C` para código) e
 
 | ID | Melhoria | Nota | Esforço | Evidência | Dependências | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| C01 | Remover código morto e dependências sem uso | 9 | P | `common/lib/switch.dart`, `common/ui/text_shimmer.dart`, `common/ui/reports/consolidated_value_card.dart` (com `values_relation_indicator`, `values_relation_text`, `icon_highlight`, `centered_icon`), `values_comparison_small.dart`, `text_ballon.dart` (só teste), `month_selector.dart` duplicado e a função legada `futureHandler`; dependências `csv`, `cupertino_icons` e `shimmer` sem uso efetivo | — | selecionada |
-| C02 | Impedir divisões por zero nos relatórios (`NaN`/`Infinity`) | 9 | P | `month_summary_card.dart` usa `balance / incomes` em `LinearProgressIndicator.value`; `current_month_report.service.dart` calcula `total / totalExpenses` e `total / totalIncomes` | — | selecionada |
+| C01 | Remover código morto e dependências sem uso | 9 | P | `common/lib/switch.dart`, `common/ui/text_shimmer.dart`, `common/ui/reports/consolidated_value_card.dart` (com `values_relation_indicator`, `values_relation_text`, `icon_highlight`, `centered_icon`), `values_comparison_small.dart`, `text_ballon.dart` (só teste), `month_selector.dart` duplicado e a função legada `futureHandler`; dependências `csv`, `cupertino_icons` e `shimmer` sem uso efetivo | — | implementada |
+| C02 | Impedir divisões por zero nos relatórios (`NaN`/`Infinity`) | 9 | P | `month_summary_card.dart` usa `balance / incomes` em `LinearProgressIndicator.value`; `current_month_report.service.dart` calcula `total / totalExpenses` e `total / totalIncomes` | — | implementada |
 | C03 | Tratar falhas de repositório no `AccountabilityBloc` e informar na interface | 9 | M | Os handlers de busca e de criação, edição e exclusão chamam o repositório sem `try/catch`; os estados não têm falha nem mensagem de erro | — | selecionada |
 | C04 | Substituir cores fixas por tokens do tema, sem `GetIt` dentro de widgets | 9 | M | `Color(0xFF262A34)` em sidebars e cabeçalhos de relatório; `Color(0xFF0A0E17)` e `0xFF1C1F29` em `accountability_table.dart` e `accountability_table_row.dart`; `Colors.grey.shade800` em `identifications_view_section.dart`; `base_toast.dart` e `month_summary_card.dart` buscam cores via `GetIt` | — | selecionada |
-| C05 | Corrigir o ciclo de vida do relatório mensal (`StreamSubscription` e serviço) | 8 | P | `monthly_report.dart` mantém `_subscription` sem uso efetivo (aviso do analisador), cria nova assinatura a cada troca de mês e não tem `dispose`; `CurrentMonthReportService.dispose()` nunca é chamado | — | selecionada |
+| C05 | Corrigir o ciclo de vida do relatório mensal (`StreamSubscription` e serviço) | 8 | P | `monthly_report.dart` mantém `_subscription` sem uso efetivo (aviso do analisador), cria nova assinatura a cada troca de mês e não tem `dispose`; `CurrentMonthReportService.dispose()` nunca é chamado | — | implementada |
 | C06 | Remover `dynamic` da tabela, dos relatórios e dos temas de comparação | 8 | G | `AccountabilityTable` recebe `List<dynamic>` e `onUpdate(dynamic)`; `AccountabilityTableRow.entry` é `dynamic`; `values_comparison.dart` retorna `Map` em `dynamic`; 69 ocorrências de `dynamic` em `lib` | — | selecionada |
 | C07 | Dividir `identification_edit_modal.dart` (988 linhas) em componentes coesos | 7 | M | O arquivo acumula formulário, seletor de cor, catálogo de ícones, validações e diálogo de exclusão, contrariando "um conceito por arquivo" da constituição | — | selecionada |
 | C08 | Extrair o cabeçalho e as seções repetidas dos relatórios | 7 | P | `monthly_report.dart` e `yearly_report.dart` repetem o bloco de ícone e título; `buildSection` existe só no relatório mensal | — | selecionada |
 | C09 | Tipar e melhorar o `FutureHandler` (erro com nova tentativa) | 7 | P | `future_handler.dart` expõe função e widget, usa `Future<dynamic>`, chama `setState` em `initState` e trata `hideLoading` como contorno | — | selecionada |
 | C10 | Criar camada de preferências persistidas (tema, sidebar, mês, ano) | 8 | M | Não há persistência local de preferências; `ThemeManager` guarda tudo em memória e o estado de navegação reinicia a cada montagem | — | selecionada |
-| C11 | Corrigir caminho de banco fixo no Linux e `catch` vazio | 7 | P | `lib/integrations/sqlite/db_provider.dart` usa `/var/home/bruno-note/Documentos` e engole a falha de `getApplicationDocumentsDirectory()` com `catch (e) {}` | — | selecionada |
-| C12 | Inicialização resiliente e ciclo de vida do servidor de predição | 7 | M | `main.dart` não trata falha de `setup()`/`initDatabase()`; `EmbeddedPredictServer.init()` é `void async` sem estado de saúde e `terminate()` encerra por nome de processo, não por PID | — | selecionada |
-| C13 | Tipar e validar o retorno do serviço de predição | 7 | P | `EmbeddedPredictService` usa `dynamic result` e `on Exception`, que não captura `TypeError` de payload inesperado nem campos ausentes | — | selecionada |
-| C14 | Zerar os avisos do `flutter analyze` e verificar análise no empacotamento | 8 | P | Baseline atual: 12 problemas (1 campo não usado, 9 `withOpacity` obsoletos, 1 `catch` vazio, 1 API experimental); `build.ps1` roda testes, mas não análise | — | selecionada |
-| C15 | Corrigir nomenclatura e idioma do código | 5 | P | `SQLiteAccontabilityMonthService` (erro de digitação), arquivo `accountability_identification_predition_service.dart` (`predition`) e comentários em português, contrariando a constituição | — | selecionada |
+| C11 | Corrigir caminho de banco fixo no Linux e `catch` vazio | 7 | P | `lib/integrations/sqlite/db_provider.dart` usa `/var/home/bruno-note/Documentos` e engole a falha de `getApplicationDocumentsDirectory()` com `catch (e) {}` | — | implementada |
+| C12 | Inicialização resiliente e ciclo de vida do servidor de predição | 7 | M | `main.dart` não trata falha de `setup()`/`initDatabase()`; `EmbeddedPredictServer.init()` é `void async` sem estado de saúde e `terminate()` encerra por nome de processo, não por PID | — | implementada |
+| C13 | Tipar e validar o retorno do serviço de predição | 7 | P | `EmbeddedPredictService` usa `dynamic result` e `on Exception`, que não captura `TypeError` de payload inesperado nem campos ausentes | — | implementada |
+| C14 | Zerar os avisos do `flutter analyze` e verificar análise no empacotamento | 8 | P | Baseline atual: 12 problemas (1 campo não usado, 9 `withOpacity` obsoletos, 1 `catch` vazio, 1 API experimental); `build.ps1` roda testes, mas não análise | — | implementada |
+| C15 | Corrigir nomenclatura e idioma do código | 5 | P | `SQLiteAccontabilityMonthService` (erro de digitação), arquivo `accountability_identification_predition_service.dart` (`predition`) e comentários em português, contrariando a constituição | — | implementada |
 | C16 | Fortalecer testes: cobrir falhas e remover mascaramento de overflow | 6 | M | Não há testes de falha de repositório no `AccountabilityBloc`; `ignore_overflow_erros.dart` esconde problemas de layout em vez de corrigi-los | U13 (parte de overflow) | selecionada |
 
 ## Ondas recomendadas
@@ -126,3 +126,4 @@ Nenhuma dependência cita item inexistente ou descartado.
 ## Histórico
 
 - **24/11/2026** — Avaliação inicial do aplicativo, catalogação de 29 melhorias e seleção de escopo: 24 itens mantidos (U02, U05, U07, U09, U10, U11, U12, U13 e C01–C16) e 5 descartados nesta rodada (U01, U03, U04, U06 e U08).
+- **24/11/2026** — Onda 1 concluída e arquivada (`stabilization-wave-1`): C01, C02, C05, C11, C12, C13, C14 e C15 passam para `implementada`. `flutter analyze` sem problemas, 385 testes passando e nova capability `accountability-reports` criada a partir do C02.

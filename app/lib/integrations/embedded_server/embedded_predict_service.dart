@@ -1,5 +1,6 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
@@ -7,7 +8,7 @@ import 'package:biluca_financas/common/extensions/number_extensions.dart';
 import 'package:biluca_financas/common/logging/logger_manager.dart';
 import 'package:collection/collection.dart';
 import 'package:biluca_financas/core/accountability/validators/identification_availability_rules.dart';
-import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_prediction_service.dart';
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
@@ -27,27 +28,66 @@ class EmbeddedPredictService
     File? importedFile,
   }) async {
     try {
-      dynamic result;
+      Object? result;
       if (importedFile != null) {
         result = await _postFile(importedFile);
       } else if (entries != null) {
         result = await _postPredict(entries);
+      } else {
+        return const [];
       }
+
+      final parsed = _parseResponse(result);
       return await _relateWithIdentificationsByName(
-        List<String>.from(result["cabeçalhos"] as List),
-        result["registros"],
+        parsed.headers,
+        parsed.records,
       );
     } on Exception catch (e, s) {
-      log.severe("Serviço de categorização indisponível.", e, s);
-
-      if (entries != null) {
-        return entries;
-      }
-      return [];
+      log.severe(
+        "Prediction service unavailable or returned invalid data.",
+        e,
+        s,
+      );
+      return _fallback(entries);
+    } on TypeError catch (e, s) {
+      log.severe("Prediction service returned an unexpected payload.", e, s);
+      return _fallback(entries);
+    } on RangeError catch (e, s) {
+      log.severe("Prediction service returned an incomplete record.", e, s);
+      return _fallback(entries);
     }
   }
 
-  Future<dynamic> _postFile(File importedFile) async {
+  List<AccountabilityEntryRequest> _fallback(
+    List<AccountabilityEntryRequest>? entries,
+  ) =>
+      entries ?? const [];
+
+  _PredictResponse _parseResponse(Object? decoded) {
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException("Prediction response is not a JSON object.");
+    }
+
+    final headers = decoded["cabeçalhos"];
+    final records = decoded["registros"];
+    if (headers is! List || records is! List) {
+      throw const FormatException(
+        "Prediction response is missing cabeçalhos or registros.",
+      );
+    }
+
+    return _PredictResponse(
+      headers: List<String>.from(headers),
+      records: records.map((record) {
+        if (record is! List) {
+          throw const FormatException("Prediction record is not a list.");
+        }
+        return record;
+      }).toList(),
+    );
+  }
+
+  Future<Object?> _postFile(File importedFile) async {
     var server = GetIt.I<EmbeddedPredictServer>();
     MultipartRequest request =
         MultipartRequest('POST', Uri.parse('${server.host}/predict'));
@@ -61,7 +101,7 @@ class EmbeddedPredictService
     return jsonDecode(await result.stream.bytesToString());
   }
 
-  Future<dynamic> _postPredict(List<AccountabilityEntryRequest> entries) async {
+  Future<Object?> _postPredict(List<AccountabilityEntryRequest> entries) async {
     var server = GetIt.I<EmbeddedPredictServer>();
     var result = await http.post(
       Uri.parse("${server.host}/predict"),
@@ -85,34 +125,52 @@ class EmbeddedPredictService
 
   Future<List<AccountabilityEntryRequest>> _relateWithIdentificationsByName(
     List<String> headers,
-    List<dynamic> categorizedEntries,
+    List<List<dynamic>> records,
   ) async {
-    var descriptionIndex = headers.indexOf("Descrição");
-    var valueIndex = headers.indexOf("Valor");
-    var createdAtIndex = headers.indexOf("Criado em");
-    var identificationIndex = headers.indexOf("Identificação");
+    final descriptionIndex = headers.indexOf("Descrição");
+    final valueIndex = headers.indexOf("Valor");
+    final createdAtIndex = headers.indexOf("Criado em");
+    final identificationIndex = headers.indexOf("Identificação");
+
+    if (descriptionIndex < 0 ||
+        valueIndex < 0 ||
+        createdAtIndex < 0 ||
+        identificationIndex < 0) {
+      throw const FormatException(
+        "Prediction response is missing required columns.",
+      );
+    }
+
+    final requiredLength = [
+      descriptionIndex,
+      valueIndex,
+      createdAtIndex,
+      identificationIndex,
+    ].reduce(math.max) + 1;
 
     final identifications =
         IdentificationAvailabilityRules.availableForPrediction(
       await repo.getIdentifications(),
     );
 
-    return categorizedEntries
-        .map(
-          (e) => AccountabilityEntryRequest(
-            createdAt: _parseDate(e[createdAtIndex]),
-            description: e[descriptionIndex],
-            value: cast(e[valueIndex]),
-            identification: identifications
-                .where(
-                  (i) =>
-                      i.description.toLowerCase() ==
-                      e[identificationIndex].toString().toLowerCase(),
-                )
-                .firstOrNull,
-          ),
-        )
-        .toList();
+    return records.map((record) {
+      if (record.length < requiredLength) {
+        throw const FormatException("Prediction record is missing fields.");
+      }
+
+      return AccountabilityEntryRequest(
+        createdAt: _parseDate(record[createdAtIndex] as String),
+        description: record[descriptionIndex] as String,
+        value: cast(record[valueIndex]),
+        identification: identifications
+            .where(
+              (i) =>
+                  i.description.toLowerCase() ==
+                  record[identificationIndex].toString().toLowerCase(),
+            )
+            .firstOrNull,
+      );
+    }).toList();
   }
 
   DateTime _parseDate(String date) {
@@ -124,9 +182,19 @@ class EmbeddedPredictService
       try {
         return DateFormat(format).parse(date);
       } on FormatException {
-        log.warning("Formato de data inválido: $date");
+        log.warning("Invalid date format: $date");
       }
     }
-    throw FormatException("Formato de data desconhecido", date);
+    throw FormatException("Unknown date format", date);
   }
+}
+
+class _PredictResponse {
+  final List<String> headers;
+  final List<List<dynamic>> records;
+
+  _PredictResponse({
+    required this.headers,
+    required this.records,
+  });
 }

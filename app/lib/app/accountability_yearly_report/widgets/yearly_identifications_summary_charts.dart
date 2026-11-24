@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:biluca_financas/common/lib/safe_ratio.dart';
 import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:biluca_financas/common/ui/reports/summary_chart_card/summary_chart_card.dart';
 import 'package:flutter/material.dart';
@@ -91,9 +92,12 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
             var monthEntries = i.monthTotal.entries.sortedBy((entry) => entry.key);
             var monthData = monthEntries.map((e) => e.key).toList();
 
-            var validEntries = monthEntries.where((entry) => entry.value != 0);
-            var maxValue = validEntries.map((entry) => entry.value.abs()).max;
-            var avgValue = validEntries.map((entry) => entry.value.abs()).average;
+            var validEntries = monthEntries.where((entry) => entry.value != 0).toList();
+            var maxValue =
+                validEntries.map((entry) => entry.value.abs()).maxOrNull ?? 0.0;
+            var avgValue = validEntries.isEmpty
+                ? 0.0
+                : validEntries.map((entry) => entry.value.abs()).average;
 
             return SummaryChartCard(
               icon: i.identification.icon,
@@ -126,7 +130,9 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
                             BarChartRodData(
                               toY: entry.value.abs(),
                               color: i.identification.color.withAlpha(
-                                (entry.value / maxValue * 255).clamp(100, 255).toInt(),
+                                ((safeRatio(entry.value, maxValue) ?? 0) * 255)
+                                    .clamp(100, 255)
+                                    .toInt(),
                               ),
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(4),

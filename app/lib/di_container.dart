@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 
 import 'package:biluca_financas/app/app_exit/application_exit_handler.dart';
 import 'package:biluca_financas/app/navigator_key.dart';
@@ -20,7 +20,7 @@ import 'package:biluca_financas/common/logging/logger_manager.dart';
 
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/identification_categories_bloc.dart';
-import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_prediction_service.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
@@ -67,7 +67,7 @@ Future<void> setup() async {
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
   getIt.registerFactoryParam<AccountabilityMonthService, DateTime, void>(
-    (month, _) => SQLiteAccontabilityMonthService(
+    (month, _) => SQLiteAccountabilityMonthService(
       db: getIt<Database>(),
       month: month,
     ),
@@ -164,9 +164,9 @@ Future<void> _registerBackup(GetIt getIt) async {
 
   loggerManager.instance('Backup').info(
         configuredProfile == null
-            ? 'Perfil de sincronização: $profile (padrão, '
-                '$backupProfileEnvironmentVariable não definida)'
-            : 'Perfil de sincronização: $profile '
+            ? 'Sync profile: $profile (default, '
+                '$backupProfileEnvironmentVariable not set)'
+            : 'Sync profile: $profile '
                 '($backupProfileEnvironmentVariable)',
       );
 

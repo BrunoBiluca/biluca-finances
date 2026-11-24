@@ -33,6 +33,9 @@ class DBProvider {
       return;
     }
 
+    // SqfliteDatabaseFactoryLogger is experimental; it is intentionally used
+    // only in debug builds to log SQL statements.
+    // ignore: experimental_member_use
     databaseFactory = SqfliteDatabaseFactoryLogger(
       baseFactory,
       options: SqfliteLoggerOptions(
@@ -60,20 +63,20 @@ class DBProvider {
         options: OpenDatabaseOptions(
           version: migrationsSQL.length,
           onCreate: (db, version) async {
-            log.info("Criando tabelas na versão $version...");
+            log.info("Creating tables at version $version...");
             await execute(db, migrationsSQL);
-            log.info("Tabelas criadas");
+            log.info("Tables created");
           },
           onUpgrade: (db, oldVersion, newVersion) async {
-            log.info("Atualizando tabelas...");
-            log.info("Versão atual: $oldVersion");
+            log.info("Updating tables...");
+            log.info("Current version: $oldVersion");
             await execute(db, migrationsSQL.sublist(oldVersion));
-            log.info("Tabelas atualizadas para versão $newVersion");
+            log.info("Tables updated to version $newVersion");
           },
         ),
       );
     } catch (error, stackTrace) {
-      log.severe("Falha ao abrir o banco de dados.", error, stackTrace);
+      log.severe("Failed to open the database.", error, stackTrace);
       rethrow;
     }
   }
@@ -91,20 +94,21 @@ class DBProvider {
     if (kReleaseMode) {
       try {
         dirPath = (await getApplicationDocumentsDirectory()).path;
-      } catch (e) {}
-
-      if (io.Platform.isLinux) {
-        dirPath = "/var/home/bruno-note/Documentos";
+      } catch (e) {
+        log.warning(
+          "Failed to resolve the documents directory; using the current directory.",
+          e,
+        );
       }
     }
 
     String dbPath = p.join(dirPath, "Biluca Finanças", "myDb.db");
-    log.info("Caminho para o banco de dados: $dbPath");
+    log.info("Database path: $dbPath");
     return dbPath;
   }
 
   Future execute(Database db, List<String> migrationsSQL) async {
-    log.info("Executando...");
+    log.info("Executing...");
     for (final migration in migrationsSQL) {
       log.info(migration);
       try {
@@ -113,16 +117,16 @@ class DBProvider {
         if (!_isAlreadyApplied(migration, error)) rethrow;
 
         final statement = migration.trim().split('\n').first;
-        log.warning("Migração já aplicada no banco, ignorando: $statement");
+        log.warning("Migration already applied to the database, ignoring: $statement");
       }
     }
   }
 
-  /// Uma migração é considerada aplicada quando o banco já tem o seu efeito
-  /// (coluna ou tabela existente). Isso acontece quando a versão registrada no
-  /// banco fica atrás do esquema real, por exemplo em um banco restaurado de um
-  /// backup. Ignorar apenas esses casos permite concluir a atualização da
-  /// versão sem impedir a abertura da aplicação.
+  /// A migration is considered already applied when the database already has
+  /// its effect (an existing column or table). This happens when the version
+  /// recorded in the database lags behind the real schema, for example in a
+  /// database restored from a backup. Ignoring only these cases allows the
+  /// version update to finish without blocking the application from opening.
   bool _isAlreadyApplied(String migration, DatabaseException error) {
     final statement = migration.trimLeft().toUpperCase();
     final message = error.toString().toLowerCase();
@@ -139,10 +143,10 @@ class DBProvider {
   }
 
   Future clear(Database db) async {
-    log.info("Limpando banco de dados...");
+    log.info("Cleaning up the database...");
     await databaseFactory.deleteDatabase(db.path);
     _database = null;
-    log.info("Banco de dados limpo");
+    log.info("Database cleaned");
   }
 
   final migrationsSQL = [

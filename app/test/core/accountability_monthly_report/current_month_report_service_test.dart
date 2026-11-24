@@ -13,6 +13,14 @@ import '../../_mocks/mock_accountability_month_service.dart';
 void main() {
   var currentMonth = DateTime(2024, 7);
 
+  setUp(() async {
+    await GetIt.I.reset();
+  });
+
+  tearDown(() async {
+    await GetIt.I.reset();
+  });
+
   test("should return totals by identifications for current month", () async {
     // despesas
     var idSupermercado = AccountabilityIdentification("supermercado", Colors.red);
@@ -67,5 +75,49 @@ void main() {
     var resultLazer = expenses.firstWhere((e) => e.identification.id == idLazer.id);
     expect(resultLazer.current, 0.00);
     expect(resultLazer.related, -100.00);
+  });
+
+  test("participation is zero without NaN when there are no expenses", () async {
+    var idSupermercado = AccountabilityIdentification("supermercado", Colors.red);
+
+    var current = MockAccountabilityMonthService();
+    when(() => current.getTotalByIdentification()).thenAnswer((_) async => Future.value([
+          GroupedBy(idSupermercado, total: 0.0),
+        ]));
+    when(() => current.getAccumulatedMeansByIdentification()).thenAnswer((_) async => Future.value([]));
+
+    var related = MockAccountabilityMonthService();
+    when(() => related.getTotalByIdentification()).thenAnswer((_) async => Future.value([]));
+    when(() => related.getAccumulatedMeansByIdentification()).thenAnswer((_) async => Future.value([]));
+
+    GetIt.I.registerFactoryParam<AccountabilityMonthService, DateTime, void>(
+      (month, _) => month == currentMonth ? current : related,
+    );
+
+    var service = CurrentMonthReportService(currentMonth);
+    var expenses = await service.expensesByIdentification();
+
+    var result = expenses.firstWhere((e) => e.identification.id == idSupermercado.id);
+    expect(result.participationInTotal, 0.0);
+    expect(result.participationInTotal.isNaN, isFalse);
+  });
+
+  test("dispose closes the change stream", () async {
+    var current = MockAccountabilityMonthService();
+    when(() => current.getTotalByIdentification()).thenAnswer((_) async => Future.value([]));
+    when(() => current.getAccumulatedMeansByIdentification()).thenAnswer((_) async => Future.value([]));
+
+    GetIt.I.registerFactoryParam<AccountabilityMonthService, DateTime, void>(
+      (month, _) => current,
+    );
+
+    var service = CurrentMonthReportService(currentMonth);
+    var done = false;
+    service.onChange.listen((_) {}, onDone: () => done = true);
+
+    service.dispose();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(done, isTrue);
   });
 }

@@ -45,6 +45,9 @@ class _MonthlyReportState extends State<MonthlyReport> {
   }
 
   void updateDateSelected(AccountabilityMonthStats month) {
+    _subscription?.cancel();
+    _service?.dispose();
+
     setState(() {
       _selectedMonth = month;
       var parsedMonth = DateFormat("yyyy/MM").parse(_selectedMonth!.month);
@@ -53,6 +56,13 @@ class _MonthlyReportState extends State<MonthlyReport> {
         updateDateSelected(_selectedMonth!);
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _service?.dispose();
+    super.dispose();
   }
 
   void displayReportData() async {

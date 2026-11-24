@@ -1,43 +1,5 @@
 import 'package:flutter/material.dart';
 
-Widget futureHandler(
-  Future<dynamic> future,
-  Widget Function(dynamic) child, {
-  bool hideLoading = false,
-}) {
-  return Column(
-    spacing: 20,
-    children: [
-      if (!hideLoading) const Text("Carregando..."),
-      FutureBuilder(
-        future: future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return hideLoading
-                ? SizedBox.shrink()
-                : SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: const CircularProgressIndicator(),
-                  );
-          }
-
-          if (snapshot.hasError) {
-            return Text('Erro: ${snapshot.error}');
-          }
-
-          if (!snapshot.hasData) {
-            return const Text("Nenhum item encontrado");
-          }
-
-          var result = snapshot.data!;
-          return child(result);
-        },
-      ),
-    ],
-  );
-}
-
 class FutureHandler extends StatefulWidget {
   final Future<dynamic> future;
   final Widget Function(dynamic) child;

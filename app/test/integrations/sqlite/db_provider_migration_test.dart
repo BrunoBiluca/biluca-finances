@@ -96,4 +96,14 @@ void main() {
 
     await db.close();
   });
+
+  test("getDBPath retorna o caminho sob o diretório atual em modo não-release",
+      () async {
+    final provider = DBProvider();
+
+    final path = await provider.getDBPath();
+
+    expect(path, startsWith(Directory.current.path));
+    expect(path, endsWith(p.join('Biluca Finanças', 'myDb.db')));
+  });
 }

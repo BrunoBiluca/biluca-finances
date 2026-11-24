@@ -2,6 +2,7 @@ import 'package:biluca_financas/app/accountability_monthly_report/monthly_report
 import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:biluca_financas/app/themes/theme_manager.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
+import 'package:biluca_financas/common/lib/safe_ratio.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_value_card.dart';
@@ -98,31 +99,36 @@ class SummaryValuesSection extends StatelessWidget {
     double avgBalanceRecentMonths,
     AppTheme currTheme,
     BuildContext context,
-  ) =>
-      SummaryValueCard(
-        title: "Balanço",
-        value: balance,
-        color: balance > 0 ? currTheme.colors.positiveYieldAlt : currTheme.colors.negativeYield,
-        subInfo: ValuesComparisonFullText.from(
-          balance,
-          avgBalanceRecentMonths,
-          false,
-          suffix: "em relação aos últimos 12 meses",
-        ),
-        label: balance > 0
-            ? SummaryCardLabel(
-                label: "Superávit\n${Formatter.relationWithoutSign(balance / incomes)}",
-                color: currTheme.colors.positiveYield,
-                icon: Icons.trending_up,
-                bgColor: currTheme.colors.positiveYieldBg,
-              )
-            : SummaryCardLabel(
-                label: "Déficit\n${Formatter.relationWithoutSign(balance / incomes)}",
-                color: currTheme.colors.negativeYield,
-                icon: Icons.trending_down,
-                bgColor: currTheme.colors.negativeYieldBg,
-              ),
-      );
+  ) {
+    final retention = safeRatio(balance, incomes);
+    final retentionLabel =
+        retention == null ? "N/A" : Formatter.relationWithoutSign(retention);
+
+    return SummaryValueCard(
+      title: "Balanço",
+      value: balance,
+      color: balance > 0 ? currTheme.colors.positiveYieldAlt : currTheme.colors.negativeYield,
+      subInfo: ValuesComparisonFullText.from(
+        balance,
+        avgBalanceRecentMonths,
+        false,
+        suffix: "em relação aos últimos 12 meses",
+      ),
+      label: balance > 0
+          ? SummaryCardLabel(
+              label: "Superávit\n$retentionLabel",
+              color: currTheme.colors.positiveYield,
+              icon: Icons.trending_up,
+              bgColor: currTheme.colors.positiveYieldBg,
+            )
+          : SummaryCardLabel(
+              label: "Déficit\n$retentionLabel",
+              color: currTheme.colors.negativeYield,
+              icon: Icons.trending_down,
+              bgColor: currTheme.colors.negativeYieldBg,
+            ),
+    );
+  }
 
   Widget buildIncomesCard(
     double incomes,
@@ -130,29 +136,34 @@ class SummaryValuesSection extends StatelessWidget {
     double avgIncomesRecentMonths,
     AppTheme currTheme,
     BuildContext context,
-  ) =>
-      SummaryValueCard(
-        title: "Receitas",
-        value: incomes,
-        color: currTheme.colors.positiveYield,
-        subInfo: ValuesComparisonFullText.from(
-          incomes,
-          avgIncomesRecentMonths,
-          false,
-          suffix: "em relação aos últimos 12 meses",
-        ),
-        label: incomes > incomesLastMonth
-            ? SummaryCardLabel.positive(
-                label: Formatter.relationWithoutSign(1 - (incomes / incomesLastMonth)),
-                icon: Icons.arrow_upward,
-                theme: currTheme,
-              )
-            : SummaryCardLabel.negative(
-                label: Formatter.relationWithoutSign(1 - (incomes / incomesLastMonth)),
-                icon: Icons.arrow_downward,
-                theme: currTheme,
-              ),
-      );
+  ) {
+    final ratio = safeRatio(incomes, incomesLastMonth);
+
+    return SummaryValueCard(
+      title: "Receitas",
+      value: incomes,
+      color: currTheme.colors.positiveYield,
+      subInfo: ValuesComparisonFullText.from(
+        incomes,
+        avgIncomesRecentMonths,
+        false,
+        suffix: "em relação aos últimos 12 meses",
+      ),
+      label: ratio == null
+          ? SummaryCardLabel.neutral(label: "N/A", theme: currTheme)
+          : incomes > incomesLastMonth
+              ? SummaryCardLabel.positive(
+                  label: Formatter.relationWithoutSign(1 - ratio),
+                  icon: Icons.arrow_upward,
+                  theme: currTheme,
+                )
+              : SummaryCardLabel.negative(
+                  label: Formatter.relationWithoutSign(1 - ratio),
+                  icon: Icons.arrow_downward,
+                  theme: currTheme,
+                ),
+    );
+  }
 
   Widget buildExpensesCard(
     double expenses,
@@ -160,27 +171,32 @@ class SummaryValuesSection extends StatelessWidget {
     double avgExpensesRecentMonths,
     AppTheme currTheme,
     BuildContext context,
-  ) =>
-      SummaryValueCard(
-        title: "Receitas",
-        value: expenses,
-        color: currTheme.colors.negativeYield,
-        subInfo: ValuesComparisonFullText.from(
-          expenses,
-          avgExpensesRecentMonths,
-          true,
-          suffix: "em relação aos últimos 12 meses",
-        ),
-        label: expenses.abs() < expensesLastMonth.abs()
-            ? SummaryCardLabel.positive(
-                label: Formatter.relationWithoutSign(1 - (expenses / expensesLastMonth)),
-                icon: Icons.arrow_downward,
-                theme: currTheme,
-              )
-            : SummaryCardLabel.negative(
-                label: Formatter.relationWithoutSign(1 - (expenses / expensesLastMonth)),
-                icon: Icons.arrow_upward,
-                theme: currTheme,
-              ),
-      );
+  ) {
+    final ratio = safeRatio(expenses, expensesLastMonth);
+
+    return SummaryValueCard(
+      title: "Receitas",
+      value: expenses,
+      color: currTheme.colors.negativeYield,
+      subInfo: ValuesComparisonFullText.from(
+        expenses,
+        avgExpensesRecentMonths,
+        true,
+        suffix: "em relação aos últimos 12 meses",
+      ),
+      label: ratio == null
+          ? SummaryCardLabel.neutral(label: "N/A", theme: currTheme)
+          : expenses.abs() < expensesLastMonth.abs()
+              ? SummaryCardLabel.positive(
+                  label: Formatter.relationWithoutSign(1 - ratio),
+                  icon: Icons.arrow_downward,
+                  theme: currTheme,
+                )
+              : SummaryCardLabel.negative(
+                  label: Formatter.relationWithoutSign(1 - ratio),
+                  icon: Icons.arrow_upward,
+                  theme: currTheme,
+                ),
+    );
+  }
 }

@@ -1,4 +1,4 @@
-import 'package:biluca_financas/app/themes/app_colors.dart';
+﻿import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -266,7 +266,7 @@ class ObsidianWealthLightTheme extends AppTheme {
           fontWeight: FontWeight.w500,
           color: Color(0xFF6A6E78),
         ),
-        indicatorColor: Color(0xFF00668A).withOpacity(0.1),
+        indicatorColor: Color(0xFF00668A).withValues(alpha: 0.1),
         minWidth: 260,
         groupAlignment: -1,
       ),
@@ -394,9 +394,9 @@ class ObsidianWealthLightTheme extends AppTheme {
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const Color(0xFF00668A).withOpacity(0.3);
+            return const Color(0xFF00668A).withValues(alpha: 0.3);
           }
-          return const Color(0xFF6A6E78).withOpacity(0.2);
+          return const Color(0xFF6A6E78).withValues(alpha: 0.2);
         }),
       ),
       checkboxTheme: CheckboxThemeData(

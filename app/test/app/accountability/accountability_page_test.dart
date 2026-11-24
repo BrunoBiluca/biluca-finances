@@ -1,4 +1,4 @@
-import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
+﻿import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_row.dart';
 import 'package:biluca_financas/app/themes/obsidian_wealth/obsidian_wealth_dark_theme.dart';
@@ -10,7 +10,7 @@ import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dar
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
-import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_predition_service.dart';
+import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_prediction_service.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';

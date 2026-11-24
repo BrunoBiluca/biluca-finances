@@ -154,4 +154,33 @@ void main() {
 
     expect(result.single.identification, isNull);
   });
+
+  test("deve retornar o fallback quando o payload for malformado", () async {
+    final malformed = MockClient((req) async {
+      return Response(
+        jsonEncode({
+          "cabeçalhos": ["Descrição", "Valor", "Criado em"],
+          "registros": [
+            ["compra", 10, "2024-01-01"],
+          ],
+        }),
+        200,
+      );
+    });
+
+    final repo = MockAccountabilityRepo();
+    final service = EmbeddedPredictService(malformed, repo);
+
+    final entries = [
+      AccountabilityEntryRequest(
+        description: "compra",
+        value: 10,
+        createdAt: DateTime(2024, 1, 1),
+      ),
+    ];
+
+    final result = await service.predict(entries: entries);
+
+    expect(result, same(entries));
+  });
 }
