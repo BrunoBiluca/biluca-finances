@@ -44,7 +44,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#ReleasePath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#ReleasePath}\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
+; Inclui flutter_windows.dll e todas as DLLs dos plugins (ex.: url_launcher_windows_plugin.dll)
+Source: "{#ReleasePath}\*.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleasePath}\native_assets.json"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#ReleasePath}\data\*"; DestDir: "{app}/data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "windows\sqlite3.dll"; DestDir: "{app}"; Flags: ignoreversion

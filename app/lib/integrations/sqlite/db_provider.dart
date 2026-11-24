@@ -54,23 +54,28 @@ class DBProvider {
   }
 
   Future<Database> open() async {
-    return await databaseFactory.openDatabase(
-      await getDBPath(),
-      options: OpenDatabaseOptions(
-        version: migrationsSQL.length,
-        onCreate: (db, version) async {
-          log.info("Criando tabelas na versão $version...");
-          await execute(db, migrationsSQL);
-          log.info("Tabelas criadas");
-        },
-        onUpgrade: (db, oldVersion, newVersion) async {
-          log.info("Atualizando tabelas...");
-          log.info("Versão atual: $oldVersion");
-          await execute(db, migrationsSQL.sublist(oldVersion));
-          log.info("Tabelas atualizadas para versão $newVersion");
-        },
-      ),
-    );
+    try {
+      return await databaseFactory.openDatabase(
+        await getDBPath(),
+        options: OpenDatabaseOptions(
+          version: migrationsSQL.length,
+          onCreate: (db, version) async {
+            log.info("Criando tabelas na versão $version...");
+            await execute(db, migrationsSQL);
+            log.info("Tabelas criadas");
+          },
+          onUpgrade: (db, oldVersion, newVersion) async {
+            log.info("Atualizando tabelas...");
+            log.info("Versão atual: $oldVersion");
+            await execute(db, migrationsSQL.sublist(oldVersion));
+            log.info("Tabelas atualizadas para versão $newVersion");
+          },
+        ),
+      );
+    } catch (error, stackTrace) {
+      log.severe("Falha ao abrir o banco de dados.", error, stackTrace);
+      rethrow;
+    }
   }
 
   int get schemaVersion => migrationsSQL.length;
@@ -102,8 +107,35 @@ class DBProvider {
     log.info("Executando...");
     for (final migration in migrationsSQL) {
       log.info(migration);
-      await db.execute(migration);
+      try {
+        await db.execute(migration);
+      } on DatabaseException catch (error) {
+        if (!_isAlreadyApplied(migration, error)) rethrow;
+
+        final statement = migration.trim().split('\n').first;
+        log.warning("Migração já aplicada no banco, ignorando: $statement");
+      }
     }
+  }
+
+  /// Uma migração é considerada aplicada quando o banco já tem o seu efeito
+  /// (coluna ou tabela existente). Isso acontece quando a versão registrada no
+  /// banco fica atrás do esquema real, por exemplo em um banco restaurado de um
+  /// backup. Ignorar apenas esses casos permite concluir a atualização da
+  /// versão sem impedir a abertura da aplicação.
+  bool _isAlreadyApplied(String migration, DatabaseException error) {
+    final statement = migration.trimLeft().toUpperCase();
+    final message = error.toString().toLowerCase();
+
+    if (statement.startsWith("ALTER TABLE")) {
+      return message.contains("duplicate column name");
+    }
+
+    if (statement.startsWith("CREATE TABLE")) {
+      return message.contains("already exists");
+    }
+
+    return false;
   }
 
   Future clear(Database db) async {
