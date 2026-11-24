@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:biluca_financas/app/app_exit/application_exit_handler.dart';
+import 'package:biluca_financas/app/navigator_key.dart';
 import 'package:biluca_financas/app/themes/theme_setup.dart';
-import 'package:biluca_financas/main.dart';
 import 'package:get_it/get_it.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,6 +27,9 @@ import 'package:biluca_financas/core/accountability/services/accountability_repo
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/current_month_report.service.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
+import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
+import 'package:biluca_financas/core/app_update/models/app_version.dart';
+import 'package:biluca_financas/core/app_update/services/app_update_service.dart';
 import 'package:biluca_financas/core/backup/bloc/backup_bloc.dart';
 import 'package:biluca_financas/core/backup/services/backup_connector.dart';
 import 'package:biluca_financas/core/backup/services/backup_record_store.dart';
@@ -32,8 +38,11 @@ import 'package:biluca_financas/core/backup/services/database_file_controller.da
 
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
-import 'package:biluca_financas/integrations/google_drive/backup_profile.dart';
-import 'package:biluca_financas/integrations/google_drive/file_backup_record_store.dart';
+import 'package:biluca_financas/integrations/app_update/inno_setup_installer_launcher.dart';
+import 'package:biluca_financas/integrations/app_update/installer_downloader.dart';
+import 'package:biluca_financas/integrations/app_update/windows_app_update_service.dart';
+import 'package:biluca_financas/integrations/github_releases/github_releases_client.dart';
+import 'package:biluca_financas/integrations/google_drive/backup_profile.dart';import 'package:biluca_financas/integrations/google_drive/file_backup_record_store.dart';
 import 'package:biluca_financas/integrations/google_drive/google_drive_backup_service.dart';
 import 'package:biluca_financas/integrations/google_drive/google_drive_connector.dart';
 import 'package:biluca_financas/integrations/google_drive/google_oauth_credentials.dart';
@@ -108,6 +117,42 @@ Future<void> setup() async {
   );
 
   await _registerBackup(getIt);
+
+  await _registerAppUpdate(getIt);
+}
+
+Future<void> _registerAppUpdate(GetIt getIt) async {
+  final loggerManager = getIt<LoggerManager>();
+  final packageInfo = await PackageInfo.fromPlatform();
+  final currentVersion =
+      AppVersion.tryParse(packageInfo.version) ?? const AppVersion(0, 0, 0);
+
+  final AppUpdateService service;
+  if (Platform.isWindows) {
+    final http = Client();
+    service = WindowsAppUpdateService(
+      releasesClient: GithubReleasesClient(http: http),
+      downloader: InstallerDownloader(
+        http: http,
+        temporaryDirectory: getTemporaryDirectory,
+      ),
+      installerLauncher: InnoSetupInstallerLauncher(
+        applicationPid: pid,
+        startProcess: (executable, arguments) async {
+          await Process.start(executable, arguments);
+        },
+      ),
+      requestExit: runApplicationExitHandler,
+      exitApplication: (code) async => exit(code),
+      currentVersion: currentVersion,
+      log: loggerManager.instance('WindowsAppUpdateService'),
+    );
+  } else {
+    service = UnsupportedAppUpdateService(currentVersion: currentVersion);
+  }
+
+  getIt.registerSingleton<AppUpdateService>(service);
+  getIt.registerSingleton<AppUpdateBloc>(AppUpdateBloc(service: service));
 }
 
 Future<void> _registerBackup(GetIt getIt) async {

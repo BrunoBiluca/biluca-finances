@@ -1,4 +1,6 @@
+import 'package:biluca_financas/app/settings/widgets/app_update_section.dart';
 import 'package:biluca_financas/app/settings/widgets/google_drive_backup_section.dart';
+import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
 import 'package:biluca_financas/core/backup/bloc/backup_bloc.dart';
 import 'package:biluca_financas/core/backup/bloc/backup_events.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +12,13 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = GetIt.I<BackupBloc>()..add(const LoadBackupStatus());
-    return BlocProvider.value(
-      value: bloc,
+    final backupBloc = GetIt.I<BackupBloc>()..add(const LoadBackupStatus());
+    final appUpdateBloc = GetIt.I<AppUpdateBloc>();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: backupBloc),
+        BlocProvider.value(value: appUpdateBloc),
+      ],
       child: const _SettingsContent(),
     );
   }
@@ -55,6 +61,8 @@ class _SettingsContent extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 24),
+        const AppUpdateSection(),
         const SizedBox(height: 24),
         const GoogleDriveBackupSection(),
       ],

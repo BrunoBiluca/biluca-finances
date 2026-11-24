@@ -96,3 +96,15 @@ O arquivo de credenciais é procurado, nesta ordem:
 3. `secrets/google_oauth.json` no diretório atual (execução pelo projeto).
 
 O instalador inclui `secrets/google_oauth.json` em `{app}\secrets`; o arquivo precisa existir na máquina de build antes de gerar o pacote.
+
+# Atualização automática
+
+A aplicação verifica a versão publicada no GitHub Releases na abertura e oferece a atualização a partir da página inicial ou das configurações. Disponível apenas no Windows, única plataforma com instalador Inno Setup.
+
+- Regras e estado: `lib/core/app_update/` (`models/`, interface `AppUpdateService` com a implementação para plataformas sem instalador, e `AppUpdateBloc`).
+- Integrações: `lib/integrations/github_releases/` (consulta do release mais recente e seleção do instalador anexado), `lib/integrations/app_update/` (download do instalador e abertura do wizard do Inno Setup).
+- Apresentação: notificação em `lib/app/home/widgets/` e seção de atualização em `lib/app/settings/widgets/`.
+- Encerramento: o fluxo de saída fica em `lib/app/app_exit/application_exit_handler.dart` e é reutilizado tanto pelo fechamento da janela quanto pela atualização, garantindo a sincronização do backup antes de encerrar.
+- Ordem da atualização: download do instalador → confirmação → fluxo de fechamento → processo auxiliar aguardando o término da aplicação → abertura do wizard do Inno Setup.
+- Diagnóstico: o processo auxiliar grava o resultado da abertura em `<instalador>.launch.log`, ao lado do instalador baixado na pasta temporária (`biluca-financas-update`), já que ele sobrevive ao processo da aplicação.
+- Contrato de publicação consumido pela aplicação (endpoint e nome do instalador): ver [Publicação](./Publicação.md).

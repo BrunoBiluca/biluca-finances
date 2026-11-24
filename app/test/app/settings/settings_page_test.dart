@@ -1,5 +1,7 @@
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/settings/settings_page.dart';
+import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
+import 'package:biluca_financas/core/app_update/bloc/app_update_events.dart';
 import 'package:biluca_financas/core/backup/bloc/backup_bloc.dart';
 import 'package:biluca_financas/core/backup/models/backup_status.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +10,18 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../_mocks/fake_app_update_service.dart';
 import '../../_mocks/fake_backup_service.dart';
 
 void main() {
   final getIt = GetIt.instance;
   late FakeBackupService service;
+  late FakeAppUpdateService updateService;
 
   setUp(() async {
     await getIt.reset();
     service = FakeBackupService(BackupStatus.notConfigured(databaseVersion: 10));
+    updateService = FakeAppUpdateService();
   });
 
   tearDown(() async {
@@ -25,13 +30,23 @@ void main() {
 
   void registerBloc() {
     getIt.registerSingleton<BackupBloc>(BackupBloc(service: service));
+    getIt.registerSingleton<AppUpdateBloc>(
+      AppUpdateBloc(service: updateService),
+    );
   }
 
   Future<void> pumpSettings(WidgetTester tester) async {
     registerBloc();
     await tester.pumpWidget(
-      const MaterialApp(home: Scaffold(body: SettingsPage())),
+      const MaterialApp(
+        home: Scaffold(body: SingleChildScrollView(child: SettingsPage())),
+      ),
     );
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> runCheck(WidgetTester tester) async {
+    getIt<AppUpdateBloc>().add(const CheckAppUpdate());
     await tester.pumpAndSettle();
   }
 
@@ -111,10 +126,92 @@ void main() {
     expect(find.text('principal'), findsOneWidget);
     expect(find.byKey(const Key('revoke-google-drive')), findsOneWidget);
 
+    await tester.ensureVisible(find.byKey(const Key('revoke-google-drive')));
     await tester.tap(find.byKey(const Key('revoke-google-drive')));
     await tester.pumpAndSettle();
 
     expect(service.revokeCalls, 1);
     expect(find.text('Conectar ao Google Drive'), findsOneWidget);
+  });
+
+  testWidgets('shows the installed version and that the app is up to date',
+      (tester) async {
+    await pumpSettings(tester);
+    await runCheck(tester);
+
+    expect(find.byKey(const Key('settings-app-update')), findsOneWidget);
+    expect(find.text('2.0.3'), findsOneWidget);
+    expect(find.text('A aplicação está atualizada.'), findsOneWidget);
+    expect(
+      find.byKey(const Key('settings-app-update-download')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('checks the published version again', (tester) async {
+    await pumpSettings(tester);
+    await runCheck(tester);
+
+    await tester.ensureVisible(
+      find.byKey(const Key('settings-app-update-check')),
+    );
+    await tester.tap(find.byKey(const Key('settings-app-update-check')));
+    await tester.pumpAndSettle();
+
+    expect(updateService.checkCalls, 2);
+  });
+
+  testWidgets('shows the published version and downloads the installer',
+      (tester) async {
+    updateService.checkResult = updateService.updateAvailable();
+
+    await pumpSettings(tester);
+    await runCheck(tester);
+
+    expect(find.text('2.1.0'), findsOneWidget);
+    expect(
+      find.text('A versão 2.1.0 está disponível para instalação.'),
+      findsOneWidget,
+    );
+
+    await tester.ensureVisible(
+      find.byKey(const Key('settings-app-update-download')),
+    );
+    await tester.tap(find.byKey(const Key('settings-app-update-download')));
+    await tester.pumpAndSettle();
+
+    expect(updateService.downloadCalls, 1);
+  });
+
+  testWidgets('shows the failure and keeps a new attempt available',
+      (tester) async {
+    updateService.checkError = Exception('sem conexão');
+
+    await pumpSettings(tester);
+    await runCheck(tester);
+
+    expect(find.byKey(const Key('settings-app-update-error')), findsOneWidget);
+    expect(find.textContaining('sem conexão'), findsOneWidget);
+    final checkButton = tester.widget<OutlinedButton>(
+      find.byKey(const Key('settings-app-update-check')),
+    );
+    expect(checkButton.onPressed, isNotNull);
+  });
+
+  testWidgets('hides the update actions on an unsupported platform',
+      (tester) async {
+    updateService.supported = false;
+
+    await pumpSettings(tester);
+
+    expect(
+      find.byKey(const Key('settings-app-update-unsupported')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('settings-app-update-check')), findsNothing);
+    expect(
+      find.byKey(const Key('settings-app-update-download')),
+      findsNothing,
+    );
   });
 }

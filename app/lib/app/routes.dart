@@ -2,8 +2,8 @@ import 'package:biluca_financas/app/accountability_identifications/accountabilit
 import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/home/home.dart';
+import 'package:biluca_financas/app/navigator_key.dart';
 import 'package:biluca_financas/app/settings/settings_page.dart';
-import 'package:biluca_financas/main.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/yearly_report.dart';
 import 'package:go_router/go_router.dart';

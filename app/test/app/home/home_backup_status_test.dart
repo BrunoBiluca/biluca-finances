@@ -1,3 +1,4 @@
+import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
 import 'package:biluca_financas/core/backup/models/backup_status.dart';
 import 'package:biluca_financas/core/backup/bloc/backup_bloc.dart';
 import 'package:biluca_financas/app/home/home.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
+import '../../_mocks/fake_app_update_service.dart';
 import '../../_mocks/fake_backup_service.dart';
 
 void main() {
@@ -22,6 +24,9 @@ void main() {
   Future<void> pumpHome(WidgetTester tester, BackupStatus status) async {
     getIt.registerSingleton<BackupBloc>(
       BackupBloc(service: FakeBackupService(status)),
+    );
+    getIt.registerSingleton<AppUpdateBloc>(
+      AppUpdateBloc(service: FakeAppUpdateService()),
     );
 
     await tester.pumpWidget(const MaterialApp(home: Scaffold(body: Home())));
