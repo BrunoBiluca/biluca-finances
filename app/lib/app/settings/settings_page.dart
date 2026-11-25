@@ -1,3 +1,4 @@
+import 'package:biluca_financas/app/settings/widgets/appearance_section.dart';
 import 'package:biluca_financas/app/settings/widgets/app_update_section.dart';
 import 'package:biluca_financas/app/settings/widgets/google_drive_backup_section.dart';
 import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
@@ -61,6 +62,8 @@ class _SettingsContent extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 24),
+        const AppearanceSection(),
         const SizedBox(height: 24),
         const AppUpdateSection(),
         const SizedBox(height: 24),

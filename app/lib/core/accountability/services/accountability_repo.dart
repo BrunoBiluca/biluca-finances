@@ -1,4 +1,5 @@
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 
@@ -8,8 +9,14 @@ abstract class AccountabilityRepo {
   Future<List<AccountabilityEntry>> searchEntries({
     required String searchQuery,
     String? identificationId,
+    AccountabilityEntryFilter filter = AccountabilityEntryFilter.empty,
     int limit = 10,
     int offset = 0,
+  });
+  Future<int> countEntries({
+    required String searchQuery,
+    String? identificationId,
+    AccountabilityEntryFilter filter = AccountabilityEntryFilter.empty,
   });
   Future<List<AccountabilityEntry>> getEntriesByIdentification(
       AccountabilityIdentification identification);
@@ -17,6 +24,7 @@ abstract class AccountabilityRepo {
   Future<AccountabilityEntry> getById(int id);
   Future<AccountabilityEntry?> exists(AccountabilityEntryRequest req);
   Future<AccountabilityEntry> add(AccountabilityEntryRequest req);
+  Future<void> addAll(List<AccountabilityEntryRequest> requests);
   Future<void> delete(AccountabilityEntry entry);
   Future<AccountabilityEntry> update(AccountabilityEntry entry);
 

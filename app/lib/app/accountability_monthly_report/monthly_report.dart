@@ -12,6 +12,8 @@ import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:biluca_financas/core/accountability_stats/models/accountability_month_stats.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/current_month_report.service.dart';
+import 'package:biluca_financas/core/preferences/preferences_service.dart';
+import 'package:biluca_financas/core/preferences/report_period_selection.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_service.provider.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_values_section.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
   CurrentMonthReportService? _service;
   StreamSubscription? _subscription;
   var statsService = GetIt.I<AccountabilityStatsService>();
+  var preferences = GetIt.I<PreferencesService>();
 
   @override
   void initState() {
@@ -42,7 +45,16 @@ class _MonthlyReportState extends State<MonthlyReport> {
   void fillMonths() async {
     var result = await statsService.getAllMonthsWithAccountability(fillBlanks: true);
     setState(() => availableMonths = result);
-    updateDateSelected(result.last);
+    final initial = ReportPeriodSelection.resolveMonth(
+      availableMonths: result,
+      savedMonth: preferences.selectedMonth,
+    );
+    if (initial != null) updateDateSelected(initial);
+  }
+
+  void selectMonth(AccountabilityMonthStats month) {
+    preferences.setSelectedMonth(month.month);
+    updateDateSelected(month);
   }
 
   void updateDateSelected(AccountabilityMonthStats month) {
@@ -252,7 +264,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
             child: MonthSelector(
               availableMonths: availableMonths,
               current: _selectedMonth!,
-              onDateChanged: updateDateSelected,
+              onDateChanged: selectMonth,
             ),
           ),
         ],

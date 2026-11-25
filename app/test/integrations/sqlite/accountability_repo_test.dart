@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
@@ -10,6 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
 import 'helpers/memory_db_provider.dart';
+
+class _BrokenEntryRequest extends Fake
+    implements AccountabilityEntryRequest {}
 
 void main() {
   setUpAll(() {
@@ -188,6 +192,96 @@ void main() {
     expect(simpleFormat.map((result) => result.id), contains(entry.id));
   });
 
+  test("should filter entries by period and value range", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    await repo.add(
+      AccountabilityEntryRequest(
+        description: "Before",
+        value: 5,
+        createdAt: DateTime(2026, 1, 1, 12),
+      ),
+    );
+    await repo.add(
+      AccountabilityEntryRequest(
+        description: "Inside",
+        value: 50,
+        createdAt: DateTime(2026, 1, 15, 12),
+      ),
+    );
+    await repo.add(
+      AccountabilityEntryRequest(
+        description: "After",
+        value: 500,
+        createdAt: DateTime(2026, 2, 1, 12),
+      ),
+    );
+
+    final period = await repo.searchEntries(
+      searchQuery: "",
+      filter: AccountabilityEntryFilter(
+        startDate: DateTime(2026, 1, 10),
+        endDate: DateTime(2026, 1, 20),
+      ),
+    );
+    expect(period.map((entry) => entry.description), ["Inside"]);
+
+    final valueRange = await repo.searchEntries(
+      searchQuery: "",
+      filter: const AccountabilityEntryFilter(minValue: 10, maxValue: 100),
+    );
+    expect(valueRange.map((entry) => entry.description), ["Inside"]);
+
+    final onlyMinimum = await repo.searchEntries(
+      searchQuery: "",
+      filter: const AccountabilityEntryFilter(minValue: 100),
+    );
+    expect(onlyMinimum.map((entry) => entry.description), ["After"]);
+  });
+
+  test("should count the entries that match the search and the filters",
+      () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+    for (var i = 0; i < 3; i++) {
+      await repo.add(
+        AccountabilityEntryRequest(
+          description: "Matching transaction $i",
+          value: 10.0 * (i + 1),
+          createdAt: DateTime(2026, 1, 10 + i),
+        ),
+      );
+    }
+    await repo.add(
+      AccountabilityEntryRequest(
+        description: "Another transaction",
+        value: 10,
+        createdAt: DateTime(2026, 1, 15),
+      ),
+    );
+
+    expect(await repo.countEntries(searchQuery: ""), 4);
+    expect(
+      await repo.countEntries(searchQuery: "Matching transaction"),
+      3,
+    );
+    expect(
+      await repo.countEntries(
+        searchQuery: "",
+        filter: const AccountabilityEntryFilter(minValue: 20),
+      ),
+      2,
+    );
+    expect(
+      await repo.countEntries(
+        searchQuery: "",
+        filter: AccountabilityEntryFilter(
+          startDate: DateTime(2026, 1, 11),
+          endDate: DateTime(2026, 1, 30),
+        ),
+      ),
+      3,
+    );
+  });
+
   test("should add an accountability entry", () async {
     final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
 
@@ -203,6 +297,51 @@ void main() {
     expect(newEntry.createdAt, req.createdAt);
     expect(newEntry.insertedAt, isNotNull);
     expect(newEntry.updatedAt, isNotNull);
+  });
+
+  test("should add all entries in one transaction", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+
+    await repo.addAll([
+      AccountabilityEntryRequest(
+        description: "First",
+        value: 10,
+        createdAt: DateTime(2026, 1, 1),
+      ),
+      AccountabilityEntryRequest(
+        description: "Second",
+        value: 20,
+        createdAt: DateTime(2026, 1, 2),
+      ),
+    ]);
+
+    final entries = await repo.getEntries();
+    expect(entries, hasLength(2));
+    expect(
+      entries.map((entry) => entry.description),
+      containsAll(["First", "Second"]),
+    );
+
+    await repo.addAll(const []);
+    expect(await repo.getEntries(), hasLength(2));
+  });
+
+  test("should not persist partial entries when adding all fails", () async {
+    final repo = SQLiteAccountabilityRepo(await MemoryDBProvider.i.database);
+
+    await expectLater(
+      repo.addAll([
+        AccountabilityEntryRequest(
+          description: "Valid",
+          value: 10,
+          createdAt: DateTime(2026, 1, 1),
+        ),
+        _BrokenEntryRequest(),
+      ]),
+      throwsA(anything),
+    );
+
+    expect(await repo.getEntries(), isEmpty);
   });
 
   test("should delete an accountability entry", () async {

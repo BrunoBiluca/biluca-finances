@@ -288,9 +288,36 @@ void main() {
     expect(service.saveCalls, 1);
   });
 
-  testWidgets('usa o mesmo raio do botão contornado e um ícone no botão salvar',
+  testWidgets('informa a falha ao salvar e mantém o modal aberto',
       (tester) async {
-    await _pumpModal(tester, service: FakeAccountabilityImportService());
+    final service = FakeAccountabilityImportService()
+      ..entries.add(_request('Mercado', 10))
+      ..saveError = Exception('banco indisponível');
+    await _pumpModal(tester, service: service);
+
+    await tester.tap(find.byKey(const Key('save-import-verification')));
+    await tester.pumpAndSettle();
+
+    expect(service.saveCalls, 1);
+    expect(find.byKey(const Key('import-save-error')), findsOneWidget);
+    expect(
+      find.byType(AccountabilityImportVerification),
+      findsOneWidget,
+    );
+
+    service.saveError = null;
+    await tester.tap(find.byKey(const Key('save-import-verification')));
+    await tester.pumpAndSettle();
+
+    expect(service.saveCalls, 2);
+    expect(
+      find.byType(AccountabilityImportVerification),
+      findsNothing,
+    );
+  });
+
+  testWidgets('usa o mesmo raio do botão contornado e um ícone no botão salvar',
+      (tester) async {    await _pumpModal(tester, service: FakeAccountabilityImportService());
 
     final saveButton = tester.widget<FilledButton>(
       find.byKey(const Key('save-import-verification')),

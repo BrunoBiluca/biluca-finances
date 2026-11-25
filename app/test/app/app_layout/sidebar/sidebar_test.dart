@@ -1,11 +1,28 @@
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/app_layout/sidebar/closed_sidebar.dart';
 import 'package:biluca_financas/app/app_layout/sidebar/open_sidebar.dart';
+import 'package:biluca_financas/core/preferences/preferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  final getIt = GetIt.instance;
+
+  setUp(() async {
+    await getIt.reset();
+    SharedPreferences.setMockInitialValues({});
+    getIt.registerSingleton<PreferencesService>(
+      await PreferencesService.load(),
+    );
+  });
+
+  tearDown(() async {
+    await getIt.reset();
+  });
+
   group('Sidebar Tests', () {
     buildApp() {
       return MaterialApp.router(
@@ -58,6 +75,32 @@ void main() {
 
       expect(find.byType(OpenSidebar), findsOneWidget);
       expect(find.byType(ClosedSidebar), findsNothing);
+    });
+
+    testWidgets('Should persist the collapsed state between sessions',
+        (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      await tapToggleSidebarBtn(tester);
+
+      expect(find.byType(ClosedSidebar), findsOneWidget);
+      expect((await PreferencesService.load()).sidebarCollapsed, isTrue);
+    });
+
+    testWidgets('Should start collapsed when the state was persisted',
+        (tester) async {
+      SharedPreferences.setMockInitialValues({
+        PreferencesService.sidebarCollapsedKey: true,
+      });
+      await getIt.unregister<PreferencesService>();
+      getIt.registerSingleton<PreferencesService>(
+        await PreferencesService.load(),
+      );
+
+      await tester.pumpWidget(buildApp());
+
+      expect(find.byType(ClosedSidebar), findsOneWidget);
+      expect(find.byType(OpenSidebar), findsNothing);
     });
 
     testWidgets('Should collapse sidebar when arrow button is tapped',

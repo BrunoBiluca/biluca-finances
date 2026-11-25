@@ -7,6 +7,8 @@ import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/year_selector.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_identifications_summary_charts.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
+import 'package:biluca_financas/core/preferences/preferences_service.dart';
+import 'package:biluca_financas/core/preferences/report_period_selection.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_summary_cards.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_summary_charts.dart';
 import 'package:biluca_financas/di_container.dart';
@@ -22,8 +24,12 @@ class YearlyReport extends StatefulWidget {
 
 class _YearlyReportState extends State<YearlyReport> {
   String? currentYear;
+  final preferences = GetIt.I<PreferencesService>();
 
-  void updateSelectedYear(String year) => setState(() => currentYear = year);
+  void updateSelectedYear(String year) {
+    preferences.setSelectedYear(year);
+    setState(() => currentYear = year);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +40,16 @@ class _YearlyReportState extends State<YearlyReport> {
           return const CircularProgressIndicator();
         }
 
+        final years = snapshot.data!;
+        if (years.isEmpty) {
+          return const Center(child: Text('Nenhum registro encontrado'));
+        }
+
         AccountabilityYearlyReportService? service;
-        currentYear ??= snapshot.data!.first.year;
+        currentYear ??= ReportPeriodSelection.resolveYear(
+          availableYears: years,
+          savedYear: preferences.selectedYear,
+        )?.year;
 
         if (currentYear == "Últimos 12 meses") {
           var now = DateTime.now();
@@ -113,9 +127,7 @@ class _YearlyReportState extends State<YearlyReport> {
             child: YearSelector(
               currentYear: currentYear!,
               years: snapshot.data!,
-              onDateChanged: (year) {
-                setState(() => currentYear = year);
-              },
+              onDateChanged: updateSelectedYear,
             ),
           ),
         ],

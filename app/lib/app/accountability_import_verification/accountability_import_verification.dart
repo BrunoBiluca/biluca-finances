@@ -32,6 +32,9 @@ class AccountabilityImportVerification extends StatefulWidget {
 
 class _AccountabilityImportVerificationState
     extends State<AccountabilityImportVerification> {
+  bool _isSaving = false;
+  String? _saveError;
+
   double get _netBalance => widget.service.entries.fold<double>(
         0,
         (sum, entry) => sum + entry.value,
@@ -131,10 +134,7 @@ class _AccountabilityImportVerificationState
     // Keep the filled action radius aligned with the outlined button from the theme.
     final saveButton = FilledButton.icon(
       key: const Key('save-import-verification'),
-      onPressed: () async {
-        await widget.service.save();
-        if (context.mounted) Navigator.pop(context);
-      },
+      onPressed: _isSaving ? null : _save,
       icon: const Icon(Icons.check),
       label: const Text('Salvar'),
       style: FilledButton.styleFrom(
@@ -154,37 +154,82 @@ class _AccountabilityImportVerificationState
           ),
         ),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth < 560) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (_saveError != null) ...[
+            Row(
+              key: const Key('import-save-error'),
               children: [
-                summary,
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(child: cancelButton),
-                    const SizedBox(width: 12),
-                    Expanded(child: saveButton),
-                  ],
+                Icon(Icons.error_outline, color: theme.colorScheme.error),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    _saveError!,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
                 ),
               ],
-            );
-          }
+            ),
+            const SizedBox(height: 12),
+          ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxWidth < 560) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    summary,
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(child: cancelButton),
+                        const SizedBox(width: 12),
+                        Expanded(child: saveButton),
+                      ],
+                    ),
+                  ],
+                );
+              }
 
-          return Row(
-            children: [
-              Expanded(child: summary),
-              const SizedBox(width: 12),
-              cancelButton,
-              const SizedBox(width: 12),
-              saveButton,
-            ],
-          );
-        },
+              return Row(
+                children: [
+                  Expanded(child: summary),
+                  const SizedBox(width: 12),
+                  cancelButton,
+                  const SizedBox(width: 12),
+                  saveButton,
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _save() async {
+    setState(() {
+      _isSaving = true;
+      _saveError = null;
+    });
+
+    try {
+      await widget.service.save();
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _isSaving = false;
+        _saveError = 'Não foi possível salvar a importação. Tente novamente.';
+      });
+      return;
+    }
+
+    if (!mounted) return;
+    setState(() => _isSaving = false);
+    Navigator.pop(context);
   }
 
   void _updateEntry(AccountabilityEntryRequest updatedEntry) {

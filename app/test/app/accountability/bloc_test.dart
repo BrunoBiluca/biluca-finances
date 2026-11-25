@@ -4,6 +4,7 @@ import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dar
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:bloc_test/bloc_test.dart';
@@ -18,6 +19,10 @@ void main() {
   late Completer<List<AccountabilityEntry>> outdatedRequest;
   late AccountabilityEntry oldEntry;
 
+  setUpAll(() {
+    registerFallbackValue(AccountabilityEntryFilter.empty);
+  });
+
   blocTest(
     "returna uma lista vazia quando nenhum dado estiver armazenado",
     build: () {
@@ -26,6 +31,7 @@ void main() {
           limit: any(named: "limit"),
           offset: any(named: "offset"))).thenAnswer((_) async => []);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo);
 
       return AccountabilityBloc(repo: repo);
     },
@@ -35,7 +41,9 @@ void main() {
           limit: any(named: "limit"), offset: any(named: "offset"))).called(1),
     },
     expect: () => [
-      const AccountabilityChanged(entries: [], identifications: []),
+      isA<AccountabilityChanged>()
+          .having((state) => state.entries, "entries", isEmpty)
+          .having((state) => state.resultCount, "resultCount", 0),
     ],
   );
 
@@ -58,11 +66,13 @@ void main() {
         () => repo.searchEntries(
           searchQuery: any(named: "searchQuery"),
           identificationId: any(named: "identificationId"),
+          filter: any(named: "filter"),
           limit: any(named: "limit"),
           offset: any(named: "offset"),
         ),
       ).thenAnswer((_) async => entries);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo, AccountabilityBloc.pageSize + 1);
 
       return AccountabilityBloc(repo: repo);
     },
@@ -75,6 +85,7 @@ void main() {
         () => bloc.repo.searchEntries(
           searchQuery: "market",
           identificationId: "groceries",
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: 0,
         ),
@@ -93,6 +104,8 @@ void main() {
           .having((state) => state.isLoading, "isLoading", false)
           .having((state) => state.entries.length, "entries.length",
               AccountabilityBloc.pageSize)
+          .having((state) => state.resultCount, "resultCount",
+              AccountabilityBloc.pageSize + 1)
           .having((state) => state.hasMore, "hasMore", true),
     ],
   );
@@ -110,6 +123,7 @@ void main() {
         () => repo.searchEntries(
           searchQuery: "old",
           identificationId: null,
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: 0,
         ),
@@ -118,11 +132,13 @@ void main() {
         () => repo.searchEntries(
           searchQuery: "new",
           identificationId: "food",
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: 0,
         ),
       ).thenAnswer((_) async => [newEntry]);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo, 1);
 
       return AccountabilityBloc(repo: repo);
     },
@@ -172,6 +188,7 @@ void main() {
         () => repo.searchEntries(
           searchQuery: "food",
           identificationId: "food",
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: 0,
         ),
@@ -180,11 +197,13 @@ void main() {
         () => repo.searchEntries(
           searchQuery: "food",
           identificationId: "food",
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: AccountabilityBloc.pageSize,
         ),
       ).thenAnswer((_) async => [nextEntry]);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo, AccountabilityBloc.pageSize + 1);
 
       return AccountabilityBloc(repo: repo);
     },
@@ -199,6 +218,7 @@ void main() {
         () => bloc.repo.searchEntries(
           searchQuery: "food",
           identificationId: "food",
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: AccountabilityBloc.pageSize,
         ),
@@ -240,11 +260,13 @@ void main() {
         () => repo.searchEntries(
           searchQuery: "matching",
           identificationId: "food",
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: 0,
         ),
       ).thenAnswer((_) async => results[searchCount++]);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo, 2);
       when(() => repo.add(any(that: isA<AccountabilityEntryRequest>())))
           .thenAnswer((_) async => addedEntry);
       when(() => repo.update(any(that: isA<AccountabilityEntry>())))
@@ -276,6 +298,7 @@ void main() {
         () => bloc.repo.searchEntries(
           searchQuery: "matching",
           identificationId: "food",
+          filter: any(named: "filter"),
           limit: AccountabilityBloc.pageSize + 1,
           offset: 0,
         ),
@@ -315,6 +338,7 @@ void main() {
           limit: any(named: "limit"),
           offset: any(named: "offset"))).thenAnswer((_) async => []);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo);
       return AccountabilityBloc(repo: repo);
     },
     act: (bloc) => bloc
@@ -328,7 +352,15 @@ void main() {
       verify(() => bloc.repo.getEntries(
           limit: any(named: "limit"), offset: any(named: "offset"))).called(1),
     },
-    expect: () => [isA<AccountabilityChanged>()],
+    expect: () => [
+      isA<AccountabilityChanged>()
+          .having((state) => state.entryCreationVersion, "entryCreationVersion",
+              1),
+      isA<AccountabilityChanged>()
+          .having((state) => state.entryCreationVersion, "entryCreationVersion",
+              1)
+          .having((state) => state.resultCount, "resultCount", 0),
+    ],
   );
 
   blocTest(
@@ -343,6 +375,7 @@ void main() {
           limit: any(named: "limit"),
           offset: any(named: "offset"))).thenAnswer((_) async => []);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo);
       return AccountabilityBloc(repo: repo);
     },
     act: (bloc) => bloc
@@ -404,6 +437,7 @@ void main() {
           limit: any(named: "limit"),
           offset: any(named: "offset"))).thenAnswer((_) async => []);
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo);
       return AccountabilityBloc(repo: repo);
     },
     act: (bloc) => bloc
@@ -430,6 +464,7 @@ void main() {
       when(() => repo.searchEntries(
             searchQuery: any(named: "searchQuery"),
             identificationId: any(named: "identificationId"),
+            filter: any(named: "filter"),
             limit: any(named: "limit"),
             offset: any(named: "offset"),
           )).thenThrow(Exception("Load failed"));
@@ -456,6 +491,7 @@ void main() {
       when(() => repo.searchEntries(
             searchQuery: any(named: "searchQuery"),
             identificationId: any(named: "identificationId"),
+            filter: any(named: "filter"),
             limit: any(named: "limit"),
             offset: any(named: "offset"),
           )).thenAnswer((_) async {
@@ -466,6 +502,7 @@ void main() {
         return [entry];
       });
       when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      _stubCount(repo, 1);
       return AccountabilityBloc(repo: repo);
     },
     act: (bloc) async {
@@ -527,6 +564,80 @@ void main() {
           .having((state) => state.failureMessage, "failureMessage", isNotNull),
     ],
   );
+  blocTest(
+    "applies the period and value filters to the search and the count",
+    build: () {
+      final repo = MockAccountabilityRepo();
+      when(() => repo.searchEntries(
+            searchQuery: any(named: "searchQuery"),
+            identificationId: any(named: "identificationId"),
+            filter: any(named: "filter"),
+            limit: any(named: "limit"),
+            offset: any(named: "offset"),
+          )).thenAnswer((_) async => [_entry(1, "Filtered entry")]);
+      when(() => repo.countEntries(
+            searchQuery: any(named: "searchQuery"),
+            identificationId: any(named: "identificationId"),
+            filter: any(named: "filter"),
+          )).thenAnswer((_) async => 42);
+      when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+
+      return AccountabilityBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(
+      SearchAccountabilityEntries(
+        query: "",
+        identificationId: null,
+        filter: AccountabilityEntryFilter(
+          startDate: DateTime(2026, 1, 1),
+          endDate: DateTime(2026, 1, 31),
+          minValue: 10,
+          maxValue: 100,
+        ),
+      ),
+    ),
+    verify: (bloc) {
+      verify(
+        () => bloc.repo.searchEntries(
+          searchQuery: "",
+          identificationId: null,
+          filter: any(named: "filter"),
+          limit: AccountabilityBloc.pageSize + 1,
+          offset: 0,
+        ),
+      ).called(1);
+      verify(
+        () => bloc.repo.countEntries(
+          searchQuery: "",
+          identificationId: null,
+          filter: any(named: "filter"),
+        ),
+      ).called(1);
+    },
+    expect: () => [
+      isA<AccountabilityChanged>()
+          .having((state) => state.isLoading, "isLoading", true)
+          .having((state) => state.filter.minValue, "minValue", 10),
+      isA<AccountabilityChanged>()
+          .having((state) => state.filter.startDate, "startDate",
+              DateTime(2026, 1, 1))
+          .having((state) => state.filter.endDate, "endDate",
+              DateTime(2026, 1, 31))
+          .having((state) => state.filter.minValue, "minValue", 10)
+          .having((state) => state.filter.maxValue, "maxValue", 100)
+          .having((state) => state.resultCount, "resultCount", 42)
+          .having((state) => state.entries.single.description, "description",
+              "Filtered entry"),
+    ],
+  );
+}
+
+void _stubCount(AccountabilityRepo repo, [int count = 0]) {
+  when(() => repo.countEntries(
+        searchQuery: any(named: "searchQuery"),
+        identificationId: any(named: "identificationId"),
+        filter: any(named: "filter"),
+      )).thenAnswer((_) async => count);
 }
 
 AccountabilityEntry _entry(int id, String description) {

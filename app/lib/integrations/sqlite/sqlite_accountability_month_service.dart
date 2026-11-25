@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability_monthly_report/services/accountability_month_service.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability_stats/models/grouped_by.dart';
@@ -21,34 +22,15 @@ class SQLiteAccountabilityMonthService extends SQLiteAccountabilityRepo
   Future<List<AccountabilityEntry>> searchEntries({
     required String searchQuery,
     String? identificationId,
+    AccountabilityEntryFilter filter = AccountabilityEntryFilter.empty,
     int limit = 10,
     int offset = 0,
   }) async {
-    final where = <String>["strftime('%m/%Y', a.createdAt) = ?"];
-    final whereArgs = <Object?>[monthf];
-    final normalizedQuery = searchQuery.trim();
-
-    if (normalizedQuery.isNotEmpty) {
-      final pattern = "%$normalizedQuery%";
-      final searchTerms = <String>[
-        "a.description LIKE ?",
-        "a.description_alt LIKE ?",
-        "ai.description LIKE ?",
-      ];
-      whereArgs.addAll([pattern, pattern, pattern]);
-      final amountInCents =
-          AccountabilitySearchQuery.amountInCents(normalizedQuery);
-      if (amountInCents != null) {
-        searchTerms.add("CAST(ROUND(ABS(a.value) * 100) AS INTEGER) = ?");
-        whereArgs.add(amountInCents);
-      }
-      where.add("(${searchTerms.join(" OR ")})");
-    }
-
-    if (identificationId != null) {
-      where.add("a.identification_id = ?");
-      whereArgs.add(identificationId);
-    }
+    final (where, whereArgs) = _monthConditions(
+      searchQuery: searchQuery,
+      identificationId: identificationId,
+      filter: filter,
+    );
 
     whereArgs.addAll([limit > 0 ? limit : -1, offset]);
     return await db.rawQuery(
@@ -82,6 +64,87 @@ class SQLiteAccountabilityMonthService extends SQLiteAccountabilityRepo
             });
           },
         ).toList());
+  }
+
+  @override
+  Future<int> countEntries({
+    required String searchQuery,
+    String? identificationId,
+    AccountabilityEntryFilter filter = AccountabilityEntryFilter.empty,
+  }) async {
+    final (where, whereArgs) = _monthConditions(
+      searchQuery: searchQuery,
+      identificationId: identificationId,
+      filter: filter,
+    );
+
+    final result = await db.rawQuery(
+      """
+    SELECT count(1) AS total
+    FROM accountability a
+    LEFT JOIN accountability_identifications ai ON a.identification_id = ai.id
+    WHERE ${where.join(" AND ")}
+    """,
+      whereArgs,
+    );
+
+    return (result.first['total'] as int?) ?? 0;
+  }
+
+  (List<String>, List<Object?>) _monthConditions({
+    required String searchQuery,
+    required String? identificationId,
+    required AccountabilityEntryFilter filter,
+  }) {
+    final where = <String>["strftime('%m/%Y', a.createdAt) = ?"];
+    final whereArgs = <Object?>[monthf];
+    final normalizedQuery = searchQuery.trim();
+
+    if (normalizedQuery.isNotEmpty) {
+      final pattern = "%$normalizedQuery%";
+      final searchTerms = <String>[
+        "a.description LIKE ?",
+        "a.description_alt LIKE ?",
+        "ai.description LIKE ?",
+      ];
+      whereArgs.addAll([pattern, pattern, pattern]);
+      final amountInCents =
+          AccountabilitySearchQuery.amountInCents(normalizedQuery);
+      if (amountInCents != null) {
+        searchTerms.add("CAST(ROUND(ABS(a.value) * 100) AS INTEGER) = ?");
+        whereArgs.add(amountInCents);
+      }
+      where.add("(${searchTerms.join(" OR ")})");
+    }
+
+    if (identificationId != null) {
+      where.add("a.identification_id = ?");
+      whereArgs.add(identificationId);
+    }
+
+    final periodStart = filter.periodStart;
+    if (periodStart != null) {
+      where.add("a.createdAt >= ?");
+      whereArgs.add(periodStart.toIso8601String());
+    }
+
+    final periodEnd = filter.periodEnd;
+    if (periodEnd != null) {
+      where.add("a.createdAt <= ?");
+      whereArgs.add(periodEnd.toIso8601String());
+    }
+
+    if (filter.minValue != null) {
+      where.add("a.value >= ?");
+      whereArgs.add(filter.minValue);
+    }
+
+    if (filter.maxValue != null) {
+      where.add("a.value <= ?");
+      whereArgs.add(filter.maxValue);
+    }
+
+    return (where, whereArgs);
   }
 
   @override

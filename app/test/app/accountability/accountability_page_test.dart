@@ -1,5 +1,6 @@
-﻿import 'package:biluca_financas/app/accountability_page/accountability_page.dart';
-import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
+﻿import 'dart:async';
+
+import 'package:biluca_financas/app/accountability_page/accountability_page.dart';import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_row.dart';
 import 'package:biluca_financas/app/themes/obsidian_wealth/obsidian_wealth_dark_theme.dart';
 import 'package:biluca_financas/app/themes/theme_manager.dart';
@@ -8,6 +9,7 @@ import 'package:biluca_financas/common/ui/base_toast.dart';
 import 'package:biluca_financas/common/ui/real_currency.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability_identification_prediction/service/accountability_identification_prediction_service.dart';
@@ -37,6 +39,7 @@ void main() {
 
   setUpAll(() async {
     await initializeDateFormatting('pt_BR');
+    registerFallbackValue(AccountabilityEntryFilter.empty);
   });
 
   setUp(() async {
@@ -52,10 +55,18 @@ void main() {
       () => repo.searchEntries(
         searchQuery: any(named: 'searchQuery'),
         identificationId: any(named: 'identificationId'),
+        filter: any(named: 'filter'),
         limit: any(named: 'limit'),
         offset: any(named: 'offset'),
       ),
     ).thenAnswer((_) async => searchResults);
+    when(
+      () => repo.countEntries(
+        searchQuery: any(named: 'searchQuery'),
+        identificationId: any(named: 'identificationId'),
+        filter: any(named: 'filter'),
+      ),
+    ).thenAnswer((_) async => searchResults.length);
     when(() => repo.getIdentifications()).thenAnswer((_) async => identifications);
     getIt.registerSingleton<AccountabilityBloc>(AccountabilityBloc(repo: repo));
   });
@@ -537,6 +548,60 @@ void main() {
     expect(entry.identificationId, identifications[1].id);
   });
 
+  testWidgets('shows the result count for the current filters', (tester) async {
+    searchResults = [_entry(1), _entry(2)];
+    await _pumpPage(tester);
+
+    expect(
+      find.byKey(const Key('accountability-result-count')),
+      findsOneWidget,
+    );
+    expect(find.text('2 lançamentos encontrados'), findsOneWidget);
+  });
+
+  testWidgets('filters by value and clears the advanced filters',
+      (tester) async {
+    final bloc = getIt<AccountabilityBloc>();
+    await _pumpPage(tester);
+
+    expect(find.byKey(const Key('accountability-start-date')), findsNothing);
+
+    await tester.tap(find.byKey(const Key('accountability-toggle-filters')));
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('accountability-start-date')), findsOneWidget);
+    expect(find.byKey(const Key('accountability-end-date')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('accountability-start-date')));
+    await tester.pumpAndSettle();
+    expect(find.byType(DatePickerDialog), findsOneWidget);
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(
+      find.byKey(const Key('accountability-min-value')),
+      '10,00',
+    );
+    await _flushAsync(tester);
+
+    expect(bloc.state.filter.minValue, 10.0);
+    verify(
+      () => repo.searchEntries(
+        searchQuery: '',
+        identificationId: null,
+        filter: any(named: 'filter'),
+        limit: AccountabilityBloc.pageSize + 1,
+        offset: 0,
+      ),
+    ).called(greaterThanOrEqualTo(1));
+
+    await tester.tap(find.byKey(const Key('accountability-clear-filter')));
+    await _flushAsync(tester);
+
+    expect(bloc.state.filter.isNotEmpty, isFalse);
+    expect(find.byKey(const Key('accountability-clear-filter')), findsNothing);
+  });
+
   testWidgets('combines text search with a category and can clear the category', (tester) async {
     final bloc = getIt<AccountabilityBloc>();
     await _pumpPage(tester);
@@ -559,6 +624,7 @@ void main() {
       () => repo.searchEntries(
         searchQuery: 'mercado',
         identificationId: lunch.id,
+        filter: any(named: 'filter'),
         limit: AccountabilityBloc.pageSize + 1,
         offset: 0,
       ),
@@ -574,6 +640,37 @@ void main() {
 
     expect(bloc.state.entries, isEmpty);
     expect(find.text('Nenhum lançamento corresponde aos filtros'), findsOneWidget);
+  });
+
+  testWidgets('offers a create action when there is no entry at all', (tester) async {
+    await _pumpPage(tester);
+
+    expect(find.text('Nenhuma entrada registrada'), findsOneWidget);
+    expect(
+      find.byKey(const Key('accountability-empty-create')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('accountability-empty-clear')), findsNothing);
+  });
+
+  testWidgets('clears the filters from the empty state', (tester) async {
+    final bloc = getIt<AccountabilityBloc>();
+    await _pumpPage(tester);
+
+    await tester.enterText(find.byKey(const Key('accountability-search')), 'inexistente');
+    await _flushAsync(tester);
+
+    expect(
+      find.byKey(const Key('accountability-empty-clear')),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byKey(const Key('accountability-empty-clear')));
+    await _flushAsync(tester);
+
+    expect(bloc.state.searchQuery, isEmpty);
+    expect(bloc.state.identificationId, isNull);
+    expect(find.text('Nenhuma entrada registrada'), findsOneWidget);
   });
 
   testWidgets('loads the next filtered page without replacing current entries', (tester) async {
@@ -611,6 +708,7 @@ void main() {
       () => repo.searchEntries(
         searchQuery: '',
         identificationId: null,
+        filter: any(named: 'filter'),
         limit: AccountabilityBloc.pageSize + 1,
         offset: AccountabilityBloc.pageSize,
       ),
@@ -908,6 +1006,68 @@ void main() {
       ),
       findsOneWidget,
     );
+    await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('shows the import progress while the file is processed', (tester) async {
+    final importService = FakeAccountabilityImportService()
+      ..importGate = Completer<void>();
+    getIt.registerSingleton<AccountabilityImportService>(importService);
+    when(() => repo.getEntries(
+          limit: any(named: 'limit'),
+          offset: any(named: 'offset'),
+        )).thenAnswer((_) async => <AccountabilityEntry>[]);
+    FilePicker.platform = FakeFilePicker(
+      result: FilePickerResult([
+        PlatformFile(name: 'extrato.pdf', size: 1, path: 'extrato.pdf'),
+      ]),
+    );
+
+    await _pumpPage(tester);
+    await tester.tap(find.byKey(const Key('import-accountability')));
+    await _flushAsync(tester);
+
+    expect(find.byKey(const Key('import-progress')), findsOneWidget);
+    expect(find.text('Conferência de Importação de Extratos'), findsNothing);
+
+    importService.importGate!.complete();
+    await _flushAsync(tester);
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(const Key('import-progress')), findsNothing);
+    expect(find.text('Conferência de Importação de Extratos'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('shows the import failure and retries with the same file', (tester) async {
+    final importService = FakeAccountabilityImportService()
+      ..importError = Exception('extrato inválido');
+    getIt.registerSingleton<AccountabilityImportService>(importService);
+    when(() => repo.getEntries(
+          limit: any(named: 'limit'),
+          offset: any(named: 'offset'),
+        )).thenAnswer((_) async => <AccountabilityEntry>[]);
+    FilePicker.platform = FakeFilePicker(
+      result: FilePickerResult([
+        PlatformFile(name: 'extrato.pdf', size: 1, path: 'extrato.pdf'),
+      ]),
+    );
+
+    await _pumpPage(tester);
+    await tester.tap(find.byKey(const Key('import-accountability')));
+    await _flushAsync(tester);
+
+    expect(find.byKey(const Key('import-error-banner')), findsOneWidget);
+    expect(find.text('Conferência de Importação de Extratos'), findsNothing);
+
+    importService.importError = null;
+    await tester.tap(find.byKey(const Key('import-retry')));
+    await _flushAsync(tester);
+    await tester.pumpAndSettle();
+
+    expect(importService.importedFiles, hasLength(2));
+    expect(find.byKey(const Key('import-error-banner')), findsNothing);
+    expect(find.text('Conferência de Importação de Extratos'), findsOneWidget);
     await tester.pump(const Duration(seconds: 3));
   });
 

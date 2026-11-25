@@ -31,9 +31,7 @@ class SQLiteAccountabilityImportService extends AccountabilityImportService {
 
   @override
   Future save() async {
-    for (var entry in entries) {
-      await repo.add(entry);
-    }
+    await repo.addAll(List.of(entries));
   }
 
   @override

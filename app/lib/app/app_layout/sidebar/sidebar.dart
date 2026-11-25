@@ -1,7 +1,9 @@
 import 'package:biluca_financas/app/app_layout/sidebar/closed_sidebar.dart';
 import 'package:biluca_financas/app/app_layout/sidebar/open_sidebar.dart';
 import 'package:biluca_financas/app/app_layout/sidebar/sidebar_page.model.dart';
+import 'package:biluca_financas/core/preferences/preferences_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -28,7 +30,8 @@ class _SidebarState extends State<Sidebar> {
     SidebarPage("Configurações", "/settings", Icons.settings, Colors.blueGrey),
   ];
 
-  bool isOpen = true;
+  late final PreferencesService _preferences = GetIt.I<PreferencesService>();
+  late bool isOpen = !_preferences.sidebarCollapsed;
   late String appVersion = "";
 
   @override
@@ -80,6 +83,7 @@ class _SidebarState extends State<Sidebar> {
                   icon: Icon(isOpen ? Icons.arrow_left : Icons.arrow_right),
                   onPressed: () {
                     setState(() => isOpen = !isOpen);
+                    _preferences.setSidebarCollapsed(!isOpen);
                   },
                 ),
               ],

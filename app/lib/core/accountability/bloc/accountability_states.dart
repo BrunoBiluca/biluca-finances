@@ -1,4 +1,5 @@
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:equatable/equatable.dart';
 
@@ -7,6 +8,8 @@ abstract class AccountabilityState extends Equatable {
   final List<AccountabilityIdentification> identifications;
   final String searchQuery;
   final String? identificationId;
+  final AccountabilityEntryFilter filter;
+  final int? resultCount;
   final bool hasMore;
   final bool isLoading;
   final int entryCreationVersion;
@@ -17,6 +20,8 @@ abstract class AccountabilityState extends Equatable {
     required this.identifications,
     this.searchQuery = '',
     this.identificationId,
+    this.filter = AccountabilityEntryFilter.empty,
+    this.resultCount,
     this.hasMore = false,
     this.isLoading = false,
     this.entryCreationVersion = 0,
@@ -29,6 +34,8 @@ abstract class AccountabilityState extends Equatable {
         identifications,
         searchQuery,
         identificationId,
+        filter,
+        resultCount,
         hasMore,
         isLoading,
         entryCreationVersion,
@@ -47,6 +54,8 @@ class AccountabilityChanged extends AccountabilityState {
     required super.identifications,
     super.searchQuery,
     super.identificationId,
+    super.filter,
+    super.resultCount,
     super.hasMore,
     super.isLoading,
     super.entryCreationVersion,

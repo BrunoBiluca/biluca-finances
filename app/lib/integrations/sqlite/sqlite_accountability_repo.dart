@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_search_query.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
@@ -25,34 +26,15 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
     int limit = 10,
     int offset = 0,
     String? identificationId,
+    AccountabilityEntryFilter filter = AccountabilityEntryFilter.empty,
   }) async {
-    final where = <String>[];
     final whereArgs = <Object?>[];
-    final normalizedQuery = searchQuery.trim();
-
-    if (normalizedQuery.isNotEmpty) {
-      final pattern = "%$normalizedQuery%";
-      final searchTerms = <String>[
-        "a.description LIKE ?",
-        "a.description_alt LIKE ?",
-        "ai.description LIKE ?",
-      ];
-      whereArgs.addAll([pattern, pattern, pattern]);
-      final amountInCents =
-          AccountabilitySearchQuery.amountInCents(normalizedQuery);
-      if (amountInCents != null) {
-        searchTerms.add("CAST(ROUND(ABS(a.value) * 100) AS INTEGER) = ?");
-        whereArgs.add(amountInCents);
-      }
-      where.add("(${searchTerms.join(" OR ")})");
-    }
-
-    if (identificationId != null) {
-      where.add("a.identification_id = ?");
-      whereArgs.add(identificationId);
-    }
-
-    final whereClause = where.isEmpty ? "" : "WHERE ${where.join(" AND ")}";
+    final whereClause = _whereClause(
+      searchQuery: searchQuery,
+      identificationId: identificationId,
+      filter: filter,
+      args: whereArgs,
+    );
 
     whereArgs.addAll([limit > 0 ? limit : -1, offset]);
     return await db.rawQuery(
@@ -88,6 +70,89 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
   }
 
   @override
+  Future<int> countEntries({
+    required String searchQuery,
+    String? identificationId,
+    AccountabilityEntryFilter filter = AccountabilityEntryFilter.empty,
+  }) async {
+    final whereArgs = <Object?>[];
+    final whereClause = _whereClause(
+      searchQuery: searchQuery,
+      identificationId: identificationId,
+      filter: filter,
+      args: whereArgs,
+    );
+
+    final result = await db.rawQuery(
+      """
+    select count(1) as total
+    from $tableName a
+    left join accountability_identifications ai on a.identification_id = ai.id
+    $whereClause
+    """,
+      whereArgs,
+    );
+
+    return (result.first['total'] as int?) ?? 0;
+  }
+
+  String _whereClause({
+    required String searchQuery,
+    required String? identificationId,
+    required AccountabilityEntryFilter filter,
+    required List<Object?> args,
+  }) {
+    final conditions = <String>[];
+    final normalizedQuery = searchQuery.trim();
+
+    if (normalizedQuery.isNotEmpty) {
+      final pattern = "%$normalizedQuery%";
+      final searchTerms = <String>[
+        "a.description LIKE ?",
+        "a.description_alt LIKE ?",
+        "ai.description LIKE ?",
+      ];
+      args.addAll([pattern, pattern, pattern]);
+      final amountInCents =
+          AccountabilitySearchQuery.amountInCents(normalizedQuery);
+      if (amountInCents != null) {
+        searchTerms.add("CAST(ROUND(ABS(a.value) * 100) AS INTEGER) = ?");
+        args.add(amountInCents);
+      }
+      conditions.add("(${searchTerms.join(" OR ")})");
+    }
+
+    if (identificationId != null) {
+      conditions.add("a.identification_id = ?");
+      args.add(identificationId);
+    }
+
+    final periodStart = filter.periodStart;
+    if (periodStart != null) {
+      conditions.add("a.createdAt >= ?");
+      args.add(periodStart.toIso8601String());
+    }
+
+    final periodEnd = filter.periodEnd;
+    if (periodEnd != null) {
+      conditions.add("a.createdAt <= ?");
+      args.add(periodEnd.toIso8601String());
+    }
+
+    if (filter.minValue != null) {
+      conditions.add("a.value >= ?");
+      args.add(filter.minValue);
+    }
+
+    if (filter.maxValue != null) {
+      conditions.add("a.value <= ?");
+      args.add(filter.maxValue);
+    }
+
+    return conditions.isEmpty ? "" : "WHERE ${conditions.join(" AND ")}";
+  }
+
+  @override
   Future<AccountabilityEntry> getById(int id) async {
     var entry =
         (await db.query(tableName, where: "id = ?", whereArgs: [id])).first;
@@ -100,9 +165,30 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<AccountabilityEntry> add(AccountabilityEntryRequest req) async {
-    String? identificationId = await addOrGetIdentification(req.identification);
+    final newId = await db.transaction((txn) => _insert(txn, req));
 
-    var newId = await db.rawInsert("""
+    return getById(newId);
+  }
+
+  @override
+  Future<void> addAll(List<AccountabilityEntryRequest> requests) async {
+    if (requests.isEmpty) return;
+
+    await db.transaction((txn) async {
+      for (final request in requests) {
+        await _insert(txn, request);
+      }
+    });
+  }
+
+  Future<int> _insert(
+    DatabaseExecutor executor,
+    AccountabilityEntryRequest req,
+  ) async {
+    String? identificationId =
+        await _addOrGetIdentification(executor, req.identification);
+
+    return executor.rawInsert("""
     INSERT INTO $tableName (description, value, createdAt, insertedAt, updatedAt, identification_id, description_alt)
     VALUES (?, ?, ?, ?, ?, ?, ?);
     """, [
@@ -114,21 +200,28 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
       identificationId,
       req.descriptionAlt,
     ]);
-
-    return getById(newId);
   }
 
   @override
   Future<String?> addOrGetIdentification(
-      AccountabilityIdentification? identification) async {
+      AccountabilityIdentification? identification) {
+    return _addOrGetIdentification(db, identification);
+  }
+
+  Future<String?> _addOrGetIdentification(
+    DatabaseExecutor executor,
+    AccountabilityIdentification? identification,
+  ) async {
     String? identificationId;
     if (identification != null) {
-      var dbIdentification = await getIdentification(identification.id);
+      var dbIdentification =
+          await _getIdentification(executor, identification.id);
 
       if (dbIdentification != null) {
         identificationId = dbIdentification.id;
       } else {
-        var newIdentification = await addIdentification(identification);
+        var newIdentification =
+            await _addIdentification(executor, identification);
         identificationId = newIdentification.id;
       }
     }
@@ -167,8 +260,15 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<AccountabilityIdentification?> getIdentification(
-      String identificationId) async {
-    var result = await db.query(
+      String identificationId) {
+    return _getIdentification(db, identificationId);
+  }
+
+  Future<AccountabilityIdentification?> _getIdentification(
+    DatabaseExecutor executor,
+    String identificationId,
+  ) async {
+    var result = await executor.query(
       "accountability_identifications",
       where: "id = ?",
       whereArgs: [identificationId],
@@ -188,10 +288,17 @@ class SQLiteAccountabilityRepo implements AccountabilityRepo {
 
   @override
   Future<AccountabilityIdentification> addIdentification(
-      AccountabilityIdentification identification) async {
+      AccountabilityIdentification identification) {
+    return _addIdentification(db, identification);
+  }
+
+  Future<AccountabilityIdentification> _addIdentification(
+    DatabaseExecutor executor,
+    AccountabilityIdentification identification,
+  ) async {
     var identificationMap = identification.toMap();
 
-    await db.rawInsert("""
+    await executor.rawInsert("""
     INSERT INTO accountability_identifications (id, description, description_detail, color, icon, type, parent_id, discontinued, insertedAt, updatedAt)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     """, [

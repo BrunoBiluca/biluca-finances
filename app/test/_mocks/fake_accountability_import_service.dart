@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
@@ -7,15 +8,24 @@ import 'package:biluca_financas/core/accountability_import/services/accountabili
 class FakeAccountabilityImportService extends AccountabilityImportService {
   final List<File> importedFiles = [];
   int saveCalls = 0;
+  Object? importError;
+  Object? saveError;
+  Completer<void>? importGate;
 
   @override
   Future import(File importedFile) async {
     importedFiles.add(importedFile);
+    final gate = importGate;
+    if (gate != null) await gate.future;
+    final error = importError;
+    if (error != null) throw error;
   }
 
   @override
   Future save() async {
     saveCalls++;
+    final error = saveError;
+    if (error != null) throw error;
   }
 
   @override

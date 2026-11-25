@@ -1,14 +1,17 @@
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/settings/settings_page.dart';
+import 'package:biluca_financas/app/themes/theme_mode_controller.dart';
 import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
 import 'package:biluca_financas/core/app_update/bloc/app_update_events.dart';
 import 'package:biluca_financas/core/backup/bloc/backup_bloc.dart';
 import 'package:biluca_financas/core/backup/models/backup_status.dart';
+import 'package:biluca_financas/core/preferences/preferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../_mocks/fake_app_update_service.dart';
 import '../../_mocks/fake_backup_service.dart';
@@ -17,9 +20,16 @@ void main() {
   final getIt = GetIt.instance;
   late FakeBackupService service;
   late FakeAppUpdateService updateService;
+  late PreferencesService preferences;
+  late ThemeModeController themeMode;
 
   setUp(() async {
     await getIt.reset();
+    SharedPreferences.setMockInitialValues({});
+    preferences = await PreferencesService.load();
+    themeMode = ThemeModeController.fromPreferences(preferences);
+    getIt.registerSingleton<PreferencesService>(preferences);
+    getIt.registerSingleton<ThemeModeController>(themeMode);
     service = FakeBackupService(BackupStatus.notConfigured(databaseVersion: 10));
     updateService = FakeAppUpdateService();
   });
@@ -91,6 +101,7 @@ void main() {
     expect(find.text('Conectar ao Google Drive'), findsOneWidget);
     expect(find.byKey(const Key('revoke-google-drive')), findsNothing);
 
+    await tester.ensureVisible(find.byKey(const Key('connect-google-drive')));
     await tester.tap(find.byKey(const Key('connect-google-drive')));
     await tester.pumpAndSettle();
 
@@ -213,5 +224,25 @@ void main() {
       find.byKey(const Key('settings-app-update-download')),
       findsNothing,
     );
+  });
+
+  testWidgets('selects and persists the appearance mode', (tester) async {
+    await pumpSettings(tester);
+
+    expect(find.byKey(const Key('settings-appearance')), findsOneWidget);
+    expect(themeMode.value, ThemeMode.system);
+
+    await tester.ensureVisible(find.text('Escuro'));
+    await tester.tap(find.text('Escuro'));
+    await tester.pumpAndSettle();
+
+    expect(themeMode.value, ThemeMode.dark);
+    expect((await PreferencesService.load()).themeMode, ThemeMode.dark);
+
+    await tester.tap(find.text('Claro'));
+    await tester.pumpAndSettle();
+
+    expect(themeMode.value, ThemeMode.light);
+    expect((await PreferencesService.load()).themeMode, ThemeMode.light);
   });
 }

@@ -20,6 +20,6 @@ ThemeManager setupThemes() {
   }
 
   themeManager.setDark("Obsidian Wealth Dark");
-  themeManager.setLight("Obsidian Wealth Dark");
+  themeManager.setLight("Obsidian Wealth Light");
   return themeManager;
 }

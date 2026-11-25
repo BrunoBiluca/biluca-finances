@@ -68,4 +68,32 @@ void main() {
     expect(service.entries, hasLength(1));
     expect(service.duplicatedEntries, hasLength(1));
   });
+
+  test("deve salvar todas as novas entradas em uma única chamada", () async {
+    registerFallbackValue(FakeAccountabilityEntryRequest());
+    registerFallbackValue(<AccountabilityEntryRequest>[]);
+    var repo = MockAccountabilityRepo();
+    when(() => repo.addAll(any(that: isA<List<AccountabilityEntryRequest>>())))
+        .thenAnswer((_) async {});
+    var service = SQLiteAccountabilityImportService(repo: repo);
+    service.entries.addAll([
+      AccountabilityEntryRequest(
+        description: "Primeira",
+        value: 10,
+        createdAt: DateTime(2026),
+      ),
+      AccountabilityEntryRequest(
+        description: "Segunda",
+        value: 20,
+        createdAt: DateTime(2026),
+      ),
+    ]);
+
+    await service.save();
+
+    verify(
+      () => repo.addAll(any(that: isA<List<AccountabilityEntryRequest>>())),
+    ).called(1);
+    verifyNever(() => repo.add(any(that: isA<AccountabilityEntryRequest>())));
+  });
 }

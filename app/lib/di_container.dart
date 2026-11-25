@@ -13,6 +13,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/theme_mode_controller.dart';
 
 import 'package:biluca_financas/common/logging/console_listener.dart';
 import 'package:biluca_financas/common/logging/file_listener.dart';
@@ -67,6 +68,9 @@ Future<void> setup() async {
   DBProvider.i.init();
 
   getIt.registerSingleton<PreferencesService>(await PreferencesService.load());
+  getIt.registerSingleton<ThemeModeController>(
+    ThemeModeController.fromPreferences(getIt<PreferencesService>()),
+  );
 
   getIt.registerSingleton<Database>(await DBProvider.i.database);
   getIt.registerFactoryParam<AccountabilityMonthService, DateTime, void>(

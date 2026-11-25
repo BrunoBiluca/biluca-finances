@@ -1,5 +1,6 @@
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ class AccountabilityBloc
   AccountabilityIdentification? currentIdentification;
   String currentSearchQuery = '';
   String? currentIdentificationId;
+  AccountabilityEntryFilter currentFilter = AccountabilityEntryFilter.empty;
   int _queryVersion = 0;
   int _entryCreationVersion = 0;
   bool _isSearchMode = false;
@@ -62,6 +64,7 @@ class AccountabilityBloc
     try {
       currentSearchQuery = event.query.trim();
       currentIdentificationId = event.identificationId;
+      currentFilter = event.filter;
       currentIdentification = null;
       _isSearchMode = true;
       await _loadFirstPage(emit);
@@ -112,6 +115,8 @@ class AccountabilityBloc
         identifications: currentState.identifications,
         searchQuery: currentState.searchQuery,
         identificationId: currentState.identificationId,
+        filter: currentState.filter,
+        resultCount: currentState.resultCount,
         hasMore: currentState.hasMore,
         isLoading: currentState.isLoading,
         entryCreationVersion: _entryCreationVersion,
@@ -200,6 +205,8 @@ class AccountabilityBloc
       identifications: currentState.identifications,
       searchQuery: currentState.searchQuery,
       identificationId: currentState.identificationId,
+      filter: currentState.filter,
+      resultCount: currentState.resultCount,
       hasMore: currentState.hasMore,
       isLoading: false,
       entryCreationVersion: _entryCreationVersion,
@@ -219,6 +226,7 @@ class AccountabilityBloc
         entries: entries,
         identifications: await repo.getIdentifications(),
         identificationId: currentIdentification!.id,
+        resultCount: entries.length,
         entryCreationVersion: _entryCreationVersion,
       ));
       return;
@@ -228,9 +236,18 @@ class AccountabilityBloc
     emit(AccountabilityChanged(
       entries: entries,
       identifications: await repo.getIdentifications(),
+      resultCount: await _countEntries(),
       hasMore: entries.length >= limit,
       entryCreationVersion: _entryCreationVersion,
     ));
+  }
+
+  Future<int> _countEntries() {
+    return repo.countEntries(
+      searchQuery: currentSearchQuery,
+      identificationId: currentIdentificationId,
+      filter: currentFilter,
+    );
   }
 
   Future<void> _loadFirstPage(Emitter<AccountabilityState> emit) async {
@@ -243,6 +260,7 @@ class AccountabilityBloc
       identifications: previousIdentifications,
       searchQuery: currentSearchQuery,
       identificationId: identificationId,
+      filter: currentFilter,
       isLoading: true,
       entryCreationVersion: _entryCreationVersion,
     ));
@@ -252,8 +270,10 @@ class AccountabilityBloc
       offset: 0,
       searchQuery: currentSearchQuery,
       identificationId: identificationId,
+      filter: currentFilter,
     );
     final identifications = await repo.getIdentifications();
+    final resultCount = await _countEntries();
 
     if (requestVersion != _queryVersion || emit.isDone) {
       return;
@@ -264,6 +284,8 @@ class AccountabilityBloc
       identifications: identifications,
       searchQuery: currentSearchQuery,
       identificationId: currentIdentificationId,
+      filter: currentFilter,
+      resultCount: resultCount,
       hasMore: entries.length > pageSize,
       entryCreationVersion: _entryCreationVersion,
     ));
@@ -282,6 +304,8 @@ class AccountabilityBloc
       identifications: currentState.identifications,
       searchQuery: currentSearchQuery,
       identificationId: identificationId,
+      filter: currentFilter,
+      resultCount: currentState.resultCount,
       hasMore: currentState.hasMore,
       isLoading: true,
       entryCreationVersion: _entryCreationVersion,
@@ -292,6 +316,7 @@ class AccountabilityBloc
       offset: currentState.entries.length,
       searchQuery: currentSearchQuery,
       identificationId: identificationId,
+      filter: currentFilter,
     );
 
     if (requestVersion != _queryVersion || emit.isDone) {
@@ -307,6 +332,8 @@ class AccountabilityBloc
       identifications: currentState.identifications,
       searchQuery: currentSearchQuery,
       identificationId: currentIdentificationId,
+      filter: currentFilter,
+      resultCount: currentState.resultCount,
       hasMore: entries.length > pageSize,
       entryCreationVersion: _entryCreationVersion,
     ));

@@ -1,8 +1,8 @@
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_filter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:equatable/equatable.dart';
-
 abstract class AccountabilityEvent extends Equatable {
   const AccountabilityEvent();
 }
@@ -18,14 +18,16 @@ class FetchAccountabilityEntries extends AccountabilityEvent {
 class SearchAccountabilityEntries extends AccountabilityEvent {
   final String query;
   final String? identificationId;
+  final AccountabilityEntryFilter filter;
 
   const SearchAccountabilityEntries({
     required this.query,
     required this.identificationId,
+    this.filter = AccountabilityEntryFilter.empty,
   });
 
   @override
-  List<Object?> get props => [query, identificationId];
+  List<Object?> get props => [query, identificationId, filter];
 }
 
 class LoadMoreAccountabilityEntries extends AccountabilityEvent {
