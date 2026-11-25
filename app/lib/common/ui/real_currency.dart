@@ -1,6 +1,5 @@
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 class RealCurrency extends StatelessWidget {
@@ -11,8 +10,8 @@ class RealCurrency extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appTheme = GetIt.I<ThemeManager>().getCurrentTheme(context);
-    var textColor = color ?? (number < 0 ? appTheme.colors.negativeYield : appTheme.colors.positiveYield);
+    final appColors = context.appColors;
+    var textColor = color ?? (number < 0 ? appColors.negativeYield : appColors.positiveYield);
 
     return Text(
       NumberFormat.simpleCurrency(locale: "pt_Br").format(number),

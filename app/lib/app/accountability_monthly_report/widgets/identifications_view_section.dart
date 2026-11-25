@@ -2,8 +2,8 @@ import 'package:biluca_financas/app/accountability_monthly_report/monthly_report
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/identifications_barchart.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/identifications_percentage_chart.dart';
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
-import 'package:biluca_financas/app/themes/app_theme.dart';
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
+
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/ui/base_dialog.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
@@ -18,7 +18,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get_it/get_it.dart';
+
 
 class IdentificationsViewSection extends StatelessWidget {
   final List<IdentificationReportInfo> data;
@@ -104,7 +104,7 @@ class IdentificationsViewSection extends StatelessWidget {
     IdentificationReportInfo e,
     BuildContext context,
   ) {
-    var currTheme = GetIt.I.get<ThemeManager>().getCurrentTheme(context);
+    final colors = context.appColors;
 
     return SummaryValueCard(
       title: e.identification.description,
@@ -142,31 +142,31 @@ class IdentificationsViewSection extends StatelessWidget {
                 minHeight: 6,
                 value: e.participationInTotal,
                 color: e.identification.color,
-                backgroundColor: Colors.grey.shade800,
+                backgroundColor: colors.chartNeutralBackground,
               ),
             ],
           )
         ],
       ),
-      label: buildLabel(e, currTheme),
+      label: buildLabel(e, colors),
       color: e.identification.color,
       icon: e.identification.icon,
       iconColor: e.identification.color,
     );
   }
 
-  SummaryCardLabel buildLabel(IdentificationReportInfo e, AppTheme currTheme) {
+  SummaryCardLabel buildLabel(IdentificationReportInfo e, AppColors colors) {
     if (e.related == 0) {
       return SummaryCardLabel.neutral(
         label: "N/A",
-        theme: currTheme,
+        colors: colors,
       );
     }
 
     if (e.current == e.related) {
       return SummaryCardLabel.neutral(
         label: "Sem variação",
-        theme: currTheme,
+        colors: colors,
       );
     }
 
@@ -175,12 +175,12 @@ class IdentificationsViewSection extends StatelessWidget {
           ? SummaryCardLabel.positive(
               label: Formatter.relationWithoutSign(1 - (e.current / e.related)),
               icon: Icons.arrow_upward,
-              theme: currTheme,
+              colors: colors,
             )
           : SummaryCardLabel.negative(
               label: Formatter.relationWithoutSign(1 - (e.current / e.related)),
               icon: Icons.arrow_downward,
-              theme: currTheme,
+              colors: colors,
             );
     }
 
@@ -188,12 +188,12 @@ class IdentificationsViewSection extends StatelessWidget {
         ? SummaryCardLabel.positive(
             label: Formatter.relationWithoutSign(1 - (e.current / e.related)),
             icon: Icons.arrow_downward,
-            theme: currTheme,
+            colors: colors,
           )
         : SummaryCardLabel.negative(
             label: Formatter.relationWithoutSign(1 - (e.current / e.related)),
             icon: Icons.arrow_upward,
-            theme: currTheme,
+            colors: colors,
           );
   }
 

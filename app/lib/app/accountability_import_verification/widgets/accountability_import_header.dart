@@ -1,6 +1,6 @@
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+
 import 'package:intl/intl.dart';
 
 class AccountabilityImportHeader extends StatelessWidget {
@@ -205,7 +205,7 @@ class AccountabilityImportHeader extends StatelessWidget {
   }
 
   Color _balanceColor(BuildContext context) {
-    final colors = GetIt.I<ThemeManager>().getCurrentTheme(context).colors;
+    final colors = context.appColors;
     if (netBalance > 0) return colors.positiveYield;
     if (netBalance < 0) return colors.negativeYield;
     return colors.neutralYield;

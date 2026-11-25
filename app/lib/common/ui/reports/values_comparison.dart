@@ -1,35 +1,62 @@
 import 'dart:math';
 
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/common/lib/values_relation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-dynamic positiveTheme(ValuesRelation values) => {
-      "rotation": pi / 8,
-      "bgColor": const Color(0xFF122622),
-      "txtColor": const Color(0xFF43C67C),
-      "icon": values.percentage > 0 ? Icons.keyboard_double_arrow_up : Icons.keyboard_double_arrow_down,
-    };
+class ValuesComparisonTheme {
+  final double rotation;
+  final Color bgColor;
+  final Color txtColor;
+  final IconData icon;
 
-dynamic neutralTheme(ValuesRelation values) => {
-      "rotation": 0.0,
-      "bgColor": const Color(0xFF232428),
-      "txtColor": const Color(0xFF988F81),
-      "icon": FontAwesomeIcons.equals,
-    };
+  const ValuesComparisonTheme({
+    required this.rotation,
+    required this.bgColor,
+    required this.txtColor,
+    required this.icon,
+  });
+}
 
-dynamic negativeTheme(ValuesRelation values) => {
-      "rotation": pi / 8,
-      "bgColor": const Color(0xFF24141B),
-      "txtColor": const Color(0xFFF54149),
-      "icon": values.percentage > 0 ? Icons.keyboard_double_arrow_up : Icons.keyboard_double_arrow_down,
-    };
+ValuesComparisonTheme positiveTheme(ValuesRelation values, AppColors colors) =>
+    ValuesComparisonTheme(
+      rotation: pi / 8,
+      bgColor: colors.positiveComparisonBackground,
+      txtColor: colors.positiveComparisonText,
+      icon: values.percentage > 0
+          ? Icons.keyboard_double_arrow_up
+          : Icons.keyboard_double_arrow_down,
+    );
 
-dynamic getTheme(ValuesRelation values) {
+ValuesComparisonTheme neutralTheme(ValuesRelation values, AppColors colors) =>
+    ValuesComparisonTheme(
+      rotation: 0.0,
+      bgColor: colors.neutralComparisonBackground,
+      txtColor: colors.neutralComparisonText,
+      icon: FontAwesomeIcons.equals,
+    );
+
+ValuesComparisonTheme negativeTheme(ValuesRelation values, AppColors colors) =>
+    ValuesComparisonTheme(
+      rotation: pi / 8,
+      bgColor: colors.negativeComparisonBackground,
+      txtColor: colors.negativeComparisonText,
+      icon: values.percentage > 0
+          ? Icons.keyboard_double_arrow_up
+          : Icons.keyboard_double_arrow_down,
+    );
+
+ValuesComparisonTheme getTheme(ValuesRelation values, AppColors colors) {
   return switch (values.type) {
-    ValuesRelationType.negative => negativeTheme(values),
-    ValuesRelationType.positive => positiveTheme(values),
-    ValuesRelationType.neutral => neutralTheme(values),
-    ValuesRelationType.unknown => neutralTheme(values)..["icon"] = Icons.question_mark,
+    ValuesRelationType.negative => negativeTheme(values, colors),
+    ValuesRelationType.positive => positiveTheme(values, colors),
+    ValuesRelationType.neutral => neutralTheme(values, colors),
+    ValuesRelationType.unknown => ValuesComparisonTheme(
+        rotation: 0.0,
+        bgColor: colors.neutralComparisonBackground,
+        txtColor: colors.neutralComparisonText,
+        icon: Icons.question_mark,
+      ),
   };
 }

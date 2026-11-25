@@ -1,16 +1,20 @@
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_color_picker_dialog.dart';
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_edit_footer.dart';
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_edit_header.dart';
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_icon_color_fields.dart';
 import 'package:biluca_financas/app/accountability_identifications/widgets/identification_icon_catalog.dart';
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_parent_field.dart';
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_status_field.dart';
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_text_field.dart';
+import 'package:biluca_financas/app/accountability_identifications/widgets/identification_type_field.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification_type.dart';
 import 'package:biluca_financas/core/accountability/validators/identification_hierarchy_rules.dart';
 import 'package:biluca_financas/core/accountability/validators/identification_status_rules.dart';
 import 'package:biluca_financas/core/accountability/validators/identification_type_rules.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_iconpicker/Models/configuration.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
-
-const Color _modalFieldBorderColor = Color(0xFF272D36);
-const Color _modalFocusedFieldBorderColor = Color(0xFF3A424C);
 
 class IdentificationEditModal extends StatefulWidget {
   final List<AccountabilityIdentification> allIdentifications;
@@ -29,7 +33,8 @@ class IdentificationEditModal extends StatefulWidget {
   });
 
   @override
-  State<IdentificationEditModal> createState() => _IdentificationEditModalState();
+  State<IdentificationEditModal> createState() =>
+      _IdentificationEditModalState();
 }
 
 class _IdentificationEditModalState extends State<IdentificationEditModal> {
@@ -55,10 +60,18 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
         widget.allIdentifications,
       );
 
+  List<AccountabilityIdentification> get _availableParents =>
+      IdentificationHierarchyRules.availableParents(
+        editedId: widget.identification?.id,
+        editedDiscontinued: _discontinued,
+        identifications: widget.allIdentifications,
+      );
+
   @override
   void initState() {
     super.initState();
-    _descriptionController = TextEditingController(text: widget.identification?.description ?? '');
+    _descriptionController =
+        TextEditingController(text: widget.identification?.description ?? '');
     _descriptionDetailController = TextEditingController(
       text: widget.identification?.descriptionDetail ?? '',
     );
@@ -71,7 +84,7 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
         widget.identification?.type ??
         AccountabilityIdentificationType.expense;
     _icon = widget.identification?.icon ?? Icons.help_outline;
-    _color = widget.identification?.color ?? const Color(0xFF38BDF8);
+    _color = widget.identification?.color ?? Colors.transparent;
   }
 
   @override
@@ -92,19 +105,12 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
     super.dispose();
   }
 
-  List<AccountabilityIdentification> get _availableParents {
-    return IdentificationHierarchyRules.availableParents(
-      editedId: widget.identification?.id,
-      editedDiscontinued: _discontinued,
-      identifications: widget.allIdentifications,
-    );
-  }
-
   void _selectStatus(bool discontinued) {
     setState(() {
       _discontinued = discontinued;
       _statusError = null;
-      if (_parentId != null && !_availableParents.any((parent) => parent.id == _parentId)) {
+      if (_parentId != null &&
+          !_availableParents.any((parent) => parent.id == _parentId)) {
         _parentId = null;
       }
     });
@@ -125,10 +131,18 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
     });
   }
 
+  void _selectType(AccountabilityIdentificationType type) {
+    setState(() {
+      _type = type;
+      _typeError = null;
+    });
+  }
+
   void _save() {
     final description = _descriptionController.text.trim();
     final descriptionDetail = _descriptionDetailController.text.trim();
-    final nameError = description.isEmpty ? 'Informe o nome da categoria' : null;
+    final nameError =
+        description.isEmpty ? 'Informe o nome da categoria' : null;
     final parentError = IdentificationHierarchyRules.validateParent(
       parentId: _parentId,
       editedId: widget.identification?.id,
@@ -156,7 +170,10 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
       _typeError = typeError;
     });
 
-    if (nameError != null || parentError != null || statusError != null || typeError != null) {
+    if (nameError != null ||
+        parentError != null ||
+        statusError != null ||
+        typeError != null) {
       return;
     }
 
@@ -241,11 +258,14 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
           minWidth: 320,
           maxWidth: 520,
         ),
-        iconPickerShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        iconPickerShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         iconPackModes: const [],
         customIconPack: identificationIconCatalog,
         searchComparator: (String search, IconPickerIcon icon) =>
-            search.toLowerCase().contains(icon.name.replaceAll('_', ' ').toLowerCase()) ||
+            search.toLowerCase().contains(
+                  icon.name.replaceAll('_', ' ').toLowerCase(),
+                ) ||
             icon.name.toLowerCase().contains(search.toLowerCase()),
       ),
     );
@@ -256,11 +276,8 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
   }
 
   Future<void> _pickColor() async {
-    final selected = await showDialog<Color>(
-      context: context,
-      builder: (context) => _ColorPickerDialog(initialColor: _color),
-    );
-
+    final selected =
+        await IdentificationColorPickerDialog.show(context, _color);
     if (selected != null) {
       setState(() => _color = selected);
     }
@@ -280,761 +297,83 @@ class _IdentificationEditModalState extends State<IdentificationEditModal> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildHeader(context),
+            IdentificationEditHeader(
+              icon: _icon,
+              isEditing: _isEditing,
+              discontinued: _discontinued,
+              description: widget.identification?.description,
+            ),
             Flexible(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildNameField(context),
+                    IdentificationTextField(
+                      fieldKey: const Key('identification-name-field'),
+                      controller: _descriptionController,
+                      label: 'Nome da identificação',
+                      autofocus: !_isEditing,
+                      errorText: _nameError,
+                      onChanged: (_) {
+                        if (_nameError != null) {
+                          setState(() => _nameError = null);
+                        }
+                      },
+                    ),
                     const SizedBox(height: 16),
-                    _buildDescriptionDetailField(context),
+                    IdentificationTextField(
+                      fieldKey: const Key(
+                        'identification-description-detail-field',
+                      ),
+                      controller: _descriptionDetailController,
+                      label: 'Descrição',
+                      hintText:
+                          'Informações adicionais sobre esta identificação',
+                      minLines: 2,
+                      maxLines: 4,
+                    ),
                     const SizedBox(height: 16),
-                    _buildParentField(context),
+                    IdentificationParentField(
+                      parents: _availableParents,
+                      parentId: _parentId,
+                      error: _parentError,
+                      hasChildren: _hasChildren,
+                      onChanged: _selectParent,
+                    ),
                     const SizedBox(height: 16),
-                    _buildStatusField(context),
+                    IdentificationStatusField(
+                      discontinued: _discontinued,
+                      error: _statusError,
+                      onChanged: _selectStatus,
+                    ),
                     const SizedBox(height: 16),
-                    _buildTypeField(context),
+                    IdentificationTypeField(
+                      type: _type,
+                      parentId: _parentId,
+                      error: _typeError,
+                      onChanged: _selectType,
+                    ),
                     const SizedBox(height: 16),
-                    _buildIconAndColorFields(context),
+                    IdentificationIconColorFields(
+                      icon: _icon,
+                      color: _color,
+                      onPickIcon: _pickIcon,
+                      onPickColor: _pickColor,
+                    ),
                   ],
                 ),
               ),
             ),
-            _buildFooter(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context) {
-    final theme = Theme.of(context);
-    final iconColor = _discontinued ? theme.colorScheme.tertiary : theme.colorScheme.primary;
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 20, 16, 16),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.14),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: iconColor.withValues(alpha: 0.35)),
-            ),
-            child: Icon(_icon, color: iconColor),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _isEditing ? 'Editar identificação' : 'Nova identificação',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  _isEditing ? widget.identification!.description : 'Configure os dados da nova categoria',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            key: const Key('identification-modal-close'),
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.close),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNameField(BuildContext context) {
-    final theme = Theme.of(context);
-    return TextField(
-      key: const Key('identification-name-field'),
-      controller: _descriptionController,
-      autofocus: !_isEditing,
-      onChanged: (_) {
-        if (_nameError != null) setState(() => _nameError = null);
-      },
-      decoration: InputDecoration(
-        labelText: 'Nome da identificação',
-        errorText: _nameError,
-        filled: true,
-        fillColor: theme.colorScheme.surfaceContainer,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: _modalFieldBorderColor),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: _modalFieldBorderColor),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: _modalFocusedFieldBorderColor),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: theme.colorScheme.error),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: theme.colorScheme.error),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDescriptionDetailField(BuildContext context) {
-    final theme = Theme.of(context);
-    return TextField(
-      key: const Key('identification-description-detail-field'),
-      controller: _descriptionDetailController,
-      minLines: 2,
-      maxLines: 4,
-      decoration: InputDecoration(
-        labelText: 'Descrição',
-        hintText: 'Informações adicionais sobre esta identificação',
-        filled: true,
-        fillColor: theme.colorScheme.surfaceContainer,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: _modalFieldBorderColor),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: _modalFieldBorderColor),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: _modalFocusedFieldBorderColor),
-        ),
-      ),
-    );
-  }
-
-  Widget _parentOption(
-    BuildContext context,
-    AccountabilityIdentification? parent, {
-    Key? key,
-  }) {
-    final theme = Theme.of(context);
-    final color = parent?.color ?? theme.colorScheme.onSurfaceVariant;
-    final description = parent == null
-        ? 'Nenhuma (categoria pai)'
-        : '${parent.description}${parent.discontinued ? ' (descontinuada)' : ''}';
-
-    return Row(
-      key: key,
-      children: [
-        Icon(parent?.icon ?? Icons.help_outline, size: 16, color: color),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            description,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildParentField(BuildContext context) {
-    final theme = Theme.of(context);
-    final parents = _availableParents;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Categoria pai',
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              '1 nível máximo',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.outline,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        Container(
-          key: const Key('identification-parent-container'),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: _parentError != null ? theme.colorScheme.error : _modalFieldBorderColor,
-            ),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String?>(
-              key: const Key('identification-parent-field'),
-              value: _parentId,
-              isExpanded: true,
-              onChanged: _hasChildren ? null : _selectParent,
-              selectedItemBuilder: (context) => [
-                _parentOption(
-                  context,
-                  null,
-                  key: const Key('identification-parent-selected-none'),
-                ),
-                ...parents.map(
-                  (parent) => _parentOption(
-                    context,
-                    parent,
-                    key: Key(
-                      'identification-parent-selected-${parent.id}',
-                    ),
-                  ),
-                ),
-              ],
-              items: [
-                DropdownMenuItem<String?>(
-                  value: null,
-                  child: _parentOption(
-                    context,
-                    null,
-                    key: const Key('identification-parent-option-none'),
-                  ),
-                ),
-                ...parents.map(
-                  (parent) => DropdownMenuItem<String?>(
-                    value: parent.id,
-                    child: _parentOption(
-                      context,
-                      parent,
-                      key: Key(
-                        'identification-parent-option-${parent.id}',
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        if (_hasChildren)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              'Esta categoria possui subcategorias e não pode ser filha de outra categoria.',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        if (_parentError != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              _parentError!,
-              key: const Key('identification-parent-error'),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildStatusField(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Status de operação',
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Row(
-          children: [
-            Expanded(
-              child: _StatusOption(
-                key: const Key('identification-status-active'),
-                label: 'Ativa',
-                description: 'Disponível para novos lançamentos',
-                icon: Icons.check_circle_outline,
-                color: theme.colorScheme.secondary,
-                selected: !_discontinued,
-                hasError: _statusError != null,
-                onTap: () => _selectStatus(false),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _StatusOption(
-                key: const Key('identification-status-discontinued'),
-                label: 'Descontinuada',
-                description: 'Somente leitura no histórico',
-                icon: Icons.archive_outlined,
-                color: theme.colorScheme.tertiary,
-                selected: _discontinued,
-                hasError: _statusError != null,
-                onTap: () => _selectStatus(true),
-              ),
-            ),
-          ],
-        ),
-        if (_statusError != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              _statusError!,
-              key: const Key('identification-status-error'),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildTypeField(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Tipo',
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          key: const Key('identification-type-container'),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: _typeError != null ? theme.colorScheme.error : _modalFieldBorderColor,
-            ),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<AccountabilityIdentificationType>(
-              key: const Key('identification-type-field'),
-              value: _type,
-              isExpanded: true,
-              onChanged: _parentId == null
-                  ? (value) {
-                      if (value == null) return;
-                      setState(() {
-                        _type = value;
-                        _typeError = null;
-                      });
-                    }
-                  : null,
-              items: AccountabilityIdentificationType.values
-                  .map(
-                    (type) => DropdownMenuItem<AccountabilityIdentificationType>(
-                      value: type,
-                      child: Text(type.label),
-                    ),
-                  )
-                  .toList(),
-            ),
-          ),
-        ),
-        if (_parentId != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              'O tipo é herdado da categoria pai.',
-              key: const Key('identification-type-helper'),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        if (_typeError != null)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(
-              _typeError!,
-              key: const Key('identification-type-error'),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildIconAndColorFields(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Ícone',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 6),
-              InkWell(
-                key: const Key('identification-icon-button'),
-                onTap: _pickIcon,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  key: const Key('identification-icon-container'),
-                  height: 44,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainer,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: _modalFieldBorderColor),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(_icon, color: theme.colorScheme.primary),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Alterar ícone',
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Cor',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 6),
-              InkWell(
-                key: const Key('identification-color-button'),
-                onTap: _pickColor,
-                borderRadius: BorderRadius.circular(8),
-                child: Container(
-                  key: const Key('identification-color-container'),
-                  height: 44,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surfaceContainer,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: _modalFieldBorderColor),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: _color,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white24),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        '#${_color.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase()}',
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFooter(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 14, 24, 18),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: theme.colorScheme.outlineVariant.withValues(alpha: 0.4),
-          ),
-        ),
-      ),
-      child: Row(
-        children: [
-          if (_isEditing && widget.onDelete != null)
-            IconButton(
-              key: const Key('identification-delete'),
-              onPressed: _confirmDelete,
-              tooltip: 'Excluir categoria',
-              icon: Icon(
-                Icons.delete_outline,
-                color: theme.colorScheme.error,
-              ),
-            ),
-          const Spacer(),
-          TextButton(
-            key: const Key('identification-cancel'),
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancelar'),
-          ),
-          const SizedBox(width: 8),
-          FilledButton(
-            key: const Key('identification-save'),
-            onPressed: _save,
-            child: Text(_isEditing ? 'Salvar alterações' : 'Criar categoria'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _StatusOption extends StatelessWidget {
-  final String label;
-  final String description;
-  final IconData icon;
-  final Color color;
-  final bool selected;
-  final bool hasError;
-  final VoidCallback onTap;
-
-  const _StatusOption({
-    super.key,
-    required this.label,
-    required this.description,
-    required this.icon,
-    required this.color,
-    required this.selected,
-    required this.onTap,
-    this.hasError = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: selected ? color.withValues(alpha: 0.12) : theme.colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: hasError ? theme.colorScheme.error : _modalFieldBorderColor,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, size: 16, color: selected ? color : theme.colorScheme.onSurfaceVariant),
-                const SizedBox(width: 6),
-                Text(
-                  label,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: selected ? color : theme.colorScheme.onSurface,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 2),
-            Text(
-              description,
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+            IdentificationEditFooter(
+              isEditing: _isEditing,
+              canDelete: widget.onDelete != null,
+              onSave: _save,
+              onDelete: _confirmDelete,
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _ColorPickerDialog extends StatefulWidget {
-  final Color initialColor;
-
-  const _ColorPickerDialog({required this.initialColor});
-
-  @override
-  State<_ColorPickerDialog> createState() => _ColorPickerDialogState();
-}
-
-class _ColorPickerDialogState extends State<_ColorPickerDialog> {
-  late Color _color;
-  late final TextEditingController _hexController;
-  String? _hexError;
-
-  @override
-  void initState() {
-    super.initState();
-    _color = widget.initialColor;
-    _hexController = TextEditingController(text: _hex(_color));
-  }
-
-  @override
-  void dispose() {
-    _hexController.dispose();
-    super.dispose();
-  }
-
-  String _hex(Color color) {
-    final value = color.toARGB32().toRadixString(16).padLeft(8, '0').substring(2).toUpperCase();
-    return '#$value';
-  }
-
-  Color? _parseHex(String value) {
-    final normalized = value.replaceAll('#', '').trim();
-    if (normalized.length != 6) return null;
-    final parsed = int.tryParse(normalized, radix: 16);
-    if (parsed == null) return null;
-    return Color(0xFF000000 | parsed);
-  }
-
-  void _onHexChanged(String value) {
-    final parsed = _parseHex(value);
-    setState(() {
-      _hexError = parsed == null ? 'Informe uma cor no formato #RRGGBB' : null;
-      if (parsed != null) _color = parsed;
-    });
-  }
-
-  void _save() {
-    final parsed = _parseHex(_hexController.text);
-    if (parsed == null) {
-      setState(() => _hexError = 'Informe uma cor no formato #RRGGBB');
-      return;
-    }
-    Navigator.of(context).pop(_color);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return AlertDialog(
-      title: const Text('Cor da categoria'),
-      content: SizedBox(
-        width: 340,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ColorPicker(
-                pickerColor: _color,
-                onColorChanged: (color) {
-                  setState(() {
-                    _color = color;
-                    _hexController.text = _hex(color);
-                    _hexController.selection = TextSelection.collapsed(
-                      offset: _hexController.text.length,
-                    );
-                  });
-                },
-                enableAlpha: false,
-                portraitOnly: true,
-                pickerAreaHeightPercent: 0.45,
-                hexInputBar: false,
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                key: const Key('identification-color-hex-field'),
-                controller: _hexController,
-                onChanged: _onHexChanged,
-                decoration: InputDecoration(
-                  labelText: 'Cor hexadecimal',
-                  hintText: '#RRGGBB',
-                  errorText: _hexError,
-                  filled: true,
-                  fillColor: theme.colorScheme.surfaceContainer,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: _modalFieldBorderColor),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: _modalFieldBorderColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: _modalFocusedFieldBorderColor,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: theme.colorScheme.error),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: theme.colorScheme.error),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
-        ),
-        TextButton(
-          key: const Key('identification-color-save'),
-          onPressed: _save,
-          child: const Text('Salvar'),
-        ),
-      ],
     );
   }
 }

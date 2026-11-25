@@ -1,11 +1,11 @@
 import 'package:biluca_financas/common/extensions/currency.dart';
 import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+
 import 'package:fl_chart/fl_chart.dart';
 
 import 'package:biluca_financas/common/ui/reports/summary_chart_card/summary_chart_card.dart';
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/models/monthly_summary.dart';
 
 class BalanceChart extends StatelessWidget {
@@ -14,9 +14,9 @@ class BalanceChart extends StatelessWidget {
   final double avgBalance;
   final double sdBalance;
 
-  final themeManager = GetIt.I<ThemeManager>();
+  
 
-  BalanceChart({
+  const BalanceChart({
     super.key,
     required this.monthEntries,
     required this.maxValue,
@@ -36,9 +36,9 @@ class BalanceChart extends StatelessWidget {
   }
 
   Widget buildChart(BuildContext context) {
-    var currTheme = themeManager.getCurrentTheme(context);
-    var incomesColor = currTheme.colors.positiveYield;
-    var expensesColor = currTheme.colors.negativeYield;
+    final colors = context.appColors;
+    var incomesColor = colors.positiveYield;
+    var expensesColor = colors.negativeYield;
 
     var monthData = monthEntries.map((e) => e.month).toList();
 
@@ -81,9 +81,9 @@ class BalanceChart extends StatelessWidget {
   }
 
   Widget buildLegend(BuildContext context) {
-    var currTheme = themeManager.getCurrentTheme(context);
-    var incomesColor = currTheme.colors.positiveYield;
-    var expensesColor = currTheme.colors.negativeYield;
+    final colors = context.appColors;
+    var incomesColor = colors.positiveYield;
+    var expensesColor = colors.negativeYield;
 
     return Row(
       spacing: 20,
@@ -107,8 +107,8 @@ class BalanceChart extends StatelessWidget {
   }
 
   Widget buildSubInfo(BuildContext context) {
-    var currTheme = themeManager.getCurrentTheme(context);
-    var balanceColor = avgBalance < 0 ? currTheme.colors.negativeYield : currTheme.colors.positiveYield;
+    final colors = context.appColors;
+    var balanceColor = avgBalance < 0 ? colors.negativeYield : colors.positiveYield;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,

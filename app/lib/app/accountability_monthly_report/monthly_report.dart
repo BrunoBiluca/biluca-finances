@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/identifications_view_section.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/month_selector.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_last_months_section.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
@@ -146,8 +147,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
                       "Receitas por Identificação",
                       Icons.savings_outlined,
                       FutureHandler(
-                        future: _service!.incomesByIdentification(),
-                        child: (data) => IdentificationsViewSection(
+                        load: () => _service!.incomesByIdentification(),
+                        builder: (context, data) => IdentificationsViewSection(
                           data: data,
                           onDataChanged: () {
                             updateDateSelected(_selectedMonth!);
@@ -160,8 +161,8 @@ class _MonthlyReportState extends State<MonthlyReport> {
                       "Despesas por Identificação",
                       Icons.money_off_outlined,
                       FutureHandler(
-                        future: _service!.expensesByIdentification(),
-                        child: (data) => IdentificationsViewSection(
+                        load: () => _service!.expensesByIdentification(),
+                        builder: (context, data) => IdentificationsViewSection(
                           data: data,
                           onDataChanged: () {
                             updateDateSelected(_selectedMonth!);
@@ -218,7 +219,7 @@ class _MonthlyReportState extends State<MonthlyReport> {
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(8),
-                    color: Color(0xFF262A34),
+                    color: context.appColors.sidebarHighlightBackground,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

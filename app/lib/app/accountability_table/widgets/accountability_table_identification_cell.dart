@@ -13,7 +13,7 @@ class AccountabilityTableIdentificationCell {
   final String? draftIdentificationId;
   final List<AccountabilityIdentification> identifications;
   final ValueChanged<String?> onChanged;
-  final Function onEdit;
+  final ValueChanged<AccountabilityIdentification> onEdit;
 
   const AccountabilityTableIdentificationCell({
     required this.identification,
@@ -64,7 +64,7 @@ class AccountabilityTableIdentificationCell {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       height: 27,
       decoration: BoxDecoration(
-        color: getInputFieldBackgroundColor(rowIndex),
+        color: getInputFieldBackgroundColor(context, rowIndex),
         borderRadius: BorderRadius.circular(3),
         border: Border.all(
           color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),

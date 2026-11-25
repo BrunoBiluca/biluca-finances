@@ -74,6 +74,10 @@ class _AccountabilityPageContentState
                   _buildHeader(context),
                   const SizedBox(height: 24),
                   _buildSearchAndFilters(context, state),
+                  if (state.failureMessage != null) ...[
+                    const SizedBox(height: 12),
+                    _buildErrorBanner(context, state),
+                  ],
                   const SizedBox(height: 20),
                   if (constraints.hasBoundedHeight)
                     Expanded(child: entries)
@@ -256,6 +260,10 @@ class _AccountabilityPageContentState
   }
 
   Widget _buildEntries(BuildContext context, AccountabilityState state) {
+    if (state.entries.isEmpty && state.failureMessage != null) {
+      return const SizedBox.shrink();
+    }
+
     if (state.entries.isEmpty) {
       if (state.isLoading) {
         return const Center(child: CircularProgressIndicator());
@@ -295,6 +303,39 @@ class _AccountabilityPageContentState
         onLoadMore: () => context
             .read<AccountabilityBloc>()
             .add(LoadMoreAccountabilityEntries()),
+      ),
+    );
+  }
+
+  Widget _buildErrorBanner(BuildContext context, AccountabilityState state) {
+    final theme = Theme.of(context);
+    return Container(
+      key: const Key('accountability-error-banner'),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, color: theme.colorScheme.onErrorContainer),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              state.failureMessage!,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onErrorContainer,
+              ),
+            ),
+          ),
+          TextButton(
+            key: const Key('accountability-retry'),
+            onPressed: () => context
+                .read<AccountabilityBloc>()
+                .add(RetryAccountability()),
+            child: const Text('Tentar novamente'),
+          ),
+        ],
       ),
     );
   }

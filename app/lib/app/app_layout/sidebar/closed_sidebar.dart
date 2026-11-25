@@ -1,4 +1,5 @@
 import 'package:biluca_financas/app/app_layout/sidebar/sidebar_page.model.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ClosedSidebar extends StatelessWidget {
@@ -52,14 +53,14 @@ class ClosedSidebar extends StatelessWidget {
               return ListTile(
                 selected: index == selectedPage,
                 selectedColor: style?.color,
-                selectedTileColor: Color(0xFF262A34),
+                selectedTileColor: context.appColors.sidebarHighlightBackground,
                 contentPadding: EdgeInsets.all(0),
                 title: SizedBox(
                   height: 36,
                   child: DecoratedBox(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Color(0xFF262A34),
+                      color: context.appColors.sidebarHighlightBackground,
                     ),
                     child: Icon(
                       page.icon,

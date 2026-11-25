@@ -5,11 +5,13 @@ import 'package:biluca_financas/app/accountability_table/widgets/accountability_
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_value_cell.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_table_entry.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 
-class AccountabilityTableRow {
-  final dynamic entry;
+class AccountabilityTableRow<T extends AccountabilityTableEntry> {
+  final T entry;
   final int rowIndex;
   final bool showInsertedAt;
   final bool enableInlineEditing;
@@ -25,7 +27,7 @@ class AccountabilityTableRow {
   final VoidCallback? onValueTap;
   final ValueChanged<String> onValueChanged;
   final ValueChanged<String?> onIdentificationChanged;
-  final Function onIdentificationEdit;
+  final ValueChanged<AccountabilityIdentification> onIdentificationEdit;
   final VoidCallback onStartEditing;
   final VoidCallback onSaveEditing;
   final VoidCallback onCancelEditing;
@@ -61,7 +63,7 @@ class AccountabilityTableRow {
       cells.add(
         DataCell(
           AccountabilityTableDateCell(
-            date: Formatter.date(entry.insertedAt),
+            date: Formatter.date(entry.insertedAt!),
             isEditing: isEditing,
           ),
         ),
@@ -122,7 +124,9 @@ class AccountabilityTableRow {
           if (states.contains(WidgetState.hovered)) {
             return Theme.of(context).colorScheme.surfaceContainerHigh;
           }
-          return rowIndex.isOdd ? const Color(0xFF0A0E17) : Colors.transparent;
+          return rowIndex.isOdd
+              ? context.appColors.tableRowAltBackground
+              : Colors.transparent;
         },
       ),
       cells: cells,
@@ -130,6 +134,9 @@ class AccountabilityTableRow {
   }
 }
 
-Color getInputFieldBackgroundColor(int rowIndex) {
-  return !rowIndex.isOdd ? const Color(0xFF0A0E17) : const Color(0xFF1C1F29);
+Color getInputFieldBackgroundColor(BuildContext context, int rowIndex) {
+  final colors = context.appColors;
+  return !rowIndex.isOdd
+      ? colors.tableHeaderBackground
+      : colors.tableRowAltFieldBackground;
 }

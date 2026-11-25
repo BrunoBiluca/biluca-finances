@@ -1,6 +1,6 @@
 import 'package:biluca_financas/app/accountability_monthly_report/monthly_report_service.provider.dart';
-import 'package:biluca_financas/app/themes/app_theme.dart';
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
+
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/lib/safe_ratio.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
@@ -9,7 +9,7 @@ import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_val
 import 'package:biluca_financas/common/ui/reports/values_comparison_full_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get_it/get_it.dart';
+
 
 class SummaryValuesSection extends StatelessWidget {
   const SummaryValuesSection({super.key});
@@ -17,8 +17,8 @@ class SummaryValuesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var service = MonthlyReportServiceProvider.of(context);
-    var appTheme = GetIt.I<ThemeManager>();
-    var currTheme = appTheme.getCurrentTheme(context);
+    final colors = context.appColors;
+    
 
     return LayoutBuilder(
       builder: (context, constraints) => Column(
@@ -44,12 +44,12 @@ class SummaryValuesSection extends StatelessWidget {
           ),
           FutureHandler(
             key: Key(service.current.currentMonth.toString()),
-            future: Future.wait([
+            load: () => Future.wait([
               service.summaryBalance(),
               service.summaryIncomes(),
               service.summaryExpenses(),
             ]),
-            child: (res) => StaggeredGrid.count(
+            builder: (context, res) => StaggeredGrid.count(
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               crossAxisCount: constraints.maxWidth < 850 ? 1 : 3,
@@ -59,21 +59,21 @@ class SummaryValuesSection extends StatelessWidget {
                   res[1]["incomes"],
                   res[2]["expenses"],
                   res[0]["avgRecentMonts"],
-                  currTheme,
+                  colors,
                   context,
                 ),
                 buildIncomesCard(
                   res[1]["incomes"],
                   res[1]["related"],
                   res[1]["avgRecentMonts"],
-                  currTheme,
+                  colors,
                   context,
                 ),
                 buildExpensesCard(
                   res[2]["expenses"],
                   res[2]["related"],
                   res[2]["avgRecentMonts"],
-                  currTheme,
+                  colors,
                   context,
                 )
               ]
@@ -97,7 +97,7 @@ class SummaryValuesSection extends StatelessWidget {
     double incomes,
     double expenses,
     double avgBalanceRecentMonths,
-    AppTheme currTheme,
+    AppColors colors,
     BuildContext context,
   ) {
     final retention = safeRatio(balance, incomes);
@@ -107,7 +107,7 @@ class SummaryValuesSection extends StatelessWidget {
     return SummaryValueCard(
       title: "Balanço",
       value: balance,
-      color: balance > 0 ? currTheme.colors.positiveYieldAlt : currTheme.colors.negativeYield,
+      color: balance > 0 ? colors.positiveYieldAlt : colors.negativeYield,
       subInfo: ValuesComparisonFullText.from(
         balance,
         avgBalanceRecentMonths,
@@ -117,15 +117,15 @@ class SummaryValuesSection extends StatelessWidget {
       label: balance > 0
           ? SummaryCardLabel(
               label: "Superávit\n$retentionLabel",
-              color: currTheme.colors.positiveYield,
+              color: colors.positiveYield,
               icon: Icons.trending_up,
-              bgColor: currTheme.colors.positiveYieldBg,
+              bgColor: colors.positiveYieldBg,
             )
           : SummaryCardLabel(
               label: "Déficit\n$retentionLabel",
-              color: currTheme.colors.negativeYield,
+              color: colors.negativeYield,
               icon: Icons.trending_down,
-              bgColor: currTheme.colors.negativeYieldBg,
+              bgColor: colors.negativeYieldBg,
             ),
     );
   }
@@ -134,7 +134,7 @@ class SummaryValuesSection extends StatelessWidget {
     double incomes,
     double incomesLastMonth,
     double avgIncomesRecentMonths,
-    AppTheme currTheme,
+    AppColors colors,
     BuildContext context,
   ) {
     final ratio = safeRatio(incomes, incomesLastMonth);
@@ -142,7 +142,7 @@ class SummaryValuesSection extends StatelessWidget {
     return SummaryValueCard(
       title: "Receitas",
       value: incomes,
-      color: currTheme.colors.positiveYield,
+      color: colors.positiveYield,
       subInfo: ValuesComparisonFullText.from(
         incomes,
         avgIncomesRecentMonths,
@@ -150,17 +150,17 @@ class SummaryValuesSection extends StatelessWidget {
         suffix: "em relação aos últimos 12 meses",
       ),
       label: ratio == null
-          ? SummaryCardLabel.neutral(label: "N/A", theme: currTheme)
+          ? SummaryCardLabel.neutral(label: "N/A", colors: colors)
           : incomes > incomesLastMonth
               ? SummaryCardLabel.positive(
                   label: Formatter.relationWithoutSign(1 - ratio),
                   icon: Icons.arrow_upward,
-                  theme: currTheme,
+                  colors: colors,
                 )
               : SummaryCardLabel.negative(
                   label: Formatter.relationWithoutSign(1 - ratio),
                   icon: Icons.arrow_downward,
-                  theme: currTheme,
+                  colors: colors,
                 ),
     );
   }
@@ -169,7 +169,7 @@ class SummaryValuesSection extends StatelessWidget {
     double expenses,
     double expensesLastMonth,
     double avgExpensesRecentMonths,
-    AppTheme currTheme,
+    AppColors colors,
     BuildContext context,
   ) {
     final ratio = safeRatio(expenses, expensesLastMonth);
@@ -177,7 +177,7 @@ class SummaryValuesSection extends StatelessWidget {
     return SummaryValueCard(
       title: "Receitas",
       value: expenses,
-      color: currTheme.colors.negativeYield,
+      color: colors.negativeYield,
       subInfo: ValuesComparisonFullText.from(
         expenses,
         avgExpensesRecentMonths,
@@ -185,17 +185,17 @@ class SummaryValuesSection extends StatelessWidget {
         suffix: "em relação aos últimos 12 meses",
       ),
       label: ratio == null
-          ? SummaryCardLabel.neutral(label: "N/A", theme: currTheme)
+          ? SummaryCardLabel.neutral(label: "N/A", colors: colors)
           : expenses.abs() < expensesLastMonth.abs()
               ? SummaryCardLabel.positive(
                   label: Formatter.relationWithoutSign(1 - ratio),
                   icon: Icons.arrow_downward,
-                  theme: currTheme,
+                  colors: colors,
                 )
               : SummaryCardLabel.negative(
                   label: Formatter.relationWithoutSign(1 - ratio),
                   icon: Icons.arrow_upward,
-                  theme: currTheme,
+                  colors: colors,
                 ),
     );
   }

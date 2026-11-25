@@ -8,7 +8,8 @@ import 'package:biluca_financas/app/themes/theme_manager.dart';
 
 class App extends StatelessWidget with WidgetsBindingObserver {
   final Future<bool> Function() onAppExit;
-  const App(this.onAppExit, {super.key});
+  final ThemeMode themeMode;
+  const App(this.onAppExit, {super.key, this.themeMode = ThemeMode.system});
 
   @override
   Future<AppExitResponse> didRequestAppExit() async {
@@ -24,6 +25,7 @@ class App extends StatelessWidget with WidgetsBindingObserver {
       title: 'Biluca Finanças',
       theme: GetIt.I<ThemeManager>().light,
       darkTheme: GetIt.I<ThemeManager>().dark,
+      themeMode: themeMode,
       builder: FToastBuilder(),
       routerConfig: routes(),
     );

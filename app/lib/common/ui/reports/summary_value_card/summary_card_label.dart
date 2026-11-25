@@ -1,4 +1,4 @@
-import 'package:biluca_financas/app/themes/app_theme.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class SummaryCardLabel extends StatelessWidget {
@@ -18,34 +18,34 @@ class SummaryCardLabel extends StatelessWidget {
   SummaryCardLabel.positive({
     super.key,
     required this.label,
-    required AppTheme theme,
+    required AppColors colors,
     this.icon,
-  })  : color = theme.colors.positiveYield,
-        bgColor = theme.colors.positiveYieldBg;
+  })  : color = colors.positiveYield,
+        bgColor = colors.positiveYieldBg;
 
   SummaryCardLabel.positiveAlt({
     super.key,
     required this.label,
-    required AppTheme theme,
+    required AppColors colors,
     this.icon,
-  })  : color = theme.colors.positiveYieldAlt,
-        bgColor = theme.colors.positiveYieldAltBg;
+  })  : color = colors.positiveYieldAlt,
+        bgColor = colors.positiveYieldAltBg;
 
   SummaryCardLabel.negative({
     super.key,
     required this.label,
-    required AppTheme theme,
+    required AppColors colors,
     this.icon,
-  })  : color = theme.colors.negativeYield,
-        bgColor = theme.colors.negativeYieldBg;
+  })  : color = colors.negativeYield,
+        bgColor = colors.negativeYieldBg;
 
   SummaryCardLabel.neutral({
     super.key,
     required this.label,
-    required AppTheme theme,
+    required AppColors colors,
     this.icon,
-  })  : color = theme.colors.neutralYield,
-        bgColor = theme.colors.neutralYieldBg;
+  })  : color = colors.neutralYield,
+        bgColor = colors.neutralYieldBg;
 
   @override
   Widget build(BuildContext context) {

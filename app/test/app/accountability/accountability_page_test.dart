@@ -143,10 +143,13 @@ void main() {
     await _pumpPage(tester, width: 380, height: 700);
 
     expect(tester.takeException(), isNull);
-    expect(find.byType(AccountabilityTable), findsOneWidget);
+    expect(
+      find.byType(AccountabilityTable<AccountabilityEntry>),
+      findsOneWidget,
+    );
     final tableScrollables = tester.widgetList<Scrollable>(
       find.descendant(
-        of: find.byType(AccountabilityTable),
+        of: find.byType(AccountabilityTable<AccountabilityEntry>),
         matching: find.byType(Scrollable),
       ),
     );
@@ -382,14 +385,17 @@ void main() {
     await tester.tap(find.byKey(const Key('edit-accountability-1')));
     await tester.pump();
 
+    final context = tester.element(
+      find.byKey(const Key('edit-identification-background-1')),
+    );
     final background = tester.widget<Container>(
       find.byKey(const Key('edit-identification-background-1')),
     );
     expect(
       (background.decoration! as BoxDecoration).color,
-      getInputFieldBackgroundColor(1),
+      getInputFieldBackgroundColor(context, 1),
     );
-    expect(getInputFieldBackgroundColor(1), const Color(0xFF1C1F29));
+    expect(getInputFieldBackgroundColor(context, 1), const Color(0xFF1C1F29));
   });
 
   testWidgets('shows identification details and keeps the none option', (tester) async {
@@ -583,11 +589,13 @@ void main() {
     expect(
       find.ancestor(
         of: find.byKey(const Key('load-more-accountability')),
-        matching: find.byType(AccountabilityTable),
+        matching: find.byType(AccountabilityTable<AccountabilityEntry>),
       ),
       findsOneWidget,
     );
-    final tableRect = tester.getRect(find.byType(AccountabilityTable));
+    final tableRect = tester.getRect(
+      find.byType(AccountabilityTable<AccountabilityEntry>),
+    );
     final paginationRect = tester.getRect(find.byKey(const Key('load-more-accountability')));
     expect(paginationRect.center.dy, greaterThan(tableRect.center.dy));
     expect(paginationRect.bottom, lessThanOrEqualTo(tableRect.bottom));
@@ -922,7 +930,12 @@ void main() {
     searchResults = [_entry(49)];
     await _pumpPage(tester, height: 900);
 
-    expect(tester.getSize(find.byType(AccountabilityTable)).height, greaterThan(650));
+    expect(
+      tester
+          .getSize(find.byType(AccountabilityTable<AccountabilityEntry>))
+          .height,
+      greaterThan(650),
+    );
   });
 
   testWidgets('keeps discontinued identifications available as filters', (tester) async {

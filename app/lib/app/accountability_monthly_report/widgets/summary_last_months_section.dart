@@ -1,5 +1,5 @@
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/month_summary_card.dart';
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/common/extensions/string_extensions.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
@@ -16,8 +16,8 @@ class SummaryLastMonthsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var monthService = MonthlyReportServiceProvider.of(context);
-    var appTheme = GetIt.I<ThemeManager>();
-    var currTheme = appTheme.getCurrentTheme(context);
+    final colors = context.appColors;
+    
 
     return LayoutBuilder(
       builder: (context, constraints) => Column(
@@ -43,14 +43,14 @@ class SummaryLastMonthsSection extends StatelessWidget {
           ),
           FutureHandler(
             key: Key(monthService.current.currentMonth.toString()),
-            future: Future.wait(
+            load: () => Future.wait(
               [
-                getMonthData(monthService, 1, currTheme.colors.positiveYieldAlt),
-                getMonthData(monthService, 2, currTheme.colors.positiveYield),
-                getMonthData(monthService, 3, currTheme.colors.neutralYield),
+                getMonthData(monthService, 1, colors.positiveYieldAlt),
+                getMonthData(monthService, 2, colors.positiveYield),
+                getMonthData(monthService, 3, colors.neutralYield),
               ],
             ),
-            child: (res) => StaggeredGrid.count(
+            builder: (context, res) => StaggeredGrid.count(
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               crossAxisCount: constraints.maxWidth < 850 ? 1 : 3,

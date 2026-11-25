@@ -1,14 +1,21 @@
 import 'accountability_identification.dart';
+import 'accountability_table_entry.dart';
 
-class AccountabilityEntry {
+class AccountabilityEntry implements AccountabilityTableEntry {
   final int id;
+  @override
   String description;
+  @override
   double value;
   String? identificationId;
+  @override
   AccountabilityIdentification? identification;
+  @override
   final DateTime createdAt;
+  @override
   final DateTime insertedAt;
   final DateTime updatedAt;
+  @override
   String? descriptionAlt;
 
   AccountabilityEntry({

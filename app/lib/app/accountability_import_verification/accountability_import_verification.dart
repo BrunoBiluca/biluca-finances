@@ -8,6 +8,7 @@ import 'package:biluca_financas/common/navigation/mouse_back_button_listener.dar
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry_request.dart';
 import 'package:biluca_financas/core/accountability_import/services/accountability_import_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -186,25 +187,23 @@ class _AccountabilityImportVerificationState
     );
   }
 
-  void _updateEntry(dynamic updatedEntry) {
+  void _updateEntry(AccountabilityEntryRequest updatedEntry) {
     final index = widget.service.entries.indexOf(updatedEntry);
     if (index == -1) return;
     setState(() => widget.service.entries[index] = updatedEntry);
   }
 
-  void _removeEntry(dynamic entry) {
+  void _removeEntry(AccountabilityEntryRequest entry) {
     setState(() => widget.service.entries.remove(entry));
   }
 
-  void _updateDuplicatedEntry(dynamic updatedEntry) {
+  void _updateDuplicatedEntry(AccountabilityEntry updatedEntry) {
     final index = widget.service.duplicatedEntries.indexOf(updatedEntry);
     if (index == -1) return;
     setState(() => widget.service.duplicatedEntries[index] = updatedEntry);
   }
 
-  void _discardDuplication(dynamic entry) {
-    setState(
-      () => widget.service.cancelDuplication(entry as AccountabilityEntry),
-    );
+  void _discardDuplication(AccountabilityEntry entry) {
+    setState(() => widget.service.cancelDuplication(entry));
   }
 }

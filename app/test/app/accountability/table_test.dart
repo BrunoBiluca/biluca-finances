@@ -1,4 +1,5 @@
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -10,7 +11,11 @@ void main() {
       MaterialApp(
         title: 'Flutter Demo',
         home: Scaffold(
-          body: AccountabilityTable(entries: const [], onUpdate: (entry) {}, onRemove: (entry) {}),
+          body: AccountabilityTable<AccountabilityEntry>(
+            entries: const <AccountabilityEntry>[],
+            onUpdate: (entry) {},
+            onRemove: (entry) {},
+          ),
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
 import 'package:biluca_financas/core/accountability_stats/models/accountability_year_stats.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/year_selector.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_identifications_summary_charts.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
@@ -49,23 +50,26 @@ class _YearlyReportState extends State<YearlyReport> {
           );
         }
 
+        final reportService = service;
+
         return Column(
           spacing: 60,
           children: [
             buildReportHeader(context, snapshot),
             FutureHandler(
-              future: service.summary(),
-              child: (res) => YearlySummaryCards(res: res),
+              load: () => reportService.summary(),
+              builder: (context, res) => YearlySummaryCards(res: res),
             ),
             FutureHandler(
-              future: service.getMonthlySummary(),
-              child: (res) => YearlySummaryCharts(res: res),
-              hideLoading: true,
+              load: () => reportService.getMonthlySummary(),
+              builder: (context, res) => YearlySummaryCharts(res: res),
+              loadingBuilder: (_) => const SizedBox.shrink(),
             ),
             FutureHandler(
-              future: service.getMonthlyIdentificationsSummary(),
-              child: (res) => YearlyIdentificationsSummaryCharts(res: res),
-              hideLoading: true,
+              load: () => reportService.getMonthlyIdentificationsSummary(),
+              builder: (context, res) =>
+                  YearlyIdentificationsSummaryCharts(res: res),
+              loadingBuilder: (_) => const SizedBox.shrink(),
             ),
             const SizedBox(height: 100)
           ],
@@ -88,7 +92,7 @@ class _YearlyReportState extends State<YearlyReport> {
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: BorderRadius.circular(8),
-                    color: Color(0xFF262A34),
+                    color: context.appColors.sidebarHighlightBackground,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

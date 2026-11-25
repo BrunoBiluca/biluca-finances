@@ -36,6 +36,7 @@ dependencies:
   googleapis_auth: ^2.3.7
   url_launcher: ^6.3.3
   crypto: ^3.0.8
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

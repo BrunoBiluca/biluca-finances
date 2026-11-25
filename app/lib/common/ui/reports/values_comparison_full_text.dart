@@ -1,3 +1,4 @@
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/lib/values_relation.dart';
 import 'package:biluca_financas/common/ui/reports/values_comparison.dart';
@@ -29,7 +30,7 @@ class ValuesComparisonFullText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = getTheme(values);
+    var theme = getTheme(values, context.appColors);
     var prefix = values.itIncreased()
         ? "Aumento de"
         : values.itDecreased()
@@ -45,7 +46,7 @@ class ValuesComparisonFullText extends StatelessWidget {
             text: Formatter.relationWithoutSign(values.percentage),
             style: Theme.of(context).textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: theme["txtColor"],
+                  color: theme.txtColor,
                 ),
           ),
           TextSpan(

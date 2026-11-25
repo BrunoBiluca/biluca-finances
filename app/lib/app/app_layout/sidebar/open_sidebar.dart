@@ -1,4 +1,5 @@
 import 'package:biluca_financas/app/app_layout/sidebar/sidebar_page.model.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class OpenSidebar extends StatelessWidget {
@@ -64,12 +65,12 @@ class OpenSidebar extends StatelessWidget {
               return ListTile(
                 selected: index == selectedPage,
                 selectedColor: Theme.of(context).textTheme.bodyLarge?.color,
-                selectedTileColor: Color(0xFF262A34),
+                selectedTileColor: context.appColors.sidebarHighlightBackground,
                 minTileHeight: 56,
                 leading: DecoratedBox(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Color(0xFF262A34),
+                    color: context.appColors.sidebarHighlightBackground,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

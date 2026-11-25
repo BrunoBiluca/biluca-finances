@@ -429,6 +429,7 @@ class ObsidianWealthLightTheme extends AppTheme {
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
         overlayShape: const RoundSliderOverlayShape(overlayRadius: 16),
       ),
+      extensions: [colors],
     );
   }
 
@@ -442,5 +443,12 @@ class ObsidianWealthLightTheme extends AppTheme {
         negativeYieldBg: Color(0xFF3E1629),
         neutralYield: Color(0xFFBDC8D1),
         neutralYieldBg: Color(0xFF31353F),
+        tableHeaderBackground: Color(0xFF0A0E17),
+        tableRowAltBackground: Color(0xFF0A0E17),
+        tableRowAltFieldBackground: Color(0xFF1C1F29),
+        sidebarHighlightBackground: Color(0xFF262A34),
+        modalFieldBorder: Color(0xFF272D36),
+        modalFocusedFieldBorder: Color(0xFF3A424C),
+        chartNeutralBackground: Color(0xFF616161),
       );
 }

@@ -33,6 +33,11 @@ class LoadMoreAccountabilityEntries extends AccountabilityEvent {
   List<Object?> get props => [];
 }
 
+class RetryAccountability extends AccountabilityEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class AddAccountabilityEntry extends AccountabilityEvent {
   final AccountabilityEntryRequest request;
   const AddAccountabilityEntry(this.request);

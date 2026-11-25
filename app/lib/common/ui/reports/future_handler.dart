@@ -1,69 +1,94 @@
 import 'package:flutter/material.dart';
 
-class FutureHandler extends StatefulWidget {
-  final Future<dynamic> future;
-  final Widget Function(dynamic) child;
-  final bool hideLoading;
+class FutureHandler<T> extends StatefulWidget {
+  final Future<T> Function() load;
+  final Widget Function(BuildContext context, T data) builder;
+  final Widget Function(BuildContext context)? loadingBuilder;
+  final Widget Function(BuildContext context, Object error)? errorBuilder;
 
   const FutureHandler({
     super.key,
-    required this.future,
-    required this.child,
-    this.hideLoading = false,
+    required this.load,
+    required this.builder,
+    this.loadingBuilder,
+    this.errorBuilder,
   });
 
   @override
-  State<FutureHandler> createState() => _FutureHandlerState();
+  State<FutureHandler<T>> createState() => _FutureHandlerState<T>();
 }
 
-class _FutureHandlerState extends State<FutureHandler> {
-  bool loaded = false;
-  late Future<dynamic> _future;
-
-  bool get hide => widget.hideLoading || loaded;
+class _FutureHandlerState<T> extends State<FutureHandler<T>> {
+  late Future<T> _future;
 
   @override
   void initState() {
     super.initState();
-    _future = initLoader();
+    _future = widget.load();
   }
 
-  Future<dynamic> initLoader() async {
-    setState(() => loaded = true);
-    return await widget.future;
+  @override
+  void didUpdateWidget(covariant FutureHandler<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.load != widget.load) {
+      _future = widget.load();
+    }
+  }
+
+  void _retry() {
+    setState(() {
+      _future = widget.load();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<T>(
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return hide
-              ? SizedBox.shrink()
-              : Column(
-                  spacing: 20,
-                  children: [
-                    const Text("Carregando..."),
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: const CircularProgressIndicator(),
-                    ),
-                  ],
-                );
+          return widget.loadingBuilder?.call(context) ??
+              Column(
+                spacing: 20,
+                children: [
+                  const Text("Carregando..."),
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: const CircularProgressIndicator(),
+                  ),
+                ],
+              );
         }
 
         if (snapshot.hasError) {
-          return Text('Erro: ${snapshot.error}');
+          return widget.errorBuilder?.call(context, snapshot.error!) ??
+              _defaultError(context, snapshot.error!);
         }
 
-        if (!snapshot.hasData) {
+        final data = snapshot.data;
+        if (data == null) {
           return const Text("Nenhum item encontrado");
         }
 
-        return widget.child(snapshot.data!);
+        return widget.builder(context, data);
       },
+    );
+  }
+
+  Widget _defaultError(BuildContext context, Object error) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 12,
+      children: [
+        Text('Erro: $error', textAlign: TextAlign.center),
+        TextButton.icon(
+          key: const Key('future-handler-retry'),
+          onPressed: _retry,
+          icon: const Icon(Icons.refresh),
+          label: const Text('Tentar novamente'),
+        ),
+      ],
     );
   }
 }

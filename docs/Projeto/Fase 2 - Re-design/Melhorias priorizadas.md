@@ -127,3 +127,4 @@ Nenhuma dependência cita item inexistente ou descartado.
 
 - **24/11/2026** — Avaliação inicial do aplicativo, catalogação de 29 melhorias e seleção de escopo: 24 itens mantidos (U02, U05, U07, U09, U10, U11, U12, U13 e C01–C16) e 5 descartados nesta rodada (U01, U03, U04, U06 e U08).
 - **24/11/2026** — Onda 1 concluída e arquivada (`stabilization-wave-1`): C01, C02, C05, C11, C12, C13, C14 e C15 passam para `implementada`. `flutter analyze` sem problemas, 385 testes passando e nova capability `accountability-reports` criada a partir do C02.
+- **25/11/2026** — Onda 2 em andamento (`foundation-wave-2`): C03, C04, C06, C07, C09, C10 e a parte de testes de falha do C16. A remoção do mascaramento de overflow do C16 fica para a Onda 4 (U13), mantendo o item `selecionada` até as duas partes serem concluídas.

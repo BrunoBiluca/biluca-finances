@@ -5,14 +5,17 @@ import 'package:biluca_financas/common/ui/number_field_edit.dart';
 import 'package:biluca_financas/common/ui/text_field_edit.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_entry.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_table_entry.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AccountabilityTable extends StatefulWidget {
-  final List<dynamic> entries;
-  final void Function(dynamic) onUpdate;
-  final void Function(dynamic) onRemove;
+class AccountabilityTable<T extends AccountabilityTableEntry>
+    extends StatefulWidget {
+  final List<T> entries;
+  final ValueChanged<T> onUpdate;
+  final ValueChanged<T> onRemove;
   final bool showInsertedAt;
   final IconData removeIcon;
   final String removeTooltip;
@@ -38,10 +41,11 @@ class AccountabilityTable extends StatefulWidget {
   });
 
   @override
-  State<AccountabilityTable> createState() => _AccountabilityTableState();
+  State<AccountabilityTable<T>> createState() => _AccountabilityTableState<T>();
 }
 
-class _AccountabilityTableState extends State<AccountabilityTable> {
+class _AccountabilityTableState<T extends AccountabilityTableEntry>
+    extends State<AccountabilityTable<T>> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _valueController = TextEditingController();
@@ -60,7 +64,7 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
   }
 
   @override
-  void didUpdateWidget(covariant AccountabilityTable oldWidget) {
+  void didUpdateWidget(covariant AccountabilityTable<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.entries.isEmpty) {
       createAtMonth = "";
@@ -125,7 +129,9 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
       dataRowHeight: 56,
       horizontalMargin: 20,
       columnSpacing: 20,
-      headingRowDecoration: const BoxDecoration(color: Color(0xFF0A0E17)),
+      headingRowDecoration: BoxDecoration(
+        color: context.appColors.tableHeaderBackground,
+      ),
       headingTextStyle: theme.textTheme.labelMedium?.copyWith(
         color: theme.colorScheme.onSurfaceVariant,
         fontWeight: FontWeight.w700,
@@ -171,10 +177,10 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
     );
   }
 
-  DataRow2 _buildRow(BuildContext context, dynamic entry, int rowIndex) {
+  DataRow2 _buildRow(BuildContext context, T entry, int rowIndex) {
     final isEditing = widget.enableInlineEditing && _editingRowIndex == rowIndex;
 
-    return AccountabilityTableRow(
+    return AccountabilityTableRow<T>(
       entry: entry,
       rowIndex: rowIndex,
       showInsertedAt: widget.showInsertedAt,
@@ -213,7 +219,7 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
     ).build(context);
   }
 
-  void _startEditing(dynamic entry, int rowIndex) {
+  void _startEditing(T entry, int rowIndex) {
     final identificationId =
         entry is AccountabilityEntry ? entry.identificationId ?? entry.identification?.id : entry.identification?.id;
     _descriptionController.text = entry.descriptionAlt ?? entry.description;
@@ -229,7 +235,7 @@ class _AccountabilityTableState extends State<AccountabilityTable> {
     setState(_discardDraft);
   }
 
-  void _saveEditing(dynamic entry) {
+  void _saveEditing(T entry) {
     final valueText = _valueController.text.trim();
     final normalizedValue = valueText.contains(',') ? valueText.replaceAll('.', '').replaceAll(',', '.') : valueText;
     final value = double.tryParse(normalizedValue);

@@ -9,7 +9,7 @@ class AccountabilityIdentificationLabel extends StatefulWidget {
   final AccountabilityIdentification? identification;
   final String recordDescription;
   final double recordValue;
-  final Function onEdit;
+  final ValueChanged<AccountabilityIdentification> onEdit;
 
   const AccountabilityIdentificationLabel({
     super.key,

@@ -1,5 +1,5 @@
-import 'package:biluca_financas/app/themes/app_theme.dart';
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
+
 import 'package:biluca_financas/common/extensions/currency.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/lib/safe_ratio.dart';
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/models/yearly_summary.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_value_card.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:get_it/get_it.dart';
+
 import 'package:intl/intl.dart';
 
 class YearlySummaryCards extends StatelessWidget {
@@ -22,8 +22,8 @@ class YearlySummaryCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appTheme = GetIt.I<ThemeManager>();
-    var currTheme = appTheme.getCurrentTheme(context);
+    final colors = context.appColors;
+    
 
     var consolidatedMonths = 0;
     var openMonths = 0;
@@ -65,12 +65,12 @@ class YearlySummaryCards extends StatelessWidget {
             mainAxisSpacing: 10,
             crossAxisCount: constraints.maxWidth < 850 ? 1 : 2,
             children: [
-              buildBalanceCard(context, currTheme),
-              buildBalanceAvgCard(context, currTheme),
-              buildIncomesCard(context, currTheme),
-              buildIncomeAvgCard(context, currTheme),
-              buildOutcomesCard(context, currTheme),
-              buildOutcomeAvgCard(context, currTheme),
+              buildBalanceCard(context, colors),
+              buildBalanceAvgCard(context, colors),
+              buildIncomesCard(context, colors),
+              buildIncomeAvgCard(context, colors),
+              buildOutcomesCard(context, colors),
+              buildOutcomeAvgCard(context, colors),
             ]
                 .map(
                   (e) => StaggeredGridTile.extent(
@@ -86,7 +86,7 @@ class YearlySummaryCards extends StatelessWidget {
     );
   }
 
-  SummaryValueCard buildOutcomeAvgCard(BuildContext context, AppTheme currTheme) {
+  SummaryValueCard buildOutcomeAvgCard(BuildContext context, AppColors colors) {
     final ratio = safeRatio(res.avgExpenses, res.avgIncomes);
     final commitment =
         ratio == null ? "N/A" : Formatter.relationWithoutSign(ratio);
@@ -97,65 +97,65 @@ class YearlySummaryCards extends StatelessWidget {
       subInfo: buildSubInfoText(
         label: "Comprometimento da Renda",
         value: "$commitment consolidado",
-        color: currTheme.colors.negativeYield,
+        color: colors.negativeYield,
         context: context,
       ),
     );
   }
 
-  SummaryValueCard buildOutcomesCard(BuildContext context, AppTheme currTheme) {
+  SummaryValueCard buildOutcomesCard(BuildContext context, AppColors colors) {
     return SummaryValueCard(
       title: "Total de despesas",
       value: res.totalExpenses,
-      color: currTheme.colors.negativeYield,
+      color: colors.negativeYield,
       subInfo: buildSubInfoText(
         label: "Média mensal de despesas",
         value: "R\$ ${formatReal(res.avgExpenses)} / mês",
-        color: currTheme.colors.negativeYield,
+        color: colors.negativeYield,
         context: context,
       ),
       label: SummaryCardLabel(
         label: "Saídas",
-        color: currTheme.colors.negativeYield,
+        color: colors.negativeYield,
         icon: Icons.arrow_downward,
-        bgColor: currTheme.colors.negativeYieldBg,
+        bgColor: colors.negativeYieldBg,
       ),
     );
   }
 
-  SummaryValueCard buildIncomeAvgCard(BuildContext context, AppTheme currTheme) {
+  SummaryValueCard buildIncomeAvgCard(BuildContext context, AppColors colors) {
     return SummaryValueCard(
       title: "Média mensal de receitas",
       value: res.avgIncomes,
       subInfo: buildSubInfoText(
         label: "Pico Máximo",
         value: "R\$ ${formatReal(res.peakIncome)} (${res.peakIncomeMonth})",
-        color: currTheme.colors.positiveYieldAlt,
+        color: colors.positiveYieldAlt,
         context: context,
       ),
     );
   }
 
-  SummaryValueCard buildIncomesCard(BuildContext context, AppTheme currTheme) {
+  SummaryValueCard buildIncomesCard(BuildContext context, AppColors colors) {
     return SummaryValueCard(
       title: "Total de receitas",
       value: res.totalIncomes,
-      color: currTheme.colors.positiveYieldAlt,
+      color: colors.positiveYieldAlt,
       subInfo: buildSubInfoText(
         label: "Média mensal de receitas",
         value: "R\$ ${formatReal(res.avgIncomes)} / mês",
-        color: currTheme.colors.positiveYieldAlt,
+        color: colors.positiveYieldAlt,
         context: context,
       ),
       label: SummaryCardLabel.positiveAlt(
         label: "Entradas",
         icon: Icons.arrow_upward,
-        theme: currTheme,
+        colors: colors,
       ),
     );
   }
 
-  SummaryValueCard buildBalanceAvgCard(BuildContext context, AppTheme currTheme) {
+  SummaryValueCard buildBalanceAvgCard(BuildContext context, AppColors colors) {
     final ratio = safeRatio(res.avgBalance, res.avgIncomes);
     final savingsIndex =
         ratio == null ? "N/A" : Formatter.relationWithoutSign(ratio);
@@ -166,17 +166,17 @@ class YearlySummaryCards extends StatelessWidget {
       subInfo: buildSubInfoText(
         label: "Índice de poupança",
         value: "$savingsIndex da receita",
-        color: res.avgBalance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
+        color: res.avgBalance > 0 ? colors.positiveYield : colors.negativeYield,
         context: context,
       ),
     );
   }
 
-  SummaryValueCard buildBalanceCard(BuildContext context, AppTheme currTheme) {
+  SummaryValueCard buildBalanceCard(BuildContext context, AppColors colors) {
     return SummaryValueCard(
       title: "Balanço",
       value: res.balance,
-      color: res.balance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
+      color: res.balance > 0 ? colors.positiveYield : colors.negativeYield,
       subInfo: buildSubInfoText(
         label: "Média mensal",
         value: "R\$ ${NumberFormat('#,##0.00', 'de').format(res.avgBalance)} / mês",
@@ -186,15 +186,15 @@ class YearlySummaryCards extends StatelessWidget {
       label: res.balance > 0
           ? SummaryCardLabel(
               label: "Superávit",
-              color: currTheme.colors.positiveYield,
+              color: colors.positiveYield,
               icon: Icons.trending_up,
-              bgColor: currTheme.colors.positiveYieldBg,
+              bgColor: colors.positiveYieldBg,
             )
           : SummaryCardLabel(
               label: "Déficit",
-              color: currTheme.colors.negativeYield,
+              color: colors.negativeYield,
               icon: Icons.trending_down,
-              bgColor: currTheme.colors.negativeYieldBg,
+              bgColor: colors.negativeYieldBg,
             ),
     );
   }

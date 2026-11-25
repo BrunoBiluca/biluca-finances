@@ -6,6 +6,7 @@ import 'package:biluca_financas/core/app_update/bloc/app_update_bloc.dart';
 import 'package:biluca_financas/core/app_update/services/startup_app_update_check.dart';
 import 'package:biluca_financas/core/backup/services/backup_service.dart';
 import 'package:biluca_financas/core/backup/services/startup_backup_sync.dart';
+import 'package:biluca_financas/core/preferences/preferences_service.dart';
 import 'package:biluca_financas/init_database.dart';
 import 'package:biluca_financas/di_container.dart';
 import 'package:flutter/material.dart';
@@ -27,5 +28,8 @@ void main() async {
     exit(1);
   }
 
-  runApp(App(runApplicationExitHandler));
+  runApp(App(
+    runApplicationExitHandler,
+    themeMode: GetIt.I<PreferencesService>().themeMode,
+  ));
 }

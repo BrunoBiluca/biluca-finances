@@ -30,7 +30,7 @@ class AccountabilityTableDescriptionCell {
               decoration: accountabilityTableEditFieldDecoration(
                 context,
                 hintText: 'Descrição',
-                fillColor: getInputFieldBackgroundColor(rowIndex),
+                fillColor: getInputFieldBackgroundColor(context, rowIndex),
               ),
             )
           : Text(

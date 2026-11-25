@@ -1,10 +1,9 @@
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/common/extensions/color_extensions.dart';
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/lib/safe_ratio.dart';
 import 'package:biluca_financas/common/ui/hover_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 class MonthSummaryCard extends StatefulWidget {
   final String title;
@@ -33,8 +32,7 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
 
   @override
   Widget build(BuildContext context) {
-    var appTheme = GetIt.I<ThemeManager>();
-    var currTheme = appTheme.getCurrentTheme(context);
+    final colors = context.appColors;
     final retentionRatio = safeRatio(widget.balance, widget.incomes);
 
     return HoverWrapper(
@@ -103,8 +101,8 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
                         Formatter.value(widget.balance),
                         style: Theme.of(context).textTheme.displaySmall?.copyWith(
                               color: widget.balance > 0
-                                  ? currTheme.colors.positiveYieldAlt
-                                  : currTheme.colors.negativeYield,
+                                  ? colors.positiveYieldAlt
+                                  : colors.negativeYield,
                               fontWeight: FontWeight.bold,
                             ),
                       ),
@@ -133,7 +131,7 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
                             Text(
                               Formatter.value(widget.incomes),
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: currTheme.colors.positiveYield,
+                                    color: colors.positiveYield,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
@@ -160,7 +158,7 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
                             Text(
                               Formatter.value(widget.expenses),
                               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: currTheme.colors.negativeYield,
+                                    color: colors.negativeYield,
                                     fontWeight: FontWeight.bold,
                                   ),
                             ),
@@ -183,19 +181,19 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
                       widget.balance < 0
                           ? Text("0% retido",
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: currTheme.colors.negativeYield,
+                                    color: colors.negativeYield,
                                     fontWeight: FontWeight.bold,
                                   ))
                           : retentionRatio == null
                               ? Text("N/A",
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: currTheme.colors.positiveYield,
+                                        color: colors.positiveYield,
                                         fontWeight: FontWeight.bold,
                                       ))
                               : Text(
                                   "${Formatter.relationWithoutSign(retentionRatio)} retido",
                                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: currTheme.colors.positiveYield,
+                                        color: colors.positiveYield,
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),
@@ -205,8 +203,8 @@ class _MonthSummaryCardState extends State<MonthSummaryCard> {
                     borderRadius: BorderRadius.circular(10),
                     minHeight: 10,
                     value: retentionRatio ?? 0,
-                    color: widget.balance > 0 ? currTheme.colors.positiveYield : currTheme.colors.negativeYield,
-                    backgroundColor: currTheme.colors.negativeYield,
+                    color: widget.balance > 0 ? colors.positiveYield : colors.negativeYield,
+                    backgroundColor: colors.negativeYield,
                   ),
                 ],
               )

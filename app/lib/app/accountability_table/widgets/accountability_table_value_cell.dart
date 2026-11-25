@@ -1,9 +1,8 @@
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_edit_field_decoration.dart';
 import 'package:biluca_financas/app/accountability_table/widgets/accountability_table_row.dart';
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/common/ui/real_currency.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 class AccountabilityTableValueCell {
   final double value;
@@ -41,7 +40,7 @@ class AccountabilityTableValueCell {
                 context,
                 hintText: 'Valor',
                 errorText: errorText,
-                fillColor: getInputFieldBackgroundColor(rowIndex),
+                fillColor: getInputFieldBackgroundColor(context, rowIndex),
               ),
               onChanged: onChanged,
             )
@@ -61,7 +60,7 @@ class AccountabilityTableValueCell {
   }
 
   Color _valueColor(BuildContext context, double value) {
-    final colors = GetIt.I<ThemeManager>().getCurrentTheme(context).colors;
+    final colors = context.appColors;
     if (value > 0) return colors.positiveYield;
     if (value < 0) return colors.negativeYield;
     return colors.neutralYield;

@@ -3,10 +3,12 @@ import 'package:biluca_financas/core/accountability/bloc/accountability_states.d
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:biluca_financas/core/accountability/services/accountability_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 
 class AccountabilityBloc
     extends Bloc<AccountabilityEvent, AccountabilityState> {
   final AccountabilityRepo repo;
+  final Logger? log;
   static const int pageSize = 100;
   int loadedPages = 1;
   AccountabilityIdentification? currentIdentification;
@@ -15,12 +17,26 @@ class AccountabilityBloc
   int _queryVersion = 0;
   int _entryCreationVersion = 0;
   bool _isSearchMode = false;
+  AccountabilityEvent? _lastFailedEvent;
 
   int get limit => loadedPages * pageSize;
 
-  AccountabilityBloc({required this.repo})
+  AccountabilityBloc({required this.repo, this.log})
       : super(const AccountabilityInitial()) {
-    on<FetchAccountabilityEntries>((event, emit) async {
+    on<FetchAccountabilityEntries>(_onFetch);
+    on<SearchAccountabilityEntries>(_onSearch);
+    on<LoadMoreAccountabilityEntries>(_onLoadMore);
+    on<AddAccountabilityEntry>(_onAdd);
+    on<DeleteAccountabilityEntry>(_onDelete);
+    on<UpdateAccountabilityEntry>(_onUpdate);
+    on<RetryAccountability>(_onRetry);
+  }
+
+  Future<void> _onFetch(
+    FetchAccountabilityEntries event,
+    Emitter<AccountabilityState> emit,
+  ) async {
+    try {
       if (event.identification != null) {
         currentIdentification = event.identification;
       }
@@ -28,17 +44,43 @@ class AccountabilityBloc
       _isSearchMode = false;
       loadedPages = 1;
       await updateEntries(emit);
-    });
+    } catch (error, stackTrace) {
+      _lastFailedEvent = event;
+      _emitFailure(
+        emit,
+        error,
+        stackTrace,
+        'Não foi possível carregar os lançamentos. Tente novamente.',
+      );
+    }
+  }
 
-    on<SearchAccountabilityEntries>((event, emit) async {
+  Future<void> _onSearch(
+    SearchAccountabilityEntries event,
+    Emitter<AccountabilityState> emit,
+  ) async {
+    try {
       currentSearchQuery = event.query.trim();
       currentIdentificationId = event.identificationId;
       currentIdentification = null;
       _isSearchMode = true;
       await _loadFirstPage(emit);
-    });
+    } catch (error, stackTrace) {
+      _lastFailedEvent = event;
+      _emitFailure(
+        emit,
+        error,
+        stackTrace,
+        'Não foi possível carregar os lançamentos. Tente novamente.',
+      );
+    }
+  }
 
-    on<LoadMoreAccountabilityEntries>((event, emit) async {
+  Future<void> _onLoadMore(
+    LoadMoreAccountabilityEntries event,
+    Emitter<AccountabilityState> emit,
+  ) async {
+    try {
       if (_isSearchMode) {
         await _loadNextPage(emit);
         return;
@@ -46,9 +88,22 @@ class AccountabilityBloc
 
       loadedPages += 1;
       await updateEntries(emit);
-    });
+    } catch (error, stackTrace) {
+      _lastFailedEvent = event;
+      _emitFailure(
+        emit,
+        error,
+        stackTrace,
+        'Não foi possível carregar os lançamentos. Tente novamente.',
+      );
+    }
+  }
 
-    on<AddAccountabilityEntry>((event, emit) async {
+  Future<void> _onAdd(
+    AddAccountabilityEntry event,
+    Emitter<AccountabilityState> emit,
+  ) async {
+    try {
       await repo.add(event.request);
       _entryCreationVersion++;
       final currentState = state;
@@ -62,17 +117,94 @@ class AccountabilityBloc
         entryCreationVersion: _entryCreationVersion,
       ));
       await _refreshEntries(emit);
-    });
+    } catch (error, stackTrace) {
+      _lastFailedEvent = event;
+      _emitFailure(
+        emit,
+        error,
+        stackTrace,
+        'Não foi possível criar o lançamento. Tente novamente.',
+      );
+    }
+  }
 
-    on<DeleteAccountabilityEntry>((event, emit) async {
+  Future<void> _onDelete(
+    DeleteAccountabilityEntry event,
+    Emitter<AccountabilityState> emit,
+  ) async {
+    try {
       await repo.delete(event.entry);
       await _refreshEntries(emit);
-    });
+    } catch (error, stackTrace) {
+      _lastFailedEvent = event;
+      _emitFailure(
+        emit,
+        error,
+        stackTrace,
+        'Não foi possível excluir o lançamento. Tente novamente.',
+      );
+    }
+  }
 
-    on<UpdateAccountabilityEntry>((event, emit) async {
+  Future<void> _onUpdate(
+    UpdateAccountabilityEntry event,
+    Emitter<AccountabilityState> emit,
+  ) async {
+    try {
       await repo.update(event.updatedEntry);
       await _refreshEntries(emit);
-    });
+    } catch (error, stackTrace) {
+      _lastFailedEvent = event;
+      _emitFailure(
+        emit,
+        error,
+        stackTrace,
+        'Não foi possível editar o lançamento. Tente novamente.',
+      );
+    }
+  }
+
+  Future<void> _onRetry(
+    RetryAccountability event,
+    Emitter<AccountabilityState> emit,
+  ) async {
+    final failed = _lastFailedEvent;
+    _lastFailedEvent = null;
+    if (failed == null) return;
+
+    if (failed is FetchAccountabilityEntries) {
+      await _onFetch(failed, emit);
+    } else if (failed is SearchAccountabilityEntries) {
+      await _onSearch(failed, emit);
+    } else if (failed is LoadMoreAccountabilityEntries) {
+      await _onLoadMore(failed, emit);
+    } else if (failed is AddAccountabilityEntry) {
+      await _onAdd(failed, emit);
+    } else if (failed is DeleteAccountabilityEntry) {
+      await _onDelete(failed, emit);
+    } else if (failed is UpdateAccountabilityEntry) {
+      await _onUpdate(failed, emit);
+    }
+  }
+
+  void _emitFailure(
+    Emitter<AccountabilityState> emit,
+    Object error,
+    StackTrace stackTrace,
+    String message,
+  ) {
+    log?.severe('Accountability operation failed', error, stackTrace);
+    final currentState = state;
+    emit(AccountabilityChanged(
+      entries: currentState.entries,
+      identifications: currentState.identifications,
+      searchQuery: currentState.searchQuery,
+      identificationId: currentState.identificationId,
+      hasMore: currentState.hasMore,
+      isLoading: false,
+      entryCreationVersion: _entryCreationVersion,
+      failureMessage: message,
+    ));
   }
 
   Future<void> _refreshEntries(Emitter<AccountabilityState> emit) {

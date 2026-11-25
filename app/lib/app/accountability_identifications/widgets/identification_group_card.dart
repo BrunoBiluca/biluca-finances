@@ -1,7 +1,7 @@
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
 import 'package:flutter/material.dart';
 
-const Color _blockBorderColor = Color(0xFF272D36);
 const double _blockRadius = 6;
 
 class IdentificationGroupCard extends StatelessWidget {
@@ -36,7 +36,7 @@ class IdentificationGroupCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(_blockRadius),
-          border: Border.all(color: _blockBorderColor),
+          border: Border.all(color: context.appColors.modalFieldBorder),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -180,7 +180,7 @@ class IdentificationGroupCard extends StatelessWidget {
             theme.colorScheme.surfaceContainerLow,
           ),
           borderRadius: BorderRadius.circular(_blockRadius),
-          border: Border.all(color: _blockBorderColor),
+          border: Border.all(color: context.appColors.modalFieldBorder),
         ),
         child: Row(
           children: [

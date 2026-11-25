@@ -1,6 +1,5 @@
-import 'package:biluca_financas/app/themes/theme_manager.dart';
+import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 enum BaseToastType { success, information, error }
 
@@ -17,10 +16,10 @@ class BaseToast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final appTheme = GetIt.I<ThemeManager>().getCurrentTheme(context);
+    final appColors = context.appColors;
     final textColor = switch (type) {
-      BaseToastType.success => appTheme.colors.positiveYield,
-      BaseToastType.information => appTheme.colors.positiveYieldAlt,
+      BaseToastType.success => appColors.positiveYield,
+      BaseToastType.information => appColors.positiveYieldAlt,
       BaseToastType.error => theme.colorScheme.error,
     };
     final icon = switch (type) {

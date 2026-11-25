@@ -364,7 +364,7 @@ void main() {
   );
 
   blocTest(
-    "does not report successful creation when persistence fails",
+    "reports a failure when creating an entry fails",
     build: () {
       registerFallbackValue(FakeAccountabilityEntryRequest());
       final repo = MockAccountabilityRepo();
@@ -381,8 +381,12 @@ void main() {
         ),
       ),
     ),
-    expect: () => <AccountabilityState>[],
-    errors: () => [isA<Exception>()],
+    expect: () => [
+      isA<AccountabilityChanged>()
+          .having((state) => state.entryCreationVersion, "entryCreationVersion",
+              0)
+          .having((state) => state.failureMessage, "failureMessage", isNotNull),
+    ],
     verify: (bloc) {
       expect(bloc.state.entryCreationVersion, 0);
       verify(() => bloc.repo.add(any())).called(1);
@@ -418,6 +422,110 @@ void main() {
           limit: any(named: "limit"), offset: any(named: "offset"))).called(1),
     },
     expect: () => [isA<AccountabilityChanged>()],
+  );
+  blocTest(
+    "reports a failure when loading entries fails",
+    build: () {
+      final repo = MockAccountabilityRepo();
+      when(() => repo.searchEntries(
+            searchQuery: any(named: "searchQuery"),
+            identificationId: any(named: "identificationId"),
+            limit: any(named: "limit"),
+            offset: any(named: "offset"),
+          )).thenThrow(Exception("Load failed"));
+      return AccountabilityBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(
+      const SearchAccountabilityEntries(query: "", identificationId: null),
+    ),
+    expect: () => [
+      isA<AccountabilityChanged>()
+          .having((state) => state.isLoading, "isLoading", true),
+      isA<AccountabilityChanged>()
+          .having((state) => state.isLoading, "isLoading", false)
+          .having((state) => state.failureMessage, "failureMessage", isNotNull),
+    ],
+  );
+
+  blocTest(
+    "recovers after retrying a failed search",
+    build: () {
+      final repo = MockAccountabilityRepo();
+      final entry = _entry(1, "Recovered entry");
+      var calls = 0;
+      when(() => repo.searchEntries(
+            searchQuery: any(named: "searchQuery"),
+            identificationId: any(named: "identificationId"),
+            limit: any(named: "limit"),
+            offset: any(named: "offset"),
+          )).thenAnswer((_) async {
+        calls++;
+        if (calls == 1) {
+          throw Exception("Load failed");
+        }
+        return [entry];
+      });
+      when(() => repo.getIdentifications()).thenAnswer((_) async => []);
+      return AccountabilityBloc(repo: repo);
+    },
+    act: (bloc) async {
+      bloc.add(
+        const SearchAccountabilityEntries(query: "a", identificationId: null),
+      );
+      await Future<void>.delayed(Duration.zero);
+      bloc.add(RetryAccountability());
+      await Future<void>.delayed(Duration.zero);
+    },
+    expect: () => [
+      isA<AccountabilityChanged>()
+          .having((state) => state.isLoading, "isLoading", true),
+      isA<AccountabilityChanged>()
+          .having((state) => state.isLoading, "isLoading", false)
+          .having((state) => state.failureMessage, "failureMessage", isNotNull),
+      isA<AccountabilityChanged>()
+          .having((state) => state.isLoading, "isLoading", true),
+      isA<AccountabilityChanged>()
+          .having((state) => state.isLoading, "isLoading", false)
+          .having((state) => state.failureMessage, "failureMessage", isNull)
+          .having((state) => state.entries.single.description,
+              "entry description", "Recovered entry"),
+    ],
+  );
+
+  blocTest(
+    "reports a failure when deleting an entry fails",
+    build: () {
+      registerFallbackValue(FakeAccountabilityEntry());
+      final repo = MockAccountabilityRepo();
+      when(() => repo.delete(any(that: isA<AccountabilityEntry>())))
+          .thenThrow(Exception("Delete failed"));
+      return AccountabilityBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(
+      DeleteAccountabilityEntry(_entry(1, "Entry")),
+    ),
+    expect: () => [
+      isA<AccountabilityChanged>()
+          .having((state) => state.failureMessage, "failureMessage", isNotNull),
+    ],
+  );
+
+  blocTest(
+    "reports a failure when editing an entry fails",
+    build: () {
+      registerFallbackValue(FakeAccountabilityEntry());
+      final repo = MockAccountabilityRepo();
+      when(() => repo.update(any(that: isA<AccountabilityEntry>())))
+          .thenThrow(Exception("Update failed"));
+      return AccountabilityBloc(repo: repo);
+    },
+    act: (bloc) => bloc.add(
+      UpdateAccountabilityEntry(_entry(1, "Entry")),
+    ),
+    expect: () => [
+      isA<AccountabilityChanged>()
+          .having((state) => state.failureMessage, "failureMessage", isNotNull),
+    ],
   );
 }
 

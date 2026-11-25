@@ -35,6 +35,7 @@ import 'package:biluca_financas/core/backup/services/backup_connector.dart';
 import 'package:biluca_financas/core/backup/services/backup_record_store.dart';
 import 'package:biluca_financas/core/backup/services/backup_service.dart';
 import 'package:biluca_financas/core/backup/services/database_file_controller.dart';
+import 'package:biluca_financas/core/preferences/preferences_service.dart';
 
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_server.dart';
 import 'package:biluca_financas/integrations/embedded_server/embedded_predict_service.dart';
@@ -65,6 +66,8 @@ Future<void> setup() async {
 
   DBProvider.i.init();
 
+  getIt.registerSingleton<PreferencesService>(await PreferencesService.load());
+
   getIt.registerSingleton<Database>(await DBProvider.i.database);
   getIt.registerFactoryParam<AccountabilityMonthService, DateTime, void>(
     (month, _) => SQLiteAccountabilityMonthService(
@@ -76,7 +79,10 @@ Future<void> setup() async {
     () => SQLiteAccountabilityRepo(getIt<Database>()),
   );
   getIt.registerFactory<AccountabilityBloc>(
-    () => AccountabilityBloc(repo: getIt<AccountabilityRepo>()),
+    () => AccountabilityBloc(
+      repo: getIt<AccountabilityRepo>(),
+      log: getIt<LoggerManager>().instance('AccountabilityBloc'),
+    ),
   );
   getIt.registerFactory<IdentificationCategoriesBloc>(
     () => IdentificationCategoriesBloc(repo: getIt<AccountabilityRepo>()),

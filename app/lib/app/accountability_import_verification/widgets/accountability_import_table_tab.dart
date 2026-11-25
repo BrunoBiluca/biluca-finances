@@ -1,13 +1,15 @@
 import 'package:biluca_financas/app/accountability_table/accountability_table.dart';
 import 'package:biluca_financas/core/accountability/models/accountability_identification.dart';
+import 'package:biluca_financas/core/accountability/models/accountability_table_entry.dart';
 import 'package:flutter/material.dart';
 
-class AccountabilityImportTableTab extends StatelessWidget {
+class AccountabilityImportTableTab<T extends AccountabilityTableEntry>
+    extends StatelessWidget {
   final Key tableKey;
-  final List<dynamic> entries;
+  final List<T> entries;
   final List<AccountabilityIdentification> identifications;
-  final ValueChanged<dynamic> onUpdate;
-  final ValueChanged<dynamic> onRemove;
+  final ValueChanged<T> onUpdate;
+  final ValueChanged<T> onRemove;
   final bool showInsertedAt;
   final IconData removeIcon;
   final String removeTooltip;
