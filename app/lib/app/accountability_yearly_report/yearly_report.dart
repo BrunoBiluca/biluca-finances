@@ -1,9 +1,8 @@
 // ignore: unused_import
 import 'package:biluca_financas/common/extensions/datetime_extensions.dart';
-import 'package:biluca_financas/core/accountability_stats/models/accountability_year_stats.dart';
 import 'package:biluca_financas/core/accountability_stats/services/accountability_stats_service.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
-import 'package:biluca_financas/app/themes/app_colors.dart';
+import 'package:biluca_financas/common/ui/reports/report_header.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/year_selector.dart';
 import 'package:biluca_financas/app/accountability_yearly_report/widgets/yearly_identifications_summary_charts.dart';
 import 'package:biluca_financas/core/accountability_yearly_report/services/accountability_yearly_report_service.dart';
@@ -69,17 +68,29 @@ class _YearlyReportState extends State<YearlyReport> {
         return Column(
           spacing: 60,
           children: [
-            buildReportHeader(context, snapshot),
+            ReportHeader(
+              icon: Icons.space_dashboard,
+              iconColor: Colors.blueAccent,
+              title: "Relatório Anual",
+              periodSelector: YearSelector(
+                currentYear: currentYear!,
+                years: years,
+                onDateChanged: updateSelectedYear,
+              ),
+            ),
             FutureHandler(
+              dependency: currentYear,
               load: () => reportService.summary(),
               builder: (context, res) => YearlySummaryCards(res: res),
             ),
             FutureHandler(
+              dependency: currentYear,
               load: () => reportService.getMonthlySummary(),
               builder: (context, res) => YearlySummaryCharts(res: res),
               loadingBuilder: (_) => const SizedBox.shrink(),
             ),
             FutureHandler(
+              dependency: currentYear,
               load: () => reportService.getMonthlyIdentificationsSummary(),
               builder: (context, res) =>
                   YearlyIdentificationsSummaryCharts(res: res),
@@ -89,49 +100,6 @@ class _YearlyReportState extends State<YearlyReport> {
           ],
         );
       },
-    );
-  }
-
-  Widget buildReportHeader(BuildContext context, AsyncSnapshot<List<AccountabilityYearStats>> snapshot) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Row(
-        spacing: 20,
-        children: [
-          Expanded(
-            flex: constraints.maxWidth < 850 ? 1 : 2,
-            child: Row(
-              spacing: 10,
-              children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(8),
-                    color: context.appColors.sidebarHighlightBackground,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.space_dashboard,
-                      color: Colors.blueAccent,
-                    ),
-                  ),
-                ),
-                Text(
-                  "Relatório Anual",
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          Flexible(
-            child: YearSelector(
-              currentYear: currentYear!,
-              years: snapshot.data!,
-              onDateChanged: updateSelectedYear,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:biluca_financas/app/themes/app_colors.dart';
 
 import 'package:biluca_financas/common/formatters/formatter.dart';
 import 'package:biluca_financas/common/ui/base_dialog.dart';
+import 'package:biluca_financas/common/ui/reports/report_header.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_card_label.dart';
 import 'package:biluca_financas/common/ui/reports/summary_value_card/summary_value_card.dart';
 import 'package:biluca_financas/common/ui/reports/values_comparison_full_text.dart';
@@ -44,8 +45,7 @@ class IdentificationsViewSection extends StatelessWidget {
             crossAxisCount: constraints.maxWidth < 850 ? 1 : 3,
             children: sortedData
                 .map(
-                  (e) => StaggeredGridTile.extent(
-                    mainAxisExtent: 230,
+                  (e) => StaggeredGridTile.fit(
                     crossAxisCellCount: 1,
                     child: GestureDetector(
                       onTap: () => displayReportData(context, e),
@@ -61,42 +61,71 @@ class IdentificationsViewSection extends StatelessWidget {
     );
   }
 
-  SizedBox buildCharts(BuildContext context, List<IdentificationReportInfo> sortedData) {
-    return SizedBox(
-      height: 600,
-      width: double.maxFinite,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            spacing: 20,
-            children: [
-              Expanded(
-                child: Column(
-                  spacing: 20,
-                  children: [
-                    Row(
-                      spacing: 10,
-                      children: [
-                        Icon(
-                          Icons.bar_chart,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        Text(
-                          "Comportamento das identificações",
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    Expanded(child: IdentificationsBarChart(data: sortedData)),
-                  ],
-                ),
+  Widget buildCharts(BuildContext context, List<IdentificationReportInfo> sortedData) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isNarrow = constraints.maxWidth < ReportHeader.narrowBreakpoint;
+        final barChart = buildBarChartSection(context, sortedData);
+        final percentageChart = IdentificationsPercentageChart(data: sortedData);
+
+        if (isNarrow) {
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 20,
+                children: [
+                  SizedBox(height: 320, child: barChart),
+                  percentageChart,
+                ],
               ),
-              IdentificationsPercentageChart(data: sortedData)
-            ],
+            ),
+          );
+        }
+
+        return SizedBox(
+          height: 600,
+          width: double.maxFinite,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                spacing: 20,
+                children: [
+                  Expanded(child: barChart),
+                  SizedBox(width: 300, child: percentageChart),
+                ],
+              ),
+            ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget buildBarChartSection(BuildContext context, List<IdentificationReportInfo> sortedData) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 20,
+      children: [
+        Row(
+          spacing: 10,
+          children: [
+            Icon(
+              Icons.bar_chart,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            Flexible(
+              child: Text(
+                "Comportamento das identificações",
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
         ),
-      ),
+        Expanded(child: IdentificationsBarChart(data: sortedData)),
+      ],
     );
   }
 

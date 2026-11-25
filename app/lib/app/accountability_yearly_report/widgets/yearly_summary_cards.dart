@@ -73,8 +73,7 @@ class YearlySummaryCards extends StatelessWidget {
               buildOutcomeAvgCard(context, colors),
             ]
                 .map(
-                  (e) => StaggeredGridTile.extent(
-                    mainAxisExtent: 180,
+                  (e) => StaggeredGridTile.fit(
                     crossAxisCellCount: 1,
                     child: e,
                   ),
@@ -205,10 +204,11 @@ class YearlySummaryCards extends StatelessWidget {
     required String value,
     required Color color,
   }) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.start,
+      alignment: WrapAlignment.start,
       spacing: 10,
+      runSpacing: 4,
       children: [
         Text(
           label,

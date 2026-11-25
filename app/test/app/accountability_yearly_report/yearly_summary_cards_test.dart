@@ -7,8 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import '../../_helpers/ignore_overflow_erros.dart';
-
 void main() {
   setUp(() async {
     await GetIt.I.reset();
@@ -22,8 +20,6 @@ void main() {
   });
 
   testWidgets("exibe N/A quando a média de receitas é zero", (tester) async {
-    FlutterError.onError = ignoreOverflowErrors;
-
     tester.view.physicalSize = const Size(1200, 4000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);

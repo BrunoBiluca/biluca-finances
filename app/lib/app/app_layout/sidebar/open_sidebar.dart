@@ -47,7 +47,7 @@ class OpenSidebar extends StatelessWidget {
           children: [
             const SizedBox(width: 16),
             Text(
-              "Navegação".toUpperCase(),
+              sidebarNavigationLabel.toUpperCase(),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -60,34 +60,50 @@ class OpenSidebar extends StatelessWidget {
             shrinkWrap: true,
             itemCount: pages.length,
             separatorBuilder: (context, index) => SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              var page = pages[index];
-              return ListTile(
-                selected: index == selectedPage,
-                selectedColor: Theme.of(context).textTheme.bodyLarge?.color,
-                selectedTileColor: context.appColors.sidebarHighlightBackground,
-                minTileHeight: 56,
-                leading: DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: context.appColors.sidebarHighlightBackground,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      page.icon,
-                      color: page.color,
-                    ),
-                  ),
-                ),
-                title: Text(page.title),
-                titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-                onTap: () => onSelectPage(index),
-              );
-            },
+            itemBuilder: (context, index) => buildItem(context, index),
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildItem(BuildContext context, int index) {
+    var page = pages[index];
+    final isSelected = index == selectedPage;
+
+    return Tooltip(
+      message: page.title,
+      excludeFromSemantics: true,
+      child: Semantics(
+        label: page.title,
+        button: true,
+        selected: isSelected,
+        onTap: () => onSelectPage(index),
+        child: ExcludeSemantics(
+          child: ListTile(
+            selected: isSelected,
+            selectedColor: Theme.of(context).textTheme.bodyLarge?.color,
+            selectedTileColor: context.appColors.sidebarHighlightBackground,
+            minTileHeight: 56,
+            leading: DecoratedBox(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: context.appColors.sidebarHighlightBackground,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  page.icon,
+                  color: page.color,
+                ),
+              ),
+            ),
+            title: Text(page.title),
+            titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+            onTap: () => onSelectPage(index),
+          ),
+        ),
+      ),
     );
   }
 }

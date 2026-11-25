@@ -1,4 +1,5 @@
 import 'package:biluca_financas/common/extensions/currency.dart';
+import 'package:biluca_financas/common/ui/reports/charts/chart_legend.dart';
 import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:flutter/material.dart';
 
@@ -13,8 +14,7 @@ class BalanceChart extends StatelessWidget {
   final double maxValue;
   final double avgBalance;
   final double sdBalance;
-
-  
+  final double? chartHeight;
 
   const BalanceChart({
     super.key,
@@ -22,6 +22,7 @@ class BalanceChart extends StatelessWidget {
     required this.maxValue,
     required this.avgBalance,
     required this.sdBalance,
+    this.chartHeight,
   });
 
   @override
@@ -30,6 +31,7 @@ class BalanceChart extends StatelessWidget {
       title: "Balanço mensal",
       subtitle: "Resultado líquido apurado mês a mês com linha de referência média",
       chart: buildChart(context),
+      chartHeight: chartHeight,
       topRightInfo: buildLegend(context),
       subInfo: buildSubInfo(context),
     );
@@ -82,26 +84,11 @@ class BalanceChart extends StatelessWidget {
 
   Widget buildLegend(BuildContext context) {
     final colors = context.appColors;
-    var incomesColor = colors.positiveYield;
-    var expensesColor = colors.negativeYield;
 
-    return Row(
-      spacing: 20,
-      children: [
-        Row(
-          spacing: 10,
-          children: [
-            CircleAvatar(backgroundColor: incomesColor, radius: 10),
-            Text("Receitas"),
-          ],
-        ),
-        Row(
-          spacing: 10,
-          children: [
-            CircleAvatar(backgroundColor: expensesColor, radius: 10),
-            Text("Receitas"),
-          ],
-        )
+    return ChartLegend(
+      items: [
+        ChartLegendItem(label: "Receitas", color: colors.positiveYield),
+        ChartLegendItem(label: "Despesas", color: colors.negativeYield),
       ],
     );
   }
@@ -110,10 +97,11 @@ class BalanceChart extends StatelessWidget {
     final colors = context.appColors;
     var balanceColor = avgBalance < 0 ? colors.negativeYield : colors.positiveYield;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      alignment: WrapAlignment.start,
       spacing: 10,
+      runSpacing: 4,
       children: [
         Text(
           "—",

@@ -40,31 +40,33 @@ class YearlySummaryCharts extends StatelessWidget {
     var avgExpenses = validEntries.map((e) => e.sumExpenses).toList().average.abs();
     var sdExpenses = validEntries.map((e) => e.sumExpenses).toList().standardDeviation.abs();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 20,
-      children: [
-        SizedBox(
-          height: 600,
-          child: IncomesExpensesEvolutionChart(
-            monthEntries: monthEntries,
-            maxValue: maxValue,
-            avgIncomes: avgIncomes,
-            sdIncomes: sdIncomes,
-            avgExpenses: avgExpenses,
-            sdExpenses: sdExpenses,
-          ),
-        ),
-        SizedBox(
-          height: 600,
-          child: BalanceChart(
-            monthEntries: monthEntries,
-            maxValue: maxBalanceValue,
-            avgBalance: avgBalance,
-            sdBalance: sdBalance,
-          ),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final chartHeight = constraints.maxWidth < 850 ? 300.0 : 460.0;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 20,
+          children: [
+            IncomesExpensesEvolutionChart(
+              monthEntries: monthEntries,
+              maxValue: maxValue,
+              avgIncomes: avgIncomes,
+              sdIncomes: sdIncomes,
+              avgExpenses: avgExpenses,
+              sdExpenses: sdExpenses,
+              chartHeight: chartHeight,
+            ),
+            BalanceChart(
+              monthEntries: monthEntries,
+              maxValue: maxBalanceValue,
+              avgBalance: avgBalance,
+              sdBalance: sdBalance,
+              chartHeight: chartHeight,
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -80,6 +80,7 @@ class _SidebarState extends State<Sidebar> {
               children: [
                 IconButton(
                   key: const Key('toggle-sidebar'),
+                  tooltip: isOpen ? "Recolher barra lateral" : "Expandir barra lateral",
                   icon: Icon(isOpen ? Icons.arrow_left : Icons.arrow_right),
                   onPressed: () {
                     setState(() => isOpen = !isOpen);

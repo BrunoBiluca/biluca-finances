@@ -43,6 +43,7 @@ class SummaryLastMonthsSection extends StatelessWidget {
           ),
           FutureHandler(
             key: Key(monthService.current.currentMonth.toString()),
+            dependency: monthService,
             load: () => Future.wait(
               [
                 getMonthData(monthService, 1, colors.positiveYieldAlt),
@@ -56,8 +57,7 @@ class SummaryLastMonthsSection extends StatelessWidget {
               crossAxisCount: constraints.maxWidth < 850 ? 1 : 3,
               children: res
                   .map<Widget>(
-                    (e) => StaggeredGridTile.extent(
-                      mainAxisExtent: 300,
+                    (e) => StaggeredGridTile.fit(
                       crossAxisCellCount: 1,
                       child: MonthSummaryCard(
                         title: e["title"],

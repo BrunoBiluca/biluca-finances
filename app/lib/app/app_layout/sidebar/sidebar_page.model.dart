@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const String sidebarNavigationLabel = "Navegação";
+
 class SidebarPage {
   final String title;
   final String route;

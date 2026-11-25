@@ -42,7 +42,7 @@ class _SummaryValueCardState extends State<SummaryValueCard> {
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             spacing: 10,
             children: [
               Row(
@@ -83,7 +83,6 @@ class _SummaryValueCardState extends State<SummaryValueCard> {
                   if (widget.label != null) widget.label!,
                 ],
               ),
-              if (widget.subInfo != null) Spacer(),
               if (widget.subInfo != null) SummaryCardSubInfo(info: widget.subInfo!),
             ],
           ),

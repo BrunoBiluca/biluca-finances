@@ -6,12 +6,17 @@ class FutureHandler<T> extends StatefulWidget {
   final Widget Function(BuildContext context)? loadingBuilder;
   final Widget Function(BuildContext context, Object error)? errorBuilder;
 
+  /// Reloads only when this value changes; rebuilds for layout changes keep the
+  /// data already loaded.
+  final Object? dependency;
+
   const FutureHandler({
     super.key,
     required this.load,
     required this.builder,
     this.loadingBuilder,
     this.errorBuilder,
+    this.dependency,
   });
 
   @override
@@ -30,7 +35,7 @@ class _FutureHandlerState<T> extends State<FutureHandler<T>> {
   @override
   void didUpdateWidget(covariant FutureHandler<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.load != widget.load) {
+    if (oldWidget.dependency != widget.dependency) {
       _future = widget.load();
     }
   }

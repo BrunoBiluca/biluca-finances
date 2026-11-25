@@ -1,6 +1,7 @@
 import 'package:biluca_financas/app/app_layout/app_layout.dart';
 import 'package:biluca_financas/app/app_layout/sidebar/closed_sidebar.dart';
 import 'package:biluca_financas/app/app_layout/sidebar/open_sidebar.dart';
+import 'package:biluca_financas/app/app_layout/sidebar/sidebar_page.model.dart';
 import 'package:biluca_financas/core/preferences/preferences_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -205,6 +206,87 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Página: Relatório do Mês'), findsOneWidget);
+    });
+
+    testWidgets('Should describe the toggle action for the current state',
+        (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      expect(find.byTooltip('Recolher barra lateral'), findsOneWidget);
+
+      await tapToggleSidebarBtn(tester);
+
+      expect(find.byTooltip('Expandir barra lateral'), findsOneWidget);
+    });
+
+    testWidgets('Should expose tooltips and accessible labels when collapsed',
+        (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      await tapToggleSidebarBtn(tester);
+
+      final handle = tester.ensureSemantics();
+
+      expect(find.byTooltip('Home'), findsOneWidget);
+      expect(find.byTooltip('Identificações'), findsOneWidget);
+      expect(find.bySemanticsLabel(sidebarNavigationLabel), findsOneWidget);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Identificações')),
+        matchesSemantics(
+          label: 'Identificações',
+          isButton: true,
+          hasSelectedState: true,
+          isSelected: false,
+          hasTapAction: true,
+        ),
+      );
+
+      handle.dispose();
+    });
+
+    testWidgets('Should expose accessible labels when expanded',
+        (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      final handle = tester.ensureSemantics();
+
+      expect(find.byTooltip('Relatório do mês'), findsOneWidget);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Relatório do mês')),
+        matchesSemantics(
+          label: 'Relatório do mês',
+          isButton: true,
+          hasSelectedState: true,
+          isSelected: false,
+          hasTapAction: true,
+        ),
+      );
+
+      handle.dispose();
+    });
+
+    testWidgets('Should mark the collapsed selected item for assistive tech',
+        (tester) async {
+      await tester.pumpWidget(buildApp());
+
+      await tester.tap(find.text('Relatório do mês'));
+      await tester.pumpAndSettle();
+      await tapToggleSidebarBtn(tester);
+
+      final handle = tester.ensureSemantics();
+
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Relatório do mês')),
+        matchesSemantics(
+          label: 'Relatório do mês',
+          isButton: true,
+          hasSelectedState: true,
+          isSelected: true,
+          hasTapAction: true,
+        ),
+      );
+
+      handle.dispose();
     });
   });
 }

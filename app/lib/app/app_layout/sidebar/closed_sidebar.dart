@@ -30,50 +30,59 @@ class ClosedSidebar extends StatelessWidget {
             )
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "N",
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.left,
-            ),
-          ],
-        ),
         Expanded(
-          child: ListView.separated(
-            shrinkWrap: true,
-            itemCount: pages.length,
-            separatorBuilder: (context, index) => SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              var page = pages[index];
-              var style = Theme.of(context).textTheme.bodyLarge;
-              return ListTile(
-                selected: index == selectedPage,
-                selectedColor: style?.color,
-                selectedTileColor: context.appColors.sidebarHighlightBackground,
-                contentPadding: EdgeInsets.all(0),
-                title: SizedBox(
-                  height: 36,
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: context.appColors.sidebarHighlightBackground,
-                    ),
-                    child: Icon(
-                      page.icon,
-                      color: page.color,
-                    ),
-                  ),
-                ),
-                onTap: () => onSelectPage(index),
-              );
-            },
+          child: Semantics(
+            label: sidebarNavigationLabel,
+            container: true,
+            explicitChildNodes: true,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemCount: pages.length,
+              separatorBuilder: (context, index) => SizedBox(height: 8),
+              itemBuilder: (context, index) => buildItem(context, index),
+            ),
           ),
         )
       ],
+    );
+  }
+
+  Widget buildItem(BuildContext context, int index) {
+    var page = pages[index];
+    var style = Theme.of(context).textTheme.bodyLarge;
+    final isSelected = index == selectedPage;
+
+    return Tooltip(
+      message: page.title,
+      excludeFromSemantics: true,
+      child: Semantics(
+        label: page.title,
+        button: true,
+        selected: isSelected,
+        onTap: () => onSelectPage(index),
+        child: ExcludeSemantics(
+          child: ListTile(
+            selected: isSelected,
+            selectedColor: style?.color,
+            selectedTileColor: context.appColors.sidebarHighlightBackground,
+            contentPadding: EdgeInsets.all(0),
+            title: SizedBox(
+              height: 36,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: context.appColors.sidebarHighlightBackground,
+                ),
+                child: Icon(
+                  page.icon,
+                  color: page.color,
+                ),
+              ),
+            ),
+            onTap: () => onSelectPage(index),
+          ),
+        ),
+      ),
     );
   }
 }

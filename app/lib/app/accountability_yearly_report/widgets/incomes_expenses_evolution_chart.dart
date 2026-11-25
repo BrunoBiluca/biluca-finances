@@ -1,5 +1,6 @@
 import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/common/extensions/currency.dart';
+import 'package:biluca_financas/common/ui/reports/charts/chart_legend.dart';
 import 'package:biluca_financas/common/ui/reports/charts/charts.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
@@ -16,8 +17,7 @@ class IncomesExpensesEvolutionChart extends StatelessWidget {
   final double sdExpenses;
   final double avgIncomes;
   final double sdIncomes;
-
-  
+  final double? chartHeight;
 
   const IncomesExpensesEvolutionChart({
     super.key,
@@ -27,6 +27,7 @@ class IncomesExpensesEvolutionChart extends StatelessWidget {
     required this.sdExpenses,
     required this.avgIncomes,
     required this.sdIncomes,
+    this.chartHeight,
   });
 
   @override
@@ -35,6 +36,7 @@ class IncomesExpensesEvolutionChart extends StatelessWidget {
       title: "Evolução das receitas e despesas",
       subtitle: "Série histórica temporal com linha de corte e desvio padrão médio",
       chart: buildIncomesAndExpensesChart(context),
+      chartHeight: chartHeight,
       topRightInfo: buildLegend(context),
       subInfo: buildSubInfo(context),
     );
@@ -133,26 +135,11 @@ class IncomesExpensesEvolutionChart extends StatelessWidget {
 
   Widget buildLegend(BuildContext context) {
     final colors = context.appColors;
-    var incomesColor = colors.positiveYield;
-    var expensesColor = colors.negativeYield;
 
-    return Row(
-      spacing: 20,
-      children: [
-        Row(
-          spacing: 10,
-          children: [
-            CircleAvatar(backgroundColor: incomesColor, radius: 10),
-            Text("Receitas"),
-          ],
-        ),
-        Row(
-          spacing: 10,
-          children: [
-            CircleAvatar(backgroundColor: expensesColor, radius: 10),
-            Text("Receitas"),
-          ],
-        )
+    return ChartLegend(
+      items: [
+        ChartLegendItem(label: "Receitas", color: colors.positiveYield),
+        ChartLegendItem(label: "Despesas", color: colors.negativeYield),
       ],
     );
   }
@@ -162,62 +149,61 @@ class IncomesExpensesEvolutionChart extends StatelessWidget {
     var incomesColor = colors.positiveYield;
     var expensesColor = colors.negativeYield;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Wrap(
+      alignment: WrapAlignment.start,
+      spacing: 20,
+      runSpacing: 8,
       children: [
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 10,
-            children: [
-              Text(
-                "—",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: incomesColor,
-                    ),
-              ),
-              Text(
-                "Receitas: Média (Desvio):",
-              ),
-              Text(
-                "${formatReal(avgIncomes)} (±${formatReal(sdIncomes)})",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: incomesColor,
-                    ),
-              )
-            ],
-          ),
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.start,
+          spacing: 10,
+          runSpacing: 4,
+          children: [
+            Text(
+              "—",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: incomesColor,
+                  ),
+            ),
+            Text(
+              "Receitas: Média (Desvio):",
+            ),
+            Text(
+              "${formatReal(avgIncomes)} (±${formatReal(sdIncomes)})",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: incomesColor,
+                  ),
+            )
+          ],
         ),
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            spacing: 10,
-            children: [
-              Text(
-                "—",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: expensesColor,
-                    ),
-              ),
-              Text(
-                "Receitas: Média (Desvio):",
-              ),
-              Text(
-                "${formatReal(avgExpenses)} (±${formatReal(sdExpenses)})",
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: expensesColor,
-                    ),
-              ),
-            ],
-          ),
-        )
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          alignment: WrapAlignment.start,
+          spacing: 10,
+          runSpacing: 4,
+          children: [
+            Text(
+              "—",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: expensesColor,
+                  ),
+            ),
+            Text(
+              "Despesas: Média (Desvio):",
+            ),
+            Text(
+              "${formatReal(avgExpenses)} (±${formatReal(sdExpenses)})",
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: expensesColor,
+                  ),
+            ),
+          ],
+        ),
       ],
     );
   }

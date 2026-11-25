@@ -34,36 +34,40 @@ class IdentificationsPercentageChart extends StatelessWidget {
               "Composição relativa",
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              height: 300,
-              width: 300,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: ScatterChart(
-                    ScatterChartData(
-                      scatterSpots: spots.entries.map((e) => e.value['spot'] as ScatterSpot).toList(),
-                      minX: 0,
-                      maxX: maxX.toDouble(),
-                      minY: 0,
-                      maxY: maxY.toDouble(),
-                      borderData: FlBorderData(show: false),
-                      gridData: const FlGridData(show: false),
-                      titlesData: const FlTitlesData(show: false),
-                      scatterTouchData: ScatterTouchData(
-                        enabled: true,
-                        touchTooltipData: ScatterTouchTooltipData(
-                          tooltipPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          getTooltipItems: (spot) {
-                            var info = spots["${spot.x.toInt()}_${spot.y.toInt()}"]['id'] as IdentificationReportInfo;
-                            var identification = info.identification.description;
-                            var percentage = "${(info.participationInTotal * 100).toStringAsFixed(2)}%";
-                            return ScatterTooltipItem("$identification\n$percentage");
-                          },
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 300),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: ScatterChart(
+                        ScatterChartData(
+                          scatterSpots: spots.entries.map((e) => e.value['spot'] as ScatterSpot).toList(),
+                          minX: 0,
+                          maxX: maxX.toDouble(),
+                          minY: 0,
+                          maxY: maxY.toDouble(),
+                          borderData: FlBorderData(show: false),
+                          gridData: const FlGridData(show: false),
+                          titlesData: const FlTitlesData(show: false),
+                          scatterTouchData: ScatterTouchData(
+                            enabled: true,
+                            touchTooltipData: ScatterTouchTooltipData(
+                              tooltipPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              getTooltipItems: (spot) {
+                                var info = spots["${spot.x.toInt()}_${spot.y.toInt()}"]['id'] as IdentificationReportInfo;
+                                var identification = info.identification.description;
+                                var percentage = "${(info.participationInTotal * 100).toStringAsFixed(2)}%";
+                                return ScatterTooltipItem("$identification\n$percentage");
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -71,10 +75,7 @@ class IdentificationsPercentageChart extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
-              width: 300,
-              child: buildLegend(context),
-            )
+            buildLegend(context)
           ],
         ),
       ),

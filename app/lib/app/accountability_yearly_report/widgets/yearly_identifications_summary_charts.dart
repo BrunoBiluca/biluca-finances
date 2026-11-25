@@ -56,15 +56,20 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+        Flexible(
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
         ),
-        Text(
-          subtitle,
-          style: Theme.of(context).textTheme.bodySmall,
+        Flexible(
+          child: Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodySmall,
+            textAlign: TextAlign.end,
+          ),
         ),
       ],
     );
@@ -78,7 +83,7 @@ class YearlyIdentificationsSummaryCharts extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 700,
-          childAspectRatio: 1.5,
+          mainAxisExtent: 420,
           mainAxisSpacing: 20,
           crossAxisSpacing: 20,
         ),

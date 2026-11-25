@@ -44,6 +44,7 @@ class SummaryValuesSection extends StatelessWidget {
           ),
           FutureHandler(
             key: Key(service.current.currentMonth.toString()),
+            dependency: service,
             load: () => Future.wait([
               service.summaryBalance(),
               service.summaryIncomes(),
@@ -78,8 +79,7 @@ class SummaryValuesSection extends StatelessWidget {
                 )
               ]
                   .map(
-                    (e) => StaggeredGridTile.extent(
-                      mainAxisExtent: 200,
+                    (e) => StaggeredGridTile.fit(
                       crossAxisCellCount: 1,
                       child: e,
                     ),

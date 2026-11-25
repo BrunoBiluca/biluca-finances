@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/identifications_view_section.dart';
-import 'package:biluca_financas/app/themes/app_colors.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/month_selector.dart';
 import 'package:biluca_financas/app/accountability_monthly_report/widgets/summary_last_months_section.dart';
 import 'package:biluca_financas/common/ui/reports/future_handler.dart';
+import 'package:biluca_financas/common/ui/reports/report_header.dart';
+import 'package:biluca_financas/common/ui/reports/report_section.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_bloc.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_events.dart';
 import 'package:biluca_financas/core/accountability/bloc/accountability_states.dart';
@@ -140,7 +141,30 @@ class _MonthlyReportState extends State<MonthlyReport> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          buildReportHeader(context),
+          ReportHeader(
+            icon: Icons.dashboard,
+            iconColor: Colors.purpleAccent,
+            title: "Relatório mensal",
+            actions: [
+              ElevatedButton(
+                onPressed: () => displayReportData(),
+                child: const Row(
+                  spacing: 10,
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_circle_outline, size: 20),
+                    Text('Dados do relatório'),
+                  ],
+                ),
+              ),
+            ],
+            periodSelector: MonthSelector(
+              availableMonths: availableMonths,
+              current: _selectedMonth!,
+              onDateChanged: selectMonth,
+            ),
+          ),
           _selectedMonth!.entriesCount == 0
               ? SizedBox(
                   height: 400,
@@ -154,11 +178,11 @@ class _MonthlyReportState extends State<MonthlyReport> {
                   children: [
                     SummaryValuesSection(),
                     SummaryLastMonthsSection(),
-                    buildSection(
-                      context,
-                      "Receitas por Identificação",
-                      Icons.savings_outlined,
-                      FutureHandler(
+                    ReportSection(
+                      title: "Receitas por Identificação",
+                      icon: Icons.savings_outlined,
+                      child: FutureHandler(
+                        dependency: _service,
                         load: () => _service!.incomesByIdentification(),
                         builder: (context, data) => IdentificationsViewSection(
                           data: data,
@@ -168,11 +192,11 @@ class _MonthlyReportState extends State<MonthlyReport> {
                         ),
                       ),
                     ),
-                    buildSection(
-                      context,
-                      "Despesas por Identificação",
-                      Icons.money_off_outlined,
-                      FutureHandler(
+                    ReportSection(
+                      title: "Despesas por Identificação",
+                      icon: Icons.money_off_outlined,
+                      child: FutureHandler(
+                        dependency: _service,
                         load: () => _service!.expensesByIdentification(),
                         builder: (context, data) => IdentificationsViewSection(
                           data: data,
@@ -186,87 +210,6 @@ class _MonthlyReportState extends State<MonthlyReport> {
                   ],
                 ),
           const SizedBox(height: 100)
-        ],
-      ),
-    );
-  }
-
-  Widget buildSection(
-    BuildContext context,
-    String title,
-    IconData icon,
-    Widget section,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 20,
-      children: [
-        Row(
-          spacing: 10,
-          children: [
-            Icon(icon, color: Theme.of(context).colorScheme.secondary),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        section,
-      ],
-    );
-  }
-
-  Widget buildReportHeader(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Row(
-        spacing: 20,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            flex: constraints.maxWidth < 850 ? 1 : 2,
-            child: Row(
-              spacing: 10,
-              children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(8),
-                    color: context.appColors.sidebarHighlightBackground,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(
-                      Icons.dashboard,
-                      color: Colors.purpleAccent,
-                    ),
-                  ),
-                ),
-                Text(
-                  "Relatório mensal",
-                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () => displayReportData(),
-            child: const Row(
-              spacing: 10,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.add_circle_outline, size: 20),
-                Text('Dados do relatório'),
-              ],
-            ),
-          ),
-          Flexible(
-            child: MonthSelector(
-              availableMonths: availableMonths,
-              current: _selectedMonth!,
-              onDateChanged: selectMonth,
-            ),
-          ),
         ],
       ),
     );

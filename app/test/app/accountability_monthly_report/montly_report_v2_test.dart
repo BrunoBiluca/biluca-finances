@@ -6,8 +6,6 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../_helpers/ignore_overflow_erros.dart';
-
 class MockMonthlyReportService extends Mock implements CurrentMonthReportService {}
 
 void main() {
@@ -57,8 +55,6 @@ void main() {
   testWidgets(
     "should show summary values",
     (tester) async {
-      FlutterError.onError = ignoreOverflowErrors;
-
       await tester.pumpWidget(
         MaterialApp(
           title: 'Flutter Demo',
